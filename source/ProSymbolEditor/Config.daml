@@ -1,0 +1,50 @@
+﻿<ArcGIS defaultAssembly="ProSymbolEditor.dll" defaultNamespace="ProSymbolEditor" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+  <AddInInfo id="{4ff462b0-2910-47f3-b6fd-d1d17e5f7dfc}" version="1.0" desktopVersion="1.2.4950">
+    <Name>ProSymbolEditor</Name>
+    <Description>ProSymbolEditor description</Description>
+    <Image>Images\AddinDesktop32.png</Image>
+    <Author>Travis Lauver</Author>
+    <Company>Esri</Company>
+    <Date>2/1/2016 3:14:45 PM, 2016</Date>
+    <Subject>Framework</Subject>
+    <!-- Note subject can be one or more of these topics:
+                    Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
+  </AddInInfo>
+  <modules>
+    <insertModule id="ProSymbolEditor_Module" className="ProSymbolEditorModule" autoLoad="false" caption="ProSymbolEditorModule">
+      <!-- uncomment to have the control hosted on a separate tab-->
+      <tabs>
+        <!--<tab id="ProSymbolEditor_Tab1" caption="New Tab">
+          <group refID="ProSymbolEditor_Group1"/>
+        </tab>-->
+      </tabs>
+      <groups>
+        <!-- comment this out if you have no controls on the Addin tab to avoid
+              an empty group-->
+        <group id="ProSymbolEditor_Group1" caption="Pro Military Symbol Editor" appearsOnAddInTab="true">
+          <!-- host controls within groups -->
+          <button refID="ProSymbolEditor_MilitarySymbolDockpane_ShowButton" size="large" />
+        </group>
+      </groups>
+      <controls>
+        <!-- add your controls here -->
+        <button id="ProSymbolEditor_MilitarySymbolDockpane_ShowButton" caption="Military Symbol Designer " className="MilitarySymbolDockpane_ShowButton" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
+          <tooltip heading="Show Dockpane">Show Dockpane<disabledText /></tooltip>
+        </button>
+        <!--<button id="ProSymbolEditor_MilitarySymbolDockpane_MenuButton" caption="Burger Menu Button" className="MilitarySymbolDockpane_MenuButton" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
+          <tooltip heading="Burger Menu Button">ToolTip<disabledText /></tooltip>
+        </button>-->
+      </controls>
+      <dockPanes>
+        <dockPane id="ProSymbolEditor_MilitarySymbolDockpane" caption="Military Symbol Designer" className="MilitarySymbolDockpaneViewModel" dock="group" dockWith="esri_core_contentsDockPane">
+          <content className="MilitarySymbolDockpaneView" />
+        </dockPane>
+      </dockPanes>
+      <menus>
+        <menu id="ProSymbolEditor_MilitarySymbolDockpane_Menu" caption="Options" contextMenu="true">
+          <button refID="ProSymbolEditor_MilitarySymbolDockpane_MenuButton" />
+        </menu>
+      </menus>
+    </insertModule>
+  </modules>
+</ArcGIS>

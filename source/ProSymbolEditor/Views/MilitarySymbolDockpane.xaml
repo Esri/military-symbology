@@ -1,0 +1,231 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"                                             
+             xmlns:Controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions" x:Class="ProSymbolEditor.MilitarySymbolDockpaneView"                                             
+             mc:Ignorable="d" d:DesignHeight="430" d:DesignWidth="550">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Grid Margin="3,3,3,3">
+
+            <DockPanel>
+
+                <Grid>
+
+                    <TabControl x:Name="tabControl" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="3,3,3,3">
+                        <TabItem Header="Search">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+
+                                    <!--<Controls:BurgerButton ToolTip="{Binding BurgerButtonTooltip}" Visibility="Hidden" PopupMenu="{Binding BurgerButtonMenu}" Margin="237,271,244.6,37.4" RenderTransformOrigin="0.448,1.184"/>-->
+                                    <TextBox x:Name="searchSymbolsTextBox" HorizontalAlignment="Stretch" Height="23" Margin="5,0,5,0" TextWrapping="Wrap" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0">
+                                        <TextBox.Style>
+                                            <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                                <Style.Resources>
+                                                    <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                                        <VisualBrush.Visual>
+                                                            <Label Content="Search..." Foreground="DarkGray" />
+                                                        </VisualBrush.Visual>
+                                                    </VisualBrush>
+                                                </Style.Resources>
+                                                <Style.Triggers>
+                                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                    </Trigger>
+                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                                        <Setter Property="Background" Value="White" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBox.Style>
+                                        <TextBox.InputBindings>
+                                            <KeyBinding Command="{Binding SearchResultCommand}" Key="Enter"/>
+                                        </TextBox.InputBindings>
+                                    </TextBox>
+                                    <Button x:Name="searchStylesButton" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SearchResultCommand}" Content="Search" Height="24" Width="75" Grid.Column="1"/>
+                                </Grid>
+
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ListBox x:Name="symbolListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
+                                             SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" Grid.Column="0" >
+
+                                        <ListBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel>
+                                                    <!--Memory footprint is only 200 mb-->
+                                                </VirtualizingStackPanel>
+                                            </ItemsPanelTemplate>
+                                        </ListBox.ItemsPanel>
+
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="2,0" ToolTip="{Binding Name}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="16"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Image Grid.Column="0" Source="{Binding PreviewImage}" Stretch="Fill"/>
+                                                    <TextBlock Grid.Column="1" TextAlignment="Left" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Padding="5,1,5,1"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+
+                                    <Image x:Name="previewSymbolImage" Source="{Binding SelectedStyleItem.PreviewImage}" RenderOptions.BitmapScalingMode="Fant" Stretch="Uniform" Margin="30,5,5,5" VerticalAlignment="Center" Grid.Column="1"/>
+
+                                </Grid>
+
+                                <Grid Grid.Row="2">
+                                    <Button x:Name="modifyButton" Content="Modify-->" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="2" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="75"/>
+
+                                </Grid>
+                            </Grid>
+
+                        
+                    </TabItem>
+                        <TabItem Header="Favorites" HorizontalAlignment="Stretch">
+                            <Grid Background="#FFE5E5E5"/>
+                        </TabItem>
+                        <TabItem Header="Modify">
+                            <Grid Background="#FFE5E5E5">
+                                <TextBlock x:Name="symbolIdCodeTextBlock" Text="{Binding SymbolIdCode, Mode=TwoWay}" HorizontalAlignment="Left" Margin="159,278,0,0" Width="100" VerticalAlignment="Top"/>
+                            <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" HorizontalAlignment="Left" Height="184" Margin="10,110,0,0" VerticalAlignment="Top" Width="184"/>
+                            <TextBlock x:Name="selectedSymbolTagsTextBlock" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" HorizontalAlignment="Left" Margin="27,315,0,0" VerticalAlignment="Top" Width="355" Height="51" TextWrapping="Wrap"/>
+                            <ComboBox x:Name="identityComboBox" ItemsSource="{Binding IdentityDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Identity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="209,10,0,0" VerticalAlignment="Top" Width="120"/>
+                            <ComboBox x:Name="echolonsComboBox" ItemsSource="{Binding EcholonsDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Echelon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="209,38,0,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1.908,0.54"/>
+                            <!--<ComboBox x:Name="statusesComboBox" ItemsSource="{Binding StatusesDomainValues}" DisplayMemberPath="Value" SelectedValuePath="Key" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Width="120"/>-->
+                            <ComboBox x:Name="operationalConditionAmplifierComboBox" ItemsSource="{Binding OperationalConditionAmplifierDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.OperationalCondition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="209,65,0,0" VerticalAlignment="Top" Width="120"/>
+                            <!--<ComboBox x:Name="operationalConditionAmplifierComboBox2test" ItemsSource="{Binding TestCol, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="402,344,0,0" VerticalAlignment="Top" Width="120" Visibility="Hidden"/>-->
+                            <Label x:Name="label" Content="Identity" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top"/>
+                            <Label x:Name="label1" Content="Echelons" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.636,0.896"/>
+                            <Label x:Name="label2" Content="Operational Condition Amplifier" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top"/>
+                        </Grid>
+                        </TabItem>
+                        <TabItem Header="Text">
+                            <Grid Background="#FFE5E5E5"/>
+                        </TabItem>
+                        <TabItem Header="Map">
+                            <Grid Background="#FFE5E5E5"/>
+                        </TabItem>
+                    </TabControl>
+
+
+
+
+                </Grid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!--<Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding InputCoordinateHistoryList}"
+                              HorizontalAlignment="Stretch" Margin="0,0,0,3" IsEditable="True">
+                        <ComboBox.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasInputError}" Value="True">
+                                        <Setter Property="TextBox.Background" Value="LightPink"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding HasInputError}" Value="False">
+                                        <Setter Property="TextBox.Background" Value="White"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+                    <Button Grid.Column="1" ToolTip="Add" Command="{Binding AddNewOCCommand}" Margin="3,0,0,3" >
+                        <Image Source="/CoordinateToolLibrary;component/Images/hand.png" Width="18" Height="18" />
+                    </Button>
+                    <Button Grid.Column="2" ToolTip="Map Point Tool" Command="{Binding ActivatePointToolCommand}" Margin="3,0,0,3">
+                        <Image Source="/CoordinateToolLibrary;component/Images/pointtool.png" Width="18" Height="18" />
+                    </Button>
+                    <Button Grid.Column="3" ToolTip="Flash" Command="{Binding FlashPointCommand}" Margin="3,0,0,3">
+                        <Image Source="/CoordinateToolLibrary;component/Images/tip.png" Width="18" Height="18" />
+                    </Button>
+                    <Button Grid.Column="4" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,0,0,3">
+                        <Image Source="/CoordinateToolLibrary;component/Images/EditCopy32_d.png" Width="18" Height="18" />
+                    </Button>
+                </Grid>
+                <UserControl Content="{Binding CTView}" />-->
+            </DockPanel>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!--<Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" LastChildFill="true" KeyboardNavigation.TabNavigation="Local" Height="30">
+            --><!--<TextBlock Grid.Column="1" Text="{Binding Heading}" VerticalAlignment="Center" HorizontalAlignment="Center"
+				FontSize="16" FontWeight="Light">
+                <TextBlock.ToolTip>
+                    <WrapPanel Orientation="Vertical" MaxWidth="300">
+                        <TextBlock Text="{Binding Heading}" TextWrapping="Wrap"/>
+                    </WrapPanel>
+                </TextBlock.ToolTip>
+			</TextBlock>--><!--
+        </DockPanel>-->
+        
+    </Grid>
+</UserControl>
