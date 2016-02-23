@@ -13,40 +13,24 @@ namespace ProSymbolEditor
 {
     public class SymbolAttributeSet : PropertyChangedBase
     {
-        private string _context;
+        //Base attributes
         private string _identity;
-        private string _symbolSet;
-        private string _symbolEntity;
-        private string _modifier1;
-        private string _modifier2;
+        private string _statuses;
+        private string _operationalCondition;
         private string _echelon;
         private string _indicator;
-        private string _operationalCondition;
+        private string _mobility;
+
+        //Delta Attributes
+        private string _context;
+        private string _modifier1;
+        private string _modifier2;
+
+        //Symbol Attributes
+        private string _symbolSet;
+        private string _symbolEntity;
         private string _selectedSymbolTags;
         private BitmapImage _symbolImage = null;
-
-        //public event PropertyChangedEventHandler PropertyChanged;
-
-        //private string _hqTaskForceDummy;
-        //private string _amplifierDescriptor;
-        //private string _entity;
-        //private string _entityType;
-        //private string _sector1Modifier;
-        //private string _sector2Modifier;
-
-        public string Identity
-        {
-            get
-            {
-                return _identity;
-            }
-            set
-            {
-                _identity = value;
-                GenerateSelectedSymbolTagsString();
-                GeneratePreviewSymbol();
-            }
-        }
 
         public string SymbolSet
         {
@@ -76,6 +60,20 @@ namespace ProSymbolEditor
             }
         }
 
+        public string Identity
+        {
+            get
+            {
+                return _identity;
+            }
+            set
+            {
+                _identity = value;
+                GenerateSelectedSymbolTagsString();
+                GeneratePreviewSymbol();
+            }
+        }
+
         public string Echelon
         {
             get
@@ -99,6 +97,90 @@ namespace ProSymbolEditor
             set
             {
                 _operationalCondition = value;
+                GenerateSelectedSymbolTagsString();
+                GeneratePreviewSymbol();
+            }
+        }
+
+        public string Statuses
+        {
+            get
+            {
+                return _statuses;
+            }
+            set
+            {
+                _statuses = value;
+                GenerateSelectedSymbolTagsString();
+                GeneratePreviewSymbol();
+            }
+        }
+
+        public string Indicator
+        {
+            get
+            {
+                return _indicator;
+            }
+            set
+            {
+                _indicator = value;
+                GenerateSelectedSymbolTagsString();
+                GeneratePreviewSymbol();
+            }
+        }
+
+        public string Mobility
+        {
+            get
+            {
+                return _mobility;
+            }
+            set
+            {
+                _mobility = value;
+                GenerateSelectedSymbolTagsString();
+                GeneratePreviewSymbol();
+            }
+        }
+
+        public string Context
+        {
+            get
+            {
+                return _context;
+            }
+            set
+            {
+                _context = value;
+                GenerateSelectedSymbolTagsString();
+                GeneratePreviewSymbol();
+            }
+        }
+
+        public string Modifier1
+        {
+            get
+            {
+                return _modifier1;
+            }
+            set
+            {
+                _modifier1 = value;
+                GenerateSelectedSymbolTagsString();
+                GeneratePreviewSymbol();
+            }
+        }
+
+        public string Modifier2
+        {
+            get
+            {
+                return _modifier2;
+            }
+            set
+            {
+                _modifier2 = value;
                 GenerateSelectedSymbolTagsString();
                 GeneratePreviewSymbol();
             }
@@ -165,7 +247,6 @@ namespace ProSymbolEditor
         {
             Dictionary<string, string> attributeSet = new Dictionary<string, string>();
 
-            //attributeSet["context"]      = "1";
             if (_identity != null && _identity != "")
             {
                 attributeSet["identity"] = _identity;
@@ -181,28 +262,69 @@ namespace ProSymbolEditor
                 attributeSet["symbolentity"] = _symbolEntity;
             }
 
-            //attributeSet["modifier1"]    = "01";
-            //attributeSet["modifier2"]    = "01";
+            if (_indicator != null && _indicator != "")
+            {
+                attributeSet["indicator"] = _indicator;
+            }
+
+            //Echelon or Mobility
 
             if (_echelon != null && _echelon != "")
             {
                 attributeSet["echelon"] = _echelon;
             }
 
-            //attributeSet["indicator"]    = "7";
+            if (_mobility != null && _mobility != "")
+            {
+                attributeSet["echelon"] = _mobility;
+            }
+
+            //Statuses or Operation
 
             if (_operationalCondition != null && _operationalCondition != "")
             {
                 attributeSet["operationalcondition"] = _operationalCondition;
             }
-            
+
+            if (_statuses != null && _statuses != "")
+            {
+                attributeSet["operationalcondition"] = _statuses;
+            }
+
+            //Delta attributes
+            if (_context != null && _context != "")
+            {
+                attributeSet["context"] = _context;
+            }
+
+            if (_modifier1 != null && _modifier1 != "")
+            {
+                attributeSet["modifier1"] = _modifier1;
+            }
+
+            if (_modifier2 != null && _modifier2 != "")
+            {
+                attributeSet["modifier2"] = _modifier2;
+            }
+
             return attributeSet;
         }
 
         private void GenerateSelectedSymbolTagsString()
         {
-            _selectedSymbolTags = "identity = " + _identity + ", symbolset = " + _symbolSet + ", symbolentity = " + _symbolEntity + 
-                ", echolon = " + _echelon + ", operationalcondition = " + _operationalCondition;
+            string statusOperation = "";
+            if (_statuses != "")
+            {
+                statusOperation = _statuses;
+            }
+            else
+            {
+                statusOperation = _operationalCondition;
+            }
+
+            _selectedSymbolTags = "Standard Identity = " + _identity + ", Symbol Set = " + _symbolSet + ", Operational Condition = " + _operationalCondition + ", Status = " + _statuses +
+                ", HQ / Task Force / Dummy = " + _indicator + ", Symbol Entity = " + _symbolEntity + ", Mobility = " + _mobility + 
+                ", Echelon = " + _echelon + ", Context = " + _context + ", Modifier 1 = " + _modifier1 + ", Modifier 2 = " + _modifier2;
             NotifyPropertyChanged(() => SelectedSymbolTags);
         }
 

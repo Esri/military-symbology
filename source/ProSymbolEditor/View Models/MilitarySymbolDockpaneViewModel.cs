@@ -21,6 +21,7 @@ using System.IO;
 using System.Drawing.Imaging;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
+using System.Windows;
 
 namespace ProSymbolEditor
 {
@@ -31,9 +32,20 @@ namespace ProSymbolEditor
         private const string _menuID = "ProSymbolEditor_MilitarySymbolDockpane_Menu";
         private const string _mil2525dStyleFilePath = @"C:\Program Files\ArcGIS\Pro\Resources\Dictionaries\mil2525d\mil2525d.stylx";
         private string _currentFeatureClassName = "";
-        private StyleProjectItem _militaryStyleItem;
+        private StyleProjectItem _militaryStyleItem = null;
         private SymbolStyleItem _selectedStyleItem = null;
         private SymbolSetMappings _symbolSetMappings = new SymbolSetMappings();
+
+        //Lock objects for ObservableCollections
+        private static object _identityLock = new object();
+        private static object _echelonLock = new object();
+        private static object _statusesLock = new object();
+        private static object _operationalConditionAmplifierLock = new object();
+        private static object _mobilityLock = new object();
+        private static object _tfFdHqLock = new object();
+        private static object _contextLock = new object();
+        private static object _modifier1Lock = new object();
+        private static object _modifier2Lock = new object();
 
         //Binded Variables - Text Boxes
         private string _searchString = "";
@@ -42,17 +54,15 @@ namespace ProSymbolEditor
         private IList<SymbolStyleItem> _styleItems = new List<SymbolStyleItem>();
 
         //Binded Variables - Combo Boxes
-        private static object _identityLock = new object();
         ObservableCollection<DomainCodedValuePair> _identityDomainValues = new ObservableCollection<DomainCodedValuePair>();
-
-        private static object _echelonLock = new object();
         ObservableCollection<DomainCodedValuePair> _echolonDomainValues = new ObservableCollection<DomainCodedValuePair>();
-
-        private static object _statusesLock = new object();
         ObservableCollection<DomainCodedValuePair> _statusesDomainValues = new ObservableCollection<DomainCodedValuePair>();
-
-        private static object _operationalConditionAmplifierLock = new object();
         ObservableCollection<DomainCodedValuePair> _operationalConditionAmplifierDomainValues = new ObservableCollection<DomainCodedValuePair>();
+        ObservableCollection<DomainCodedValuePair> _mobilityDomainValues = new ObservableCollection<DomainCodedValuePair>();
+        ObservableCollection<DomainCodedValuePair> _tfFdHqDomainValues = new ObservableCollection<DomainCodedValuePair>();
+        ObservableCollection<DomainCodedValuePair> _contextDomainValues = new ObservableCollection<DomainCodedValuePair>();
+        ObservableCollection<DomainCodedValuePair> _modifier1DomainValues = new ObservableCollection<DomainCodedValuePair>();
+        ObservableCollection<DomainCodedValuePair> _modifier2DomainValues = new ObservableCollection<DomainCodedValuePair>();
 
         //Binded Variables - Other
         private SymbolAttributeSet _symbolAttributeSet = new SymbolAttributeSet();
@@ -64,17 +74,23 @@ namespace ProSymbolEditor
 
         protected MilitarySymbolDockpaneViewModel()
         {
-            ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe((args) =>
+            ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
                 //Add military style to project
-                AddMilitaryStyle();
-
-                //Create locks for variables that are updated in worker threads
-                BindingOperations.EnableCollectionSynchronization(_identityDomainValues, _identityLock);
-                BindingOperations.EnableCollectionSynchronization(_echolonDomainValues, _echelonLock);
-                BindingOperations.EnableCollectionSynchronization(_statusesDomainValues, _statusesLock);
-                BindingOperations.EnableCollectionSynchronization(_operationalConditionAmplifierDomainValues, _operationalConditionAmplifierLock);
+                Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
+                _militaryStyleItem = await getMilitaryStyle;
             });
+
+            //Create locks for variables that are updated in worker threads
+            BindingOperations.EnableCollectionSynchronization(_identityDomainValues, _identityLock);
+            BindingOperations.EnableCollectionSynchronization(_echolonDomainValues, _echelonLock);
+            BindingOperations.EnableCollectionSynchronization(_statusesDomainValues, _statusesLock);
+            BindingOperations.EnableCollectionSynchronization(_operationalConditionAmplifierDomainValues, _operationalConditionAmplifierLock);
+            BindingOperations.EnableCollectionSynchronization(_mobilityDomainValues, _mobilityLock);
+            BindingOperations.EnableCollectionSynchronization(_tfFdHqDomainValues, _tfFdHqLock);
+            BindingOperations.EnableCollectionSynchronization(_contextDomainValues, _contextLock);
+            BindingOperations.EnableCollectionSynchronization(_modifier1DomainValues, _modifier1Lock);
+            BindingOperations.EnableCollectionSynchronization(_modifier2DomainValues, _modifier2Lock);
         }
 
         /// <summary>
@@ -172,6 +188,12 @@ namespace ProSymbolEditor
                     _symbolAttributeSet.Echelon = "";
                     _symbolAttributeSet.Identity = "";
                     _symbolAttributeSet.OperationalCondition = "";
+                    _symbolAttributeSet.Statuses = "";
+                    _symbolAttributeSet.Mobility = "";
+                    _symbolAttributeSet.Indicator = "";
+                    _symbolAttributeSet.Context = "";
+                    _symbolAttributeSet.Modifier1 = "";
+                    _symbolAttributeSet.Modifier2 = "";
 
                     //Get feature class name to generate domains
                     _currentFeatureClassName = _symbolSetMappings.SymbolsDictionaryMapping[_symbolAttributeSet.SymbolSet];
@@ -234,7 +256,69 @@ namespace ProSymbolEditor
             }
         }
 
+        public ObservableCollection<DomainCodedValuePair> IndicatorDomainValues
+        {
+            get
+            {
+                return _tfFdHqDomainValues;
+            }
+            set
+            {
+                _tfFdHqDomainValues = value;
+            }
+        }
+
+        public ObservableCollection<DomainCodedValuePair> MobilityDomainValues
+        {
+            get
+            {
+                return _mobilityDomainValues;
+            }
+            set
+            {
+                _mobilityDomainValues = value;
+            }
+        }
+
+        public ObservableCollection<DomainCodedValuePair> ContextDomainValues
+        {
+            get
+            {
+                return _contextDomainValues;
+            }
+            set
+            {
+                _contextDomainValues = value;
+            }
+        }
+
+        public ObservableCollection<DomainCodedValuePair> Modifier1DomainValues
+        {
+            get
+            {
+                return _modifier1DomainValues;
+            }
+            set
+            {
+                _modifier1DomainValues = value;
+            }
+        }
+
+        public ObservableCollection<DomainCodedValuePair> Modifier2DomainValues
+        {
+            get
+            {
+                return _modifier2DomainValues;
+            }
+            set
+            {
+                _modifier2DomainValues = value;
+            }
+        }
+
         #endregion
+
+        #region Commands
 
         public ICommand SearchResultCommand
         {
@@ -261,8 +345,18 @@ namespace ProSymbolEditor
             }
         }
 
+        #endregion
+
         private async void SearchStyles(object parameter)
         {
+            //Make sure we have the military style file
+            if (_militaryStyleItem == null)
+            {
+                //Add military style to project
+                Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
+                _militaryStyleItem = await getMilitaryStyle;
+            }
+
             //Clear for new search
             if (_styleItems.Count != 0)
                 _styleItems.Clear();
@@ -296,7 +390,7 @@ namespace ProSymbolEditor
             SelectedTabIndex = Convert.ToInt32(parameter);
         }
 
-        private async void AddMilitaryStyle()
+        public async Task<StyleProjectItem> GetMilitaryStyleAsync()
         {
             if (Project.Current != null)
             {
@@ -316,8 +410,10 @@ namespace ProSymbolEditor
                 var styles = Project.Current.GetItems<StyleProjectItem>();
 
                 //Get a specific style in the project
-                _militaryStyleItem = styles.First(x => x.Name == "mil2525d");
+                return styles.First(x => x.Name == "mil2525d");
             }
+
+            return null;
         }
 
         private async void GetMilitaryDomains()
@@ -345,9 +441,14 @@ namespace ProSymbolEditor
                                 IReadOnlyList<ArcGIS.Core.Data.Field> fields = facilitySiteDefinition.GetFields();
 
                                 GetDomainAndPopulateList(fields, "identity", _identityDomainValues);
-                                //GetDomainAndPopulateList(fields, "echelon", _echolonDomainValues);
-                                //GetDomainAndPopulateList(fields, "status", _statusesDomainValues);
+                                GetDomainAndPopulateList(fields, "echelon", _echolonDomainValues);
+                                GetDomainAndPopulateList(fields, "status", _statusesDomainValues);
                                 GetDomainAndPopulateList(fields, "operationalcondition", _operationalConditionAmplifierDomainValues);
+                                GetDomainAndPopulateList(fields, "mobility", _mobilityDomainValues);
+                                GetDomainAndPopulateList(fields, "indicator", _tfFdHqDomainValues);
+                                GetDomainAndPopulateList(fields, "context", _contextDomainValues);
+                                GetDomainAndPopulateList(fields, "modifier1", _modifier1DomainValues);
+                                GetDomainAndPopulateList(fields, "modifier2", _modifier2DomainValues);
                             }
                         }
 
