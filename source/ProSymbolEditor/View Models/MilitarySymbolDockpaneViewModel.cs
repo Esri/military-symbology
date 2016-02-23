@@ -196,8 +196,8 @@ namespace ProSymbolEditor
                     _symbolAttributeSet.Modifier2 = "";
 
                     //Get feature class name to generate domains
-                    _currentFeatureClassName = _symbolSetMappings.SymbolsDictionaryMapping[_symbolAttributeSet.SymbolSet];
-                    if (_currentFeatureClassName != null)
+                    _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.SymbolSet, _selectedStyleItem.ItemType);
+                    if (_currentFeatureClassName != null && _currentFeatureClassName != "")
                     {
                         //Generate domains
                         GetMilitaryDomains();
@@ -368,13 +368,11 @@ namespace ProSymbolEditor
 
             IList<SymbolStyleItem> combinedSymbols = new List<SymbolStyleItem>();
             (combinedSymbols as List<SymbolStyleItem>).AddRange(pointSymbols);
-            
-            //TODO: uncomment for lines and polygons
-            //(combinedSymbols as List<SymbolStyleItem>).AddRange(lineSymbols);
-            //(combinedSymbols as List<SymbolStyleItem>).AddRange(polygonSymbols);
+            (combinedSymbols as List<SymbolStyleItem>).AddRange(lineSymbols);
+            (combinedSymbols as List<SymbolStyleItem>).AddRange(polygonSymbols);
 
             _styleItems = combinedSymbols;
-            // _styleItems.AddRange(lineSymbols);
+            //_styleItems.AddRange(lineSymbols);
             //_styleItems.AddRange(polygonSymbols);
 
             NotifyPropertyChanged(() => StyleItems);

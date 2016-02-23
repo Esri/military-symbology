@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="Models\DomainCodedValuePair.cs" />
     <Compile Include="Models\SymbolAttributeSet.cs" />
+    <Compile Include="Models\SymbolSetMapping.cs" />
     <Compile Include="Models\SymbolSetMappings.cs" />
     <Compile Include="Views\MilitarySymbolDockpane.xaml.cs">
       <DependentUpon>MilitarySymbolDockpane.xaml</DependentUpon>
