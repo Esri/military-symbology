@@ -30,5 +30,13 @@ namespace ProSymbolEditor
 
             return bitmapImage;
         }
+
+        public static string AddinAssemblyLocation()
+        {
+            var asm = System.Reflection.Assembly.GetExecutingAssembly();
+            return System.IO.Path.GetDirectoryName(
+                              Uri.UnescapeDataString(
+                                      new Uri(asm.CodeBase).LocalPath));
+        }
     }
 }

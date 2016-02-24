@@ -213,7 +213,11 @@ namespace ProSymbolEditor
 
             // This is called in CheckSettings below, but you should call yourself if
             // reusing this method 
-            Utilities.SetImageFilesHome(@"C:\Projects\Github\joint-military-symbology-xml\svg\MIL_STD_2525D_Symbols");
+            //Utilities.SetImageFilesHome(@"C:\Projects\Github\joint-military-symbology-xml\svg\MIL_STD_2525D_Symbols");
+
+            string militarySymbolsPath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "Images", "MIL_STD_2525D_Symbols");
+            bool pathExists = Utilities.SetImageFilesHome(militarySymbolsPath);
+
             if (!Utilities.CheckImageFilesHomeExists())
             //if (!CheckSettings())
             {
