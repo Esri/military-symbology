@@ -49,20 +49,21 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 	* Note : Assembly references are based on a default install of the SDK, you may have to update the references if you chose an alternate install option
 	
 ## Users
-	* Running
-		* To run from a stand-alone deployment
-			* Pro
-				* Install the add-in from the application folder by double clicking it
-				* The ADD-IN appears under the "ADD-IN" tab in Pro	
-				* Click the "Military Symbol Designer" button and the tool will appear
-				* The Search tab is the first tab:
-					* Type a search term into the bar, and click Search (or hit enter)
-					* The tool will return matches to that term in the Military style file
-					* Selecting a search result will show a low resolution preview next to it
-					* Click the modify button or the modify tab when you have selected a style symbol-editor-addin-wpf
-				* The Modify tab is the third tab:
-					* The application will display all attributes associated with the chosen style, with combo boxes for selecting values
-					* As you select values, the symbol will update to incorporate those changes
+
+* Running
+	* To run from a stand-alone deployment
+		* Pro
+			* Install the add-in from the application folder by double clicking it
+			* The ADD-IN appears under the "ADD-IN" tab in Pro	
+			* Click the "Military Symbol Designer" button and the tool will appear
+			* The Search tab is the first tab:
+				* Type a search term into the bar, and click Search (or hit enter)
+				* The tool will return matches to that term in the Military style file
+				* Selecting a search result will show a low resolution preview next to it
+				* Click the modify button or the modify tab when you have selected a style symbol-editor-addin-wpf
+			* The Modify tab is the third tab:
+				* The application will display all attributes associated with the chosen style, with combo boxes for selecting values
+				* As you select values, the symbol will update to incorporate those changes
 					
 
 ## Resources
