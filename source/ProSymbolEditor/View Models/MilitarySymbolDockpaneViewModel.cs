@@ -22,6 +22,7 @@ using System.Drawing.Imaging;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Windows;
+using Microsoft.Win32;
 
 namespace ProSymbolEditor
 {
@@ -30,7 +31,8 @@ namespace ProSymbolEditor
         //Member Variables
         private const string _dockPaneID = "ProSymbolEditor_MilitarySymbolDockpane";
         private const string _menuID = "ProSymbolEditor_MilitarySymbolDockpane_Menu";
-        private const string _mil2525dStyleFilePath = @"C:\Program Files\ArcGIS\Pro\Resources\Dictionaries\mil2525d\mil2525d.stylx";
+        private const string _mil2525dRelativePath = @"Resources\Dictionaries\mil2525d\mil2525d.stylx";
+        private string _mil2525dStyleFullFilePath;// = @"C:\Program Files\ArcGIS\Pro\Resources\Dictionaries\mil2525d\mil2525d.stylx";
         private string _currentFeatureClassName = "";
         private StyleProjectItem _militaryStyleItem = null;
         private SymbolStyleItem _selectedStyleItem = null;
@@ -74,6 +76,13 @@ namespace ProSymbolEditor
 
         protected MilitarySymbolDockpaneViewModel()
         {
+            //Get Military Symbol Style Install Path
+            string installPath = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\ESRI\ArcGISPro\", "InstallDir", null);
+            if (installPath != null)
+            {
+                _mil2525dStyleFullFilePath = installPath + _mil2525dRelativePath;
+            }
+
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
                 //Add military style to project
@@ -402,7 +411,7 @@ namespace ProSymbolEditor
                 //    //Get a specific style in the project
                 //    return styles.First(x => x.Name == "mil2525d");
                 //});
-                await Project.Current.AddStyleAsync(_mil2525dStyleFilePath);
+                await Project.Current.AddStyleAsync(_mil2525dStyleFullFilePath);
 
                 //Get all styles in the project
                 var styles = Project.Current.GetItems<StyleProjectItem>();
