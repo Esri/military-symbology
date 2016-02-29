@@ -114,8 +114,6 @@
     <AddInContent Include="Images\GenericButtonPurple32.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Dependencies\MilitarySymbols\debug\MilitarySymbols.dll" />
-    <Content Include="Dependencies\MilitarySymbols\debug\Svg.dll" />
     <Content Include="Images\MIL_STD_2525D_Symbols\Amplifier\131.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -11498,9 +11496,6 @@
     <Content Include="Images\MIL_STD_2525D_Symbols\OCA\4.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dependencies\MilitarySymbols\release\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.PackageAddIn" />
