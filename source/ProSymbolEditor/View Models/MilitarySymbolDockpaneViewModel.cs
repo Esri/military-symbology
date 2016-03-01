@@ -51,6 +51,7 @@ namespace ProSymbolEditor
 
         //Binded Variables - Text Boxes
         private string _searchString = "";
+        private string _selectedStyleTags = "";
 
         //Binded Variables - List Boxes
         private IList<SymbolStyleItem> _styleItems = new List<SymbolStyleItem>();
@@ -144,6 +145,20 @@ namespace ProSymbolEditor
             }
         }
 
+        public string SelectedStyleTags
+        {
+            get
+            {
+                return _selectedStyleTags;
+            }
+            set
+            {
+                _selectedStyleTags = value;
+
+                NotifyPropertyChanged(() => SelectedStyleTags);
+            }
+        }
+
         public int SelectedTabIndex
         {
             get
@@ -190,10 +205,10 @@ namespace ProSymbolEditor
                 {
                     //Parse key for symbol id codes
                     //TODO: Change to just use the key instead of parsing the tags?
-                    string[] symbolIdCode = ParseKeyForSymbolIdCode(_selectedStyleItem.Tags);
-                    _symbolAttributeSet.SymbolSet = symbolIdCode[0];
-                    _symbolAttributeSet.SymbolEntity = symbolIdCode[1];
+                    SelectedStyleTags = _selectedStyleItem.Tags;
 
+                    _symbolAttributeSet.SymbolSet = "";
+                    _symbolAttributeSet.SymbolEntity = "";
                     _symbolAttributeSet.Echelon = "";
                     _symbolAttributeSet.Identity = "";
                     _symbolAttributeSet.OperationalCondition = "";
@@ -203,6 +218,10 @@ namespace ProSymbolEditor
                     _symbolAttributeSet.Context = "";
                     _symbolAttributeSet.Modifier1 = "";
                     _symbolAttributeSet.Modifier2 = "";
+
+                    string[] symbolIdCode = ParseKeyForSymbolIdCode(_selectedStyleItem.Tags);
+                    _symbolAttributeSet.SymbolSet = symbolIdCode[0];
+                    _symbolAttributeSet.SymbolEntity = symbolIdCode[1];
 
                     //Get feature class name to generate domains
                     _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.SymbolSet, _selectedStyleItem.ItemType);

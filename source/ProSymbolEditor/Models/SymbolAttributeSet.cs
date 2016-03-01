@@ -242,6 +242,8 @@ namespace ProSymbolEditor
             if (!success || (exportBitmap == null))
             {
                 Console.WriteLine("Export failed!");
+                _symbolImage = null;
+                NotifyPropertyChanged(() => SymbolImage);
                 return;
             }
         }

@@ -16,98 +16,112 @@
 
     <Grid Margin="3,3,3,3">
 
-            <DockPanel>
+        <DockPanel>
 
-                <Grid>
+            <Grid>
 
-                    <TabControl x:Name="tabControl" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="3,3,3,3">
-                        <TabItem Header="Search">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
+                <TabControl x:Name="tabControl" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="3,3,3,3">
+                    <TabItem Header="Search">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                                <Grid Grid.Row="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
 
-                                    <!--<Controls:BurgerButton ToolTip="{Binding BurgerButtonTooltip}" Visibility="Hidden" PopupMenu="{Binding BurgerButtonMenu}" Margin="237,271,244.6,37.4" RenderTransformOrigin="0.448,1.184"/>-->
-                                    <TextBox x:Name="searchSymbolsTextBox" HorizontalAlignment="Stretch" Height="23" Margin="5,0,5,0" TextWrapping="Wrap" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0">
-                                        <TextBox.Style>
-                                            <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                                                <Style.Resources>
-                                                    <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                        <VisualBrush.Visual>
-                                                            <Label Content="Search..." Foreground="DarkGray" />
-                                                        </VisualBrush.Visual>
-                                                    </VisualBrush>
-                                                </Style.Resources>
-                                                <Style.Triggers>
-                                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                                    </Trigger>
-                                                    <Trigger Property="Text" Value="{x:Null}">
-                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                                    </Trigger>
-                                                    <Trigger Property="IsKeyboardFocused" Value="True">
-                                                        <Setter Property="Background" Value="White" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBox.Style>
-                                        <TextBox.InputBindings>
-                                            <KeyBinding Command="{Binding SearchResultCommand}" Key="Enter"/>
-                                        </TextBox.InputBindings>
-                                    </TextBox>
-                                    <Button x:Name="searchStylesButton" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SearchResultCommand}" Content="Search" Height="24" Width="75" Grid.Column="1"/>
-                                </Grid>
-
-                                <Grid Grid.Row="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <ListBox x:Name="symbolListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
-                                             SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" Grid.Column="0" >
-
-                                        <ListBox.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <VirtualizingStackPanel>
-                                                    <!--Memory footprint is only 200 mb-->
-                                                </VirtualizingStackPanel>
-                                            </ItemsPanelTemplate>
-                                        </ListBox.ItemsPanel>
-
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Margin="2,0" ToolTip="{Binding Name}">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="16"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Image Grid.Column="0" Source="{Binding PreviewImage}" Stretch="Fill"/>
-                                                    <TextBlock Grid.Column="1" TextAlignment="Left" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Padding="5,1,5,1"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-
-                                    <Image x:Name="previewSymbolImage" Source="{Binding SelectedStyleItem.PreviewImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Margin="30,5,5,5" VerticalAlignment="Center" Grid.Column="1"/>
-
-                                </Grid>
-
-                                <Grid Grid.Row="2">
-                                    <Button x:Name="modifyButton" Content="Modify-->" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="2" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="75"/>
-
-                                </Grid>
+                                <!--<Controls:BurgerButton ToolTip="{Binding BurgerButtonTooltip}" Visibility="Hidden" PopupMenu="{Binding BurgerButtonMenu}" Margin="237,271,244.6,37.4" RenderTransformOrigin="0.448,1.184"/>-->
+                                <TextBox x:Name="searchSymbolsTextBox" HorizontalAlignment="Stretch" Height="23" Margin="5,0,5,0" TextWrapping="Wrap" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0">
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                            <Style.Resources>
+                                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                                    <VisualBrush.Visual>
+                                                        <Label Content="Search..." Foreground="DarkGray" />
+                                                    </VisualBrush.Visual>
+                                                </VisualBrush>
+                                            </Style.Resources>
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="Text" Value="{x:Null}">
+                                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                                    <Setter Property="Background" Value="White" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Command="{Binding SearchResultCommand}" Key="Enter"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
+                                <Button x:Name="searchStylesButton" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SearchResultCommand}" Content="Search" Height="24" Width="75" Grid.Column="1"/>
                             </Grid>
 
-                        
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ListBox x:Name="symbolListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
+                                            SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" Grid.Column="0" >
+
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel>
+                                                <!--Memory footprint is only 200 mb-->
+                                            </VirtualizingStackPanel>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="2,0" ToolTip="{Binding Name}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="16"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Image Grid.Column="0" Source="{Binding PreviewImage}" Stretch="Fill"/>
+                                                <TextBlock Grid.Column="1" TextAlignment="Left" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Padding="5,1,5,1"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+
+                                <Grid Grid.Column="1" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Image x:Name="searchTabImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Margin="20,5,20,5" Grid.Row="0" VerticalAlignment="Center"/>
+                                    <Grid Grid.Row="1" Margin="20,5,20,5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Image x:Name="previewSymbolImage" Source="{Binding SelectedStyleItem.PreviewImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" VerticalAlignment="Center" Grid.Row="0"/>
+                                        <TextBlock x:Name="styleTagsTextBlock" Text="{Binding SelectedStyleTags, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1"/>
+                                    </Grid>
+                                </Grid>
+
+                            </Grid>
+
+                            <Grid Grid.Row="2">
+                                <Button x:Name="modifyButton" Content="Modify-->" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="2" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="75"/>
+
+                            </Grid>
+                        </Grid>
+
+
                     </TabItem>
                     <TabItem Header="Favorites" HorizontalAlignment="Stretch">
                         <Grid Background="#FFE5E5E5"/>
@@ -256,8 +270,8 @@
                                             </ComboBox.Style>
                                         </ComboBox>
 
-                                        
-        
+
+
 
                                     </Grid>
                                 </Border>
@@ -270,41 +284,40 @@
                             </Grid>
 
                             <!--<Grid Grid.Column="1" Grid.Row="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    --><!--<RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />--><!--
-                                </Grid.RowDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                -->
+                            <!--<RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />-->
+                            <!--
+                            </Grid.RowDefinitions>
 
-                                                                --><!--<TextBlock x:Name="symbolIdCodeTextBlock" Text="{Binding SymbolIdCode, Mode=TwoWay, StringFormat='Symbol ID Code: {0}'}" Width="100" Grid.Row="1"/>
-                                <TextBlock x:Name="selectedSymbolTagsTextBlock" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" Width="100" Height="100" TextWrapping="Wrap" Grid.Row="2"/>--><!--
-                            </Grid>-->
+                                                            -->
+                            <!--<TextBlock x:Name="symbolIdCodeTextBlock" Text="{Binding SymbolIdCode, Mode=TwoWay, StringFormat='Symbol ID Code: {0}'}" Width="100" Grid.Row="1"/>
+                            <TextBlock x:Name="selectedSymbolTagsTextBlock" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" Width="100" Height="100" TextWrapping="Wrap" Grid.Row="2"/>-->
+                            <!--
+                        </Grid>-->
 
                             <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                  
+
                             <Button Content="&lt;-- Search" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="0" HorizontalAlignment="Left" Width="101"/>
                             <Button Content="Add Favorite" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="0" HorizontalAlignment="Center" Width="101"/>
                             <Button Content="Text -->" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="3" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101"/>
 
                         </Grid>
                     </TabItem>
-                        <TabItem Header="Text">
-                            <Grid Background="#FFE5E5E5"/>
-                        </TabItem>
-                        <TabItem Header="Map">
-                            <Grid Background="#FFE5E5E5"/>
-                        </TabItem>
-                    </TabControl>
+                    <TabItem Header="Text">
+                        <Grid Background="#FFE5E5E5"/>
+                    </TabItem>
+                    <TabItem Header="Map">
+                        <Grid Background="#FFE5E5E5"/>
+                    </TabItem>
+                </TabControl>
 
 
 
 
-                </Grid>
-
-
-
-
-
+            </Grid>
 
 
 
@@ -314,7 +327,12 @@
 
 
 
-                <!--<Grid>
+
+
+
+
+
+            <!--<Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
