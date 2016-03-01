@@ -32,7 +32,7 @@ namespace ProSymbolEditor
         private const string _dockPaneID = "ProSymbolEditor_MilitarySymbolDockpane";
         private const string _menuID = "ProSymbolEditor_MilitarySymbolDockpane_Menu";
         private const string _mil2525dRelativePath = @"Resources\Dictionaries\mil2525d\mil2525d.stylx";
-        private string _mil2525dStyleFullFilePath;// = @"C:\Program Files\ArcGIS\Pro\Resources\Dictionaries\mil2525d\mil2525d.stylx";
+        private string _mil2525dStyleFullFilePath;
         private string _currentFeatureClassName = "";
         private StyleProjectItem _militaryStyleItem = null;
         private SymbolStyleItem _selectedStyleItem = null;

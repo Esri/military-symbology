@@ -53,6 +53,8 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 * Running
 	* To run from a stand-alone deployment in ArcGIS Pro
 		* Install the add-in from the application folder by double clicking it
+		* Open ArcGIS Pro 1.2
+		* Open a Military Overlay Project file (or any project that has the militaryoverlay.gdb in it)
 		* The ADD-IN appears under the "ADD-IN" tab in Pro	
 		* Click the "Military Symbol Designer" button and the tool will appear
 		* The Search tab is the first tab:
@@ -111,7 +113,7 @@ limitations under the License.
 
 A copy of the license is available in the repository's [license.txt](license.txt) file.
 
-Note: This addin uses MIL_STD_2525D_Symbols that is governed by the Apache License.  For more details see https://github.com/ArcGIS/military-symbol-editor-addin-wpf/blob/master/source/ProSymbolEditor/Images/MIL_STD_2525D_Symbols/license.txt.
+Note: This addin uses MIL_STD_2525D_Symbols that is governed by the Apache License.  For more details see ./source/ProSymbolEditor/Images/MIL_STD_2525D_Symbols/license.txt
 
 [](Esri Tags: Military Analyst Defense ArcGIS ArcObjects .NET WPF ArcGISSolutions ArcMap ArcPro Add-In Symbol Editor)
 [](Esri Language: C#) 
