@@ -52,6 +52,18 @@ namespace ProSymbolEditor
         //Binded Variables - Text Boxes
         private string _searchString = "";
         private string _selectedStyleTags = "";
+        private DateTime _dateTime = DateTime.Now;
+        private string _dateTime2 = "";
+        private string _location = "";
+        private string _type = "";
+        private string _name = "";
+        private string _speed = "";
+        private string _uniqueDesignation = "";
+        private string _reinforced = "";
+        private string _staffComment = "";
+        private string _additionalInformation = "";
+        private string _higherFormation = "";
+        private string _credibilityReliability = "";
 
         //Binded Variables - List Boxes
         private IList<SymbolStyleItem> _styleItems = new List<SymbolStyleItem>();
@@ -341,6 +353,19 @@ namespace ProSymbolEditor
             set
             {
                 _modifier2DomainValues = value;
+            }
+        }
+
+        public DateTime DateTimeAttribute
+        {
+            get
+            {
+                return _dateTime;
+            }
+            set
+            {
+                _dateTime = value;
+                NotifyPropertyChanged(() => DateTimeAttribute);
             }
         }
 

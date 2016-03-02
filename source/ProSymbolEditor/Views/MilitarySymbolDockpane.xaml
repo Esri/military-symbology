@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"                                             
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"                                     
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions" x:Class="ProSymbolEditor.MilitarySymbolDockpaneView"                                             
              mc:Ignorable="d" d:DesignHeight="430" d:DesignWidth="550">
     <UserControl.Resources>
@@ -301,13 +302,120 @@
                             <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
                             <Button Content="&lt;-- Search" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="0" HorizontalAlignment="Left" Width="101"/>
-                            <Button Content="Add Favorite" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="0" HorizontalAlignment="Center" Width="101"/>
+                            <Button Content="Add Favorite" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="101"/>
                             <Button Content="Text -->" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="3" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101"/>
 
                         </Grid>
                     </TabItem>
                     <TabItem Header="Text">
-                        <Grid Background="#FFE5E5E5"/>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <ScrollViewer>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid Grid.Column="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Label Content="Date/Time" Grid.Row="0"/>
+                                        <xctk:DateTimePicker  Grid.Row="1" Width="170" Value="{Binding DateTimeAttribute}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt"/>
+                                        <!--<DatePicker Name="Picker" Grid.Row="1" Width="150">
+                                            <DatePicker.Resources>
+                                                <Style TargetType="DatePickerTextBox">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate>
+                                                                <TextBox Text="{Binding Path=DateTimeAttribute, RelativeSource={RelativeSource AncestorType=DatePicker}, StringFormat={}{0:MM/dd/yyyy hh:mm:ss}}"/>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </DatePicker.Resources>
+                                        </DatePicker>-->
+                                        <!--<TextBox Grid.Row="1" Width="100"/>-->
+
+                                        <!--<Label Content="Date/Time 2" Grid.Row="2"/>
+                                        <TextBox Grid.Row="3" Width="100"/>
+
+                                        <Label Content="Location" Grid.Row="4"/>
+                                        <TextBox Grid.Row="5" Width="100"/>
+
+                                        <Label Content="Type" Grid.Row="6"/>
+                                        <TextBox Grid.Row="7" Width="100"/>
+
+                                        <Label Content="Name" Grid.Row="8"/>
+                                        <TextBox Grid.Row="9" Width="100"/>
+
+                                        <Label Content="Speed" Grid.Row="10"/>
+                                        <TextBox Grid.Row="11" Width="100"/>-->
+                                    </Grid>
+
+                                    <Image x:Name="textTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" MaxHeight="400" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+                                    <Grid Grid.Column="2">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Label Content="Unique Designation" Grid.Row="0"/>
+                                        <TextBox Grid.Row="1" Width="100"/>
+
+                                        <!--<Label Content="Reinforced" Grid.Row="2"/>
+                                        <TextBox Grid.Row="3" Width="100"/>-->
+
+                                        <Label Content="Staff Comments" Grid.Row="4"/>
+                                        <TextBox Grid.Row="5" Width="100"/>
+
+                                        <Label Content="Additional Information" Grid.Row="6"/>
+                                        <TextBox Grid.Row="7" Width="100"/>
+
+                                        <!--<Label Content="Higher Formation" Grid.Row="8"/>
+                                        <TextBox Grid.Row="9" Width="100"/>
+
+                                        <Label Content="Credibility/Reliability" Grid.Row="10"/>
+                                        <TextBox Grid.Row="11" Width="100"/>-->
+                                    </Grid>
+                                </Grid>
+                            </ScrollViewer>
+
+                            <Button Content="&lt;-- Modify" Grid.Row="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="2" HorizontalAlignment="Left" Width="101"/>
+                            <Button Content="Add Favorite" Grid.Row="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="101"/>
+                            <Button Content="Map -->" Grid.Row="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="4" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101"/>
+                        </Grid>
+
                     </TabItem>
                     <TabItem Header="Map">
                         <Grid Background="#FFE5E5E5"/>
