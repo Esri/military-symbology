@@ -391,16 +391,16 @@
                                         </Grid.RowDefinitions>
 
                                         <Label Content="Unique Designation" Grid.Row="0"/>
-                                        <TextBox Grid.Row="1" Width="100"/>
+                                        <TextBox Grid.Row="1" Width="100" Text="{Binding UniqueDesignation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                                         <!--<Label Content="Reinforced" Grid.Row="2"/>
                                         <TextBox Grid.Row="3" Width="100"/>-->
 
                                         <Label Content="Staff Comments" Grid.Row="4"/>
-                                        <TextBox Grid.Row="5" Width="100"/>
+                                        <TextBox Grid.Row="5" Width="100" Text="{Binding StaffComments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                                         <Label Content="Additional Information" Grid.Row="6"/>
-                                        <TextBox Grid.Row="7" Width="100"/>
+                                        <TextBox Grid.Row="7" Width="100" Text="{Binding AdditionalInformation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                                         <!--<Label Content="Higher Formation" Grid.Row="8"/>
                                         <TextBox Grid.Row="9" Width="100"/>
@@ -418,7 +418,55 @@
 
                     </TabItem>
                     <TabItem Header="Map">
-                        <Grid Background="#FFE5E5E5"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Label Content="Coordinates" Grid.Row="0"/>
+                                <TextBox Grid.Row="1" Width="200" Margin="5"/>
+
+                                <Button Grid.Row="2" Content="Get Location from Map" Style="{DynamicResource Esri_SimpleButton}" Width="200"/>
+
+                                <Button Grid.Row="3" Content="Add to Map" Style="{DynamicResource Esri_SimpleButton}" Width="200"/>
+
+                                <Button Content="&lt;-- Text" Grid.Row="5" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="3" HorizontalAlignment="Left" Width="101"/>
+                            </Grid>
+
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Image x:Name="mapTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+
+                                <!-- All Selected Symbol Tags-->
+                                <TextBlock x:Name="mapTabSymbolTagsTextBlock" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" TextWrapping="Wrap" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+                                <Button Content="Favorites -->" Grid.Row="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="1" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101"/>
+
+
+                            </Grid>
+
+
+
+
+
+                        </Grid>
                     </TabItem>
                 </TabControl>
 

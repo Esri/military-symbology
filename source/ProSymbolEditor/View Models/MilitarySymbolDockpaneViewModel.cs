@@ -64,6 +64,7 @@ namespace ProSymbolEditor
         private string _additionalInformation = "";
         private string _higherFormation = "";
         private string _credibilityReliability = "";
+        private string _mapCoordinates = "";
 
         //Binded Variables - List Boxes
         private IList<SymbolStyleItem> _styleItems = new List<SymbolStyleItem>();
@@ -91,9 +92,16 @@ namespace ProSymbolEditor
         {
             //Get Military Symbol Style Install Path
             string installPath = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\ESRI\ArcGISPro\", "InstallDir", null);
+            
+            if (installPath == null || installPath == "")
+            {
+                //Try to get the install path from current user instead of local machine
+                installPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\ESRI\ArcGISPro\", "InstallDir", null);
+            }
+
             if (installPath != null)
             {
-                _mil2525dStyleFullFilePath = installPath + _mil2525dRelativePath;
+                _mil2525dStyleFullFilePath = Path.Combine(installPath, _mil2525dRelativePath);
             }
 
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
@@ -140,7 +148,23 @@ namespace ProSymbolEditor
             }
         }
 
+        public int SelectedTabIndex
+        {
+            get
+            {
+                return _selectedTabIndex;
+            }
+            set
+            {
+                _selectedTabIndex = value;
+
+                NotifyPropertyChanged(() => SelectedTabIndex);
+            }
+        }
+
         #region Properties for user inputs
+
+        #region Style Search Bindings
 
         public string SearchString
         {
@@ -168,20 +192,6 @@ namespace ProSymbolEditor
                 _selectedStyleTags = value;
 
                 NotifyPropertyChanged(() => SelectedStyleTags);
-            }
-        }
-
-        public int SelectedTabIndex
-        {
-            get
-            {
-                return _selectedTabIndex;
-            }
-            set
-            {
-                _selectedTabIndex = value;
-
-                NotifyPropertyChanged(() => SelectedTabIndex);
             }
         }
 
@@ -247,6 +257,10 @@ namespace ProSymbolEditor
                 NotifyPropertyChanged(() => SelectedStyleItem);
             }
         }
+
+        #endregion
+
+        #region Domain Binders
 
         public ObservableCollection<DomainCodedValuePair> IdentityDomainValues
         {
@@ -356,6 +370,10 @@ namespace ProSymbolEditor
             }
         }
 
+        #endregion
+
+        #region Text Label Bindings
+
         public DateTime DateTimeAttribute
         {
             get
@@ -368,6 +386,47 @@ namespace ProSymbolEditor
                 NotifyPropertyChanged(() => DateTimeAttribute);
             }
         }
+
+        public string UniqueDesignation
+        {
+            get
+            {
+                return _uniqueDesignation;
+            }
+            set
+            {
+                _uniqueDesignation = value;
+                NotifyPropertyChanged(() => UniqueDesignation);
+            }
+        }
+
+        public string StaffComments
+        {
+            get
+            {
+                return _staffComment;
+            }
+            set
+            {
+                _staffComment = value;
+                NotifyPropertyChanged(() => StaffComments);
+            }
+        }
+
+        public string AdditionalInformation
+        {
+            get
+            {
+                return _additionalInformation;
+            }
+            set
+            {
+                _additionalInformation = value;
+                NotifyPropertyChanged(() => AdditionalInformation);
+            }
+        }
+
+        #endregion
 
         #endregion
 
