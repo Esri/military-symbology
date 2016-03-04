@@ -1,4 +1,5 @@
-﻿using ArcGIS.Desktop.Framework.Contracts;
+﻿using ArcGIS.Core.Data;
+using ArcGIS.Desktop.Framework.Contracts;
 using MilitarySymbols;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ namespace ProSymbolEditor
         private string _symbolEntity;
         private string _selectedSymbolTags;
         private BitmapImage _symbolImage = null;
+
+        //Label Text Attributes
 
         public string SymbolSet
         {
@@ -314,6 +317,71 @@ namespace ProSymbolEditor
             }
 
             return attributeSet;
+        }
+
+        public void PopulateRowBufferWithAttributes(ref RowBuffer rowBuffer)
+        {
+            if (_identity != null && _identity != "")
+            {
+                rowBuffer["identity"] = _identity;
+            }
+
+            if (_symbolSet != null && _symbolSet != "")
+            {
+                rowBuffer["symbolset"] = Convert.ToInt32(_symbolSet);
+            }
+
+            if (_symbolEntity != null && _symbolEntity != "")
+            {
+                rowBuffer["symbolentity"] = Convert.ToInt32(_symbolEntity);
+            }
+
+            //Indicator / HQTFFD /
+
+            if (_indicator != null && _indicator != "")
+            {
+                rowBuffer["indicator"] = _indicator;
+            }
+
+            //Echelon or Mobility
+
+            if (_echelon != null && _echelon != "")
+            {
+                rowBuffer["echelon"] = _echelon;
+            }
+
+            if (_mobility != null && _mobility != "")
+            {
+                rowBuffer["mobility"] = _mobility;
+            }
+
+            //Statuses or Operation
+
+            if (_operationalCondition != null && _operationalCondition != "")
+            {
+                rowBuffer["operationalcondition"] = _operationalCondition;
+            }
+
+            if (_statuses != null && _statuses != "")
+            {
+                rowBuffer["status"] = _statuses;
+            }
+
+            //Delta attributes
+            if (_context != null && _context != "")
+            {
+                rowBuffer["context"] = _context;
+            }
+
+            if (_modifier1 != null && _modifier1 != "")
+            {
+                rowBuffer["modifier1"] = _modifier1;
+            }
+
+            if (_modifier2 != null && _modifier2 != "")
+            {
+                rowBuffer["modifier2"] = _modifier2;
+            }
         }
 
         private void GenerateSelectedSymbolTagsString()

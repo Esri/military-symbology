@@ -93,6 +93,7 @@
     <AddInContent Include="Images\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Map Tools\CoordinateMapTool.cs" />
     <Compile Include="Models\DomainCodedValuePair.cs" />
     <Compile Include="Models\SymbolAttributeSet.cs" />
     <Compile Include="Models\SymbolSetMapping.cs" />
@@ -121,6 +122,8 @@
     <Content Include="Dependencies\Extended WPF Toolkit Binaries\Xceed.Wpf.Toolkit.dll" />
     <Content Include="Dependencies\MilitarySymbols\MilitarySymbols.dll" />
     <Content Include="Dependencies\MilitarySymbols\Svg.dll" />
+    <AddInContent Include="Images\GenericButtonRed16.png" />
+    <AddInContent Include="Images\GenericButtonRed32.png" />
     <Content Include="Images\MIL_STD_2525D_Symbols\Amplifier\131.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

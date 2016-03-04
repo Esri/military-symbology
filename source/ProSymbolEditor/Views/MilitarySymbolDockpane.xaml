@@ -117,7 +117,7 @@
                             </Grid>
 
                             <Grid Grid.Row="2">
-                                <Button x:Name="modifyButton" Content="Modify-->" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="2" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="75"/>
+                                <Button x:Name="modifyButton" Content="Modify-->" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="2" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="75"/>
 
                             </Grid>
                         </Grid>
@@ -301,9 +301,9 @@
 
                             <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
-                            <Button Content="&lt;-- Search" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="0" HorizontalAlignment="Left" Width="101"/>
-                            <Button Content="Add Favorite" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="101"/>
-                            <Button Content="Text -->" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="3" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101"/>
+                            <Button Content="&lt;-- Search" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="0" HorizontalAlignment="Left" Width="101"/>
+                            <Button Content="Add Favorite" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="101"/>
+                            <Button Content="Text -->" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101"/>
 
                         </Grid>
                     </TabItem>
@@ -411,9 +411,9 @@
                                 </Grid>
                             </ScrollViewer>
 
-                            <Button Content="&lt;-- Modify" Grid.Row="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="2" HorizontalAlignment="Left" Width="101"/>
-                            <Button Content="Add Favorite" Grid.Row="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="101"/>
-                            <Button Content="Map -->" Grid.Row="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="4" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101"/>
+                            <Button Content="&lt;-- Modify" Grid.Row="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="2" HorizontalAlignment="Left" Width="101"/>
+                            <Button Content="Add Favorite" Grid.Row="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="101"/>
+                            <Button Content="Map -->" Grid.Row="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101"/>
                         </Grid>
 
                     </TabItem>
@@ -435,13 +435,13 @@
                                 </Grid.RowDefinitions>
 
                                 <Label Content="Coordinates" Grid.Row="0"/>
-                                <TextBox Grid.Row="1" Width="200" Margin="5"/>
+                                <TextBox Grid.Row="1" Width="200" Margin="5" Text="{Binding MapCoordinatesString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                <Button Grid.Row="2" Content="Get Location from Map" Style="{DynamicResource Esri_SimpleButton}" Width="200"/>
+                                <Button Grid.Row="2" Content="Get Location from Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding ActivateMapToolCommand}" Width="200"/>
 
-                                <Button Grid.Row="3" Content="Add to Map" Style="{DynamicResource Esri_SimpleButton}" Width="200"/>
+                                <Button Grid.Row="3" Content="Add to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddToMapCommand}" Width="200"/>
 
-                                <Button Content="&lt;-- Text" Grid.Row="5" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="3" HorizontalAlignment="Left" Width="101"/>
+                                <Button Content="&lt;-- Text" Grid.Row="5" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" HorizontalAlignment="Left" Width="101"/>
                             </Grid>
 
                             <Grid Grid.Column="1">
@@ -457,7 +457,7 @@
                                 <!-- All Selected Symbol Tags-->
                                 <TextBlock x:Name="mapTabSymbolTagsTextBlock" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" TextWrapping="Wrap" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
-                                <Button Content="Favorites -->" Grid.Row="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToModifyTabCommand}" CommandParameter="1" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101"/>
+                                <Button Content="Favorites -->" Grid.Row="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101"/>
 
 
                             </Grid>

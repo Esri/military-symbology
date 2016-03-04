@@ -23,6 +23,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Windows;
 using Microsoft.Win32;
+using ArcGIS.Desktop.Editing;
+using ArcGIS.Core.Geometry;
 
 namespace ProSymbolEditor
 {
@@ -34,6 +36,7 @@ namespace ProSymbolEditor
         private const string _mil2525dRelativePath = @"Resources\Dictionaries\mil2525d\mil2525d.stylx";
         private string _mil2525dStyleFullFilePath;
         private string _currentFeatureClassName = "";
+        private FeatureClass _currentFeatureClass = null;
         private StyleProjectItem _militaryStyleItem = null;
         private SymbolStyleItem _selectedStyleItem = null;
         private SymbolSetMappings _symbolSetMappings = new SymbolSetMappings();
@@ -64,7 +67,7 @@ namespace ProSymbolEditor
         private string _additionalInformation = "";
         private string _higherFormation = "";
         private string _credibilityReliability = "";
-        private string _mapCoordinates = "";
+        private string _mapCoordinatesString = "";
 
         //Binded Variables - List Boxes
         private IList<SymbolStyleItem> _styleItems = new List<SymbolStyleItem>();
@@ -83,10 +86,11 @@ namespace ProSymbolEditor
         //Binded Variables - Other
         private SymbolAttributeSet _symbolAttributeSet = new SymbolAttributeSet();
         private int _selectedTabIndex = 0;
+        private MapPoint _mapCoordinates;
 
         //Commands
-        private ICommand _searchResultCommand = null;
-        private ICommand _goToModifyTabCommand = null;
+        //private ICommand _searchResultCommand = null;
+        //private ICommand _goToTabCommand = null;
 
         protected MilitarySymbolDockpaneViewModel()
         {
@@ -121,6 +125,12 @@ namespace ProSymbolEditor
             BindingOperations.EnableCollectionSynchronization(_contextDomainValues, _contextLock);
             BindingOperations.EnableCollectionSynchronization(_modifier1DomainValues, _modifier1Lock);
             BindingOperations.EnableCollectionSynchronization(_modifier2DomainValues, _modifier2Lock);
+
+            //Set up Commands
+            SearchResultCommand = new RelayCommand(SearchStyles, param => true);
+            GoToTabCommand = new RelayCommand(GoToTab, param => true);
+            ActivateMapToolCommand = new RelayCommand(ActivateCoordinateMapTool, param => true);
+            AddToMapCommand = new RelayCommand(AddStyleToMap, param => true);
         }
 
         /// <summary>
@@ -135,18 +145,7 @@ namespace ProSymbolEditor
             pane.Activate();
         }
 
-        /// <summary>
-        /// Text shown near the top of the DockPane.
-        /// </summary>
-        private string _heading = "My DockPane";
-        public string Heading
-        {
-            get { return _heading; }
-            set
-            {
-                SetProperty(ref _heading, value, () => Heading);
-            }
-        }
+        #region Mutators (Get/Set)
 
         public int SelectedTabIndex
         {
@@ -161,8 +160,6 @@ namespace ProSymbolEditor
                 NotifyPropertyChanged(() => SelectedTabIndex);
             }
         }
-
-        #region Properties for user inputs
 
         #region Style Search Bindings
 
@@ -428,36 +425,63 @@ namespace ProSymbolEditor
 
         #endregion
 
-        #endregion
+        #region Map Tab Bindings
 
-        #region Commands
-
-        public ICommand SearchResultCommand
+        public MapPoint MapCoordinates
         {
             get
             {
-                if (_searchResultCommand == null)
-                {
-                    _searchResultCommand = new RelayCommand(SearchStyles, param => true);
-                }
-                return _searchResultCommand;
+                return _mapCoordinates;
+            }
+            set
+            {
+                _mapCoordinates = value;
+
+                
+                
+                NotifyPropertyChanged(() => MapCoordinates);
+
+
             }
         }
 
-        public ICommand GoToModifyTabCommand
+        public string MapCoordinatesString
         {
             get
             {
-                if (_goToModifyTabCommand == null)
-                {
-                    _goToModifyTabCommand = new RelayCommand(GoToTab, param => true);
-                }
+                return _mapCoordinatesString;
+            }
+            set
+            {
+                _mapCoordinatesString = value;
+                NotifyPropertyChanged(() => MapCoordinatesString);
 
-                return _goToModifyTabCommand;
+                //TODO: Update MapCoordinates to make sure they stay in synch
             }
         }
 
         #endregion
+
+        #region Commands Get/Sets
+
+        public ICommand SearchResultCommand { get; set; }
+
+        public ICommand GoToTabCommand { get; set; }
+
+        public ICommand ActivateMapToolCommand { get; set; }
+
+        public ICommand AddToMapCommand { get; set; }
+
+        #endregion
+
+        #endregion
+
+        #region Command Methods
+
+        private void ActivateCoordinateMapTool(object parameter)
+        {
+            FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_CoordinateMapTool");
+        }
 
         private async void SearchStyles(object parameter)
         {
@@ -490,15 +514,111 @@ namespace ProSymbolEditor
             NotifyPropertyChanged(() => StyleItems);
         }
 
+        private void GoToTab(object parameter)
+        {
+            SelectedTabIndex = Convert.ToInt32(parameter);
+        }
+
+        private async void AddStyleToMap(object parameter)
+        {
+            string message = String.Empty;
+            bool creationResult = false;
+
+            IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
+            await QueuedTask.Run(() =>
+            {
+                foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
+                {
+                    using (Datastore datastore = gdbProjectItem.GetDatastore())
+                    {
+                        //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
+                        if (datastore is UnknownDatastore)
+                            continue;
+                        Geodatabase geodatabase = datastore as Geodatabase;
+                        // Use the geodatabase.
+
+                        string geodatabasePath = geodatabase.GetPath();
+                        if (geodatabasePath.Contains("militaryoverlay.gdb"))
+                        {
+                            //Correct GDB, open the current selected feature class
+                            FeatureClass testfc = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
+                            using (testfc)
+                            using (FeatureClassDefinition facilitySiteDefinition = testfc.GetDefinition())
+                            {
+                                EditOperation editOperation = new EditOperation();
+                                editOperation.Name = "Military Symbol Insert";
+                                editOperation.Callback(context =>
+                                {
+                                    try
+                                    {
+                                        RowBuffer rowBuffer = testfc.CreateRowBuffer();
+                                        _symbolAttributeSet.PopulateRowBufferWithAttributes(ref rowBuffer);
+                                        rowBuffer["Shape"] = GeometryEngine.Project(MapCoordinates, facilitySiteDefinition.GetSpatialReference());// as ArcGIS.Core.Geometry.Geometry;
+
+                                        Feature feature = testfc.CreateRow(rowBuffer);
+                                        feature.Store();
+
+                                        //To Indicate that the attribute table has to be updated
+                                        context.Invalidate(feature);
+                                    }
+                                    catch (GeodatabaseException geodatabaseException)
+                                    {
+                                        message = geodatabaseException.Message;
+                                    }
+                                }, testfc);
+
+                                var task = editOperation.ExecuteAsync();
+                                creationResult = task.Result;
+                                if (!creationResult)
+                                {
+                                    message = editOperation.ErrorMessage;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            });
+
+            if (!creationResult)
+            {
+                MessageBox.Show(message);
+            }
+        }
+
+        private async Task MakeEdits()
+        {
+
+
+        }
+
+        private void Edits(EditOperation.IEditContext context)
+        {
+            ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+            {
+                Dictionary<string, object> atts = new Dictionary<string, object>();
+                //atts.Add("identity", _symbolAttributeSet.Identity);
+                atts.Add("Shape", MapCoordinates);   // I know the shape field is called Shape - but dont assume
+
+                var editOperation = new EditOperation();
+                editOperation.Name = "Add Military Symbol";
+                //var disLayer = ArcGIS.Desktop.Mapping.MapView.Active.Map.FindLayers("Air").FirstOrDefault() as BasicFeatureLayer;
+
+                editOperation.Create(_currentFeatureClass, atts);
+                //editOperation.EditOperationType = EditOperationType.Long;
+
+                //bool success = editOperation.Execute();
+            });
+        }
+
+        #endregion
+
         private void ParseKeyValues()
         {
 
         }
 
-        private void GoToTab(object parameter)
-        {
-            SelectedTabIndex = Convert.ToInt32(parameter);
-        }
+
 
         public async Task<StyleProjectItem> GetMilitaryStyleAsync()
         {
@@ -545,9 +665,10 @@ namespace ProSymbolEditor
                         if (geodatabasePath.Contains("militaryoverlay.gdb"))
                         {
                             //Correct GDB, open the current selected feature class
-                            using (ArcGIS.Core.Data.FeatureClass airFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName))
+                            _currentFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
+                            using (_currentFeatureClass)
                             {
-                                ArcGIS.Core.Data.FeatureClassDefinition facilitySiteDefinition = airFeatureClass.GetDefinition();
+                                ArcGIS.Core.Data.FeatureClassDefinition facilitySiteDefinition = _currentFeatureClass.GetDefinition();
                                 IReadOnlyList<ArcGIS.Core.Data.Field> fields = facilitySiteDefinition.GetFields();
 
                                 GetDomainAndPopulateList(fields, "identity", _identityDomainValues);
