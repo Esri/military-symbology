@@ -34,7 +34,20 @@ namespace ProSymbolEditor
         private BitmapImage _symbolImage = null;
 
         //Label Text Attributes
-
+        private DateTime _dateTimeValid;
+        private DateTime _dateTimeExpired;
+        private string _staffComments;
+        private string _additionalInformation;
+        private string _uniqueDesignation;
+        private string _type;
+        private string _commonidentifier;
+        private short? _speed;
+        private string _higherFormation;
+        private string _reinforced;
+        private string _credibility;
+        private string _reliability;
+        
+        #region Getters/Setters
         public string SymbolSet
         {
             get
@@ -204,6 +217,180 @@ namespace ProSymbolEditor
                 return _symbolImage;
             }
         }
+
+        //For text labels
+        public DateTime DateTimeValid
+        {
+            get
+            {
+                return _dateTimeValid;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _dateTimeValid = DateTime.Now;
+                }
+                else
+                {
+                    _dateTimeValid = value;
+                }
+
+                NotifyPropertyChanged(() => DateTimeValid);
+            }
+        }
+
+        public DateTime DateTimeExpired
+        {
+            get
+            {
+                return _dateTimeExpired;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _dateTimeExpired = DateTime.Now;
+                }
+                else
+                {
+                    _dateTimeExpired = value;
+                }
+                NotifyPropertyChanged(() => DateTimeExpired);
+            }
+        }
+
+        public string UniqueDesignation
+        {
+            get
+            {
+                return _uniqueDesignation;
+            }
+            set
+            {
+                _uniqueDesignation = value;
+                NotifyPropertyChanged(() => UniqueDesignation);
+            }
+        }
+
+        public string StaffComments
+        {
+            get
+            {
+                return _staffComments;
+            }
+            set
+            {
+                _staffComments = value;
+                NotifyPropertyChanged(() => StaffComments);
+            }
+        }
+
+        public string AdditionalInformation
+        {
+            get
+            {
+                return _additionalInformation;
+            }
+            set
+            {
+                _additionalInformation = value;
+                NotifyPropertyChanged(() => AdditionalInformation);
+            }
+        }
+
+        public string Type
+        {
+            get
+            {
+                return _type;
+            }
+            set
+            {
+                _type = value;
+                NotifyPropertyChanged(() => Type);
+            }
+        }
+
+        public string CommonIdentifier
+        {
+            get
+            {
+                return _commonidentifier;
+            }
+            set
+            {
+                _commonidentifier = value;
+                NotifyPropertyChanged(() => CommonIdentifier);
+            }
+        }
+
+        public short? Speed
+        {
+            get
+            {
+                return _speed;
+            }
+            set
+            {
+                _speed = value;
+                NotifyPropertyChanged(() => Speed);
+            }
+        }
+
+        public string HigherFormation
+        {
+            get
+            {
+                return _higherFormation;
+            }
+            set
+            {
+                _higherFormation = value;
+                NotifyPropertyChanged(() => HigherFormation);
+            }
+        }
+
+        public string Reinforced
+        {
+            get
+            {
+                return _reinforced;
+            }
+            set
+            {
+                _reinforced = value;
+                //NotifyPropertyChanged(() => Reinforced);
+            }
+        }
+
+        public string Credibility
+        {
+            get
+            {
+                return _credibility;
+            }
+            set
+            {
+                _credibility = value;
+                //NotifyPropertyChanged(() => Credibility);
+            }
+        }
+
+        public string Reliability
+        {
+            get
+            {
+                return _reliability;
+            }
+            set
+            {
+                _reliability = value;
+                //NotifyPropertyChanged(() => Reliability);
+            }
+        }
+
+        #endregion
 
         private void GeneratePreviewSymbol()
         {
@@ -382,6 +569,68 @@ namespace ProSymbolEditor
             {
                 rowBuffer["modifier2"] = _modifier2;
             }
+
+            //LABELS
+            if (DateTimeValid != null)
+            {
+                rowBuffer["datetimevalid"] = DateTimeValid.ToString();
+            }
+
+            if (DateTimeExpired != null)
+            {
+                rowBuffer["datetimeexpired"] = DateTimeExpired.ToString();
+            }
+            
+            if (UniqueDesignation != null && UniqueDesignation != "")
+            {
+                rowBuffer["uniquedesignation"] = UniqueDesignation;
+            }
+
+            if (StaffComments != null && StaffComments != "")
+            {
+                rowBuffer["staffcomment"] = StaffComments;
+            }
+
+            if (AdditionalInformation != null && AdditionalInformation != "")
+            {
+                rowBuffer["additionalinformation"] = AdditionalInformation;
+            }
+
+            if (Type != null && Type != "")
+            {
+                rowBuffer["type"] = Type;
+            }
+
+            if (CommonIdentifier != null && CommonIdentifier != "")
+            {
+                rowBuffer["commonidentifier"] = CommonIdentifier;
+            }
+
+            if (Speed != null)
+            {
+                //Short
+                rowBuffer["speed"] = Speed;
+            }
+
+            if (HigherFormation != null && HigherFormation != "")
+            {
+                rowBuffer["higherFormation"] = HigherFormation;
+            }
+
+            if (Reinforced != null && Reinforced != "")
+            {
+                rowBuffer["reinforced"] = Reinforced;
+            }
+
+            if (Credibility != null && Credibility != "")
+            {
+                rowBuffer["credibility"] = Credibility;
+            }
+
+            if (Reliability != null && Reliability != "")
+            {
+                rowBuffer["reliability"] = Reliability;
+            }
         }
 
         private void GenerateSelectedSymbolTagsString()
@@ -401,8 +650,35 @@ namespace ProSymbolEditor
                 ", Echelon = " + _echelon + ", Context = " + _context + ", Modifier 1 = " + _modifier1 + ", Modifier 2 = " + _modifier2;
             NotifyPropertyChanged(() => SelectedSymbolTags);
         }
+        
+        public void ResetAttributes()
+        {
+            //Reset attributes
+            SymbolSet = "";
+            SymbolEntity = "";
+            Echelon = "";
+            Identity = "";
+            OperationalCondition = "";
+            Statuses = "";
+            Mobility = "";
+            Indicator = "";
+            Context = "";
+            Modifier1 = "";
+            Modifier2 = "";
 
-
-
+            //Reset label text attributes
+            DateTimeValid = DateTime.Now;
+            DateTimeExpired = DateTime.Now;
+            UniqueDesignation = "";
+            StaffComments = "";
+            AdditionalInformation = "";
+            Type = "";
+            CommonIdentifier = "";
+            Speed = null;
+            HigherFormation = "";
+            Reinforced = "";
+            Credibility = null;
+            Reliability = "";
+        }
     }
 }

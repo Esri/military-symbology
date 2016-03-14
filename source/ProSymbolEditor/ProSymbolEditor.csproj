@@ -38,6 +38,10 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CoordinateToolLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependencies\Coordinate Library\CoordinateToolLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="MilitarySymbols">
       <HintPath>Dependencies\MilitarySymbols\debug\MilitarySymbols.dll</HintPath>
     </Reference>
@@ -98,6 +102,7 @@
     <Compile Include="Models\SymbolAttributeSet.cs" />
     <Compile Include="Models\SymbolSetMapping.cs" />
     <Compile Include="Models\SymbolSetMappings.cs" />
+    <Compile Include="Models\MilitaryFieldsInspectorModel.cs" />
     <Compile Include="Views\MilitarySymbolDockpane.xaml.cs">
       <DependentUpon>MilitarySymbolDockpane.xaml</DependentUpon>
     </Compile>
@@ -119,6 +124,7 @@
     <AddInContent Include="Images\GenericButtonPurple32.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Dependencies\Coordinate Library\CoordinateToolLibrary.dll" />
     <Content Include="Dependencies\Extended WPF Toolkit Binaries\Xceed.Wpf.Toolkit.dll" />
     <Content Include="Dependencies\MilitarySymbols\MilitarySymbols.dll" />
     <Content Include="Dependencies\MilitarySymbols\Svg.dll" />

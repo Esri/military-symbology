@@ -25,10 +25,11 @@ using System.Windows;
 using Microsoft.Win32;
 using ArcGIS.Desktop.Editing;
 using ArcGIS.Core.Geometry;
+using CoordinateToolLibrary.Models;
 
 namespace ProSymbolEditor
 {
-    internal class MilitarySymbolDockpaneViewModel : DockPane
+    internal class MilitarySymbolDockpaneViewModel : DockPane, IDataErrorInfo
     {
         //Member Variables
         private const string _dockPaneID = "ProSymbolEditor_MilitarySymbolDockpane";
@@ -40,7 +41,7 @@ namespace ProSymbolEditor
         private StyleProjectItem _militaryStyleItem = null;
         private SymbolStyleItem _selectedStyleItem = null;
         private SymbolSetMappings _symbolSetMappings = new SymbolSetMappings();
-
+        
         //Lock objects for ObservableCollections
         private static object _identityLock = new object();
         private static object _echelonLock = new object();
@@ -51,47 +52,25 @@ namespace ProSymbolEditor
         private static object _contextLock = new object();
         private static object _modifier1Lock = new object();
         private static object _modifier2Lock = new object();
+        private static object _reinforcedLock = new object();
+        private static object _credibilityLock = new object();
+        private static object _reliabilityLock = new object();
 
         //Binded Variables - Text Boxes
         private string _searchString = "";
         private string _selectedStyleTags = "";
-        private DateTime _dateTime = DateTime.Now;
-        private string _dateTime2 = "";
-        private string _location = "";
-        private string _type = "";
-        private string _name = "";
-        private string _speed = "";
-        private string _uniqueDesignation = "";
-        private string _reinforced = "";
-        private string _staffComment = "";
-        private string _additionalInformation = "";
-        private string _higherFormation = "";
-        private string _credibilityReliability = "";
         private string _mapCoordinatesString = "";
 
         //Binded Variables - List Boxes
         private IList<SymbolStyleItem> _styleItems = new List<SymbolStyleItem>();
 
-        //Binded Variables - Combo Boxes
-        ObservableCollection<DomainCodedValuePair> _identityDomainValues = new ObservableCollection<DomainCodedValuePair>();
-        ObservableCollection<DomainCodedValuePair> _echolonDomainValues = new ObservableCollection<DomainCodedValuePair>();
-        ObservableCollection<DomainCodedValuePair> _statusesDomainValues = new ObservableCollection<DomainCodedValuePair>();
-        ObservableCollection<DomainCodedValuePair> _operationalConditionAmplifierDomainValues = new ObservableCollection<DomainCodedValuePair>();
-        ObservableCollection<DomainCodedValuePair> _mobilityDomainValues = new ObservableCollection<DomainCodedValuePair>();
-        ObservableCollection<DomainCodedValuePair> _tfFdHqDomainValues = new ObservableCollection<DomainCodedValuePair>();
-        ObservableCollection<DomainCodedValuePair> _contextDomainValues = new ObservableCollection<DomainCodedValuePair>();
-        ObservableCollection<DomainCodedValuePair> _modifier1DomainValues = new ObservableCollection<DomainCodedValuePair>();
-        ObservableCollection<DomainCodedValuePair> _modifier2DomainValues = new ObservableCollection<DomainCodedValuePair>();
-
         //Binded Variables - Other
         private SymbolAttributeSet _symbolAttributeSet = new SymbolAttributeSet();
+        private MilitaryFieldsInspectorModel _militaryFieldsInspectorModel = new MilitaryFieldsInspectorModel();
         private int _selectedTabIndex = 0;
         private MapPoint _mapCoordinates;
-
-        //Commands
-        //private ICommand _searchResultCommand = null;
-        //private ICommand _goToTabCommand = null;
-
+        public bool _coordinateValid = false;
+      
         protected MilitarySymbolDockpaneViewModel()
         {
             //Get Military Symbol Style Install Path
@@ -116,21 +95,27 @@ namespace ProSymbolEditor
             });
 
             //Create locks for variables that are updated in worker threads
-            BindingOperations.EnableCollectionSynchronization(_identityDomainValues, _identityLock);
-            BindingOperations.EnableCollectionSynchronization(_echolonDomainValues, _echelonLock);
-            BindingOperations.EnableCollectionSynchronization(_statusesDomainValues, _statusesLock);
-            BindingOperations.EnableCollectionSynchronization(_operationalConditionAmplifierDomainValues, _operationalConditionAmplifierLock);
-            BindingOperations.EnableCollectionSynchronization(_mobilityDomainValues, _mobilityLock);
-            BindingOperations.EnableCollectionSynchronization(_tfFdHqDomainValues, _tfFdHqLock);
-            BindingOperations.EnableCollectionSynchronization(_contextDomainValues, _contextLock);
-            BindingOperations.EnableCollectionSynchronization(_modifier1DomainValues, _modifier1Lock);
-            BindingOperations.EnableCollectionSynchronization(_modifier2DomainValues, _modifier2Lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.IdentityDomainValues, _identityLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.EcholonDomainValues, _echelonLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.StatusesDomainValues, _statusesLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues, _operationalConditionAmplifierLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.MobilityDomainValues, _mobilityLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.TfFdHqDomainValues, _tfFdHqLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ContextDomainValues, _contextLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.Modifier1DomainValues, _modifier1Lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.Modifier2DomainValues, _modifier2Lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReinforcedDomainValues, _reinforcedLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReliabilityDomainValues, _reliabilityLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CredibilityDomainValues, _credibilityLock);
 
             //Set up Commands
             SearchResultCommand = new RelayCommand(SearchStyles, param => true);
             GoToTabCommand = new RelayCommand(GoToTab, param => true);
             ActivateMapToolCommand = new RelayCommand(ActivateCoordinateMapTool, param => true);
             AddToMapCommand = new RelayCommand(AddStyleToMap, param => true);
+
+            _symbolAttributeSet.DateTimeValid = DateTime.Now;
+            _symbolAttributeSet.DateTimeExpired = DateTime.Now;
         }
 
         /// <summary>
@@ -144,8 +129,6 @@ namespace ProSymbolEditor
 
             pane.Activate();
         }
-
-        #region Mutators (Get/Set)
 
         public int SelectedTabIndex
         {
@@ -200,11 +183,20 @@ namespace ProSymbolEditor
             }
         }
 
+        
         public SymbolAttributeSet SymbolAttributeSet
         {
             get
             {
                 return _symbolAttributeSet;
+            }
+        }
+
+        public MilitaryFieldsInspectorModel MilitaryFieldsInspectorModel
+        {
+            get
+            {
+                return _militaryFieldsInspectorModel;
             }
         }
 
@@ -226,17 +218,7 @@ namespace ProSymbolEditor
                     //TODO: Change to just use the key instead of parsing the tags?
                     SelectedStyleTags = _selectedStyleItem.Tags;
 
-                    _symbolAttributeSet.SymbolSet = "";
-                    _symbolAttributeSet.SymbolEntity = "";
-                    _symbolAttributeSet.Echelon = "";
-                    _symbolAttributeSet.Identity = "";
-                    _symbolAttributeSet.OperationalCondition = "";
-                    _symbolAttributeSet.Statuses = "";
-                    _symbolAttributeSet.Mobility = "";
-                    _symbolAttributeSet.Indicator = "";
-                    _symbolAttributeSet.Context = "";
-                    _symbolAttributeSet.Modifier1 = "";
-                    _symbolAttributeSet.Modifier2 = "";
+                    _symbolAttributeSet.ResetAttributes();
 
                     string[] symbolIdCode = ParseKeyForSymbolIdCode(_selectedStyleItem.Tags);
                     _symbolAttributeSet.SymbolSet = symbolIdCode[0];
@@ -257,175 +239,20 @@ namespace ProSymbolEditor
 
         #endregion
 
-        #region Domain Binders
-
-        public ObservableCollection<DomainCodedValuePair> IdentityDomainValues
-        {
-            get
-            {
-                return _identityDomainValues;
-            }
-            set
-            {
-                _identityDomainValues = value;
-            }
-        }
-
-        public ObservableCollection<DomainCodedValuePair> EcholonsDomainValues
-        {
-            get
-            {
-                return _echolonDomainValues;
-            }
-            set
-            {
-                _echolonDomainValues = value;
-            }
-        }
-
-        public ObservableCollection<DomainCodedValuePair> StatusesDomainValues
-        {
-            get
-            {
-                return _statusesDomainValues;
-            }
-            set
-            {
-                _statusesDomainValues = value;
-            }
-        }
-
-        public ObservableCollection<DomainCodedValuePair> OperationalConditionAmplifierDomainValues
-        {
-            get
-            {
-                return _operationalConditionAmplifierDomainValues;
-            }
-            set
-            {
-                _operationalConditionAmplifierDomainValues = value;
-            }
-        }
-
-        public ObservableCollection<DomainCodedValuePair> IndicatorDomainValues
-        {
-            get
-            {
-                return _tfFdHqDomainValues;
-            }
-            set
-            {
-                _tfFdHqDomainValues = value;
-            }
-        }
-
-        public ObservableCollection<DomainCodedValuePair> MobilityDomainValues
-        {
-            get
-            {
-                return _mobilityDomainValues;
-            }
-            set
-            {
-                _mobilityDomainValues = value;
-            }
-        }
-
-        public ObservableCollection<DomainCodedValuePair> ContextDomainValues
-        {
-            get
-            {
-                return _contextDomainValues;
-            }
-            set
-            {
-                _contextDomainValues = value;
-            }
-        }
-
-        public ObservableCollection<DomainCodedValuePair> Modifier1DomainValues
-        {
-            get
-            {
-                return _modifier1DomainValues;
-            }
-            set
-            {
-                _modifier1DomainValues = value;
-            }
-        }
-
-        public ObservableCollection<DomainCodedValuePair> Modifier2DomainValues
-        {
-            get
-            {
-                return _modifier2DomainValues;
-            }
-            set
-            {
-                _modifier2DomainValues = value;
-            }
-        }
-
-        #endregion
-
-        #region Text Label Bindings
-
-        public DateTime DateTimeAttribute
-        {
-            get
-            {
-                return _dateTime;
-            }
-            set
-            {
-                _dateTime = value;
-                NotifyPropertyChanged(() => DateTimeAttribute);
-            }
-        }
-
-        public string UniqueDesignation
-        {
-            get
-            {
-                return _uniqueDesignation;
-            }
-            set
-            {
-                _uniqueDesignation = value;
-                NotifyPropertyChanged(() => UniqueDesignation);
-            }
-        }
-
-        public string StaffComments
-        {
-            get
-            {
-                return _staffComment;
-            }
-            set
-            {
-                _staffComment = value;
-                NotifyPropertyChanged(() => StaffComments);
-            }
-        }
-
-        public string AdditionalInformation
-        {
-            get
-            {
-                return _additionalInformation;
-            }
-            set
-            {
-                _additionalInformation = value;
-                NotifyPropertyChanged(() => AdditionalInformation);
-            }
-        }
-
-        #endregion
-
         #region Map Tab Bindings
+
+        public bool CoordinateValid
+        {
+            get
+            {
+                return _coordinateValid;
+            }
+            set
+            {
+                _coordinateValid = value;
+                NotifyPropertyChanged(() => CoordinateValid);
+            }
+        }
 
         public MapPoint MapCoordinates
         {
@@ -437,11 +264,10 @@ namespace ProSymbolEditor
             {
                 _mapCoordinates = value;
 
-                
-                
+
+                CoordinateValid = true;
+
                 NotifyPropertyChanged(() => MapCoordinates);
-
-
             }
         }
 
@@ -454,9 +280,21 @@ namespace ProSymbolEditor
             set
             {
                 _mapCoordinatesString = value;
-                NotifyPropertyChanged(() => MapCoordinatesString);
 
-                //TODO: Update MapCoordinates to make sure they stay in synch
+                MapPoint point;
+                var coordType = GetCoordinateType(_mapCoordinatesString, out point);
+
+                if (coordType == CoordinateType.Unknown)
+                {
+                    //Error
+                    CoordinateValid = false;
+                }
+                else
+                {
+                    MapCoordinates = point;
+                }
+
+                NotifyPropertyChanged(() => MapCoordinatesString);
             }
         }
 
@@ -471,8 +309,6 @@ namespace ProSymbolEditor
         public ICommand ActivateMapToolCommand { get; set; }
 
         public ICommand AddToMapCommand { get; set; }
-
-        #endregion
 
         #endregion
 
@@ -586,12 +422,6 @@ namespace ProSymbolEditor
             }
         }
 
-        private async Task MakeEdits()
-        {
-
-
-        }
-
         private void Edits(EditOperation.IEditContext context)
         {
             ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
@@ -613,27 +443,154 @@ namespace ProSymbolEditor
 
         #endregion
 
-        private void ParseKeyValues()
-        {
+        #region IDataErrorInfo Interface
 
+        public string Error { get; set; }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                Error = null;
+
+                switch (columnName)
+                {
+                    case "MapCoordinatesString":
+                        if (!_coordinateValid)
+                        {
+                            Error = "The coordinates are invalid";
+                        }
+                        break;
+                }
+
+                return Error;
+            }
         }
 
+        #endregion
+
+        private CoordinateType GetCoordinateType(string input, out MapPoint point)
+        {
+            point = null;
+
+            // DD
+            CoordinateDD dd;
+            if (CoordinateDD.TryParse(input, out dd))
+            {
+                point = QueuedTask.Run(() =>
+                {
+                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, 0, sptlRef);
+                }).Result;
+                return CoordinateType.DD;
+            }
+
+            // DDM
+            CoordinateDDM ddm;
+            if (CoordinateDDM.TryParse(input, out ddm))
+            {
+                dd = new CoordinateDD(ddm);
+                point = QueuedTask.Run(() =>
+                {
+                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, 0, sptlRef);
+                }).Result;
+                return CoordinateType.DDM;
+            }
+            // DMS
+            CoordinateDMS dms;
+            if (CoordinateDMS.TryParse(input, out dms))
+            {
+                dd = new CoordinateDD(dms);
+                point = QueuedTask.Run(() =>
+                {
+                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, 0, sptlRef);
+                }).Result;
+                return CoordinateType.DMS;
+            }
+
+            CoordinateGARS gars;
+            if (CoordinateGARS.TryParse(input, out gars))
+            {
+                try
+                {
+                    point = QueuedTask.Run(() =>
+                    {
+                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(gars.ToString("", new CoordinateGARSFormatter()), sptlRef, GeoCoordinateType.GARS, FromGeoCoordinateMode.Default);
+                        tmp = MapPointBuilder.CreateMapPoint(tmp.X, tmp.Y, 0, sptlRef);
+                        return tmp;
+                    }).Result;
+
+                    return CoordinateType.GARS;
+                }
+                catch { }
+            }
+
+            CoordinateMGRS mgrs;
+            if (CoordinateMGRS.TryParse(input, out mgrs))
+            {
+                try
+                {
+                    point = QueuedTask.Run(() =>
+                    {
+                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(mgrs.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.MGRS, FromGeoCoordinateMode.Default);
+                        tmp = MapPointBuilder.CreateMapPoint(tmp.X, tmp.Y, 0, sptlRef);
+                        return tmp;
+                    }).Result;
+
+                    return CoordinateType.MGRS;
+                }
+                catch { }
+            }
+
+            CoordinateUSNG usng;
+            if (CoordinateUSNG.TryParse(input, out usng))
+            {
+                try
+                {
+                    point = QueuedTask.Run(() =>
+                    {
+                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(usng.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.USNG, FromGeoCoordinateMode.Default);
+                        tmp = MapPointBuilder.CreateMapPoint(tmp.X, tmp.Y, 0, sptlRef);
+                        return tmp;
+                    }).Result;
+
+                    return CoordinateType.USNG;
+                }
+                catch { }
+            }
+
+            CoordinateUTM utm;
+            if (CoordinateUTM.TryParse(input, out utm))
+            {
+                try
+                {
+                    point = QueuedTask.Run(() =>
+                    {
+                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
+                        var tmp = MapPointBuilder.FromGeoCoordinateString(utm.ToString("", new CoordinateUTMFormatter()), sptlRef, GeoCoordinateType.UTM, FromGeoCoordinateMode.Default);
+                        tmp = MapPointBuilder.CreateMapPoint(tmp.X, tmp.Y, 0, sptlRef);
+                        return tmp;
+                    }).Result;
+
+                    return CoordinateType.UTM;
+                }
+                catch { }
+            }
+
+
+            return CoordinateType.Unknown;
+        }
 
 
         public async Task<StyleProjectItem> GetMilitaryStyleAsync()
         {
             if (Project.Current != null)
             {
-                //_militaryStyleItem = await QueuedTask.Run<StyleProjectItem>(() =>
-                //{
-                //    Project.Current.AddStyleAsync(_mil2525dStyleFilePath);
-
-                //    //Get all styles in the project
-                //    var styles = Project.Current.GetItems<StyleProjectItem>();
-
-                //    //Get a specific style in the project
-                //    return styles.First(x => x.Name == "mil2525d");
-                //});
                 await Project.Current.AddStyleAsync(_mil2525dStyleFullFilePath);
 
                 //Get all styles in the project
@@ -671,42 +628,14 @@ namespace ProSymbolEditor
                                 ArcGIS.Core.Data.FeatureClassDefinition facilitySiteDefinition = _currentFeatureClass.GetDefinition();
                                 IReadOnlyList<ArcGIS.Core.Data.Field> fields = facilitySiteDefinition.GetFields();
 
-                                GetDomainAndPopulateList(fields, "identity", _identityDomainValues);
-                                GetDomainAndPopulateList(fields, "echelon", _echolonDomainValues);
-                                GetDomainAndPopulateList(fields, "status", _statusesDomainValues);
-                                GetDomainAndPopulateList(fields, "operationalcondition", _operationalConditionAmplifierDomainValues);
-                                GetDomainAndPopulateList(fields, "mobility", _mobilityDomainValues);
-                                GetDomainAndPopulateList(fields, "indicator", _tfFdHqDomainValues);
-                                GetDomainAndPopulateList(fields, "context", _contextDomainValues);
-                                GetDomainAndPopulateList(fields, "modifier1", _modifier1DomainValues);
-                                GetDomainAndPopulateList(fields, "modifier2", _modifier2DomainValues);
+                                MilitaryFieldsInspectorModel.PopulateDomains(fields);
+                                MilitaryFieldsInspectorModel.CheckLabelFieldsExistence(fields);
                             }
                         }
 
                     }
                 }
             });
-        }
-
-        private void GetDomainAndPopulateList(IReadOnlyList<Field> fields, string fieldName, ObservableCollection<DomainCodedValuePair> memberCodedValueDomains)//SortedList<object, string> memberCodedValueDomains)
-        {
-            ArcGIS.Core.Data.Field foundField = fields.FirstOrDefault(field => field.Name == fieldName);
-
-            //Clear out any old values
-            memberCodedValueDomains.Clear();
-
-            if (foundField != null)
-            {
-                Domain domain = foundField.GetDomain();
-                var codedValueDomain = domain as CodedValueDomain;
-                SortedList<object, string> codedValuePairs = codedValueDomain.GetCodedValuePairs();
-
-                foreach (KeyValuePair<object, string> pair in codedValuePairs)
-                {
-                    DomainCodedValuePair domainObjectPair = new DomainCodedValuePair(pair.Key, pair.Value);
-                    memberCodedValueDomains.Add(domainObjectPair);//pair.Value);
-                }
-            }
         }
 
         private string[] ParseKeyForSymbolIdCode(string key)

@@ -157,7 +157,7 @@
                                 <!-- Identity/Affiliation -->
 
                                 <Label Content="Identity/Affiliation" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0"/>
-                                <ComboBox x:Name="identityComboBox" Margin="5,5,5,5" ItemsSource="{Binding IdentityDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Identity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="Identity" Width="150" Grid.Column="1" Grid.Row="0">
+                                <ComboBox x:Name="identityComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.IdentityDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Identity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="Identity" Width="150" Grid.Column="1" Grid.Row="0">
                                     <ComboBox.Style>
                                         <Style TargetType="ComboBox"/>
                                     </ComboBox.Style>
@@ -166,12 +166,12 @@
                                 <!-- Status or Operation -->
 
                                 <Label Grid.Column="0" Grid.Row="1" Margin="5,5,5,5" Content="Status/Planned" Visibility="{Binding ElementName=statusesComboBox, Path=Visibility}"/>
-                                <ComboBox x:Name="statusesComboBox" Margin="5,5,5,5" ItemsSource="{Binding StatusesDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Statuses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150" Grid.Column="1" Grid.Row="1">
+                                <ComboBox x:Name="statusesComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.StatusesDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Statuses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150" Grid.Column="1" Grid.Row="1">
                                     <ComboBox.Style>
                                         <Style TargetType="ComboBox">
                                             <Style.Triggers>
                                                 <Trigger Property="HasItems" Value="False">
-                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                    <Setter Property="Visibility" Value="Collapsed" />
                                                 </Trigger>
                                             </Style.Triggers>
                                         </Style>
@@ -179,12 +179,12 @@
                                 </ComboBox>
 
                                 <Label Content="Operational Condition Amplifier" Margin="5,5,5,5" Grid.Column="0" Grid.Row="1" Visibility="{Binding ElementName=operationalConditionAmplifierComboBox, Path=Visibility}"/>
-                                <ComboBox x:Name="operationalConditionAmplifierComboBox" Margin="5,5,5,5" ItemsSource="{Binding OperationalConditionAmplifierDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.OperationalCondition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150" Grid.Column="1" Grid.Row="1">
+                                <ComboBox x:Name="operationalConditionAmplifierComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.OperationalCondition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150" Grid.Column="1" Grid.Row="1">
                                     <ComboBox.Style>
                                         <Style TargetType="ComboBox">
                                             <Style.Triggers>
                                                 <Trigger Property="HasItems" Value="False">
-                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                    <Setter Property="Visibility" Value="Collapsed" />
                                                 </Trigger>
                                             </Style.Triggers>
                                         </Style>
@@ -194,7 +194,7 @@
                                 <!-- TFFDHQ/Indicator -->
 
                                 <Label Content="TF, FD, HQ" Margin="5,5,5,5" Grid.Column="0" Grid.Row="2"/>
-                                <ComboBox x:Name="tfFdHqComboBox" Margin="5,5,5,5" Width="150" Grid.Column="1" Grid.Row="2" ItemsSource="{Binding IndicatorDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Indicator, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <ComboBox x:Name="tfFdHqComboBox" Margin="5,5,5,5" Width="150" Grid.Column="1" Grid.Row="2" ItemsSource="{Binding MilitaryFieldsInspectorModel.TfFdHqDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Indicator, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <ComboBox.Style>
                                         <Style TargetType="ComboBox"/>
                                     </ComboBox.Style>
@@ -203,12 +203,12 @@
                                 <!-- Echelon or Mobility -->
 
                                 <Label Content="Echelon" Margin="5,5,5,5" Grid.Column="0" Grid.Row="3" Visibility="{Binding ElementName=echelonComboBox, Path=Visibility}"/>
-                                <ComboBox x:Name="echelonComboBox" Margin="5,5,5,5" ItemsSource="{Binding EcholonsDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Echelon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150" Grid.Column="1" Grid.Row="3">
+                                <ComboBox x:Name="echelonComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.EcholonsDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Echelon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150" Grid.Column="1" Grid.Row="3">
                                     <ComboBox.Style>
                                         <Style TargetType="ComboBox">
                                             <Style.Triggers>
                                                 <Trigger Property="HasItems" Value="False">
-                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                    <Setter Property="Visibility" Value="Collapsed" />
                                                 </Trigger>
                                             </Style.Triggers>
                                         </Style>
@@ -216,12 +216,12 @@
                                 </ComboBox>
 
                                 <Label Content="Mobility" Margin="5,5,5,5" Grid.Column="0" Grid.Row="3" Visibility="{Binding ElementName=mobilityComboBox, Path=Visibility}"/>
-                                <ComboBox x:Name="mobilityComboBox" Margin="5,5,5,5" Width="150" Grid.Column="1" Grid.Row="3" ItemsSource="{Binding MobilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Mobility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <ComboBox x:Name="mobilityComboBox" Margin="5,5,5,5" Width="150" Grid.Column="1" Grid.Row="3" ItemsSource="{Binding MilitaryFieldsInspectorModel.MobilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Mobility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <ComboBox.Style>
                                         <Style TargetType="ComboBox">
                                             <Style.Triggers>
                                                 <Trigger Property="HasItems" Value="False">
-                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                    <Setter Property="Visibility" Value="Collapsed" />
                                                 </Trigger>
                                             </Style.Triggers>
                                         </Style>
@@ -247,7 +247,7 @@
                                         <!-- Identity/Reality/Context -->
 
                                         <Label Content="Identity/Reality" Margin="5,5,5,5" Grid.Column="0" Grid.Row="1"/>
-                                        <ComboBox x:Name="contextComboBox" Margin="5,5,5,5" Width="150" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding ContextDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Context, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox x:Name="contextComboBox" Margin="5,5,5,5" Width="150" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding MilitaryFieldsInspectorModel.ContextDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Context, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox"/>
                                             </ComboBox.Style>
@@ -256,7 +256,7 @@
                                         <!-- Modifier 1 -->
 
                                         <Label Content="Modifier 1" Margin="5,5,5,5" Grid.Column="0" Grid.Row="2"/>
-                                        <ComboBox x:Name="modifier1ComboBox" Margin="5,5,5,5" Width="150" Grid.Column="1" Grid.Row="2" ItemsSource="{Binding Modifier1DomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Modifier1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox x:Name="modifier1ComboBox" Margin="5,5,5,5" Width="150" Grid.Column="1" Grid.Row="2" ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier1DomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Modifier1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox"/>
                                             </ComboBox.Style>
@@ -265,7 +265,7 @@
                                         <!-- Modifier 2 -->
 
                                         <Label Content="Modifier 2" Margin="5,5,5,5" Grid.Column="0" Grid.Row="3"/>
-                                        <ComboBox x:Name="modifier2ComboBox" Margin="5,5,5,5" Width="150" Grid.Column="1" Grid.Row="3" ItemsSource="{Binding Modifier2DomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Modifier2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox x:Name="modifier2ComboBox" Margin="5,5,5,5" Width="150" Grid.Column="1" Grid.Row="3" ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier2DomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Modifier2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox"/>
                                             </ComboBox.Style>
@@ -339,37 +339,24 @@
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
-                                        <Label Content="Date/Time" Grid.Row="0"/>
-                                        <xctk:DateTimePicker  Grid.Row="1" Width="170" Value="{Binding DateTimeAttribute}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt"/>
-                                        <!--<DatePicker Name="Picker" Grid.Row="1" Width="150">
-                                            <DatePicker.Resources>
-                                                <Style TargetType="DatePickerTextBox">
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate>
-                                                                <TextBox Text="{Binding Path=DateTimeAttribute, RelativeSource={RelativeSource AncestorType=DatePicker}, StringFormat={}{0:MM/dd/yyyy hh:mm:ss}}"/>
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Style>
-                                            </DatePicker.Resources>
-                                        </DatePicker>-->
-                                        <!--<TextBox Grid.Row="1" Width="100"/>-->
+                                        <Label Content="Date/Time Valid" Grid.Row="0" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}"/>
+                                        <xctk:DateTimePicker Grid.Row="1" Width="170" Value="{Binding SymbolAttributeSet.DateTimeValid}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}"/>
 
-                                        <!--<Label Content="Date/Time 2" Grid.Row="2"/>
-                                        <TextBox Grid.Row="3" Width="100"/>
+                                        <Label Content="Date/Time Expired" Grid.Row="2" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}"/>
+                                        <xctk:DateTimePicker  Grid.Row="3" Width="170" Value="{Binding SymbolAttributeSet.DateTimeExpired}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}"/>
 
-                                        <Label Content="Location" Grid.Row="4"/>
-                                        <TextBox Grid.Row="5" Width="100"/>
+                                        <!--<Label Content="Location" Grid.Row="4"/>
+                                        <TextBox Grid.Row="5" Width="170"/>-->
 
-                                        <Label Content="Type" Grid.Row="6"/>
-                                        <TextBox Grid.Row="7" Width="100"/>
+                                        <Label Content="Type" Grid.Row="6" Visibility="{Binding MilitaryFieldsInspectorModel.TypeFieldExists}"/>
+                                        <TextBox Grid.Row="7" Width="170" Text="{Binding SymbolAttributeSet.Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding MilitaryFieldsInspectorModel.TypeFieldExists}"/>
 
-                                        <Label Content="Name" Grid.Row="8"/>
-                                        <TextBox Grid.Row="9" Width="100"/>
+                                        <Label Content="Common Identifier" Grid.Row="8" Visibility="{Binding MilitaryFieldsInspectorModel.CommonIdentifierFieldExists}"/>
+                                        <TextBox Grid.Row="9" Width="170" Text="{Binding SymbolAttributeSet.CommonIdentifier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding MilitaryFieldsInspectorModel.CommonIdentifierFieldExists}"/>
 
-                                        <Label Content="Speed" Grid.Row="10"/>
-                                        <TextBox Grid.Row="11" Width="100"/>-->
+                                        <Label Content="Speed" Grid.Row="10" Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"/>
+                                        <!--<TextBox Grid.Row="11" Width="170" Text="{Binding SymbolAttributeSet.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"/>-->
+                                        <xctk:ShortUpDown Name="speedUpDown" Grid.Row="11" Width="170" Value="{Binding SymbolAttributeSet.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"/>
                                     </Grid>
 
                                     <Image x:Name="textTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" MaxHeight="400" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
@@ -388,25 +375,60 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
-                                        <Label Content="Unique Designation" Grid.Row="0"/>
-                                        <TextBox Grid.Row="1" Width="100" Text="{Binding UniqueDesignation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Label Content="Unique Designation" Grid.Row="0" Visibility="{Binding MilitaryFieldsInspectorModel.UniqueDesignationFieldExists}"/>
+                                        <TextBox Grid.Row="1" Width="100" Text="{Binding SymbolAttributeSet.UniqueDesignation}" Visibility="{Binding MilitaryFieldsInspectorModel.UniqueDesignationFieldExists}"/>
 
-                                        <!--<Label Content="Reinforced" Grid.Row="2"/>
-                                        <TextBox Grid.Row="3" Width="100"/>-->
+                                        <Label Content="Reinforced" Grid.Row="2" Margin="5,5,5,5" Visibility="{Binding ElementName=reinforcedComboBox, Path=Visibility}"/>
+                                        <ComboBox Name="reinforcedComboBox" Grid.Row="3" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.ReinforcedDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Reinforced, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
 
-                                        <Label Content="Staff Comments" Grid.Row="4"/>
-                                        <TextBox Grid.Row="5" Width="100" Text="{Binding StaffComments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Label Content="Staff Comments" Grid.Row="4" Visibility="{Binding MilitaryFieldsInspectorModel.StaffCommentsFieldExists}"/>
+                                        <TextBox Grid.Row="5" Width="100" Text="{Binding SymbolAttributeSet.StaffComments}" Visibility="{Binding MilitaryFieldsInspectorModel.StaffCommentsFieldExists}"/>
 
-                                        <Label Content="Additional Information" Grid.Row="6"/>
-                                        <TextBox Grid.Row="7" Width="100" Text="{Binding AdditionalInformation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Label Content="Additional Information" Grid.Row="6" Visibility="{Binding MilitaryFieldsInspectorModel.AdditionalInformationFieldExists}"/>
+                                        <TextBox Grid.Row="7" Width="100" Text="{Binding SymbolAttributeSet.AdditionalInformation}" Visibility="{Binding MilitaryFieldsInspectorModel.AdditionalInformationFieldExists}"/>
 
-                                        <!--<Label Content="Higher Formation" Grid.Row="8"/>
-                                        <TextBox Grid.Row="9" Width="100"/>
+                                        <Label Content="Higher Formation" Grid.Row="8" Visibility="{Binding MilitaryFieldsInspectorModel.HigherFormationFieldExists}"/>
+                                        <TextBox Grid.Row="9" Width="100" Text="{Binding SymbolAttributeSet.HigherFormation}" Visibility="{Binding MilitaryFieldsInspectorModel.HigherFormationFieldExists}"/>
 
-                                        <Label Content="Credibility/Reliability" Grid.Row="10"/>
-                                        <TextBox Grid.Row="11" Width="100"/>-->
+                                        <Label Content="Credibility" Grid.Row="10" Margin="5,5,5,5" Visibility="{Binding ElementName=credibilityComboBox, Path=Visibility}"/>
+                                        <ComboBox Name="credibilityComboBox" Grid.Row="11" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.CredibilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Credibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+
+                                        <Label Content="Reliability" Grid.Row="12" Margin="5,5,5,5" Visibility="{Binding ElementName=reliabilityComboBox, Path=Visibility}"/>
+                                        <ComboBox Name="reliabilityComboBox" Grid.Row="13" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.ReliabilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Reliability, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
                                     </Grid>
                                 </Grid>
                             </ScrollViewer>
@@ -435,11 +457,13 @@
                                 </Grid.RowDefinitions>
 
                                 <Label Content="Coordinates" Grid.Row="0"/>
-                                <TextBox Grid.Row="1" Width="200" Margin="5" Text="{Binding MapCoordinatesString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <AdornerDecorator>
+                                    <TextBox Grid.Row="1" Width="200" Margin="5" Text="{Binding MapCoordinatesString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                                </AdornerDecorator>
 
                                 <Button Grid.Row="2" Content="Get Location from Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding ActivateMapToolCommand}" Width="200"/>
 
-                                <Button Grid.Row="3" Content="Add to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddToMapCommand}" Width="200"/>
+                                <Button Grid.Row="3" Content="Add to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddToMapCommand}" Width="200" IsEnabled="{Binding CoordinateValid}"/>
 
                                 <Button Content="&lt;-- Text" Grid.Row="5" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" HorizontalAlignment="Left" Width="101"/>
                             </Grid>
