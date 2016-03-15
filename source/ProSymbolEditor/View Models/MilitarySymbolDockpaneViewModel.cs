@@ -366,7 +366,8 @@ namespace ProSymbolEditor
             (combinedSymbols as List<SymbolStyleItem>).AddRange(lineSymbols);
             (combinedSymbols as List<SymbolStyleItem>).AddRange(polygonSymbols);
 
-            _styleItems = combinedSymbols;
+            int outParse;
+            _styleItems = combinedSymbols.Where( x => x.Key.Length == 8).Where(x => int.TryParse(x.Key, out outParse)).ToList();
             //_styleItems.AddRange(lineSymbols);
             //_styleItems.AddRange(polygonSymbols);
 
