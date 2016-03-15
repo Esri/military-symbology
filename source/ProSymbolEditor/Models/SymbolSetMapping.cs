@@ -10,51 +10,17 @@ namespace ProSymbolEditor
 {
     public class SymbolSetMapping
     {
-        private string _featureClassName;
-        private StyleItemType _styleItemType;
-        private string _symbolSet;
+        public string FeatureClassName { get; set; }
+        public StyleItemType StyleItemType { get; set; }
+        public string SymbolSet { get; set; }
 
         public SymbolSetMapping(string featureClassName, StyleItemType styleItemType, string symbolSet)
         {
-            _featureClassName = featureClassName;
-            _styleItemType = styleItemType;
-            _symbolSet = symbolSet;
+            FeatureClassName = featureClassName;
+            StyleItemType = styleItemType;
+            SymbolSet = symbolSet;
         }
 
-        public string FeatureClassName
-        {
-            get
-            {
-                return _featureClassName;
-            }
-            set
-            {
-                _featureClassName = value;
-            }
-        }
 
-        public StyleItemType StyleItemType
-        {
-            get
-            {
-                return _styleItemType;
-            }
-            set
-            {
-                _styleItemType = value;
-            }
-        }
-
-        public string SymbolSet
-        {
-            get
-            {
-                return _symbolSet;
-            }
-            set
-            {
-                _symbolSet = value;
-            }
-        }
     }
 }

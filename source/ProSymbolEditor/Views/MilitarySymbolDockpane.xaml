@@ -21,7 +21,7 @@
 
             <Grid>
 
-                <TabControl x:Name="tabControl" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="3,3,3,3">
+                <TabControl x:Name="tabControl" IsEnabled="{Binding IsEnabled}" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="3,3,3,3">
                     <TabItem Header="Search">
                         <Grid>
                             <Grid.RowDefinitions>

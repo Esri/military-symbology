@@ -26,6 +26,7 @@ using Microsoft.Win32;
 using ArcGIS.Desktop.Editing;
 using ArcGIS.Core.Geometry;
 using CoordinateToolLibrary.Models;
+using System.Windows.Threading;
 
 namespace ProSymbolEditor
 {
@@ -70,7 +71,8 @@ namespace ProSymbolEditor
         private int _selectedTabIndex = 0;
         private MapPoint _mapCoordinates;
         public bool _coordinateValid = false;
-      
+        private bool _isEnabled = false;
+
         protected MilitarySymbolDockpaneViewModel()
         {
             //Get Military Symbol Style Install Path
@@ -141,6 +143,27 @@ namespace ProSymbolEditor
                 _selectedTabIndex = value;
 
                 NotifyPropertyChanged(() => SelectedTabIndex);
+            }
+        }
+
+        public bool IsEnabled
+        {
+            get
+            {
+                return _isEnabled;
+            }
+            set
+            {
+                _isEnabled = value;
+                NotifyPropertyChanged(() => IsEnabled);
+
+                if (!_isEnabled && IsVisible)
+                {
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
+                    {
+                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The Pro Symbol Editor is disabled until the Military Overlay project is opened.");
+                    }));
+                }
             }
         }
 
@@ -651,6 +674,58 @@ namespace ProSymbolEditor
 
             return symbolId;
         }
+
+        private async Task<bool> ShouldAddInBeEnabled()
+        {
+            //If we can get both the style and database, then enable the add-in
+            if (Project.Current == null)
+            {
+                //No open project
+                return false;
+            }
+
+            //Get style
+            //Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
+            //StyleProjectItem militaryStyleProjectItem = await getMilitaryStyle;
+
+            //if (militaryStyleProjectItem == null)
+            //{
+            //    return false;
+            //}
+
+            //Get database
+            IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
+            Geodatabase militaryGeodatabase = await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+            {
+                foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
+                {
+                    using (Datastore datastore = gdbProjectItem.GetDatastore())
+                    {
+                        //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
+                        if (datastore is UnknownDatastore)
+                            continue;
+                        Geodatabase geodatabase = datastore as Geodatabase;
+                        // Use the geodatabase.
+
+                        string geodatabasePath = geodatabase.GetPath();
+                        if (geodatabasePath.Contains("militaryoverlay.gdb"))
+                        {
+                            return geodatabase;
+                        }
+
+                    }
+                }
+
+                return null;
+            });
+
+            if (militaryGeodatabase == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 
     /// <summary>
@@ -660,6 +735,14 @@ namespace ProSymbolEditor
     {
         protected override void OnClick()
         {
+            if (!ProSymbolEditorModule._isEnabled)
+            {
+                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The Pro Symbol Editor is disabled until the Military Overlay project is opened.");
+                }));
+            }
+
             MilitarySymbolDockpaneViewModel.Show();
         }
     }

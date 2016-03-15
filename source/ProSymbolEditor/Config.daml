@@ -11,7 +11,7 @@
                     Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
   </AddInInfo>
   <modules>
-    <insertModule id="ProSymbolEditor_Module" className="ProSymbolEditorModule" autoLoad="false" caption="ProSymbolEditorModule">
+    <insertModule id="ProSymbolEditor_Module" className="ProSymbolEditorModule" autoLoad="true" caption="ProSymbolEditorModule">
       <!-- uncomment to have the control hosted on a separate tab-->
       <tabs>
         <!--<tab id="ProSymbolEditor_Tab1" caption="New Tab">
