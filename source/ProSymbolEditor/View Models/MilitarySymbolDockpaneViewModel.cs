@@ -74,6 +74,7 @@ namespace ProSymbolEditor
         private bool _isEnabled = false;
         private bool _isStyleItemSelected = false;
         private bool _addToMapToolEnabled = false;
+        private ProgressDialog _progressDialog;
 
         protected MilitarySymbolDockpaneViewModel()
         {
@@ -125,6 +126,8 @@ namespace ProSymbolEditor
             _symbolAttributeSet.DateTimeValid = DateTime.Now;
             _symbolAttributeSet.DateTimeExpired = DateTime.Now;
             IsStyleItemSelected = false;
+
+            _progressDialog = new ProgressDialog("Searching...");
         }
 
         /// <summary>
@@ -202,6 +205,8 @@ namespace ProSymbolEditor
                 _searchString = value;
 
                 NotifyPropertyChanged(() => SearchString);
+
+                SearchStyles(null);
             }
         }
 
@@ -401,26 +406,43 @@ namespace ProSymbolEditor
                 _militaryStyleItem = await getMilitaryStyle;
             }
 
+            //IsSearching = true;
+
             //Clear for new search
             if (_styleItems.Count != 0)
                 _styleItems.Clear();
 
-            //Get results and populate symbol gallery
-            IList<SymbolStyleItem> pointSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PointSymbol, _searchString);
-            IList<SymbolStyleItem> lineSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.LineSymbol, _searchString);
-            IList<SymbolStyleItem> polygonSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PolygonSymbol, _searchString);
+            _progressDialog.Show();
+            await RunProgress();
+            
 
-            IList<SymbolStyleItem> combinedSymbols = new List<SymbolStyleItem>();
-            (combinedSymbols as List<SymbolStyleItem>).AddRange(pointSymbols);
-            (combinedSymbols as List<SymbolStyleItem>).AddRange(lineSymbols);
-            (combinedSymbols as List<SymbolStyleItem>).AddRange(polygonSymbols);
-
-            int outParse;
-            _styleItems = combinedSymbols.Where( x => x.Key.Length == 8).Where(x => int.TryParse(x.Key, out outParse)).ToList();
             //_styleItems.AddRange(lineSymbols);
             //_styleItems.AddRange(polygonSymbols);
 
             NotifyPropertyChanged(() => StyleItems);
+
+            //IsSearching = false;
+        }
+
+        private Task RunProgress()
+        {
+            return QueuedTask.Run(async() =>
+            {
+                //Get results and populate symbol gallery
+                IList<SymbolStyleItem> pointSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PointSymbol, _searchString);
+                IList<SymbolStyleItem> lineSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.LineSymbol, _searchString);
+                IList<SymbolStyleItem> polygonSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PolygonSymbol, _searchString);
+
+                IList<SymbolStyleItem> combinedSymbols = new List<SymbolStyleItem>();
+                (combinedSymbols as List<SymbolStyleItem>).AddRange(pointSymbols);
+                (combinedSymbols as List<SymbolStyleItem>).AddRange(lineSymbols);
+                (combinedSymbols as List<SymbolStyleItem>).AddRange(polygonSymbols);
+
+                int outParse;
+                _styleItems = combinedSymbols.Where(x => x.Key.Length == 8).Where(x => int.TryParse(x.Key, out outParse)).ToList();
+
+                _progressDialog.Hide();
+            });
         }
 
         private void GoToTab(object parameter)
