@@ -97,6 +97,7 @@
     <AddInContent Include="Images\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Map Tools\AddToMapTool.cs" />
     <Compile Include="Map Tools\CoordinateMapTool.cs" />
     <Compile Include="Models\DomainCodedValuePair.cs" />
     <Compile Include="Models\SymbolAttributeSet.cs" />

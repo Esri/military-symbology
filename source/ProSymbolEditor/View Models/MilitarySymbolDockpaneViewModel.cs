@@ -72,6 +72,8 @@ namespace ProSymbolEditor
         private MapPoint _mapCoordinates;
         public bool _coordinateValid = false;
         private bool _isEnabled = false;
+        private bool _isStyleItemSelected = false;
+        private bool _addToMapToolEnabled = false;
 
         protected MilitarySymbolDockpaneViewModel()
         {
@@ -96,6 +98,9 @@ namespace ProSymbolEditor
                 _militaryStyleItem = await getMilitaryStyle;
             });
 
+            ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
+
+
             //Create locks for variables that are updated in worker threads
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.IdentityDomainValues, _identityLock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.EcholonDomainValues, _echelonLock);
@@ -115,9 +120,11 @@ namespace ProSymbolEditor
             GoToTabCommand = new RelayCommand(GoToTab, param => true);
             ActivateMapToolCommand = new RelayCommand(ActivateCoordinateMapTool, param => true);
             AddToMapCommand = new RelayCommand(AddStyleToMap, param => true);
+            ActivateAddToMapToolCommand = new RelayCommand(ActivateAddToMapTool, param => true);
 
             _symbolAttributeSet.DateTimeValid = DateTime.Now;
             _symbolAttributeSet.DateTimeExpired = DateTime.Now;
+            IsStyleItemSelected = false;
         }
 
         /// <summary>
@@ -167,6 +174,20 @@ namespace ProSymbolEditor
             }
         }
 
+        public bool AddToMapToolEnabled
+        {
+            get
+            {
+                return _addToMapToolEnabled;
+            }
+            set
+            {
+                _addToMapToolEnabled = value;
+                NotifyPropertyChanged(() => AddToMapToolEnabled);
+            }
+        }
+
+
         #region Style Search Bindings
 
         public string SearchString
@@ -195,6 +216,20 @@ namespace ProSymbolEditor
                 _selectedStyleTags = value;
 
                 NotifyPropertyChanged(() => SelectedStyleTags);
+            }
+        }
+
+        public bool IsStyleItemSelected
+        {
+            get
+            {
+                return _isStyleItemSelected;
+            }
+            set
+            {
+                _isStyleItemSelected = value;
+
+                NotifyPropertyChanged(() => IsStyleItemSelected);
             }
         }
 
@@ -254,6 +289,12 @@ namespace ProSymbolEditor
                         //Generate domains
                         GetMilitaryDomains();
                     }
+
+                    IsStyleItemSelected = true;
+                }
+                else
+                {
+                    IsStyleItemSelected = false;
                 }
 
                 NotifyPropertyChanged(() => SelectedStyleItem);
@@ -333,6 +374,8 @@ namespace ProSymbolEditor
 
         public ICommand AddToMapCommand { get; set; }
 
+        public ICommand ActivateAddToMapToolCommand { get; set; }
+
         #endregion
 
         #region Command Methods
@@ -340,6 +383,12 @@ namespace ProSymbolEditor
         private void ActivateCoordinateMapTool(object parameter)
         {
             FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_CoordinateMapTool");
+        }
+
+        private void ActivateAddToMapTool(object parameter)
+        {
+            FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_AddToMapTool");
+            AddToMapToolEnabled = true;
         }
 
         private async void SearchStyles(object parameter)
@@ -379,7 +428,7 @@ namespace ProSymbolEditor
             SelectedTabIndex = Convert.ToInt32(parameter);
         }
 
-        private async void AddStyleToMap(object parameter)
+        public async void AddStyleToMap(object parameter)
         {
             string message = String.Empty;
             bool creationResult = false;
@@ -610,6 +659,19 @@ namespace ProSymbolEditor
             return CoordinateType.Unknown;
         }
 
+        private void OnActiveToolChanged(ArcGIS.Desktop.Framework.Events.ToolEventArgs args)
+        {
+            if (args.CurrentID == "ProSymbolEditor_AddToMapTool")
+            {
+                //Toggle all down
+                AddToMapToolEnabled = true;
+            }
+            else
+            {
+                //Disable all toggles
+                AddToMapToolEnabled = false;
+            }
+        }
 
         public async Task<StyleProjectItem> GetMilitaryStyleAsync()
         {
