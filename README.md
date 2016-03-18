@@ -50,11 +50,15 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 	
 ## Users
 
+> IMPORTANT: This application depends on the Military Overlay datamodel/geodatabase(GDB) that is provided with the ArcGIS Pro Military Overlay Template. If you do not have the Military Overlay GDB included in your project, you will receive a warning when you attempt to use the application.
+
 * Running
 	* To run from a stand-alone deployment in ArcGIS Pro
 		* Install the add-in from the application folder by double clicking it
 		* Open ArcGIS Pro 1.2
-		* Open a Military Overlay Project file (or any project that has the militaryoverlay.gdb in it)
+		* Open a project that contains the Military Overlay geodatabase (MilitaryOverlay.gdb)
+		    * This geodatabase may be obtained by downloading the Military Overlay template release available at http://solutions.arcgis.com/defense/templates/military-overlay/
+		    * You may also just add the MilitaryOverlay.gdb available from https://github.com/Esri/military-features-data/tree/master/data/mil2525d/core_data/gdbs 
 		* The ADD-IN appears under the "ADD-IN" tab in Pro	
 		* Click the "Military Symbol Designer" button and the tool will appear
 		* The Search tab is the first tab:
@@ -84,14 +88,16 @@ Anyone and everyone is welcome to contribute. Please see our [guidelines for con
 
 ### Repository Points of Contact
 
-#### Repository Owner: [Travis](https://github.com/tlauver)
+#### Repository Owners
+
+##### Primary - [Travis](https://github.com/tlauver)
 
 * Merge Pull Requests
 * Creates Releases and Tags
 * Manages Milestones
 * Manages and Assigns Issues
 
-#### Secondary: TBD
+##### Secondary: [Chris](https://github.com/csmoore)
 
 * Backup when the Owner is away
 
