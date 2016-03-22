@@ -101,6 +101,21 @@ Anyone and everyone is welcome to contribute. Please see our [guidelines for con
 
 * Backup when the Owner is away
 
+## Credits
+
+This addin uses the following third-party software.
+
+This software is governed by [the Apache V2 License](http://www.apache.org/licenses/LICENSE-2.0):
+
+* MIL_STD_2525D_Symbols - https://github.com/Esri/joint-military-symbology-xml/tree/master/svg or [MIL_STD_2525D_Symbols license](./source/ProSymbolEditor/Images/MIL_STD_2525D_Symbols/license.txt)
+* Coordinate Conversion Addin - https://github.com/Esri/coordinate-conversion-addin-dotnet
+* Military Symbols.NET - https://github.com/csmoore/military-symbols-dotnet
+
+This software is governed by [the Microsoft Public License (Ms-PL)](http://wpftoolkit.codeplex.com/license):
+
+* Extended WPF Toolkit Community Edition - http://wpftoolkit.codeplex.com
+* SVG Rendering Engine - https://github.com/vvvv/SVG http://svg.codeplex.com/
+
 ## Licensing
 
 Copyright 2016 Esri
@@ -118,8 +133,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 A copy of the license is available in the repository's [license.txt](license.txt) file.
-
-Note: This addin uses MIL_STD_2525D_Symbols that is governed by the Apache License.  For more details see ./source/ProSymbolEditor/Images/MIL_STD_2525D_Symbols/license.txt
 
 [](Esri Tags: Military Analyst Defense ArcGIS ArcObjects .NET WPF ArcGISSolutions ArcMap ArcPro Add-In Symbol Editor)
 [](Esri Language: C#) 
