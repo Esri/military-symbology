@@ -45,7 +45,7 @@ namespace ProSymbolEditor
             //Add project opened listener
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
-                Task<bool> isEnabledMethod = ShouldAddInBeEnabled();
+                Task<bool> isEnabledMethod = ShouldAddInBeEnabledAsync();
                 _isEnabled = await isEnabledMethod;
 
                 //Give pane the enabled value
@@ -59,7 +59,7 @@ namespace ProSymbolEditor
 
         #endregion Overrides
 
-        private async Task<bool> ShouldAddInBeEnabled()
+        private async Task<bool> ShouldAddInBeEnabledAsync()
         {
             //If we can get the database, then enable the add-in
             if (Project.Current == null)
@@ -69,32 +69,38 @@ namespace ProSymbolEditor
             }
 
             //Get database
-            IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
-            Geodatabase militaryGeodatabase = await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+            try
             {
-                foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
+                IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
+                Geodatabase militaryGeodatabase = await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
                 {
-                    using (Datastore datastore = gdbProjectItem.GetDatastore())
+                    foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
                     {
-                        //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
-                        if (datastore is UnknownDatastore)
-                            continue;
-                        Geodatabase geodatabase = datastore as Geodatabase;
-                        // Use the geodatabase.
-
-                        string geodatabasePath = geodatabase.GetPath();
-                        if (geodatabasePath.Contains("militaryoverlay.gdb"))
+                        using (Datastore datastore = gdbProjectItem.GetDatastore())
                         {
-                            return geodatabase;
+                            //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
+                            if (datastore is UnknownDatastore)
+                                    continue;
+                            Geodatabase geodatabase = datastore as Geodatabase;
+
+                            string geodatabasePath = geodatabase.GetPath();
+                            if (geodatabasePath.Contains("militaryoverlay.gdb"))
+                            {
+                                return geodatabase;
+                            }
                         }
-
                     }
+
+                    return null;
+                });
+
+
+                if (militaryGeodatabase == null)
+                {
+                    return false;
                 }
-
-                return null;
-            });
-
-            if (militaryGeodatabase == null)
+            }
+            catch (Exception exception)
             {
                 return false;
             }

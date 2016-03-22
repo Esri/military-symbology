@@ -611,80 +611,44 @@ namespace ProSymbolEditor
 
         private async void GetMilitaryDomainsAsync()
         {
-            IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
-            await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+            try
             {
-                foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
+                IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
+                await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
                 {
-                    using (Datastore datastore = gdbProjectItem.GetDatastore())
+                    foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
                     {
-                        //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
-                        if (datastore is UnknownDatastore)
-                            continue;
-                        Geodatabase geodatabase = datastore as Geodatabase;
-                        // Use the geodatabase.
-
-                        string geodatabasePath = geodatabase.GetPath();
-                        if (geodatabasePath.Contains("militaryoverlay.gdb"))
+                        using (Datastore datastore = gdbProjectItem.GetDatastore())
                         {
-                            //Correct GDB, open the current selected feature class
-                            _currentFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
-                            using (_currentFeatureClass)
-                            {
-                                ArcGIS.Core.Data.FeatureClassDefinition facilitySiteDefinition = _currentFeatureClass.GetDefinition();
-                                IReadOnlyList<ArcGIS.Core.Data.Field> fields = facilitySiteDefinition.GetFields();
+                            //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
+                            if (datastore is UnknownDatastore)
+                                    continue;
+                            Geodatabase geodatabase = datastore as Geodatabase;
 
-                                MilitaryFieldsInspectorModel.PopulateDomains(fields);
-                                MilitaryFieldsInspectorModel.CheckLabelFieldsExistence(fields);
+                            string geodatabasePath = geodatabase.GetPath();
+                            if (geodatabasePath.Contains("militaryoverlay.gdb"))
+                            {
+                                //Correct GDB, open the current selected feature class
+                                _currentFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
+                                using (_currentFeatureClass)
+                                {
+                                    ArcGIS.Core.Data.FeatureClassDefinition facilitySiteDefinition = _currentFeatureClass.GetDefinition();
+                                    IReadOnlyList<ArcGIS.Core.Data.Field> fields = facilitySiteDefinition.GetFields();
+
+                                    MilitaryFieldsInspectorModel.PopulateDomains(fields);
+                                    MilitaryFieldsInspectorModel.CheckLabelFieldsExistence(fields);
+                                }
+
+                                break;
                             }
                         }
-
                     }
-                }
-            });
-        }
-
-        private async Task<bool> ShouldAddInBeEnabledAsync()
-        {
-            //If we can get both the style and database, then enable the add-in
-            if (Project.Current == null)
-            {
-                //No open project
-                return false;
+                });
             }
-
-            //Get database
-            IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
-            Geodatabase militaryGeodatabase = await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+            catch(Exception exception)
             {
-                foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
-                {
-                    using (Datastore datastore = gdbProjectItem.GetDatastore())
-                    {
-                        //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
-                        if (datastore is UnknownDatastore)
-                            continue;
-                        Geodatabase geodatabase = datastore as Geodatabase;
-                        // Use the geodatabase.
-
-                        string geodatabasePath = geodatabase.GetPath();
-                        if (geodatabasePath.Contains("militaryoverlay.gdb"))
-                        {
-                            return geodatabase;
-                        }
-
-                    }
-                }
-
-                return null;
-            });
-
-            if (militaryGeodatabase == null)
-            {
-                return false;
+                System.Diagnostics.Debug.WriteLine(exception.ToString());
             }
-
-            return true;
         }
 
         private string[] ParseKeyForSymbolIdCode(string key)
@@ -743,7 +707,8 @@ namespace ProSymbolEditor
                 (combinedSymbols as List<SymbolStyleItem>).AddRange(polygonSymbols);
 
                 int outParse;
-                _styleItems = combinedSymbols.Where(x => x.Key.Length == 8).Where(x => int.TryParse(x.Key, out outParse)).ToList();
+                _styleItems = combinedSymbols.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) || 
+                                                         (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))).ToList();
 
                 _progressDialog.Hide();
             });
@@ -763,8 +728,8 @@ namespace ProSymbolEditor
 
                 switch (columnName)
                 {
-                    case "MapCoordinatesString":
-                        if (!_coordinateValid)
+                    case "MapPointCoordinatesString":
+                        if (!PointCoordinateValid)
                         {
                             Error = "The coordinates are invalid";
                         }

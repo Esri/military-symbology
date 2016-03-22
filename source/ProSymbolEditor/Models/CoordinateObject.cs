@@ -13,8 +13,11 @@ namespace ProSymbolEditor
 {
     public class CoordinateObject : PropertyChangedBase, IDataErrorInfo
     {
-        //private bool _valid;
         private string _coordinate;
+
+        public MapPoint MapPoint { get; set; }
+        public bool IsValid { get; set; }
+
         public string Coordinate
         {
             get
@@ -46,11 +49,7 @@ namespace ProSymbolEditor
 
         #region IDataErrorInfo Interface
 
-        public bool IsValid { get; set; }
-
         public string Error { get; set; }
-
-        public MapPoint MapPoint { get; set; }
 
         public string this[string columnName]
         {
