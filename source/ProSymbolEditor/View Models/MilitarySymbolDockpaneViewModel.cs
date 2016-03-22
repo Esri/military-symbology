@@ -42,7 +42,7 @@ namespace ProSymbolEditor
         private StyleProjectItem _militaryStyleItem = null;
         private SymbolStyleItem _selectedStyleItem = null;
         private SymbolSetMappings _symbolSetMappings = new SymbolSetMappings();
-        
+
         //Lock objects for ObservableCollections
         private static object _identityLock = new object();
         private static object _echelonLock = new object();
@@ -69,18 +69,20 @@ namespace ProSymbolEditor
         private SymbolAttributeSet _symbolAttributeSet = new SymbolAttributeSet();
         private MilitaryFieldsInspectorModel _militaryFieldsInspectorModel = new MilitaryFieldsInspectorModel();
         private int _selectedTabIndex = 0;
-        private MapPoint _mapCoordinates;
+        private ArcGIS.Core.Geometry.Geometry _mapCoordinates;
         public bool _coordinateValid = false;
         private bool _isEnabled = false;
         private bool _isStyleItemSelected = false;
         private bool _addToMapToolEnabled = false;
+        private Visibility _pointCoordinateVisibility;
+        private Visibility _polyCoordinateVisibility;
         private ProgressDialog _progressDialog;
 
         protected MilitarySymbolDockpaneViewModel()
         {
             //Get Military Symbol Style Install Path
             string installPath = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\ESRI\ArcGISPro\", "InstallDir", null);
-            
+
             if (installPath == null || installPath == "")
             {
                 //Try to get the install path from current user instead of local machine
@@ -101,7 +103,6 @@ namespace ProSymbolEditor
 
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
 
-
             //Create locks for variables that are updated in worker threads
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.IdentityDomainValues, _identityLock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.EcholonDomainValues, _echelonLock);
@@ -117,30 +118,22 @@ namespace ProSymbolEditor
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CredibilityDomainValues, _credibilityLock);
 
             //Set up Commands
-            SearchResultCommand = new RelayCommand(SearchStyles, param => true);
+            SearchResultCommand = new RelayCommand(SearchStylesAsync, param => true);
             GoToTabCommand = new RelayCommand(GoToTab, param => true);
-            ActivateMapToolCommand = new RelayCommand(ActivateCoordinateMapTool, param => true);
-            AddToMapCommand = new RelayCommand(AddStyleToMap, param => true);
-            ActivateAddToMapToolCommand = new RelayCommand(ActivateAddToMapTool, param => true);
+            //ActivateMapToolCommand = new RelayCommand(ActivateCoordinateMapTool, param => true);
+            AddCoordinateToMapCommand = new RelayCommand(CreateNewFeatureAsync, CanCreatePolyFeatureFromCoordinates);
+            ActivateAddToMapToolCommand = new RelayCommand(ActivateDrawFeatureSketchTool, param => true);
 
             _symbolAttributeSet.DateTimeValid = DateTime.Now;
             _symbolAttributeSet.DateTimeExpired = DateTime.Now;
             IsStyleItemSelected = false;
 
+            PolyCoordinates = new ObservableCollection<CoordinateObject>();
+
             _progressDialog = new ProgressDialog("Searching...");
         }
 
-        /// <summary>
-        /// Show the DockPane.
-        /// </summary>
-        internal static void Show()
-        {
-            DockPane pane = FrameworkApplication.DockPaneManager.Find(_dockPaneID);
-            if (pane == null)
-                return;
-
-            pane.Activate();
-        }
+        #region General Add-In Getters/Setters
 
         public int SelectedTabIndex
         {
@@ -177,21 +170,23 @@ namespace ProSymbolEditor
             }
         }
 
-        public bool AddToMapToolEnabled
-        {
-            get
-            {
-                return _addToMapToolEnabled;
-            }
-            set
-            {
-                _addToMapToolEnabled = value;
-                NotifyPropertyChanged(() => AddToMapToolEnabled);
-            }
-        }
+        #endregion
 
+        #region Commands Get/Sets
 
-        #region Style Search Bindings
+        public ICommand SearchResultCommand { get; set; }
+
+        public ICommand GoToTabCommand { get; set; }
+
+        //public ICommand ActivateMapToolCommand { get; set; }
+
+        public ICommand AddCoordinateToMapCommand { get; set; }
+
+        public ICommand ActivateAddToMapToolCommand { get; set; }
+
+        #endregion
+
+        #region Style Getters/Setters
 
         public string SearchString
         {
@@ -206,7 +201,7 @@ namespace ProSymbolEditor
 
                 NotifyPropertyChanged(() => SearchString);
 
-                SearchStyles(null);
+                SearchStylesAsync(null);
             }
         }
 
@@ -219,7 +214,6 @@ namespace ProSymbolEditor
             set
             {
                 _selectedStyleTags = value;
-
                 NotifyPropertyChanged(() => SelectedStyleTags);
             }
         }
@@ -233,7 +227,6 @@ namespace ProSymbolEditor
             set
             {
                 _isStyleItemSelected = value;
-
                 NotifyPropertyChanged(() => IsStyleItemSelected);
             }
         }
@@ -243,23 +236,6 @@ namespace ProSymbolEditor
             get
             {
                 return _styleItems;
-            }
-        }
-
-        
-        public SymbolAttributeSet SymbolAttributeSet
-        {
-            get
-            {
-                return _symbolAttributeSet;
-            }
-        }
-
-        public MilitaryFieldsInspectorModel MilitaryFieldsInspectorModel
-        {
-            get
-            {
-                return _militaryFieldsInspectorModel;
             }
         }
 
@@ -279,6 +255,25 @@ namespace ProSymbolEditor
                 {
                     //Parse key for symbol id codes
                     //TODO: Change to just use the key instead of parsing the tags?
+                    if (_selectedStyleItem.ItemType == StyleItemType.PointSymbol)
+                    {
+                        GeometryType = GeometryType.Point;
+                        PointCoordinateVisibility = Visibility.Visible;
+                        PolyCoordinateVisibility = Visibility.Collapsed;
+                    }
+                    else if (_selectedStyleItem.ItemType == StyleItemType.PolygonSymbol)
+                    {
+                        GeometryType = GeometryType.Polygon;
+                        PointCoordinateVisibility = Visibility.Collapsed;
+                        PolyCoordinateVisibility = Visibility.Visible;
+                    }
+                    else if (_selectedStyleItem.ItemType == StyleItemType.LineSymbol)
+                    {
+                        GeometryType = GeometryType.Polyline;
+                        PointCoordinateVisibility = Visibility.Collapsed;
+                        PolyCoordinateVisibility = Visibility.Visible;
+                    }
+
                     SelectedStyleTags = _selectedStyleItem.Tags;
 
                     _symbolAttributeSet.ResetAttributes();
@@ -292,7 +287,7 @@ namespace ProSymbolEditor
                     if (_currentFeatureClassName != null && _currentFeatureClassName != "")
                     {
                         //Generate domains
-                        GetMilitaryDomains();
+                        GetMilitaryDomainsAsync();
                     }
 
                     IsStyleItemSelected = true;
@@ -308,9 +303,13 @@ namespace ProSymbolEditor
 
         #endregion
 
-        #region Map Tab Bindings
+        #region Feature Data and Map Getters/Setters
 
-        public bool CoordinateValid
+        public GeometryType GeometryType { get; set; }
+
+        public ObservableCollection<CoordinateObject> PolyCoordinates { get; set; }
+
+        public bool PointCoordinateValid
         {
             get
             {
@@ -319,11 +318,11 @@ namespace ProSymbolEditor
             set
             {
                 _coordinateValid = value;
-                NotifyPropertyChanged(() => CoordinateValid);
+                NotifyPropertyChanged(() => PointCoordinateValid);
             }
         }
 
-        public MapPoint MapCoordinates
+        public ArcGIS.Core.Geometry.Geometry MapGeometry
         {
             get
             {
@@ -332,15 +331,11 @@ namespace ProSymbolEditor
             set
             {
                 _mapCoordinates = value;
-
-
-                CoordinateValid = true;
-
-                NotifyPropertyChanged(() => MapCoordinates);
+                NotifyPropertyChanged(() => MapGeometry);
             }
         }
 
-        public string MapCoordinatesString
+        public string MapPointCoordinatesString
         {
             get
             {
@@ -351,52 +346,96 @@ namespace ProSymbolEditor
                 _mapCoordinatesString = value;
 
                 MapPoint point;
-                var coordType = GetCoordinateType(_mapCoordinatesString, out point);
+                var coordType = ProSymbolUtilities.GetCoordinateType(_mapCoordinatesString, out point);
 
                 if (coordType == CoordinateType.Unknown)
                 {
                     //Error
-                    CoordinateValid = false;
+                    MapGeometry = null;
+                    PointCoordinateValid = false;
                 }
                 else
                 {
-                    MapCoordinates = point;
+                    MapGeometry = point;
+                    PointCoordinateValid = true;
                 }
 
-                NotifyPropertyChanged(() => MapCoordinatesString);
+                NotifyPropertyChanged(() => MapPointCoordinatesString);
+            }
+        }
+
+        public SymbolAttributeSet SymbolAttributeSet
+        {
+            get
+            {
+                return _symbolAttributeSet;
+            }
+        }
+
+        public MilitaryFieldsInspectorModel MilitaryFieldsInspectorModel
+        {
+            get
+            {
+                return _militaryFieldsInspectorModel;
+            }
+        }
+
+        public Visibility PointCoordinateVisibility
+        {
+            get
+            {
+                return _pointCoordinateVisibility;
+            }
+            set
+            {
+                _pointCoordinateVisibility = value;
+                NotifyPropertyChanged(() => PointCoordinateVisibility);
+            }
+        }
+
+        public Visibility PolyCoordinateVisibility
+        {
+            get
+            {
+                return _polyCoordinateVisibility;
+            }
+            set
+            {
+                _polyCoordinateVisibility = value;
+                NotifyPropertyChanged(() => PolyCoordinateVisibility);
+            }
+        }
+
+        public bool AddToMapToolEnabled
+        {
+            get
+            {
+                return _addToMapToolEnabled;
+            }
+            set
+            {
+                _addToMapToolEnabled = value;
+                NotifyPropertyChanged(() => AddToMapToolEnabled);
             }
         }
 
         #endregion
 
-        #region Commands Get/Sets
-
-        public ICommand SearchResultCommand { get; set; }
-
-        public ICommand GoToTabCommand { get; set; }
-
-        public ICommand ActivateMapToolCommand { get; set; }
-
-        public ICommand AddToMapCommand { get; set; }
-
-        public ICommand ActivateAddToMapToolCommand { get; set; }
-
-        #endregion
-
         #region Command Methods
 
-        private void ActivateCoordinateMapTool(object parameter)
-        {
-            FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_CoordinateMapTool");
-        }
+        //private void ActivateCoordinateMapTool(object parameter)
+        //{
+        //    FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_CoordinateMapTool");
+        //    AddToMapToolEnabled = true;
+        //}
 
-        private void ActivateAddToMapTool(object parameter)
+        private void ActivateDrawFeatureSketchTool(object parameter)
         {
-            FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_AddToMapTool");
+            FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_DrawFeatureSketchTool");
             AddToMapToolEnabled = true;
         }
 
-        private async void SearchStyles(object parameter)
+        private async void SearchStylesAsync(object parameter)
         {
             //Make sure we have the military style file
             if (_militaryStyleItem == null)
@@ -406,43 +445,14 @@ namespace ProSymbolEditor
                 _militaryStyleItem = await getMilitaryStyle;
             }
 
-            //IsSearching = true;
-
             //Clear for new search
             if (_styleItems.Count != 0)
                 _styleItems.Clear();
 
             _progressDialog.Show();
-            await RunProgress();
-            
-
-            //_styleItems.AddRange(lineSymbols);
-            //_styleItems.AddRange(polygonSymbols);
+            await SearchSymbols();
 
             NotifyPropertyChanged(() => StyleItems);
-
-            //IsSearching = false;
-        }
-
-        private Task RunProgress()
-        {
-            return QueuedTask.Run(async() =>
-            {
-                //Get results and populate symbol gallery
-                IList<SymbolStyleItem> pointSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PointSymbol, _searchString);
-                IList<SymbolStyleItem> lineSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.LineSymbol, _searchString);
-                IList<SymbolStyleItem> polygonSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PolygonSymbol, _searchString);
-
-                IList<SymbolStyleItem> combinedSymbols = new List<SymbolStyleItem>();
-                (combinedSymbols as List<SymbolStyleItem>).AddRange(pointSymbols);
-                (combinedSymbols as List<SymbolStyleItem>).AddRange(lineSymbols);
-                (combinedSymbols as List<SymbolStyleItem>).AddRange(polygonSymbols);
-
-                int outParse;
-                _styleItems = combinedSymbols.Where(x => x.Key.Length == 8).Where(x => int.TryParse(x.Key, out outParse)).ToList();
-
-                _progressDialog.Hide();
-            });
         }
 
         private void GoToTab(object parameter)
@@ -450,10 +460,19 @@ namespace ProSymbolEditor
             SelectedTabIndex = Convert.ToInt32(parameter);
         }
 
-        public async void AddStyleToMap(object parameter)
+        public async void CreateNewFeatureAsync(object parameter)
         {
             string message = String.Empty;
             bool creationResult = false;
+
+            //Generate geometry if polygon or polyline, if adding new feature is from using coordinates and not the map tool
+            if (Convert.ToBoolean(parameter) == true)
+            {
+                if (GeometryType == GeometryType.Polyline || GeometryType == GeometryType.Polygon)
+                {
+                    GeneratePolyGeometry();
+                }
+            }
 
             IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
             await QueuedTask.Run(() =>
@@ -484,7 +503,7 @@ namespace ProSymbolEditor
                                     {
                                         RowBuffer rowBuffer = testfc.CreateRowBuffer();
                                         _symbolAttributeSet.PopulateRowBufferWithAttributes(ref rowBuffer);
-                                        rowBuffer["Shape"] = GeometryEngine.Project(MapCoordinates, facilitySiteDefinition.GetSpatialReference());// as ArcGIS.Core.Geometry.Geometry;
+                                        rowBuffer["Shape"] = GeometryEngine.Project(MapGeometry, facilitySiteDefinition.GetSpatialReference());
 
                                         Feature feature = testfc.CreateRow(rowBuffer);
                                         feature.Store();
@@ -505,6 +524,7 @@ namespace ProSymbolEditor
                                     message = editOperation.ErrorMessage;
                                 }
 
+                                break;
                             }
                         }
                     }
@@ -517,173 +537,47 @@ namespace ProSymbolEditor
             }
         }
 
-        private void Edits(EditOperation.IEditContext context)
+        private bool CanCreatePolyFeatureFromCoordinates()
         {
-            ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+            if (GeometryType == GeometryType.Polyline)
             {
-                Dictionary<string, object> atts = new Dictionary<string, object>();
-                //atts.Add("identity", _symbolAttributeSet.Identity);
-                atts.Add("Shape", MapCoordinates);   // I know the shape field is called Shape - but dont assume
+                if (PolyCoordinates.Count < 2)
+                {
+                    return false;
+                }
+            }
 
-                var editOperation = new EditOperation();
-                editOperation.Name = "Add Military Symbol";
-                //var disLayer = ArcGIS.Desktop.Mapping.MapView.Active.Map.FindLayers("Air").FirstOrDefault() as BasicFeatureLayer;
+            if (GeometryType == GeometryType.Polygon)
+            {
+                if (PolyCoordinates.Count < 3)
+                {
+                    return false;
+                }
+            }
 
-                editOperation.Create(_currentFeatureClass, atts);
-                //editOperation.EditOperationType = EditOperationType.Long;
+            if (GeometryType == GeometryType.Point)
+            {
+                return PointCoordinateValid;
+            }
 
-                //bool success = editOperation.Execute();
-            });
+            foreach(CoordinateObject coordObject in PolyCoordinates)
+            {
+                if (!coordObject.IsValid)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         #endregion
 
-        #region IDataErrorInfo Interface
-
-        public string Error { get; set; }
-
-        public string this[string columnName]
-        {
-            get
-            {
-                Error = null;
-
-                switch (columnName)
-                {
-                    case "MapCoordinatesString":
-                        if (!_coordinateValid)
-                        {
-                            Error = "The coordinates are invalid";
-                        }
-                        break;
-                }
-
-                return Error;
-            }
-        }
-
-        #endregion
-
-        private CoordinateType GetCoordinateType(string input, out MapPoint point)
-        {
-            point = null;
-
-            // DD
-            CoordinateDD dd;
-            if (CoordinateDD.TryParse(input, out dd))
-            {
-                point = QueuedTask.Run(() =>
-                {
-                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, 0, sptlRef);
-                }).Result;
-                return CoordinateType.DD;
-            }
-
-            // DDM
-            CoordinateDDM ddm;
-            if (CoordinateDDM.TryParse(input, out ddm))
-            {
-                dd = new CoordinateDD(ddm);
-                point = QueuedTask.Run(() =>
-                {
-                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, 0, sptlRef);
-                }).Result;
-                return CoordinateType.DDM;
-            }
-            // DMS
-            CoordinateDMS dms;
-            if (CoordinateDMS.TryParse(input, out dms))
-            {
-                dd = new CoordinateDD(dms);
-                point = QueuedTask.Run(() =>
-                {
-                    ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                    return MapPointBuilder.CreateMapPoint(dd.Lon, dd.Lat, 0, sptlRef);
-                }).Result;
-                return CoordinateType.DMS;
-            }
-
-            CoordinateGARS gars;
-            if (CoordinateGARS.TryParse(input, out gars))
-            {
-                try
-                {
-                    point = QueuedTask.Run(() =>
-                    {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(gars.ToString("", new CoordinateGARSFormatter()), sptlRef, GeoCoordinateType.GARS, FromGeoCoordinateMode.Default);
-                        tmp = MapPointBuilder.CreateMapPoint(tmp.X, tmp.Y, 0, sptlRef);
-                        return tmp;
-                    }).Result;
-
-                    return CoordinateType.GARS;
-                }
-                catch { }
-            }
-
-            CoordinateMGRS mgrs;
-            if (CoordinateMGRS.TryParse(input, out mgrs))
-            {
-                try
-                {
-                    point = QueuedTask.Run(() =>
-                    {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(mgrs.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.MGRS, FromGeoCoordinateMode.Default);
-                        tmp = MapPointBuilder.CreateMapPoint(tmp.X, tmp.Y, 0, sptlRef);
-                        return tmp;
-                    }).Result;
-
-                    return CoordinateType.MGRS;
-                }
-                catch { }
-            }
-
-            CoordinateUSNG usng;
-            if (CoordinateUSNG.TryParse(input, out usng))
-            {
-                try
-                {
-                    point = QueuedTask.Run(() =>
-                    {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(usng.ToString("", new CoordinateMGRSFormatter()), sptlRef, GeoCoordinateType.USNG, FromGeoCoordinateMode.Default);
-                        tmp = MapPointBuilder.CreateMapPoint(tmp.X, tmp.Y, 0, sptlRef);
-                        return tmp;
-                    }).Result;
-
-                    return CoordinateType.USNG;
-                }
-                catch { }
-            }
-
-            CoordinateUTM utm;
-            if (CoordinateUTM.TryParse(input, out utm))
-            {
-                try
-                {
-                    point = QueuedTask.Run(() =>
-                    {
-                        ArcGIS.Core.Geometry.SpatialReference sptlRef = SpatialReferenceBuilder.CreateSpatialReference(4326);
-                        var tmp = MapPointBuilder.FromGeoCoordinateString(utm.ToString("", new CoordinateUTMFormatter()), sptlRef, GeoCoordinateType.UTM, FromGeoCoordinateMode.Default);
-                        tmp = MapPointBuilder.CreateMapPoint(tmp.X, tmp.Y, 0, sptlRef);
-                        return tmp;
-                    }).Result;
-
-                    return CoordinateType.UTM;
-                }
-                catch { }
-            }
-
-
-            return CoordinateType.Unknown;
-        }
+        #region Event Listeners
 
         private void OnActiveToolChanged(ArcGIS.Desktop.Framework.Events.ToolEventArgs args)
         {
-            if (args.CurrentID == "ProSymbolEditor_AddToMapTool")
+            if (args.CurrentID == "ProSymbolEditor_DrawFeatureSketchTool")
             {
                 //Toggle all down
                 AddToMapToolEnabled = true;
@@ -695,7 +589,11 @@ namespace ProSymbolEditor
             }
         }
 
-        public async Task<StyleProjectItem> GetMilitaryStyleAsync()
+        #endregion
+
+        #region Private Methods
+
+        private async Task<StyleProjectItem> GetMilitaryStyleAsync()
         {
             if (Project.Current != null)
             {
@@ -711,7 +609,7 @@ namespace ProSymbolEditor
             return null;
         }
 
-        private async void GetMilitaryDomains()
+        private async void GetMilitaryDomainsAsync()
         {
             IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
             await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
@@ -746,21 +644,7 @@ namespace ProSymbolEditor
             });
         }
 
-        private string[] ParseKeyForSymbolIdCode(string key)
-        {
-            string[] symbolId = new string[2];
-
-            //todo check if symbolid is in key
-
-            int lastSemicolon = key.LastIndexOf(';');
-            string symbolIdCode = key.Substring(lastSemicolon + 1, key.Length - lastSemicolon - 1);
-            symbolId[0] = string.Format("{0}{1}", symbolIdCode[0], symbolIdCode[1]);
-            symbolId[1] = string.Format("{0}{1}{2}{3}{4}{5}", symbolIdCode[2], symbolIdCode[3], symbolIdCode[4], symbolIdCode[5], symbolIdCode[6], symbolIdCode[7]);
-
-            return symbolId;
-        }
-
-        private async Task<bool> ShouldAddInBeEnabled()
+        private async Task<bool> ShouldAddInBeEnabledAsync()
         {
             //If we can get both the style and database, then enable the add-in
             if (Project.Current == null)
@@ -768,15 +652,6 @@ namespace ProSymbolEditor
                 //No open project
                 return false;
             }
-
-            //Get style
-            //Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
-            //StyleProjectItem militaryStyleProjectItem = await getMilitaryStyle;
-
-            //if (militaryStyleProjectItem == null)
-            //{
-            //    return false;
-            //}
 
             //Get database
             IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
@@ -810,6 +685,108 @@ namespace ProSymbolEditor
             }
 
             return true;
+        }
+
+        private string[] ParseKeyForSymbolIdCode(string key)
+        {
+            string[] symbolId = new string[2];
+
+            //todo check if symbolid is in key
+
+            int lastSemicolon = key.LastIndexOf(';');
+            string symbolIdCode = key.Substring(lastSemicolon + 1, key.Length - lastSemicolon - 1);
+            symbolId[0] = string.Format("{0}{1}", symbolIdCode[0], symbolIdCode[1]);
+            symbolId[1] = string.Format("{0}{1}{2}{3}{4}{5}", symbolIdCode[2], symbolIdCode[3], symbolIdCode[4], symbolIdCode[5], symbolIdCode[6], symbolIdCode[7]);
+
+            return symbolId;
+        }
+
+        private void GeneratePolyGeometry()
+        {
+            //PolyCoordinates.ToList()
+            List<MapPoint> points = new List<MapPoint>();
+            foreach (CoordinateObject coordObject in PolyCoordinates)
+            {
+                //points.Add(new MapPointBuilder(coordObject.MapPoint.X, coordObject.MapPoint.Y, 0, coordObject.MapPoint.SpatialReference));
+                points.Add(coordObject.MapPoint);
+            }
+
+            ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+            {
+                if (GeometryType == GeometryType.Polyline)
+                {
+                    PolylineBuilder polylineBuilder = new PolylineBuilder(points);
+                    polylineBuilder.HasZ = true;
+                    MapGeometry = polylineBuilder.ToGeometry();
+                }
+                else if (GeometryType == GeometryType.Polygon)
+                {
+                    PolygonBuilder polygonBuilder = new PolygonBuilder(points);
+                    polygonBuilder.HasZ = true;
+                    MapGeometry = polygonBuilder.ToGeometry();
+                }
+            });
+        }
+
+        private Task SearchSymbols()
+        {
+            return QueuedTask.Run(async () =>
+            {
+                //Get results and populate symbol gallery
+                IList<SymbolStyleItem> pointSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PointSymbol, _searchString);
+                IList<SymbolStyleItem> lineSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.LineSymbol, _searchString);
+                IList<SymbolStyleItem> polygonSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PolygonSymbol, _searchString);
+
+                IList<SymbolStyleItem> combinedSymbols = new List<SymbolStyleItem>();
+                (combinedSymbols as List<SymbolStyleItem>).AddRange(pointSymbols);
+                (combinedSymbols as List<SymbolStyleItem>).AddRange(lineSymbols);
+                (combinedSymbols as List<SymbolStyleItem>).AddRange(polygonSymbols);
+
+                int outParse;
+                _styleItems = combinedSymbols.Where(x => x.Key.Length == 8).Where(x => int.TryParse(x.Key, out outParse)).ToList();
+
+                _progressDialog.Hide();
+            });
+        }
+
+        #endregion
+
+        #region IDataErrorInfo Interface
+
+        public string Error { get; set; }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                Error = null;
+
+                switch (columnName)
+                {
+                    case "MapCoordinatesString":
+                        if (!_coordinateValid)
+                        {
+                            Error = "The coordinates are invalid";
+                        }
+                        break;
+                }
+
+                return Error;
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Show the DockPane.
+        /// </summary>
+        internal static void Show()
+        {
+            DockPane pane = FrameworkApplication.DockPaneManager.Find(_dockPaneID);
+            if (pane == null)
+                return;
+
+            pane.Activate();
         }
     }
 

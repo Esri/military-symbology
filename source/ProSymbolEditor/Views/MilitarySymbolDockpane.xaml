@@ -46,7 +46,7 @@
 
                                 
                                 
-                                    <TextBox x:Name="searchSymbolsTextBox" HorizontalAlignment="Stretch" Height="23" Margin="5,0,5,0" TextWrapping="Wrap" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=2000}" Grid.Column="0">
+                                    <TextBox x:Name="searchSymbolsTextBox" HorizontalAlignment="Stretch" Height="23" Margin="5,5,5,5" TextWrapping="Wrap" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=2000}" Grid.Column="0">
                                         <TextBox.Style>
                                             <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                                                 <Style.Resources>
@@ -69,13 +69,13 @@
                                                 </Style.Triggers>
                                             </Style>
                                         </TextBox.Style>
-                                        <TextBox.InputBindings>
+                                        <!--<TextBox.InputBindings>
                                             <KeyBinding Command="{Binding SearchResultCommand}" Key="Enter"/>
-                                        </TextBox.InputBindings>
+                                        </TextBox.InputBindings>-->
                                     </TextBox>
                                 
 
-                                <Button x:Name="searchStylesButton" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SearchResultCommand}" Content="Search" Height="24" Width="75" Grid.Column="2"/>
+                                <!--<Button x:Name="searchStylesButton" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SearchResultCommand}" Content="Search" Height="24" Width="75" Grid.Column="2"/>-->
                             </Grid>
 
                             <Grid Grid.Row="1">
@@ -83,7 +83,7 @@
                                     <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <ListBox x:Name="symbolListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
+                                <ListBox x:Name="symbolListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="5,5,5,5" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
                                             SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" Grid.Column="0" >
 
                                     <ListBox.ItemsPanel>
@@ -491,12 +491,28 @@
 
                                 <Label Content="Coordinates" Grid.Row="0"/>
                                 <AdornerDecorator Grid.Row="1">
-                                    <TextBox Width="200" Margin="5" Text="{Binding MapCoordinatesString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
-                                </AdornerDecorator>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
 
+                                        <TextBox Width="200" Grid.Row="0" Margin="5" Text="{Binding MapPointCoordinatesString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Visibility="{Binding PointCoordinateVisibility}"/>
+                                        <DataGrid x:Name="dataGrid" Grid.Row="1" ItemsSource="{Binding PolyCoordinates, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="True" AutoGenerateColumns="False" Height="200" Width="200" Visibility="{Binding PolyCoordinateVisibility}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="List of Coordinates" Binding="{Binding Coordinate, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Width="*"/>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Grid>
+                                    
+                                  </AdornerDecorator>
+
+
+                                
                                 <!--<Button Grid.Row="2" Content="Get Location from Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding ActivateMapToolCommand}" Width="200"/>-->
 
-                                <Button Grid.Row="2" Content="Add Coordinates to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddToMapCommand}" Width="200" IsEnabled="{Binding CoordinateValid}"/>
+                                <Button Grid.Row="2" Content="Add Coordinates to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddCoordinateToMapCommand}" CommandParameter="True" Width="200"/>
+                                <!--IsEnabled="{Binding CoordinateValid}"/>-->
 
                                 <Button Content="&lt;-- Text" Grid.Row="5" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" HorizontalAlignment="Left" Width="101"/>
                             </Grid>
@@ -527,6 +543,7 @@
 
                         </Grid>
                     </TabItem>
+                    
                 </TabControl>
 
 

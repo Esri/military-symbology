@@ -45,8 +45,8 @@ namespace ProSymbolEditor
                     MapPoint projectedMapPoint = GeometryEngine.Project(tempMapPoint, SpatialReferences.WGS84) as MapPoint;
 
                     //Create a point with a z value, since the mil spec feature classes have z enabled (TODO: other way to do this?)
-                    symbolDockPaneViewModel.MapCoordinates = MapPointBuilder.CreateMapPoint(projectedMapPoint.X, projectedMapPoint.Y, 0, projectedMapPoint.SpatialReference);
-                    symbolDockPaneViewModel.MapCoordinatesString = string.Format("{0:0.0####} {1:0.0####}", tempMapPoint.Y, tempMapPoint.X);
+                    symbolDockPaneViewModel.MapGeometry = MapPointBuilder.CreateMapPoint(projectedMapPoint.X, projectedMapPoint.Y, 0, projectedMapPoint.SpatialReference);
+                    symbolDockPaneViewModel.MapPointCoordinatesString = string.Format("{0:0.0####} {1:0.0####}", tempMapPoint.Y, tempMapPoint.X);
                 }
                 catch
                 {
