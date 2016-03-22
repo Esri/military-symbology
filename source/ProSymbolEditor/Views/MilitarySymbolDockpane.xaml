@@ -113,15 +113,8 @@
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
-                                    <Image x:Name="searchTabImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Margin="20,5,20,5" Grid.Row="0" VerticalAlignment="Center"/>
-                                    <Grid Grid.Row="1" Margin="20,5,20,5">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*" />
-                                            <RowDefinition Height="*" />
-                                        </Grid.RowDefinitions>
-                                        <Image x:Name="previewSymbolImage" Source="{Binding SelectedStyleItem.PreviewImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" VerticalAlignment="Center" Grid.Row="0"/>
-                                        <TextBlock x:Name="styleTagsTextBlock" Text="{Binding SelectedStyleTags, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1"/>
-                                    </Grid>
+                                    <Image x:Name="searchTabImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Margin="20,5,20,5" Grid.Row="0" VerticalAlignment="Bottom"/>
+                                    <TextBlock x:Name="styleTagsTextBlock" Text="{Binding SelectedStyleTags, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="1"/>
                                 </Grid>
 
                             </Grid>
