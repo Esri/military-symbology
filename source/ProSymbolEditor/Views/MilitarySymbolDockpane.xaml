@@ -135,7 +135,7 @@
 
 
                     </TabItem>
-                    <TabItem Header="Favorites" HorizontalAlignment="Stretch">
+                    <TabItem Header="Favorites" HorizontalAlignment="Stretch" Visibility="Collapsed">
                         <Grid Background="#FFE5E5E5"/>
                     </TabItem>
                     <TabItem Header="Modify" IsEnabled="{Binding IsStyleItemSelected}">
@@ -321,7 +321,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Button Content="&lt;-- Search" Grid.Column="0" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="0" HorizontalAlignment="Left" Width="101"/>
-                                <Button Content="Add Favorite" Grid.Column="1" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="101"/>
+                                <Button Content="Add Favorite" Grid.Column="1" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="101" Visibility="Collapsed"/>
                                 <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Esri_SimpleButton" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="101"/>
                                 <Button Content="Text -->" Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101"/>
 
@@ -465,7 +465,7 @@
                                 </Grid.ColumnDefinitions>
                                 
                                 <Button Content="&lt;-- Modify" Grid.Column="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="2" HorizontalAlignment="Left" Width="101"/>
-                                <Button Content="Add Favorite" Grid.Column="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="101"/>
+                                <Button Content="Add Favorite" Grid.Column="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="101" Visibility="Collapsed"/>
                                 <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="101"/>
                                 <Button Content="Coordinates -->" Grid.Column="3" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101"/>
                             </Grid>
