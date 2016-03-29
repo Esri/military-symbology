@@ -59,6 +59,7 @@ namespace ProSymbolEditor
                 _symbolSet = value;
                 GenerateSelectedSymbolTagsString();
                 GeneratePreviewSymbol();
+                NotifyPropertyChanged(() => SymbolSet);
             }
         }
 
@@ -73,6 +74,7 @@ namespace ProSymbolEditor
                 _symbolEntity = value;
                 GenerateSelectedSymbolTagsString();
                 GeneratePreviewSymbol();
+                NotifyPropertyChanged(() => SymbolEntity);
             }
         }
 
@@ -87,6 +89,7 @@ namespace ProSymbolEditor
                 _identity = value;
                 GenerateSelectedSymbolTagsString();
                 GeneratePreviewSymbol();
+                //NotifyPropertyChanged(() => Identity);
             }
         }
 

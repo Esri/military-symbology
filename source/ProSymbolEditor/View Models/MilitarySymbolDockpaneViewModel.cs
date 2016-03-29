@@ -59,7 +59,6 @@ namespace ProSymbolEditor
 
         //Binded Variables - Text Boxes
         private string _searchString = "";
-        private string _selectedStyleTags = "";
         private string _mapCoordinatesString = "";
 
         //Binded Variables - List Boxes
@@ -129,6 +128,7 @@ namespace ProSymbolEditor
             IsStyleItemSelected = false;
 
             PolyCoordinates = new ObservableCollection<CoordinateObject>();
+            SelectedStyleTags = new ObservableCollection<string>();
 
             _progressDialog = new ProgressDialog("Searching...");
         }
@@ -205,19 +205,6 @@ namespace ProSymbolEditor
             }
         }
 
-        public string SelectedStyleTags
-        {
-            get
-            {
-                return _selectedStyleTags;
-            }
-            set
-            {
-                _selectedStyleTags = value;
-                NotifyPropertyChanged(() => SelectedStyleTags);
-            }
-        }
-
         public bool IsStyleItemSelected
         {
             get
@@ -274,7 +261,12 @@ namespace ProSymbolEditor
                         PolyCoordinateVisibility = Visibility.Visible;
                     }
 
-                    SelectedStyleTags = _selectedStyleItem.Tags;
+                    //Tokenize tags
+                    SelectedStyleTags.Clear();
+                    foreach(string tag in _selectedStyleItem.Tags.Split(';').ToList())
+                    {
+                        SelectedStyleTags.Add(tag);
+                    }
 
                     _symbolAttributeSet.ResetAttributes();
 
@@ -308,6 +300,7 @@ namespace ProSymbolEditor
         public GeometryType GeometryType { get; set; }
 
         public ObservableCollection<CoordinateObject> PolyCoordinates { get; set; }
+        public ObservableCollection<string> SelectedStyleTags { get; set; }
 
         public bool PointCoordinateValid
         {
@@ -491,9 +484,9 @@ namespace ProSymbolEditor
                         if (geodatabasePath.Contains("militaryoverlay.gdb"))
                         {
                             //Correct GDB, open the current selected feature class
-                            FeatureClass testfc = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
-                            using (testfc)
-                            using (FeatureClassDefinition facilitySiteDefinition = testfc.GetDefinition())
+                            FeatureClass featureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
+                            using (featureClass)
+                            using (FeatureClassDefinition facilitySiteDefinition = featureClass.GetDefinition())
                             {
                                 EditOperation editOperation = new EditOperation();
                                 editOperation.Name = "Military Symbol Insert";
@@ -501,11 +494,11 @@ namespace ProSymbolEditor
                                 {
                                     try
                                     {
-                                        RowBuffer rowBuffer = testfc.CreateRowBuffer();
+                                        RowBuffer rowBuffer = featureClass.CreateRowBuffer();
                                         _symbolAttributeSet.PopulateRowBufferWithAttributes(ref rowBuffer);
                                         rowBuffer["Shape"] = GeometryEngine.Project(MapGeometry, facilitySiteDefinition.GetSpatialReference());
 
-                                        Feature feature = testfc.CreateRow(rowBuffer);
+                                        Feature feature = featureClass.CreateRow(rowBuffer);
                                         feature.Store();
 
                                         //To Indicate that the attribute table has to be updated
@@ -515,7 +508,7 @@ namespace ProSymbolEditor
                                     {
                                         message = geodatabaseException.Message;
                                     }
-                                }, testfc);
+                                }, featureClass);
 
                                 var task = editOperation.ExecuteAsync();
                                 creationResult = task.Result;
@@ -590,6 +583,62 @@ namespace ProSymbolEditor
         }
 
         #endregion
+
+        private int _searchUniformGridRows = 2;
+        public int SearchUniformGridRows
+        {
+            get
+            {
+                return _searchUniformGridRows;
+            }
+            set
+            {
+                _searchUniformGridRows = value;
+
+                NotifyPropertyChanged(() => SearchUniformGridRows);
+            }
+        }
+
+        private int _searchUniformGridColumns = 1;
+        public int SearchUniformGridColumns
+        {
+            get
+            {
+                return _searchUniformGridColumns;
+            }
+            set
+            {
+                _searchUniformGridColumns = value;
+
+                NotifyPropertyChanged(() => SearchUniformGridColumns);
+            }
+        }
+
+        private int _searchUniformGridWith;
+        public int SearchUniformGridWidth
+        {
+            get
+            {
+                return _searchUniformGridWith;
+            }
+            set
+            {
+                _searchUniformGridWith = value;
+
+                if (_searchUniformGridColumns < 600)
+                {
+                    SearchUniformGridColumns = 1;
+                    SearchUniformGridRows = 2;
+                }
+                else
+                {
+                    SearchUniformGridColumns = 2;
+                    SearchUniformGridRows = 1;
+                }
+
+                //NotifyPropertyChanged(() => SearchString);
+            }
+        }
 
         #region Private Methods
 

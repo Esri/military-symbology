@@ -97,6 +97,7 @@
     <AddInContent Include="Images\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\StringCharacterValueConverter.cs" />
     <Compile Include="Map Tools\CoordinateMapTool.cs" />
     <Compile Include="Map Tools\DrawFeatureSketchTool.cs" />
     <Compile Include="Models\CoordinateObject.cs" />
