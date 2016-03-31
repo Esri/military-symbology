@@ -162,10 +162,7 @@ namespace ProSymbolEditor
 
                 if (!_isEnabled && IsVisible)
                 {
-                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
-                    {
-                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The Pro Symbol Editor is disabled until the Military Overlay project is opened.");
-                    }));
+                    ProSymbolUtilities.ShowAddInNotEnabledMessageBox();
                 }
             }
         }
@@ -813,10 +810,7 @@ namespace ProSymbolEditor
         {
             if (!ProSymbolEditorModule._isEnabled)
             {
-                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
-                {
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The Pro Symbol Editor is disabled until the Military Overlay project is opened.");
-                }));
+                ProSymbolUtilities.ShowAddInNotEnabledMessageBox();
             }
 
             MilitarySymbolDockpaneViewModel.Show();
