@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace ProSymbolEditor
 {
@@ -32,6 +33,18 @@ namespace ProSymbolEditor
             }
 
             return bitmapImage;
+        }
+
+        public static void ShowAddInNotEnabledMessageBox()
+        {
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
+            {
+                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The Pro Symbol Editor is disabled until the Military Overlay project is opened.  Would you like to go to the website to download the project?", "Add-In Disabled", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (result.ToString() == "Yes")
+                {
+                    System.Diagnostics.Process.Start("http://esriurl.com/AFDMilitaryOverlay");
+                }
+            }));
         }
 
         public static string AddinAssemblyLocation()
