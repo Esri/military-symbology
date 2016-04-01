@@ -265,8 +265,6 @@ namespace ProSymbolEditor
                         SelectedStyleTags.Add(tag);
                     }
 
-                    _symbolAttributeSet.ResetAttributes();
-
                     string[] symbolIdCode = ParseKeyForSymbolIdCode(_selectedStyleItem.Tags);
                     _symbolAttributeSet.SymbolSet = symbolIdCode[0];
                     _symbolAttributeSet.SymbolEntity = symbolIdCode[1];
@@ -285,8 +283,6 @@ namespace ProSymbolEditor
                 {
                     IsStyleItemSelected = false;
                 }
-
-                NotifyPropertyChanged(() => SelectedStyleItem);
             }
         }
 
@@ -690,11 +686,93 @@ namespace ProSymbolEditor
                         }
                     }
                 });
+
+                //Check for affiliation tag
+                string identityCode = "";
+                if (_selectedStyleItem.Tags.ToUpper().Contains("FRIEND"))
+                {
+                    identityCode = await GetDomainValueAsync("identity", "Friend");
+                }
+                else if (_selectedStyleItem.Tags.ToUpper().Contains("HOSTILE"))
+                {
+                    identityCode = await GetDomainValueAsync("identity", "Hostile/Faker");
+                }
+                else if (_selectedStyleItem.Tags.ToUpper().Contains("NEUTRAL"))
+                {
+                    identityCode = await GetDomainValueAsync("identity", "Neutral");
+                }
+                else if (_selectedStyleItem.Tags.ToUpper().Contains("UNKNOWN"))
+                {
+                    identityCode = await GetDomainValueAsync("identity", "Unknown");
+                }
+
+                if (identityCode != "")
+                {
+                    foreach (DomainCodedValuePair dcvp in MilitaryFieldsInspectorModel.IdentityDomainValues)
+                    {
+                        if (dcvp.Code.ToString() == identityCode)
+                        {
+                            SymbolAttributeSet.SelectedIdentityDomainPair = dcvp;
+                            break;
+                        }
+                    }
+                }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 System.Diagnostics.Debug.WriteLine(exception.ToString());
             }
+        }
+
+        private async Task<string> GetDomainValueAsync(string fieldName, string key)
+        {
+            try
+            {
+                IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
+                return await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+                {
+                    foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
+                    {
+                        using (Datastore datastore = gdbProjectItem.GetDatastore())
+                        {
+                            //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
+                            if (datastore is UnknownDatastore)
+                                continue;
+                            Geodatabase geodatabase = datastore as Geodatabase;
+
+                            string geodatabasePath = geodatabase.GetPath();
+                            if (geodatabasePath.Contains("militaryoverlay.gdb"))
+                            {
+                                //Correct GDB, open the current selected feature class
+                                _currentFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
+                                using (_currentFeatureClass)
+                                {
+                                    ArcGIS.Core.Data.FeatureClassDefinition facilitySiteDefinition = _currentFeatureClass.GetDefinition();
+                                    IReadOnlyList<ArcGIS.Core.Data.Field> fields = facilitySiteDefinition.GetFields();
+
+                                    ArcGIS.Core.Data.Field foundField = fields.FirstOrDefault(field => field.Name == fieldName);
+
+                                    if (foundField != null)
+                                    {
+                                        CodedValueDomain domain = foundField.GetDomain() as CodedValueDomain;
+                                        return domain.GetCodedValue(key).ToString();         
+                                    }
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+
+                    return "";
+                });
+            }
+            catch (Exception exception)
+            {
+                System.Diagnostics.Debug.WriteLine(exception.ToString());
+            }
+
+            return null;
         }
 
         private string[] ParseKeyForSymbolIdCode(string key)

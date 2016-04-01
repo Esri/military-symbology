@@ -16,6 +16,7 @@ namespace ProSymbolEditor
     {
         //Base attributes
         private string _identity;
+        private DomainCodedValuePair _selectedIdentityDomainPair;
         private string _statuses;
         private string _operationalCondition;
         private string _echelon;
@@ -89,7 +90,27 @@ namespace ProSymbolEditor
                 _identity = value;
                 GenerateSelectedSymbolTagsString();
                 GeneratePreviewSymbol();
-                //NotifyPropertyChanged(() => Identity);
+            }
+        }
+
+        public DomainCodedValuePair SelectedIdentityDomainPair
+        {
+            get
+            {
+                return _selectedIdentityDomainPair;
+            }
+            set
+            {
+                _selectedIdentityDomainPair = value;
+                if (_selectedIdentityDomainPair != null)
+                {
+                    Identity = _selectedIdentityDomainPair.Code.ToString();
+                }
+                else
+                {
+                    Identity = "";
+                }
+                NotifyPropertyChanged(() => SelectedIdentityDomainPair);
             }
         }
 

@@ -194,8 +194,12 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <ToggleButton Name="searchAddToMapButton" Grid.Column="0" Content="Add to Map" IsEnabled="{Binding IsStyleItemSelected}" IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}" Command="{Binding ActivateAddToMapToolCommand}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" ToolTip="Esri_SimpleButton" HorizontalAlignment="Center" Width="90"/>
-                                <Button x:Name="modifyButton" Grid.Column="1" Content="Modify-->" IsEnabled="{Binding IsStyleItemSelected}" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="2" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Height="24" Width="75"/>
+                                <ToggleButton Name="searchAddToMapButton" Grid.Column="0" Content="Add to Map" IsEnabled="{Binding IsStyleItemSelected}" IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}" Command="{Binding ActivateAddToMapToolCommand}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" ToolTip="Add to Map" HorizontalAlignment="Center" Width="90"/>
+                                <Button x:Name="modifyButton" Grid.Column="1" IsEnabled="{Binding IsStyleItemSelected}" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="2" ToolTip="Go to Modify Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                    <Button.RenderTransform>
+                                        <ScaleTransform ScaleX="-1" />
+                                    </Button.RenderTransform>
+                                </Button>
                             </Grid>
                         </Grid>
                     </TabItem>
@@ -231,7 +235,7 @@
                                     <!-- Identity/Affiliation -->
 
                                     <Label Content="Identity/Affiliation" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0" Visibility="{Binding ElementName=identityComboBox, Path=Visibility}"/>
-                                    <ComboBox x:Name="identityComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.IdentityDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Identity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="Identity" Grid.Column="1" Grid.Row="0">
+                                    <ComboBox x:Name="identityComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.IdentityDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.SelectedIdentityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0">
                                         <ComboBox.Style>
                                             <Style TargetType="ComboBox">
                                                 <Style.Triggers>
@@ -365,7 +369,7 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    
+
                                     <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
                                     <!-- All Selected Symbol Tags-->
@@ -396,8 +400,8 @@
                                         <Label Content="{Binding SymbolAttributeSet.SymbolEntity, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="{Binding ElementName=statusesComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="{Binding ElementName=tfFdHqComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="5" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                                                               
-                                        
+
+
                                         <!--<Label Content="Version" FontSize="10" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
                                         <Label Content="Context" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="Identity" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
@@ -411,11 +415,11 @@
                                         <Label Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
                                             <TextBlock Text="TF/FD/HQ" FontSize="10" TextWrapping="Wrap"/>
                                         </Label>
-                                                                                                                       <!--<Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
+                                        <!--<Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
                                             <TextBlock Text="Standard Identity" FontSize="10" TextWrapping="Wrap"/>
                                         </Label>-->
 
-                                        
+
 
                                         <!--<Label Grid.Column="6" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
                                             <TextBlock Text="Amplifier / Descriptor" FontSize="10" TextWrapping="Wrap"/>
@@ -424,8 +428,8 @@
                                     </Grid>
 
                                     <Grid Grid.Row="2" Margin="0,10,0,10">
-                                        
-                                        
+
+
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="*"/>
@@ -445,7 +449,7 @@
                                         <Label Content="{Binding ElementName=echelonComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="{Binding ElementName=modifier1ComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="{Binding ElementName=modifier2ComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        
+
 
 
                                         <!--<Label Content="12" FontSize="8" Grid.Column="0"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
@@ -481,14 +485,17 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Content="&lt;-- Search" Grid.Column="0" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="0" HorizontalAlignment="Left" Width="82"/>
+                                <Button Grid.Column="0" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="0" HorizontalAlignment="Left" ToolTip="Back to Search"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="81" Visibility="Collapsed"/>
-                                <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Esri_SimpleButton" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82"/>
-                                <Button Content="Text -->" Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="82"/>
+                                <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Add to Map" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82"/>
+                                <Button Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Text" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                    <Button.RenderTransform>
+                                        <ScaleTransform ScaleX="-1" />
+                                    </Button.RenderTransform>
+                                </Button>
 
                             </Grid>
                         </Grid>
-
                     </TabItem>
                     <TabItem Header="Text" IsEnabled="{Binding IsStyleItemSelected}">
 
@@ -606,11 +613,15 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                
-                                <Button Content="&lt;-- Modify" Grid.Column="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="2" HorizontalAlignment="Left" Width="82"/>
+
+                                <Button Grid.Column="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="2" HorizontalAlignment="Left" ToolTip="Back to Modify"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="82" Visibility="Collapsed"/>
-                                <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82"/>
-                                <Button Content="Coordinates -->" Grid.Column="3" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="107"/>
+                                <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Add to Map"/>
+                                <Button Grid.Column="3" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Enter Coordinates" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                    <Button.RenderTransform>
+                                        <ScaleTransform ScaleX="-1" />
+                                    </Button.RenderTransform>
+                                </Button>
                             </Grid>
                         </Grid>
 
@@ -775,8 +786,8 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Content="&lt;-- Text" Grid.Column="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Esri_SimpleButton" HorizontalAlignment="Left" Width="101"/>
-                                <ToggleButton Content="Add to Map" Grid.Column="1" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="101"/>
+                                <Button Grid.Column="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Back to Text" HorizontalAlignment="Left"/>
+                                <ToggleButton Content="Add to Map" Grid.Column="1" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="101" ToolTip="Add to Map"/>
                                 <Button Content="Favorites -->" Grid.Column="2" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" ToolTip="Esri_SimpleButton" HorizontalAlignment="Right" Width="101" Visibility="Collapsed"/>
                             </Grid>
                         </Grid>
