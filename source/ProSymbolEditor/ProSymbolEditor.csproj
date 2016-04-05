@@ -133,6 +133,8 @@
     <Content Include="Dependencies\MilitarySymbols\Svg.dll" />
     <AddInContent Include="Images\GenericButtonRed16.png" />
     <AddInContent Include="Images\GenericButtonRed32.png" />
+    <AddInContent Include="Images\MIL-16x16.png" />
+    <AddInContent Include="Images\MIL-32x32.png" />
     <Content Include="Images\MIL_STD_2525D_Symbols\Amplifier\131.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
