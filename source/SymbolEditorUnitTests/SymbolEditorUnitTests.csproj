@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,6 +38,9 @@
   <ItemGroup>
     <Reference Include="ArcGIS.Core">
       <HintPath>..\..\..\..\..\Program Files\ArcGIS\Pro\bin\ArcGIS.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ArcGIS.CoreHost">
+      <HintPath>..\..\..\..\..\Program Files\ArcGIS\Pro\bin\ArcGIS.CoreHost.dll</HintPath>
     </Reference>
     <Reference Include="ArcGIS.Desktop.Catalog">
       <HintPath>..\..\..\..\..\Program Files\ArcGIS\Pro\bin\Extensions\Catalog\ArcGIS.Desktop.Catalog.dll</HintPath>

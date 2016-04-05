@@ -7,6 +7,7 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 
 * Addin for ArcGIS Pro 1.2
 * Quickly and easily search, modify attributes, and preview multilayer military symbols using ArcGIS Pro
+* Add created symbols to the map through clicking/drawing or by typing in coordinates
 
 ## Sections
 
@@ -64,11 +65,21 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 		* The Search tab is the first tab:
 			* Type a search term into the bar, and click Search (or hit enter)
 			* The tool will return matches to that term in the Military style file
-			* Selecting a search result will show a low resolution preview next to it
-			* Click the modify button or the modify tab when you have selected a style symbol-editor-addin-wpf
-		* The Modify tab is the third tab:
+			* Selecting a search result will show a preview and associated tags with that symbol
+			* Click the next arrow button or the modify tab when you have selected a style
+		* The Modify tab is the second tab:
 			* The application will display all attributes associated with the chosen style, with combo boxes for selecting values
 			* As you select values, the symbol will update to incorporate those changes
+			* A table below has a summary of the values you select
+			* After you are finished loading values, click the next arrow or the Text tab
+		* The Text tab is the third tab:
+			* Various values that will be saved into the feature are available for edit here.  These values will appear around the symbol on the map.
+			* After you are finished populating any text values, you can click the next arrow button to go the last tab.
+		* The Coordinate tab is the fourth tab:
+			* Coordinates can be entered in DD, DMS, DD, or other coordinate systems.
+			* Once valid coordinates are entered, a button can be clicked to add a feature to those coordinates.
+			* Invalid coordinates will show with a red box around it.
+			* At any time in this process, the "Add to Map" button, which is on every tab, could be clicked to graphically add the feature to the map by clicking.
 					
 
 ## Resources

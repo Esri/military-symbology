@@ -74,7 +74,7 @@
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>-->
 
-                            
+
                                 <Grid>
                                     <!--<Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -85,7 +85,7 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
-                                
+
                                     <TextBox x:Name="searchSymbolsTextBox" HorizontalAlignment="Stretch" Height="23" Margin="5,5,5,5" TextWrapping="Wrap" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=2000}" Grid.Row="0">
                                         <TextBox.Style>
                                             <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
@@ -110,14 +110,14 @@
                                             </Style>
                                         </TextBox.Style>
                                     </TextBox>
-                                <!--</Grid>
+                                    <!--</Grid>
 
                                 <Grid>-->
                                     <!--<Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="2*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>-->
-                                
+
                                     <ListBox x:Name="symbolListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="5,5,5,5" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
                                                 SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1">
 
@@ -143,7 +143,7 @@
                                         </ListBox.ItemTemplate>
                                     </ListBox>
 
-                                
+
 
                                 </Grid>
 
@@ -157,7 +157,7 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>-->
-                                
+
                                     <Image x:Name="searchTabImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Margin="20,5,20,5" Grid.Row="0" VerticalAlignment="Bottom"/>
 
                                     <ItemsControl Name="tStack" ItemsSource="{Binding SelectedStyleTags, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10">
@@ -214,273 +214,262 @@
                             </Grid.RowDefinitions>
 
                             <ScrollViewer>
-                            <UniformGrid Name="modifyUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged" Grid.Row="0">
+                                <UniformGrid Name="modifyUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged" Grid.Row="0">
 
-                                
+
                                     <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <!-- Identity/Affiliation -->
-
-                                    <Label Content="Identity/Affiliation" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0" Visibility="{Binding ElementName=identityComboBox, Path=Visibility}"/>
-                                    <ComboBox x:Name="identityComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.IdentityDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.SelectedIdentityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0">
-                                        <ComboBox.Style>
-                                            <Style TargetType="ComboBox">
-                                                <Style.Triggers>
-                                                    <Trigger Property="HasItems" Value="False">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ComboBox.Style>
-                                    </ComboBox>
-
-                                    <!-- Status or Operation -->
-
-                                    <Label Grid.Column="0" Grid.Row="1" Margin="5,5,5,5" Content="Status/Planned" Visibility="{Binding ElementName=statusesComboBox, Path=Visibility}"/>
-                                    <ComboBox x:Name="statusesComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.StatusesDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Statuses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1">
-                                        <ComboBox.Style>
-                                            <Style TargetType="ComboBox">
-                                                <Style.Triggers>
-                                                    <Trigger Property="HasItems" Value="False">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ComboBox.Style>
-                                    </ComboBox>
-
-                                    <Label Content="Operational Condition Amplifier" Margin="5,5,5,5" Grid.Column="0" Grid.Row="2" Visibility="{Binding ElementName=operationalConditionAmplifierComboBox, Path=Visibility}"/>
-                                    <ComboBox x:Name="operationalConditionAmplifierComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.OperationalCondition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2">
-                                        <ComboBox.Style>
-                                            <Style TargetType="ComboBox">
-                                                <Style.Triggers>
-                                                    <Trigger Property="HasItems" Value="False">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ComboBox.Style>
-                                    </ComboBox>
-
-                                    <!-- TFFDHQ/Indicator -->
-
-                                    <Label Content="TF, FD, HQ" Margin="5,5,5,5" Grid.Column="0" Grid.Row="3" Visibility="{Binding ElementName=tfFdHqComboBox, Path=Visibility}"/>
-                                    <ComboBox x:Name="tfFdHqComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="3" ItemsSource="{Binding MilitaryFieldsInspectorModel.TfFdHqDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Indicator, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                        <ComboBox.Style>
-                                            <Style TargetType="ComboBox">
-                                                <Style.Triggers>
-                                                    <Trigger Property="HasItems" Value="False">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ComboBox.Style>
-                                    </ComboBox>
-
-                                    <!-- Echelon or Mobility -->
-
-                                    <Label Content="Echelon" Margin="5,5,5,5" Grid.Column="0" Grid.Row="4" Visibility="{Binding ElementName=echelonComboBox, Path=Visibility}"/>
-                                    <ComboBox x:Name="echelonComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.EcholonDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Echelon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4">
-                                        <ComboBox.Style>
-                                            <Style TargetType="ComboBox">
-                                                <Style.Triggers>
-                                                    <Trigger Property="HasItems" Value="False">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ComboBox.Style>
-                                    </ComboBox>
-
-                                    <Label Content="Mobility" Margin="5,5,5,5" Grid.Column="0" Grid.Row="5" Visibility="{Binding ElementName=mobilityComboBox, Path=Visibility}"/>
-                                    <ComboBox x:Name="mobilityComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="5" ItemsSource="{Binding MilitaryFieldsInspectorModel.MobilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Mobility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                        <ComboBox.Style>
-                                            <Style TargetType="ComboBox">
-                                                <Style.Triggers>
-                                                    <Trigger Property="HasItems" Value="False">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ComboBox.Style>
-                                    </ComboBox>
-
-                                    <!-- Identity/Reality/Context -->
-
-                                    <Label Content="Context" Margin="5,5,5,5" Grid.Column="0" Grid.Row="6" Visibility="{Binding ElementName=contextComboBox, Path=Visibility}"/>
-                                    <ComboBox x:Name="contextComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="6" ItemsSource="{Binding MilitaryFieldsInspectorModel.ContextDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Context, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                        <ComboBox.Style>
-                                            <Style TargetType="ComboBox">
-                                                <Style.Triggers>
-                                                    <Trigger Property="HasItems" Value="False">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ComboBox.Style>
-                                    </ComboBox>
-
-                                    <!-- Modifier 1 -->
-
-                                    <Label Content="Modifier 1" Margin="5,5,5,5" Grid.Column="0" Grid.Row="7" Visibility="{Binding ElementName=modifier1ComboBox, Path=Visibility}"/>
-                                    <ComboBox x:Name="modifier1ComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="7" ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier1DomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Modifier1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                        <ComboBox.Style>
-                                            <Style TargetType="ComboBox">
-                                                <Style.Triggers>
-                                                    <Trigger Property="HasItems" Value="False">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ComboBox.Style>
-                                    </ComboBox>
-
-                                    <!-- Modifier 2 -->
-
-                                    <Label Content="Modifier 2" Margin="5,5,5,5" Grid.Column="0" Grid.Row="8" Visibility="{Binding ElementName=modifier2ComboBox, Path=Visibility}"/>
-                                    <ComboBox x:Name="modifier2ComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="8" ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier2DomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Modifier2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                        <ComboBox.Style>
-                                            <Style TargetType="ComboBox">
-                                                <Style.Triggers>
-                                                    <Trigger Property="HasItems" Value="False">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ComboBox.Style>
-                                    </ComboBox>
-                                </Grid>
-                                
-
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-
-                                    <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-
-                                    <!-- All Selected Symbol Tags-->
-                                    <!--<TextBlock x:Name="selectedSymbolTagsTextBlock" Margin="10,0,10,10" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Stretch"/>-->
-
-                                    <Grid Grid.Row="1" Margin="0,10,0,0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <!--<Label Content="Set A" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
+                                        <!-- Identity/Affiliation -->
 
-                                        <!--<Label Content="1" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+                                        <Label Content="Identity/Affiliation" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0" Visibility="{Binding ElementName=identityComboBox, Path=Visibility}"/>
+                                        <ComboBox x:Name="identityComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.IdentityDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.SelectedIdentityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+
+                                        <!-- Status or Operation -->
+
+                                        <Label Grid.Column="0" Grid.Row="1" Margin="5,5,5,5" Content="Status/Planned" Visibility="{Binding ElementName=statusesComboBox, Path=Visibility}"/>
+                                        <ComboBox x:Name="statusesComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.StatusesDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Statuses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+
+                                        <Label Content="Operational Condition Amplifier" Margin="5,5,5,5" Grid.Column="0" Grid.Row="2" Visibility="{Binding ElementName=operationalConditionAmplifierComboBox, Path=Visibility}"/>
+                                        <ComboBox x:Name="operationalConditionAmplifierComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.OperationalCondition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+
+                                        <!-- TFFDHQ/Indicator -->
+
+                                        <Label Content="TF, FD, HQ" Margin="5,5,5,5" Grid.Column="0" Grid.Row="3" Visibility="{Binding ElementName=tfFdHqComboBox, Path=Visibility}"/>
+                                        <ComboBox x:Name="tfFdHqComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="3" ItemsSource="{Binding MilitaryFieldsInspectorModel.TfFdHqDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Indicator, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+
+                                        <!-- Echelon or Mobility -->
+
+                                        <Label Content="Echelon" Margin="5,5,5,5" Grid.Column="0" Grid.Row="4" Visibility="{Binding ElementName=echelonComboBox, Path=Visibility}"/>
+                                        <ComboBox x:Name="echelonComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.EcholonDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Echelon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+
+                                        <Label Content="Mobility" Margin="5,5,5,5" Grid.Column="0" Grid.Row="5" Visibility="{Binding ElementName=mobilityComboBox, Path=Visibility}"/>
+                                        <ComboBox x:Name="mobilityComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="5" ItemsSource="{Binding MilitaryFieldsInspectorModel.MobilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Mobility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+
+                                        <!-- Identity/Reality/Context -->
+
+                                        <Label Content="Context" Margin="5,5,5,5" Grid.Column="0" Grid.Row="6" Visibility="{Binding ElementName=contextComboBox, Path=Visibility}"/>
+                                        <ComboBox x:Name="contextComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="6" ItemsSource="{Binding MilitaryFieldsInspectorModel.ContextDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Context, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+
+                                        <!-- Modifier 1 -->
+
+                                        <Label Content="Modifier 1" Margin="5,5,5,5" Grid.Column="0" Grid.Row="7" Visibility="{Binding ElementName=modifier1ComboBox, Path=Visibility}"/>
+                                        <ComboBox x:Name="modifier1ComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="7" ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier1DomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Modifier1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+
+                                        <!-- Modifier 2 -->
+
+                                        <Label Content="Modifier 2" Margin="5,5,5,5" Grid.Column="0" Grid.Row="8" Visibility="{Binding ElementName=modifier2ComboBox, Path=Visibility}"/>
+                                        <ComboBox x:Name="modifier2ComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="8" ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier2DomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Modifier2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+                                    </Grid>
+
+
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+                                        <!-- All Selected Symbol Tags-->
+                                        <!--<TextBlock x:Name="selectedSymbolTagsTextBlock" Margin="10,0,10,10" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Stretch"/>-->
+
+                                        <Grid Grid.Row="1" Margin="0,10,0,0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!--<Label Content="Set A" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
+
+                                            <!--<Label Content="1" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="0" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>-->
-                                        <Label Content="{Binding ElementName=contextComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=identityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding SymbolAttributeSet.SymbolSet, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding SymbolAttributeSet.SymbolEntity, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=statusesComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=tfFdHqComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="5" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding ElementName=contextComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding ElementName=identityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding SymbolAttributeSet.SymbolSet, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding SymbolAttributeSet.SymbolEntity, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding ElementName=statusesComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding ElementName=tfFdHqComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="5" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
 
 
-                                        <!--<Label Content="Version" FontSize="10" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
-                                        <Label Content="Context" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="Identity" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="Symbol Set" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>
-                                        <Label Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="Symbol Entity" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>
-                                        <Label Content="Status" FontSize="10" Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="TF/FD/HQ" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>
-                                        <!--<Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
+                                            <!--<Label Content="Version" FontSize="10" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
+                                            <Label Content="Context" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="Identity" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
+                                                <TextBlock Text="Symbol Set" FontSize="10" TextWrapping="Wrap"/>
+                                            </Label>
+                                            <Label Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
+                                                <TextBlock Text="Symbol Entity" FontSize="10" TextWrapping="Wrap"/>
+                                            </Label>
+                                            <Label Content="Status" FontSize="10" Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
+                                                <TextBlock Text="TF/FD/HQ" FontSize="10" TextWrapping="Wrap"/>
+                                            </Label>
+                                            <!--<Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
                                             <TextBlock Text="Standard Identity" FontSize="10" TextWrapping="Wrap"/>
                                         </Label>-->
 
 
 
-                                        <!--<Label Grid.Column="6" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
+                                            <!--<Label Grid.Column="6" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
                                             <TextBlock Text="Amplifier / Descriptor" FontSize="10" TextWrapping="Wrap"/>
                                         </Label>-->
 
+                                        </Grid>
+
+                                        <Grid Grid.Row="2" Margin="0,10,0,10">
+
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!--<Label Content="Set B" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
+                                            <Label Content="{Binding ElementName=operationalConditionAmplifierComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding ElementName=mobilityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding ElementName=echelonComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding ElementName=modifier1ComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding ElementName=modifier2ComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+
+
+                                            <Label Content="Operational" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+
+                                            <Label Content="Mobility" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="Echelon" FontSize="10" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Grid.Column="3"  Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
+                                                <TextBlock Text="Modifier 1" FontSize="10" TextWrapping="Wrap"/>
+                                            </Label>
+                                            <Label Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
+                                                <TextBlock Text="Modifier 2" FontSize="10" TextWrapping="Wrap"/>
+                                            </Label>
+
+                                        </Grid>
                                     </Grid>
-
-                                    <Grid Grid.Row="2" Margin="0,10,0,10">
-
-
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="*"/>
-                                        </Grid.RowDefinitions>
-
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <!--<Label Content="Set B" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
-                                        <Label Content="{Binding ElementName=operationalConditionAmplifierComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=mobilityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=echelonComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=modifier1ComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=modifier2ComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-
-
-
-                                        <!--<Label Content="12" FontSize="8" Grid.Column="0"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="12" FontSize="8" Grid.Column="1"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="13" FontSize="8" Grid.Column="2"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="14" FontSize="8" Grid.Column="3"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="15" FontSize="8" Grid.Column="4"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="16" FontSize="8" Grid.Column="5"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="17" FontSize="8" Grid.Column="6"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="18" FontSize="8" Grid.Column="7"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="19" FontSize="8" Grid.Column="8"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="20" FontSize="8" Grid.Column="9"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
-                                        <Label Content="Operational" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-
-                                        <Label Content="Mobility" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="Echelon" FontSize="10" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Grid.Column="3"  Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="Modifier 1" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>
-                                        <Label Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="Modifier 2" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>
-
-                                    </Grid>
-                                </Grid>
-                            </UniformGrid>
+                                </UniformGrid>
                             </ScrollViewer>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -797,100 +786,9 @@
                             </Grid>
                         </Grid>
                     </TabItem>
-                    
+
                 </TabControl>
-
-
-
-
             </Grid>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <!--<Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="input" Text="{Binding InputCoordinate, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding InputCoordinateHistoryList}"
-                              HorizontalAlignment="Stretch" Margin="0,0,0,3" IsEditable="True">
-                        <ComboBox.Style>
-                            <Style>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasInputError}" Value="True">
-                                        <Setter Property="TextBox.Background" Value="LightPink"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding HasInputError}" Value="False">
-                                        <Setter Property="TextBox.Background" Value="White"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ComboBox.Style>
-                    </ComboBox>
-                    <Button Grid.Column="1" ToolTip="Add" Command="{Binding AddNewOCCommand}" Margin="3,0,0,3" >
-                        <Image Source="/CoordinateToolLibrary;component/Images/hand.png" Width="18" Height="18" />
-                    </Button>
-                    <Button Grid.Column="2" ToolTip="Map Point Tool" Command="{Binding ActivatePointToolCommand}" Margin="3,0,0,3">
-                        <Image Source="/CoordinateToolLibrary;component/Images/pointtool.png" Width="18" Height="18" />
-                    </Button>
-                    <Button Grid.Column="3" ToolTip="Flash" Command="{Binding FlashPointCommand}" Margin="3,0,0,3">
-                        <Image Source="/CoordinateToolLibrary;component/Images/tip.png" Width="18" Height="18" />
-                    </Button>
-                    <Button Grid.Column="4" ToolTip="Copy All" Command="{Binding CopyAllCommand}" Margin="3,0,0,3">
-                        <Image Source="/CoordinateToolLibrary;component/Images/EditCopy32_d.png" Width="18" Height="18" />
-                    </Button>
-                </Grid>
-                <UserControl Content="{Binding CTView}" />-->
-            </DockPanel>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!--<Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <DockPanel Grid.Row="0" LastChildFill="true" KeyboardNavigation.TabNavigation="Local" Height="30">
-            --><!--<TextBlock Grid.Column="1" Text="{Binding Heading}" VerticalAlignment="Center" HorizontalAlignment="Center"
-				FontSize="16" FontWeight="Light">
-                <TextBlock.ToolTip>
-                    <WrapPanel Orientation="Vertical" MaxWidth="300">
-                        <TextBlock Text="{Binding Heading}" TextWrapping="Wrap"/>
-                    </WrapPanel>
-                </TextBlock.ToolTip>
-			</TextBlock>--><!--
-        </DockPanel>-->
-        
+        </DockPanel>
     </Grid>
 </UserControl>
