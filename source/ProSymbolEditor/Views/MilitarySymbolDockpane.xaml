@@ -213,9 +213,10 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
+                            <ScrollViewer>
                             <UniformGrid Name="modifyUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged" Grid.Row="0">
 
-                                <ScrollViewer>
+                                
                                     <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
@@ -295,7 +296,7 @@
                                     <!-- Echelon or Mobility -->
 
                                     <Label Content="Echelon" Margin="5,5,5,5" Grid.Column="0" Grid.Row="4" Visibility="{Binding ElementName=echelonComboBox, Path=Visibility}"/>
-                                    <ComboBox x:Name="echelonComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.EcholonsDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Echelon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4">
+                                    <ComboBox x:Name="echelonComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.EcholonDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedValue="{Binding SymbolAttributeSet.Echelon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4">
                                         <ComboBox.Style>
                                             <Style TargetType="ComboBox">
                                                 <Style.Triggers>
@@ -365,7 +366,7 @@
                                         </ComboBox.Style>
                                     </ComboBox>
                                 </Grid>
-                                </ScrollViewer>
+                                
 
                                 <Grid>
                                     <Grid.RowDefinitions>
@@ -374,7 +375,7 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                    <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                    <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
                                     <!-- All Selected Symbol Tags-->
                                     <!--<TextBlock x:Name="selectedSymbolTagsTextBlock" Margin="10,0,10,10" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Stretch"/>-->
@@ -480,7 +481,7 @@
                                     </Grid>
                                 </Grid>
                             </UniformGrid>
-
+                            </ScrollViewer>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
