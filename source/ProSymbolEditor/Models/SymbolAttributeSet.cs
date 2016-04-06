@@ -548,64 +548,64 @@ namespace ProSymbolEditor
 
         public void PopulateRowBufferWithAttributes(ref RowBuffer rowBuffer)
         {
-            if (string.IsNullOrEmpty(_identity))
+            if (!string.IsNullOrEmpty(_identity))
             {
                 rowBuffer["identity"] = _identity;
             }
 
-            if (string.IsNullOrEmpty(_symbolSet))
+            if (!string.IsNullOrEmpty(_symbolSet))
             {
                 rowBuffer["symbolset"] = Convert.ToInt32(_symbolSet);
             }
 
-            if (string.IsNullOrEmpty(_symbolEntity))
+            if (!string.IsNullOrEmpty(_symbolEntity))
             {
                 rowBuffer["symbolentity"] = Convert.ToInt32(_symbolEntity);
             }
 
             //Indicator / HQTFFD /
 
-            if (string.IsNullOrEmpty(_indicator))
+            if (!string.IsNullOrEmpty(_indicator))
             {
                 rowBuffer["indicator"] = _indicator;
             }
 
             //Echelon or Mobility
 
-            if (string.IsNullOrEmpty(_echelon))
+            if (!string.IsNullOrEmpty(_echelon))
             {
                 rowBuffer["echelon"] = _echelon;
             }
 
-            if (string.IsNullOrEmpty(_mobility))
+            if (!string.IsNullOrEmpty(_mobility))
             {
                 rowBuffer["mobility"] = _mobility;
             }
 
             //Statuses or Operation
 
-            if (string.IsNullOrEmpty(_operationalCondition))
+            if (!string.IsNullOrEmpty(_operationalCondition))
             {
                 rowBuffer["operationalcondition"] = _operationalCondition;
             }
 
-            if (string.IsNullOrEmpty(_statuses))
+            if (!string.IsNullOrEmpty(_statuses))
             {
                 rowBuffer["status"] = _statuses;
             }
 
             //Delta attributes
-            if (string.IsNullOrEmpty(_context))
+            if (!string.IsNullOrEmpty(_context))
             {
                 rowBuffer["context"] = _context;
             }
 
-            if (string.IsNullOrEmpty(_modifier1))
+            if (!string.IsNullOrEmpty(_modifier1))
             {
                 rowBuffer["modifier1"] = _modifier1;
             }
 
-            if (string.IsNullOrEmpty(_modifier2))
+            if (!string.IsNullOrEmpty(_modifier2))
             {
                 rowBuffer["modifier2"] = _modifier2;
             }
@@ -621,27 +621,27 @@ namespace ProSymbolEditor
                 rowBuffer["datetimeexpired"] = DateTimeExpired.ToString();
             }
             
-            if (string.IsNullOrEmpty(UniqueDesignation))
+            if (!string.IsNullOrEmpty(UniqueDesignation))
             {
                 rowBuffer["uniquedesignation"] = UniqueDesignation;
             }
 
-            if (string.IsNullOrEmpty(StaffComments))
+            if (!string.IsNullOrEmpty(StaffComments))
             {
                 rowBuffer["staffcomment"] = StaffComments;
             }
 
-            if (string.IsNullOrEmpty(AdditionalInformation))
+            if (!string.IsNullOrEmpty(AdditionalInformation))
             {
                 rowBuffer["additionalinformation"] = AdditionalInformation;
             }
 
-            if (string.IsNullOrEmpty(Type))
+            if (!string.IsNullOrEmpty(Type))
             {
                 rowBuffer["type"] = Type;
             }
 
-            if (string.IsNullOrEmpty(CommonIdentifier))
+            if (!string.IsNullOrEmpty(CommonIdentifier))
             {
                 rowBuffer["commonidentifier"] = CommonIdentifier;
             }
@@ -652,22 +652,22 @@ namespace ProSymbolEditor
                 rowBuffer["speed"] = Speed;
             }
 
-            if (string.IsNullOrEmpty(HigherFormation))
+            if (!string.IsNullOrEmpty(HigherFormation))
             {
                 rowBuffer["higherFormation"] = HigherFormation;
             }
 
-            if (string.IsNullOrEmpty(Reinforced))
+            if (!string.IsNullOrEmpty(Reinforced))
             {
                 rowBuffer["reinforced"] = Reinforced;
             }
 
-            if (string.IsNullOrEmpty(Credibility))
+            if (!string.IsNullOrEmpty(Credibility))
             {
                 rowBuffer["credibility"] = Credibility;
             }
 
-            if (string.IsNullOrEmpty(Reliability))
+            if (!string.IsNullOrEmpty(Reliability))
             {
                 rowBuffer["reliability"] = Reliability;
             }
