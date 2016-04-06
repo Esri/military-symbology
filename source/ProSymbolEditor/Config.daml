@@ -28,7 +28,7 @@
       </groups>
       <controls>
         <!-- add your controls here -->
-        <button id="ProSymbolEditor_MilitarySymbolDockpane_ShowButton" caption="Military Symbol Designer " className="MilitarySymbolDockpane_ShowButton" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
+        <button id="ProSymbolEditor_MilitarySymbolDockpane_ShowButton" caption="Military Symbol Designer " className="MilitarySymbolDockpane_ShowButton" loadOnClick="true" smallImage="Images\MIL-16x16.png" largeImage="Images\MIL-32x32.png">
           <tooltip heading="Show Dockpane">Show Dockpane<disabledText /></tooltip>
         </button>
         <!--<button id="ProSymbolEditor_MilitarySymbolDockpane_MenuButton" caption="Burger Menu Button" className="MilitarySymbolDockpane_MenuButton" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">

@@ -1,4 +1,20 @@
-﻿using System;
+﻿/*******************************************************************************
+ * Copyright 2016 Esri
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ ******************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -162,10 +178,7 @@ namespace ProSymbolEditor
 
                 if (!_isEnabled && IsVisible)
                 {
-                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
-                    {
-                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The Pro Symbol Editor is disabled until the Military Overlay project is opened.");
-                    }));
+                    ProSymbolUtilities.ShowAddInNotEnabledMessageBox();
                 }
             }
         }
@@ -268,8 +281,6 @@ namespace ProSymbolEditor
                         SelectedStyleTags.Add(tag);
                     }
 
-                    _symbolAttributeSet.ResetAttributes();
-
                     string[] symbolIdCode = ParseKeyForSymbolIdCode(_selectedStyleItem.Tags);
                     _symbolAttributeSet.SymbolSet = symbolIdCode[0];
                     _symbolAttributeSet.SymbolEntity = symbolIdCode[1];
@@ -288,8 +299,6 @@ namespace ProSymbolEditor
                 {
                     IsStyleItemSelected = false;
                 }
-
-                NotifyPropertyChanged(() => SelectedStyleItem);
             }
         }
 
@@ -693,11 +702,93 @@ namespace ProSymbolEditor
                         }
                     }
                 });
+
+                //Check for affiliation tag
+                string identityCode = "";
+                if (_selectedStyleItem.Tags.ToUpper().Contains("FRIEND"))
+                {
+                    identityCode = await GetDomainValueAsync("identity", "Friend");
+                }
+                else if (_selectedStyleItem.Tags.ToUpper().Contains("HOSTILE"))
+                {
+                    identityCode = await GetDomainValueAsync("identity", "Hostile/Faker");
+                }
+                else if (_selectedStyleItem.Tags.ToUpper().Contains("NEUTRAL"))
+                {
+                    identityCode = await GetDomainValueAsync("identity", "Neutral");
+                }
+                else if (_selectedStyleItem.Tags.ToUpper().Contains("UNKNOWN"))
+                {
+                    identityCode = await GetDomainValueAsync("identity", "Unknown");
+                }
+
+                if (identityCode != "")
+                {
+                    foreach (DomainCodedValuePair dcvp in MilitaryFieldsInspectorModel.IdentityDomainValues)
+                    {
+                        if (dcvp.Code.ToString() == identityCode)
+                        {
+                            SymbolAttributeSet.SelectedIdentityDomainPair = dcvp;
+                            break;
+                        }
+                    }
+                }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 System.Diagnostics.Debug.WriteLine(exception.ToString());
             }
+        }
+
+        private async Task<string> GetDomainValueAsync(string fieldName, string key)
+        {
+            try
+            {
+                IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
+                return await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+                {
+                    foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
+                    {
+                        using (Datastore datastore = gdbProjectItem.GetDatastore())
+                        {
+                            //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
+                            if (datastore is UnknownDatastore)
+                                continue;
+                            Geodatabase geodatabase = datastore as Geodatabase;
+
+                            string geodatabasePath = geodatabase.GetPath();
+                            if (geodatabasePath.Contains("militaryoverlay.gdb"))
+                            {
+                                //Correct GDB, open the current selected feature class
+                                _currentFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
+                                using (_currentFeatureClass)
+                                {
+                                    ArcGIS.Core.Data.FeatureClassDefinition facilitySiteDefinition = _currentFeatureClass.GetDefinition();
+                                    IReadOnlyList<ArcGIS.Core.Data.Field> fields = facilitySiteDefinition.GetFields();
+
+                                    ArcGIS.Core.Data.Field foundField = fields.FirstOrDefault(field => field.Name == fieldName);
+
+                                    if (foundField != null)
+                                    {
+                                        CodedValueDomain domain = foundField.GetDomain() as CodedValueDomain;
+                                        return domain.GetCodedValue(key).ToString();         
+                                    }
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+
+                    return "";
+                });
+            }
+            catch (Exception exception)
+            {
+                System.Diagnostics.Debug.WriteLine(exception.ToString());
+            }
+
+            return null;
         }
 
         private string[] ParseKeyForSymbolIdCode(string key)
@@ -813,10 +904,7 @@ namespace ProSymbolEditor
         {
             if (!ProSymbolEditorModule._isEnabled)
             {
-                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
-                {
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The Pro Symbol Editor is disabled until the Military Overlay project is opened.");
-                }));
+                ProSymbolUtilities.ShowAddInNotEnabledMessageBox();
             }
 
             MilitarySymbolDockpaneViewModel.Show();
