@@ -67,126 +67,120 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <UniformGrid Name="SearchUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged" Grid.Row="0">
-                                <!--<Grid.RowDefinitions>
+
+                            <ScrollViewer Grid.Row="0">
+                                <UniformGrid Name="SearchUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged">
+                                    <!--<Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>-->
 
 
-                                <Grid>
-                                    <!--<Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <!--<Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>-->
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition MaxHeight="310"/>
+                                        </Grid.RowDefinitions>
 
-                                    <TextBox x:Name="searchSymbolsTextBox" HorizontalAlignment="Stretch" Height="23" Margin="5,5,5,5" TextWrapping="Wrap" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=2000}" Grid.Row="0">
-                                        <TextBox.Style>
-                                            <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                                                <Style.Resources>
-                                                    <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                        <VisualBrush.Visual>
-                                                            <Label Content="Search..." Foreground="DarkGray" />
-                                                        </VisualBrush.Visual>
-                                                    </VisualBrush>
-                                                </Style.Resources>
-                                                <Style.Triggers>
-                                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                                    </Trigger>
-                                                    <Trigger Property="Text" Value="{x:Null}">
-                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                                    </Trigger>
-                                                    <Trigger Property="IsKeyboardFocused" Value="True">
-                                                        <Setter Property="Background" Value="White" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBox.Style>
-                                    </TextBox>
-                                    <!--</Grid>
+                                        <TextBox x:Name="searchSymbolsTextBox" HorizontalAlignment="Stretch" Height="23" Margin="5,5,5,5" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=2000}" Grid.Row="0">
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                                    <Style.Resources>
+                                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                                            <VisualBrush.Visual>
+                                                                <Label Content="Search..." Foreground="DarkGray" />
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </Style.Resources>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                        </Trigger>
+                                                        <Trigger Property="Text" Value="{x:Null}">
+                                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsKeyboardFocused" Value="True">
+                                                            <Setter Property="Background" Value="White" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
 
-                                <Grid>-->
-                                    <!--<Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>-->
+                                        <ListBox x:Name="symbolListBox" Margin="5,5,5,5" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
+                                                SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" MaxHeight="300">
 
-                                    <ListBox x:Name="symbolListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="5,5,5,5" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
-                                                SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1">
+                                            <ListBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel>
+                                                        <!--Memory footprint is only 200 mb-->
+                                                    </VirtualizingStackPanel>
+                                                </ItemsPanelTemplate>
+                                            </ListBox.ItemsPanel>
 
-                                        <ListBox.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <VirtualizingStackPanel>
-                                                    <!--Memory footprint is only 200 mb-->
-                                                </VirtualizingStackPanel>
-                                            </ItemsPanelTemplate>
-                                        </ListBox.ItemsPanel>
-
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Margin="2,0" ToolTip="{Binding Name}">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="16"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Image Grid.Column="0" Source="{Binding PreviewImage}" Stretch="Fill"/>
-                                                    <TextBlock Grid.Column="1" TextAlignment="Left" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Padding="5,1,5,1"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-
-
-
-                                </Grid>
-
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <!--<Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>-->
-
-                                    <Image x:Name="searchTabImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Margin="20,5,20,5" Grid.Row="0" VerticalAlignment="Bottom"/>
-
-                                    <ItemsControl Name="tStack" ItemsSource="{Binding SelectedStyleTags, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border x:Name="border" BorderBrush="#409BD1" BorderThickness="2" CornerRadius="5" Height="Auto" d:DesignWidth="139" d:DesignHeight="40" Padding="5,3" Margin="3,0,3,3">
-                                                    <Border.Background>
-                                                        <SolidColorBrush Color="#E1F0FB"/>
-                                                    </Border.Background>
-                                                    <Grid HorizontalAlignment="Left" Width="Auto">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="2,0" ToolTip="{Binding Name}">
                                                         <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="16"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <TextBlock TextWrapping="Wrap" Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Margin="5,0,5,0" FontSize="10"/>
+                                                        <Image Grid.Column="0" Source="{Binding PreviewImage}" Stretch="Fill"/>
+                                                        <TextBlock Grid.Column="1" TextAlignment="Left" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Padding="5,1,5,1"/>
                                                     </Grid>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
 
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                    </ItemsControl>
-                                </Grid>
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <!--<Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>-->
+
+                                        <Image x:Name="searchTabImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Margin="20,5,20,5" Grid.Row="0" VerticalAlignment="Bottom"/>
+
+                                        <ItemsControl Name="tStack" ItemsSource="{Binding SelectedStyleTags, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border x:Name="border" BorderBrush="#409BD1" BorderThickness="2" CornerRadius="5" Height="Auto" d:DesignWidth="139" d:DesignHeight="40" Padding="5,3" Margin="3,0,3,3">
+                                                        <Border.Background>
+                                                            <SolidColorBrush Color="#E1F0FB"/>
+                                                        </Border.Background>
+                                                        <Grid HorizontalAlignment="Left" Width="Auto">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock TextWrapping="Wrap" Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Margin="5,0,5,0" FontSize="10"/>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                        </ItemsControl>
+                                    </Grid>
 
 
-                            </UniformGrid>
+                                </UniformGrid>
+                            </ScrollViewer>
 
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -595,7 +589,7 @@
                                     </Grid>
                                 </ScrollViewer>
                                 <Grid Grid.Row="1">
-                                    <Image x:Name="textTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Image x:Name="textTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Grid>
                             </UniformGrid>
 
@@ -627,7 +621,8 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <UniformGrid Name="CoordinatesUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged" Grid.Row="0">
+                            <ScrollViewer Grid.Row="0">
+                            <UniformGrid Name="CoordinatesUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged">
                                 <Grid>
 
                                     <Grid.RowDefinitions>
@@ -656,7 +651,7 @@
 
                                     <!--<Button Grid.Row="2" Content="Get Location from Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding ActivateMapToolCommand}" Width="200"/>-->
 
-                                    <Button Grid.Row="2" Content="Add Coordinates to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddCoordinateToMapCommand}" CommandParameter="True" Width="200"/>
+                                    <Button Grid.Row="2" Content="Add Coordinates to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddCoordinateToMapCommand}" CommandParameter="True" Width="175"/>
                                     <!--IsEnabled="{Binding CoordinateValid}"/>-->
                                 </Grid>
                                 <Grid>
@@ -666,7 +661,7 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                    <Image x:Name="mapTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                    <Image x:Name="mapTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
                                     <!-- All Selected Symbol Tags-->
                                     <!--<TextBlock x:Name="selectedSymbolTagsTextBlock" Margin="10,0,10,10" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Stretch"/>-->
@@ -772,6 +767,7 @@
                                     </Grid>
                                 </Grid>
                             </UniformGrid>
+                            </ScrollViewer>
 
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
