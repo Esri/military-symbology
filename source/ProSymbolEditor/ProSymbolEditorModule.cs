@@ -16,12 +16,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Input;
+using System.Threading.Tasks;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
-using System.Threading.Tasks;
 using ArcGIS.Desktop.Catalog;
 using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Core;
@@ -32,6 +29,7 @@ namespace ProSymbolEditor
     {
         private static ProSymbolEditorModule _this = null;
         public static bool _isEnabled = false;
+        public static string WorkspaceString = "militaryoverlay.gdb";
 
         /// <summary>
         /// Retrieve the singleton instance to this module here
@@ -100,7 +98,7 @@ namespace ProSymbolEditor
                             Geodatabase geodatabase = datastore as Geodatabase;
 
                             string geodatabasePath = geodatabase.GetPath();
-                            if (geodatabasePath.Contains("militaryoverlay.gdb"))
+                            if (geodatabasePath.Contains(WorkspaceString))
                             {
                                 return geodatabase;
                             }

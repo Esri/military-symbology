@@ -14,13 +14,8 @@
  *   limitations under the License.
  ******************************************************************************/
 
-using ArcGIS.Core.CIM;
-using ArcGIS.Desktop.Mapping;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
 
 namespace ProSymbolEditor
 {

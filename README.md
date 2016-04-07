@@ -41,7 +41,10 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 ## Developers
 
 * Building
-	* To Build Using Visual Studio
+	* To Build Using Visual Studio 2015
+		* Open and build solution file
+	* To Build Using Visual Studio 2013
+		* Install the .NET 4.5.2 Dev Pack
 		* Open and build solution file
 	* To use MSBuild to build the solution
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2015 | Visual Studio Tools | Developer Command Prompt for VS2015
@@ -58,7 +61,7 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 		* Install the add-in from the application folder by double clicking it
 		* Open ArcGIS Pro 1.2
 		* Open a project that contains the Military Overlay geodatabase (MilitaryOverlay.gdb)
-		    * This geodatabase may be obtained by downloading the Military Overlay template release available at http://solutions.arcgis.com/defense/templates/military-overlay/
+		    * This geodatabase may be obtained by downloading the Military Overlay template release available at http://esriurl.com/AFDMilitaryOverlay
 		    * You may also just add the MilitaryOverlay.gdb available from https://github.com/Esri/military-features-data/tree/master/data/mil2525d/core_data/gdbs 
 		* The ADD-IN appears under the "ADD-IN" tab in Pro	
 		* Click the "Military Symbol Designer" button and the tool will appear
@@ -88,6 +91,7 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 * [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
 * ![Twitter](https://g.twimg.com/twitter-bird-16x16.png)[@EsriDefense](http://twitter.com/EsriDefense)
 * [ArcGIS Solutions Website](http://solutions.arcgis.com/military/)
+* [Military Overlay Template](http://esriurl.com/AFDMilitaryOverlay)
 
 ## Issues
 

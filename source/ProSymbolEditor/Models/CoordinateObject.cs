@@ -14,16 +14,10 @@
  *   limitations under the License.
  ******************************************************************************/
 
+using System.ComponentModel;
 using ArcGIS.Core.Geometry;
-using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
 using CoordinateToolLibrary.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProSymbolEditor
 {

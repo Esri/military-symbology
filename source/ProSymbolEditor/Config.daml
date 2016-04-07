@@ -21,7 +21,7 @@
       <groups>
         <!-- comment this out if you have no controls on the Addin tab to avoid
               an empty group-->
-        <group id="ProSymbolEditor_Group1" caption="Pro Military Symbol Editor" appearsOnAddInTab="true">
+        <group id="ProSymbolEditor_Group1" caption="Military Symbol Editor" appearsOnAddInTab="true">
           <!-- host controls within groups -->
           <button refID="ProSymbolEditor_MilitarySymbolDockpane_ShowButton" size="large" />
         </group>
