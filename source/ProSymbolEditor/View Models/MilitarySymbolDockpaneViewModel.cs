@@ -248,6 +248,9 @@ namespace ProSymbolEditor
 
                 if (_selectedStyleItem != null)
                 {
+                    //Clear old attributes
+                    _symbolAttributeSet.ResetAttributes();
+
                     //Parse key for symbol id codes
                     if (_selectedStyleItem.ItemType == StyleItemType.PointSymbol)
                     {
