@@ -14,10 +14,6 @@
  *   limitations under the License.
  ******************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Mapping;
@@ -33,26 +29,6 @@ namespace ProSymbolEditor
             IsSketchTool = true;
             SketchOutputMode = SketchOutputMode.Map;
         }
-
-        //protected override Task OnToolActivateAsync(bool hasMapViewChanged)
-        //{
-        //    //Get view, determine what type of geometry we're editing (polygon or line)
-        //    var symbolDockPaneViewModel = FrameworkApplication.DockPaneManager.Find("ProSymbolEditor_MilitarySymbolDockpane") as MilitarySymbolDockpaneViewModel;
-        //    if (symbolDockPaneViewModel.GeometryType == GeometryType.Point)
-        //    {
-        //        SketchType = SketchGeometryType.Point;
-        //    }
-        //    else if (symbolDockPaneViewModel.GeometryType == GeometryType.Polyline)
-        //    {
-        //        SketchType = SketchGeometryType.Line;
-        //    }
-        //    else if (symbolDockPaneViewModel.GeometryType == GeometryType.Polygon)
-        //    {
-        //        SketchType = SketchGeometryType.Polygon;
-        //    }
-
-        //    return base.OnToolActivateAsync(hasMapViewChanged);
-        //}
 
         protected override void OnToolMouseDown(MapViewMouseButtonEventArgs e)
         {
@@ -78,8 +54,6 @@ namespace ProSymbolEditor
         {
             //Get the instance of the ViewModel
             var symbolDockPaneViewModel = FrameworkApplication.DockPaneManager.Find("ProSymbolEditor_MilitarySymbolDockpane") as MilitarySymbolDockpaneViewModel;
-            //if (symbolDockPaneViewModel == null)
-            //    return Task.FromResult(0);
 
             //Get the map coordinates from the click point and set the property on the ViewModel.
             return QueuedTask.Run(() =>

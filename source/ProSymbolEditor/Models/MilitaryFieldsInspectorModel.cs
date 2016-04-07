@@ -13,16 +13,13 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  ******************************************************************************/
-
-using ArcGIS.Core.Data;
-using ArcGIS.Desktop.Framework.Contracts;
-using System;
+ 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using ArcGIS.Core.Data;
+using ArcGIS.Desktop.Framework.Contracts;
 
 namespace ProSymbolEditor
 {

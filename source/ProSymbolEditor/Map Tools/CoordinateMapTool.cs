@@ -14,11 +14,8 @@
  *   limitations under the License.
  ******************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Core.Geometry;
@@ -26,6 +23,9 @@ using ArcGIS.Desktop.Framework;
 
 namespace ProSymbolEditor
 {
+    /// <summary>
+    /// Tool is not currently used by the addin, but keeping in case we do.  It will grab the coordinates if a user clicks on the map.
+    /// </summary>
     internal class CoordinateMapTool : MapTool
     {
         protected override Task OnToolActivateAsync(bool active)
@@ -64,9 +64,9 @@ namespace ProSymbolEditor
                     symbolDockPaneViewModel.MapGeometry = MapPointBuilder.CreateMapPoint(projectedMapPoint.X, projectedMapPoint.Y, 0, projectedMapPoint.SpatialReference);
                     symbolDockPaneViewModel.MapPointCoordinatesString = string.Format("{0:0.0####} {1:0.0####}", tempMapPoint.Y, tempMapPoint.X);
                 }
-                catch
+                catch(Exception exception)
                 {
-                    //TODO: Add exception handler
+                    System.Console.WriteLine(exception.Message);
                 }
             });
         }
