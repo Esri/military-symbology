@@ -14,6 +14,7 @@
  *   limitations under the License.
  ******************************************************************************/
 
+using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Mapping;
 
 namespace ProSymbolEditor
@@ -21,13 +22,13 @@ namespace ProSymbolEditor
     public class SymbolSetMapping
     {
         public string FeatureClassName { get; set; }
-        public StyleItemType StyleItemType { get; set; }
+        public GeometryType GeometryType { get; set; }
         public string SymbolSet { get; set; }
 
-        public SymbolSetMapping(string featureClassName, StyleItemType styleItemType, string symbolSet)
+        public SymbolSetMapping(string featureClassName, GeometryType geometryType, string symbolSet)
         {
             FeatureClassName = featureClassName;
-            StyleItemType = styleItemType;
+            GeometryType = geometryType;
             SymbolSet = symbolSet;
         }
 
