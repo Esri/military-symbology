@@ -251,26 +251,6 @@ namespace ProSymbolEditor
                     //Clear old attributes
                     _symbolAttributeSet.ResetAttributes();
 
-                    //Parse key for symbol id codes
-                    if (_selectedStyleItem.ItemType == StyleItemType.PointSymbol)
-                    {
-                        GeometryType = GeometryType.Point;
-                        PointCoordinateVisibility = Visibility.Visible;
-                        PolyCoordinateVisibility = Visibility.Collapsed;
-                    }
-                    else if (_selectedStyleItem.ItemType == StyleItemType.PolygonSymbol)
-                    {
-                        GeometryType = GeometryType.Polygon;
-                        PointCoordinateVisibility = Visibility.Collapsed;
-                        PolyCoordinateVisibility = Visibility.Visible;
-                    }
-                    else if (_selectedStyleItem.ItemType == StyleItemType.LineSymbol)
-                    {
-                        GeometryType = GeometryType.Polyline;
-                        PointCoordinateVisibility = Visibility.Collapsed;
-                        PolyCoordinateVisibility = Visibility.Visible;
-                    }
-
                     //Tokenize tags
                     SelectedStyleTags.Clear();
                     foreach(string tag in _selectedStyleItem.Tags.Split(';').ToList())
@@ -278,12 +258,59 @@ namespace ProSymbolEditor
                         SelectedStyleTags.Add(tag);
                     }
 
+                    //Get the geometry type off a tag on the symbol
+                    List<string> reverseTags = _selectedStyleItem.Tags.Split(';').ToList();
+                    reverseTags.Reverse();
+                    string geometryTypeTag = reverseTags[2];
+
+                    if (geometryTypeTag.ToUpper() == "POINT")
+                    {
+                        GeometryType = GeometryType.Point;
+                        PointCoordinateVisibility = Visibility.Visible;
+                        PolyCoordinateVisibility = Visibility.Collapsed;
+                    }
+                    else if (geometryTypeTag.ToUpper() == "LINE")
+                    {
+                        GeometryType = GeometryType.Polyline;
+                        PointCoordinateVisibility = Visibility.Collapsed;
+                        PolyCoordinateVisibility = Visibility.Visible;
+                    }
+                    else if (geometryTypeTag.ToUpper() == "AREA")
+                    {
+                        GeometryType = GeometryType.Polygon;
+                        PointCoordinateVisibility = Visibility.Collapsed;
+                        PolyCoordinateVisibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        //No tag found for geometry type, so use the geometry type off the symbol itself
+                        if (_selectedStyleItem.ItemType == StyleItemType.PointSymbol)
+                        {
+                            GeometryType = GeometryType.Point;
+                            PointCoordinateVisibility = Visibility.Visible;
+                            PolyCoordinateVisibility = Visibility.Collapsed;
+                        }
+                        else if (_selectedStyleItem.ItemType == StyleItemType.PolygonSymbol)
+                        {
+                            GeometryType = GeometryType.Polygon;
+                            PointCoordinateVisibility = Visibility.Collapsed;
+                            PolyCoordinateVisibility = Visibility.Visible;
+                        }
+                        else if (_selectedStyleItem.ItemType == StyleItemType.LineSymbol)
+                        {
+                            GeometryType = GeometryType.Polyline;
+                            PointCoordinateVisibility = Visibility.Collapsed;
+                            PolyCoordinateVisibility = Visibility.Visible;
+                        }
+                    }
+
+                    //Parse key for symbol id codes
                     string[] symbolIdCode = ParseKeyForSymbolIdCode(_selectedStyleItem.Tags);
                     _symbolAttributeSet.SymbolSet = symbolIdCode[0];
                     _symbolAttributeSet.SymbolEntity = symbolIdCode[1];
 
                     //Get feature class name to generate domains
-                    _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.SymbolSet, _selectedStyleItem.ItemType);
+                    _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.SymbolSet, GeometryType);
                     if (_currentFeatureClassName != null && _currentFeatureClassName != "")
                     {
                         //Generate domains
