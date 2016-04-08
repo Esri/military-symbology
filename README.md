@@ -83,7 +83,8 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 			* Once valid coordinates are entered, a button can be clicked to add a feature to those coordinates.
 			* Invalid coordinates will show with a red box around it.
 			* At any time in this process, the "Add to Map" button, which is on every tab, could be clicked to graphically add the feature to the map by clicking.
-					
+
+> Please note: if you have an issue that is not specifically related to the User Interface or the Addin form itself, but is related to how the symbol draws on the map (ex. incorrect symbol, missing labels on map, line styles) please log those issues against the symbol data itself at: https://github.com/Esri/military-features-data 					
 
 ## Resources
 
@@ -122,6 +123,7 @@ This addin uses the following third-party software.
 
 This software is governed by [the Apache V2 License](http://www.apache.org/licenses/LICENSE-2.0):
 
+* Military Features Data - https://github.com/Esri/military-features-data
 * MIL_STD_2525D_Symbols - https://github.com/Esri/joint-military-symbology-xml/tree/master/svg or [MIL_STD_2525D_Symbols license](./source/ProSymbolEditor/Images/MIL_STD_2525D_Symbols/license.txt)
 * Coordinate Conversion Addin - https://github.com/Esri/coordinate-conversion-addin-dotnet
 * Military Symbols.NET - https://github.com/csmoore/military-symbols-dotnet
