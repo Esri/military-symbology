@@ -15,14 +15,13 @@
  ******************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace ProSymbolEditor
 {
+    /// <summary>
+    /// Not currently used.  Was used to get the character in a position in a string from XAML.  Might be used in the future for SIDC.
+    /// </summary>
     public class StringCharacterValueConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

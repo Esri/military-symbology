@@ -17,32 +17,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ArcGIS.Desktop.Framework;
-using ArcGIS.Desktop.Framework.Contracts;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using ArcGIS.Desktop.Mapping;
-using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using System.Windows.Media;
 using System.Windows.Input;
-using ArcGIS.Core.Data;
-using ArcGIS.Desktop.Catalog;
-using MilitarySymbols;
-using System.Drawing;
-using System.Windows.Media.Imaging;
 using System.IO;
-using System.Drawing.Imaging;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Windows;
-using Microsoft.Win32;
+using ArcGIS.Desktop.Framework;
+using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Editing;
 using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Mapping;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Core.Data;
+using ArcGIS.Desktop.Catalog;
 using CoordinateToolLibrary.Models;
-using System.Windows.Threading;
+using Microsoft.Win32;
 
 namespace ProSymbolEditor
 {
@@ -214,7 +206,10 @@ namespace ProSymbolEditor
 
                 NotifyPropertyChanged(() => SearchString);
 
-                SearchStylesAsync(null);
+                if (_searchString.Length > 0)
+                {
+                    SearchStylesAsync(null);
+                }
             }
         }
 
@@ -253,26 +248,8 @@ namespace ProSymbolEditor
 
                 if (_selectedStyleItem != null)
                 {
-                    //Parse key for symbol id codes
-                    //TODO: Change to just use the key instead of parsing the tags?
-                    if (_selectedStyleItem.ItemType == StyleItemType.PointSymbol)
-                    {
-                        GeometryType = GeometryType.Point;
-                        PointCoordinateVisibility = Visibility.Visible;
-                        PolyCoordinateVisibility = Visibility.Collapsed;
-                    }
-                    else if (_selectedStyleItem.ItemType == StyleItemType.PolygonSymbol)
-                    {
-                        GeometryType = GeometryType.Polygon;
-                        PointCoordinateVisibility = Visibility.Collapsed;
-                        PolyCoordinateVisibility = Visibility.Visible;
-                    }
-                    else if (_selectedStyleItem.ItemType == StyleItemType.LineSymbol)
-                    {
-                        GeometryType = GeometryType.Polyline;
-                        PointCoordinateVisibility = Visibility.Collapsed;
-                        PolyCoordinateVisibility = Visibility.Visible;
-                    }
+                    //Clear old attributes
+                    _symbolAttributeSet.ResetAttributes();
 
                     //Tokenize tags
                     SelectedStyleTags.Clear();
@@ -281,12 +258,59 @@ namespace ProSymbolEditor
                         SelectedStyleTags.Add(tag);
                     }
 
+                    //Get the geometry type off a tag on the symbol
+                    List<string> reverseTags = _selectedStyleItem.Tags.Split(';').ToList();
+                    reverseTags.Reverse();
+                    string geometryTypeTag = reverseTags[2];
+
+                    if (geometryTypeTag.ToUpper() == "POINT")
+                    {
+                        GeometryType = GeometryType.Point;
+                        PointCoordinateVisibility = Visibility.Visible;
+                        PolyCoordinateVisibility = Visibility.Collapsed;
+                    }
+                    else if (geometryTypeTag.ToUpper() == "LINE")
+                    {
+                        GeometryType = GeometryType.Polyline;
+                        PointCoordinateVisibility = Visibility.Collapsed;
+                        PolyCoordinateVisibility = Visibility.Visible;
+                    }
+                    else if (geometryTypeTag.ToUpper() == "AREA")
+                    {
+                        GeometryType = GeometryType.Polygon;
+                        PointCoordinateVisibility = Visibility.Collapsed;
+                        PolyCoordinateVisibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        //No tag found for geometry type, so use the geometry type off the symbol itself
+                        if (_selectedStyleItem.ItemType == StyleItemType.PointSymbol)
+                        {
+                            GeometryType = GeometryType.Point;
+                            PointCoordinateVisibility = Visibility.Visible;
+                            PolyCoordinateVisibility = Visibility.Collapsed;
+                        }
+                        else if (_selectedStyleItem.ItemType == StyleItemType.PolygonSymbol)
+                        {
+                            GeometryType = GeometryType.Polygon;
+                            PointCoordinateVisibility = Visibility.Collapsed;
+                            PolyCoordinateVisibility = Visibility.Visible;
+                        }
+                        else if (_selectedStyleItem.ItemType == StyleItemType.LineSymbol)
+                        {
+                            GeometryType = GeometryType.Polyline;
+                            PointCoordinateVisibility = Visibility.Collapsed;
+                            PolyCoordinateVisibility = Visibility.Visible;
+                        }
+                    }
+
+                    //Parse key for symbol id codes
                     string[] symbolIdCode = ParseKeyForSymbolIdCode(_selectedStyleItem.Tags);
                     _symbolAttributeSet.SymbolSet = symbolIdCode[0];
                     _symbolAttributeSet.SymbolEntity = symbolIdCode[1];
 
                     //Get feature class name to generate domains
-                    _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.SymbolSet, _selectedStyleItem.ItemType);
+                    _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.SymbolSet, GeometryType);
                     if (_currentFeatureClassName != null && _currentFeatureClassName != "")
                     {
                         //Generate domains
@@ -425,12 +449,6 @@ namespace ProSymbolEditor
 
         #region Command Methods
 
-        //private void ActivateCoordinateMapTool(object parameter)
-        //{
-        //    FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_CoordinateMapTool");
-        //    AddToMapToolEnabled = true;
-        //}
-
         private void ActivateDrawFeatureSketchTool(object parameter)
         {
             FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_DrawFeatureSketchTool");
@@ -490,7 +508,7 @@ namespace ProSymbolEditor
                         // Use the geodatabase.
 
                         string geodatabasePath = geodatabase.GetPath();
-                        if (geodatabasePath.Contains("militaryoverlay.gdb"))
+                        if (geodatabasePath.Contains(ProSymbolEditorModule.WorkspaceString))
                         {
                             //Correct GDB, open the current selected feature class
                             FeatureClass featureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
@@ -684,7 +702,7 @@ namespace ProSymbolEditor
                             Geodatabase geodatabase = datastore as Geodatabase;
 
                             string geodatabasePath = geodatabase.GetPath();
-                            if (geodatabasePath.Contains("militaryoverlay.gdb"))
+                            if (geodatabasePath.Contains(ProSymbolEditorModule.WorkspaceString))
                             {
                                 //Correct GDB, open the current selected feature class
                                 _currentFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
@@ -757,7 +775,7 @@ namespace ProSymbolEditor
                             Geodatabase geodatabase = datastore as Geodatabase;
 
                             string geodatabasePath = geodatabase.GetPath();
-                            if (geodatabasePath.Contains("militaryoverlay.gdb"))
+                            if (geodatabasePath.Contains(ProSymbolEditorModule.WorkspaceString))
                             {
                                 //Correct GDB, open the current selected feature class
                                 _currentFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
@@ -834,21 +852,51 @@ namespace ProSymbolEditor
 
         private Task SearchSymbols()
         {
+            //return QueuedTask.Run(async () =>
+            //{
+            //    //Get results and populate symbol gallery
+            //    IList<SymbolStyleItem> pointSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PointSymbol, _searchString);
+            //    IList<SymbolStyleItem> lineSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.LineSymbol, _searchString);
+            //    IList<SymbolStyleItem> polygonSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PolygonSymbol, _searchString);
+
+            //    IList<SymbolStyleItem> combinedSymbols = new List<SymbolStyleItem>();
+            //    (combinedSymbols as List<SymbolStyleItem>).AddRange(pointSymbols);
+            //    (combinedSymbols as List<SymbolStyleItem>).AddRange(lineSymbols);
+            //    (combinedSymbols as List<SymbolStyleItem>).AddRange(polygonSymbols);
+
+            //    int outParse;
+            //    _styleItems = combinedSymbols.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) || 
+            //                                             (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))).ToList();
+
+            //    _progressDialog.Hide();
+            //});
+
+
             return QueuedTask.Run(async () =>
             {
-                //Get results and populate symbol gallery
-                IList<SymbolStyleItem> pointSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PointSymbol, _searchString);
-                IList<SymbolStyleItem> lineSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.LineSymbol, _searchString);
-                IList<SymbolStyleItem> polygonSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PolygonSymbol, _searchString);
+                var list = new List<StyleItemType>() { StyleItemType.PointSymbol, StyleItemType.LineSymbol, StyleItemType.PolygonSymbol };
 
-                IList<SymbolStyleItem> combinedSymbols = new List<SymbolStyleItem>();
-                (combinedSymbols as List<SymbolStyleItem>).AddRange(pointSymbols);
-                (combinedSymbols as List<SymbolStyleItem>).AddRange(lineSymbols);
-                (combinedSymbols as List<SymbolStyleItem>).AddRange(polygonSymbols);
+                IEnumerable<Task<IList<SymbolStyleItem>>> symbolQuery = from type in list select _militaryStyleItem.SearchSymbolsAsync(type, _searchString);
 
+                var combinedSymbols = new List<SymbolStyleItem>();
                 int outParse;
-                _styleItems = combinedSymbols.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) || 
-                                                         (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))).ToList();
+
+                // start the query
+                var searchTasks = symbolQuery.ToList();
+
+                while (searchTasks.Count > 0)
+                {
+                    var nextTask = await Task.WhenAny(searchTasks);
+                    var results = await nextTask;
+                    searchTasks.Remove(nextTask);
+                    combinedSymbols.AddRange(results.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
+                                                         (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))));
+                }
+
+                //_styleItems = combinedSymbols.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) || 
+                //                                         (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))).ToList();
+
+                _styleItems = combinedSymbols;
 
                 _progressDialog.Hide();
             });
