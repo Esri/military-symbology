@@ -30,14 +30,28 @@ namespace SymbolEditorUnitTests
         public void CheckLayerForSymbolSetTest()
         {
             SymbolSetMappings symbolSetMappings = new SymbolSetMappings();
-            string featureClassName = symbolSetMappings.GetFeatureClassFromMapping("01", StyleItemType.PointSymbol);
+            string featureClassName = symbolSetMappings.GetFeatureClassFromMapping("01", GeometryType.Point);
             Assert.IsTrue(featureClassName == "Air", "Feature Class from mapping is incorrect");
 
-            featureClassName = symbolSetMappings.GetFeatureClassFromMapping("40", StyleItemType.PointSymbol);
+            featureClassName = symbolSetMappings.GetFeatureClassFromMapping("40", GeometryType.Point);
             Assert.IsTrue(featureClassName == "Activities", "Feature Class from mapping is incorrect");
 
-            featureClassName = symbolSetMappings.GetFeatureClassFromMapping("60", StyleItemType.PointSymbol);
+            featureClassName = symbolSetMappings.GetFeatureClassFromMapping("60", GeometryType.Point);
             Assert.IsTrue(featureClassName == "Cyberspace", "Feature Class from mapping is incorrect");
+        }
+
+        [TestMethod, STAThread]
+        public void CoordinateTypeTest()
+        {
+            //TODO move initialize to main init method for unit tests
+            Host.Initialize();
+
+            MapPoint mapPoint;
+            var coordType = ProSymbolUtilities.GetCoordinateType("10SFF", out mapPoint);
+            Assert.IsTrue(mapPoint != null, "MGRS coordinate is invalid, when it should be valid");
+
+            coordType = ProSymbolUtilities.GetCoordinateType("invalidpoint", out mapPoint);
+            Assert.IsTrue(mapPoint == null, "MGRS coordinate is valid, when it should be invalid");
         }
     }
 }
