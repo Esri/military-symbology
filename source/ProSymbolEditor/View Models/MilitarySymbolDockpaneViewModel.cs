@@ -24,6 +24,9 @@ using System.IO;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Windows;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using System.Diagnostics;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Editing;
@@ -130,6 +133,8 @@ namespace ProSymbolEditor
             //ActivateMapToolCommand = new RelayCommand(ActivateCoordinateMapTool, param => true);
             AddCoordinateToMapCommand = new RelayCommand(CreateNewFeatureAsync, CanCreatePolyFeatureFromCoordinates);
             ActivateAddToMapToolCommand = new RelayCommand(ActivateDrawFeatureSketchTool, param => true);
+            CopyImageToClipboardCommand = new RelayCommand(CopyImageToClipboard, param => true);
+            SaveImageToCommand = new RelayCommand(SaveImageAs, param => true);
 
             _symbolAttributeSet.DateTimeValid = DateTime.Now;
             _symbolAttributeSet.DateTimeExpired = DateTime.Now;
@@ -188,6 +193,10 @@ namespace ProSymbolEditor
         public ICommand AddCoordinateToMapCommand { get; set; }
 
         public ICommand ActivateAddToMapToolCommand { get; set; }
+
+        public ICommand SaveImageToCommand { get; set; }
+
+        public ICommand CopyImageToClipboardCommand { get; set; }
 
         #endregion
 
@@ -591,6 +600,78 @@ namespace ProSymbolEditor
             return true;
         }
 
+        private void SaveImageAs(object parameter)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = "symbol";
+            saveFileDialog.Filter = "Png Image|*.png";
+            Nullable<bool> result = saveFileDialog.ShowDialog();
+            if (result == true)
+            {
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(SymbolAttributeSet.SymbolImage));
+                using (var stream = saveFileDialog.OpenFile())
+                {
+                    encoder.Save(stream);
+                }
+            }
+        }
+
+        private void CopyImageToClipboard(object parameter)
+        {
+            //There's an issue copying the image directly to the clipboard, where transparency isn't retained, and will have a black background.
+            //The code below will switch that to be a pseudo-transparency with a white background.
+            Size size = new Size(SymbolAttributeSet.SymbolImage.Width, SymbolAttributeSet.SymbolImage.Height);
+
+            // Create a white background render bitmap
+            int dWidth = (int)size.Width;
+            int dHeight = (int)size.Height;
+            int dStride = dWidth * 4;
+            byte[] pixels = new byte[dHeight * dStride];
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                pixels[i] = 0xFF;
+            }
+            BitmapSource bg = BitmapSource.Create(
+                dWidth,
+                dHeight,
+                96,
+                96,
+                PixelFormats.Pbgra32,
+                null,
+                pixels,
+                dStride
+            );
+
+            // Adding those two render bitmap to the same drawing visual
+            DrawingVisual dv = new DrawingVisual();
+            DrawingContext dc = dv.RenderOpen();
+            dc.DrawImage(bg, new Rect(size));
+            dc.DrawImage(SymbolAttributeSet.SymbolImage, new Rect(size));
+            dc.Close();
+
+            // Render the result
+            RenderTargetBitmap resultBitmap =
+                new RenderTargetBitmap(
+                (int)size.Width,
+                (int)size.Height,
+                96d,
+                96d,
+                PixelFormats.Pbgra32
+            );
+            resultBitmap.Render(dv);
+
+            // Copy it to clipboard
+            try
+            {
+                Clipboard.SetImage(resultBitmap);
+            }
+            catch(Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
+        }
+
         #endregion
 
         #region Event Listeners
@@ -852,26 +933,6 @@ namespace ProSymbolEditor
 
         private Task SearchSymbols()
         {
-            //return QueuedTask.Run(async () =>
-            //{
-            //    //Get results and populate symbol gallery
-            //    IList<SymbolStyleItem> pointSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PointSymbol, _searchString);
-            //    IList<SymbolStyleItem> lineSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.LineSymbol, _searchString);
-            //    IList<SymbolStyleItem> polygonSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PolygonSymbol, _searchString);
-
-            //    IList<SymbolStyleItem> combinedSymbols = new List<SymbolStyleItem>();
-            //    (combinedSymbols as List<SymbolStyleItem>).AddRange(pointSymbols);
-            //    (combinedSymbols as List<SymbolStyleItem>).AddRange(lineSymbols);
-            //    (combinedSymbols as List<SymbolStyleItem>).AddRange(polygonSymbols);
-
-            //    int outParse;
-            //    _styleItems = combinedSymbols.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) || 
-            //                                             (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))).ToList();
-
-            //    _progressDialog.Hide();
-            //});
-
-
             return QueuedTask.Run(async () =>
             {
                 var list = new List<StyleItemType>() { StyleItemType.PointSymbol, StyleItemType.LineSymbol, StyleItemType.PolygonSymbol };

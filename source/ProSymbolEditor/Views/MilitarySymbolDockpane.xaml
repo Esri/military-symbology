@@ -151,7 +151,14 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>-->
 
-                                        <Image x:Name="searchTabImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Margin="20,5,20,5" Grid.Row="0" VerticalAlignment="Bottom"/>
+                                        <Image x:Name="searchTabImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Margin="20,5,20,5" Grid.Row="0" VerticalAlignment="Bottom">
+                                            <Image.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
+                                                    <MenuItem Header="Copy Image to Clipboard" Command="{Binding CopyImageToClipboardCommand}"/>
+                                                </ContextMenu>
+                                            </Image.ContextMenu>
+                                        </Image>
 
                                         <ItemsControl Name="tStack" ItemsSource="{Binding SelectedStyleTags, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10">
                                             <ItemsControl.ItemTemplate>
@@ -369,7 +376,14 @@
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
-                                        <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                        <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                            <Image.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
+                                                    <MenuItem Header="Copy Image to Clipboard" Command="{Binding CopyImageToClipboardCommand}"/>
+                                                </ContextMenu>
+                                            </Image.ContextMenu>
+                                        </Image>
 
                                         <!-- All Selected Symbol Tags-->
                                         <!--<TextBlock x:Name="selectedSymbolTagsTextBlock" Margin="10,0,10,10" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Stretch"/>-->
@@ -589,7 +603,14 @@
                                     </Grid>
                                 </ScrollViewer>
                                 <Grid Grid.Row="1">
-                                    <Image x:Name="textTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Image x:Name="textTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Image.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
+                                                <MenuItem Header="Copy Image to Clipboard" Command="{Binding CopyImageToClipboardCommand}"/>
+                                            </ContextMenu>
+                                        </Image.ContextMenu>
+                                    </Image>
                                 </Grid>
                             </UniformGrid>
 
@@ -661,7 +682,14 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                    <Image x:Name="mapTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                        <Image x:Name="mapTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                            <Image.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
+                                                    <MenuItem Header="Copy Image to Clipboard" Command="{Binding CopyImageToClipboardCommand}"/>
+                                                </ContextMenu>
+                                            </Image.ContextMenu>
+                                        </Image>
 
                                     <!-- All Selected Symbol Tags-->
                                     <!--<TextBlock x:Name="selectedSymbolTagsTextBlock" Margin="10,0,10,10" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Stretch"/>-->
