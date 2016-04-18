@@ -23,6 +23,8 @@ namespace ProSymbolEditor
         public object Code { get; set; }
         public string Name { get; set; }
 
+        public DomainCodedValuePair() { }
+            
         public DomainCodedValuePair(object value, string name)
         {
             Code = value;

@@ -48,6 +48,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -102,7 +103,9 @@
     <Compile Include="Map Tools\DrawFeatureSketchTool.cs" />
     <Compile Include="Models\CoordinateObject.cs" />
     <Compile Include="Models\DomainCodedValuePair.cs" />
-    <Compile Include="Models\SymbolAttributeSet.cs" />
+    <Compile Include="Models\Symbol Attributes\LabelAttributes.cs" />
+    <Compile Include="Models\Symbol Attributes\SymbolAttributeSet.cs" />
+    <Compile Include="Models\Symbol Attributes\DisplayAttributes.cs" />
     <Compile Include="Models\SymbolSetMapping.cs" />
     <Compile Include="Models\SymbolSetMappings.cs" />
     <Compile Include="Models\MilitaryFieldsInspectorModel.cs" />
