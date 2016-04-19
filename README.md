@@ -13,6 +13,7 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 
 * [Requirements](#requirements)
 * [Instructions](#instructions)
+* [Workflows](#workflows)
 * [Resources](#resources)
 * [Issues](#issues)
 * [Contributing](#contributing)
@@ -85,6 +86,59 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 			* At any time in this process, the "Add to Map" button, which is on every tab, could be clicked to graphically add the feature to the map by clicking.
 
 > Please note: if you have an issue that is not specifically related to the User Interface or the Addin form itself, but is related to how the symbol draws on the map (ex. incorrect symbol, missing labels on map, line styles) please log those issues against the symbol data itself at: https://github.com/Esri/military-features-data 					
+
+## Workflows
+
+### Open the add-in in ArcGIS Pro
+1. After you've installed the add-in, Open ArcGIS Pro and click the ADD-IN tab.
+2. Click the **Military Symbol Designer** button.
+	The **Military Symbol Designer** pane will open.
+	If you don't have the Military Overlay geodatabase in your Pro project, you will be prompted to download or add it.
+	The Military Symbol Designer requires this geodatabase.
+
+### Search for a symbol
+1. On the **Search** tab, type a keyword in the **Search** box to find the symbol you want (e.g. type "Infantry" to find infantry-related symbols).
+2. Optionally, refine your search by typing other keywords (e.g. type "armor" after infantry to find armored infantry symbols).
+3. Click one of the results in the list that appears below the search box.
+4. Optionally, click **Add to Map** to add the symbol to the map without further refinement.
+	You can also modify the symbol before you add it, so it will have the text and graphic modifiers that you want.
+5. Optionally, click **Add Favorite** to add the symbol to your favorites list.
+	You can also modify the symbol before you add it to your Favorites.
+	
+### Modify a symbol
+1. After you've selected a symbol, click the **Modify** tab.
+2. Click the dropdown lists to set the **Identity/Affiliation**, **Status**, **TF, FD, HQ**, **Echelon**, **Context**, **Modifier 1**, and **Modifier 2** modifier attributes.
+3. Optionally, click **Add to Map** to add the symbol to the map without further refinement.
+4. Optionally, click **Add Favorite** to add the symbol to your favorites list.
+
+### Add text modifiers to a symbol
+1. After you've selected a symbol, click the **Text** tab.
+2. Click the Date and Time adjustment buttons to set the **Date/Time Valid** and **Date/Time Expired** values for the symbol.
+3. Set the **Speed**, **Unique Designation**, **Reinforced**, **Staff Comments**, **Additional Information**, and **Higher Formation** text modifier attributes.
+4. Optionally, click **Add to Map** to add the symbol to the map.
+5. Optionally, click **Add Favorite** to add the symbol to your favorites list.
+
+### Add a symbol to the map by clicking on the map.
+1. After you've selected a symbol, click **Add to Map** to add the symbol to the map.
+2. Click the location on the map where you want to add the symbol.
+    If the symbol is for a point feature, the feature is added where you clicked. If the symbol is for a line or area feature, the first vertex is added.
+	Click to add additional vertices. Double-click to finish the feature.
+3. Optionally, click elsewhere on the map to add more instances of the symbol.
+
+### Add a symbol to the map by entering coordinates
+1. After you've selected a symbol, click the **Enter Coordinates** tab to add the symbol at a particular coordinate location.
+    **Note:**  The Coordinates box accepts coordinates in a variety of formats, including DD, DMS, MGRS, and UTM. 
+2. Type or paste a coordinate value in the Coordinates box.
+    If the symbol is for a line or area feature, press the **Enter** key and continue adding coordinates.
+3. Click **Add Coordinates to Map**.
+    The symbol is added to the map at the coordinates you specified.
+	
+### Add a symbol to your Favorites
+1. After you've selected a symbol, click the **Add Favorite** button.
+2. Click the **Favorites** tab.
+    You should see the symbol in the favorites box.
+3. Optionally, define other symbols that you will need. Add each one to your Favorites.
+    Click a symbol in your favorites to add it to the map.
 
 ## Resources
 
