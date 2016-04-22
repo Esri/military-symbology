@@ -248,52 +248,46 @@
                                             </TextBox.Style>
                                         </TextBox>
 
-                                        <ListBox Margin="5,5,5,5" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding FavoritesView, UpdateSourceTrigger=PropertyChanged}" 
-                                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Height="225" SelectedItem="{Binding SelectedFavoriteSymbol, Mode=TwoWay}">
-
-                                            <ListBox.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <WrapPanel/>
-                                                    <!--<VirtualizingStackPanel>
-                                                        --><!--Memory footprint is only 200 mb--><!--
-                                                    </VirtualizingStackPanel>-->
-                                                </ItemsPanelTemplate>
-                                            </ListBox.ItemsPanel>
-
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Image Source="{Binding SymbolImage}" Width="100" Height="100" Stretch="UniformToFill"/>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
-
-                                        <Grid Grid.Row="2">
+                                        <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
+
                                             <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>
 
-                                            <Button Content="Load Selected Symbol" Grid.Row="0" Grid.Column="0" Command="{Binding LoadSymbolFileCommand}" Margin="5,5,5,5" Style="{DynamicResource Esri_SimpleButton}" IsEnabled="{Binding IsFavoriteItemSelected}"/>
-                                            <Button Content="Delete Selected Symbol" Grid.Row="0" Grid.Column="1" Command="{Binding DeleteFavoriteSymbolCommand}" Margin="5,5,5,5" Style="{DynamicResource Esri_SimpleButton}" IsEnabled="{Binding IsFavoriteItemSelected}"/>
-                                            <Button Content="Import JSON Symbol File..." Grid.Row="1" Grid.Column="0" Command="{Binding ImportFavoritesFileCommand}" Margin="5,5,5,5" Style="{DynamicResource Esri_SimpleButton}"/>
-                                            <Button Content="Save JSON Symbol File As..." Grid.Row="1" Grid.Column="1" Command="{Binding SaveFavoritesFileAsCommand}" Margin="5,5,5,5" Style="{DynamicResource Esri_SimpleButton}"/>
+                                            <ListBox Margin="5,5,5,5" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding FavoritesView, UpdateSourceTrigger=PropertyChanged}" 
+                                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="175" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" SelectedItem="{Binding SelectedFavoriteSymbol, Mode=TwoWay}">
+
+                                                <ListBox.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel/>
+                                                        <!--<VirtualizingStackPanel>
+                                                        -->
+                                                        <!--Memory footprint is only 200 mb-->
+                                                        <!--
+                                                    </VirtualizingStackPanel>-->
+                                                    </ItemsPanelTemplate>
+                                                </ListBox.ItemsPanel>
+
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Image Source="{Binding SymbolImage}" Width="100" Height="100" Stretch="UniformToFill"/>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+
+                                            <Button Content="Delete" Grid.Row="0" Grid.Column="1" Command="{Binding DeleteFavoriteSymbolCommand}" Margin="5,5,5,5" Style="{DynamicResource Esri_SimpleButton}" IsEnabled="{Binding IsFavoriteItemSelected}"/>
+                                            <Button Content="Import..." Grid.Row="1" Grid.Column="1" Command="{Binding ImportFavoritesFileCommand}" Margin="5,5,5,5" Style="{DynamicResource Esri_SimpleButton}"/>
+                                            <Button Content="Save As..." Grid.Row="2" Grid.Column="1" Command="{Binding SaveFavoritesFileAsCommand}" Margin="5,5,5,5" Style="{DynamicResource Esri_SimpleButton}"/>
+
                                         </Grid>
 
-                                    </Grid>
-
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                        </Grid.RowDefinitions>
-
-                                        <!--<Image Source="{Binding SelectedFavoriteSymbol.SymbolImage, UpdateSourceTrigger=PropertyChanged}" Width="200" Height="200" Grid.Column="0"/>-->
-
-                                        <ItemsControl ItemsSource="{Binding SelectedFavoriteStyleTags, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10">
+                                        <ItemsControl ItemsSource="{Binding SelectedFavoriteStyleTags, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,10">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <Border x:Name="border" BorderBrush="#409BD1" BorderThickness="2" CornerRadius="5" Height="Auto" d:DesignWidth="139" d:DesignHeight="40" Padding="5,3" Margin="3,0,3,3">
@@ -316,17 +310,49 @@
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                         </ItemsControl>
-                                        
-                                        <xctk:PropertyGrid SelectedObject="{Binding SelectedFavoriteSymbol}" IsReadOnly="True" Grid.Row="1" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="200" Margin="5,5,5,5">
+
+                                        <!--<Grid Grid.Row="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            --><!--<Button Content="Load Selected Symbol" Grid.Row="0" Grid.Column="0" Command="{Binding LoadSymbolFileCommand}" Margin="5,5,5,5" Style="{DynamicResource Esri_SimpleButton}" IsEnabled="{Binding IsFavoriteItemSelected}"/>--><!--
+                                            <Button Content="Delete" Grid.Row="0" Grid.Column="1" Command="{Binding DeleteFavoriteSymbolCommand}" Margin="5,5,5,5" Style="{DynamicResource Esri_SimpleButton}" IsEnabled="{Binding IsFavoriteItemSelected}"/>
+                                            <Button Content="Import..." Grid.Row="1" Grid.Column="0" Command="{Binding ImportFavoritesFileCommand}" Margin="5,5,5,5" Style="{DynamicResource Esri_SimpleButton}"/>
+                                            <Button Content="Save As..." Grid.Row="1" Grid.Column="1" Command="{Binding SaveFavoritesFileAsCommand}" Margin="5,5,5,5" Style="{DynamicResource Esri_SimpleButton}"/>
+                                        </Grid>-->
+
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <!--<Image Source="{Binding SelectedFavoriteSymbol.SymbolImage, UpdateSourceTrigger=PropertyChanged}" Width="200" Height="200" Grid.Column="0"/>-->
+
+                                        <Image Grid.Row="0" Source="{Binding SelectedFavoriteSymbol.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="190" Height="190" Margin="20,5,20,5" VerticalAlignment="Bottom">
+                                            <Image.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
+                                                    <MenuItem Header="Copy Image to Clipboard" Command="{Binding CopyImageToClipboardCommand}"/>
+                                                </ContextMenu>
+                                            </Image.ContextMenu>
+                                        </Image>
+
+                                        <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SelectedFavoriteSymbol}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
                                             <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID"/>
-                                                <xctk:PropertyDefinition TargetProperties="SymbolSet" DisplayName="Symbol Set"/>
-                                                <xctk:PropertyDefinition TargetProperties="SymbolEntity" DisplayName="Symbol Entity"/>
-                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes"/>
-                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes"/>
+                                                <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
+                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
+                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
-
 
                                     </Grid>
 
@@ -554,8 +580,8 @@
                                         <Label Content="0" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>-->
                                             <Label Content="{Binding ElementName=contextComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                             <Label Content="{Binding ElementName=identityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding SymbolAttributeSet.SymbolSet, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding SymbolAttributeSet.SymbolEntity, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding SymbolAttributeSet.DisplayAttributes.SymbolSet, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding SymbolAttributeSet.DisplayAttributes.SymbolEntity, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
                                             <Label Content="{Binding ElementName=statusComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                             <Label Content="{Binding ElementName=tfFdHqComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="5" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
 
@@ -860,8 +886,8 @@
                                         <Label Content="0" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>-->
                                         <Label Content="{Binding ElementName=contextComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="{Binding ElementName=identityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding SymbolAttributeSet.SymbolSet, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding SymbolAttributeSet.SymbolEntity, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding SymbolAttributeSet.DisplayAttributes.SymbolSet, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+                                            <Label Content="{Binding SymbolAttributeSet.DisplayAttributes.SymbolEntity, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="{Binding ElementName=statusComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="{Binding ElementName=tfFdHqComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="5" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
 
