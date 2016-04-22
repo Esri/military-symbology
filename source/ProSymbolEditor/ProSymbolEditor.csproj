@@ -99,20 +99,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\StringCharacterValueConverter.cs" />
-    <Compile Include="Map Tools\CoordinateMapTool.cs" />
-    <Compile Include="Map Tools\DrawFeatureSketchTool.cs" />
+    <Compile Include="MapTools\CoordinateMapTool.cs" />
+    <Compile Include="MapTools\DrawFeatureSketchTool.cs" />
     <Compile Include="Models\CoordinateObject.cs" />
     <Compile Include="Models\DomainCodedValuePair.cs" />
-    <Compile Include="Models\Symbol Attributes\LabelAttributes.cs" />
-    <Compile Include="Models\Symbol Attributes\SymbolAttributeSet.cs" />
-    <Compile Include="Models\Symbol Attributes\DisplayAttributes.cs" />
+    <Compile Include="Models\SymbolAttributes\LabelAttributes.cs" />
+    <Compile Include="Models\SymbolAttributes\SymbolAttributeSet.cs" />
+    <Compile Include="Models\SymbolAttributes\DisplayAttributes.cs" />
     <Compile Include="Models\SymbolSetMapping.cs" />
     <Compile Include="Models\SymbolSetMappings.cs" />
     <Compile Include="Models\MilitaryFieldsInspectorModel.cs" />
     <Compile Include="Views\MilitarySymbolDockpane.xaml.cs">
       <DependentUpon>MilitarySymbolDockpane.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View Models\MilitarySymbolDockpaneViewModel.cs" />
+    <Compile Include="ViewModels\MilitarySymbolDockpaneViewModel.cs" />
     <Compile Include="ProSymbolEditorModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ProSymbolUtilities.cs" />

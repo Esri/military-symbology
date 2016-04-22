@@ -28,6 +28,8 @@ namespace ProSymbolEditor
     public class DisplayAttributes : PropertyChangedBase
     {
         //Base attributes
+        private string _symbolSet;
+        private string _symbolEntity;
         private string _identity;
         private DomainCodedValuePair _selectedIdentityDomainPair;
         private string _status;
@@ -50,6 +52,32 @@ namespace ProSymbolEditor
         public DisplayAttributes()  {    }
 
         #region Getters/Setters
+
+        public string SymbolSet
+        {
+            get
+            {
+                return _symbolSet;
+            }
+            set
+            {
+                _symbolSet = value;
+                NotifyPropertyChanged(() => SymbolSet);
+            }
+        }
+
+        public string SymbolEntity
+        {
+            get
+            {
+                return _symbolEntity;
+            }
+            set
+            {
+                _symbolEntity = value;
+                NotifyPropertyChanged(() => SymbolEntity);
+            }
+        }
 
         public string Identity
         {

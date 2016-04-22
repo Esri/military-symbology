@@ -384,11 +384,11 @@ namespace ProSymbolEditor
 
                     //Parse key for symbol id codes
                     string[] symbolIdCode = ParseKeyForSymbolIdCode(_selectedStyleItem.Tags);
-                    _symbolAttributeSet.SymbolSet = symbolIdCode[0];
-                    _symbolAttributeSet.SymbolEntity = symbolIdCode[1];
+                    _symbolAttributeSet.DisplayAttributes.SymbolSet = symbolIdCode[0];
+                    _symbolAttributeSet.DisplayAttributes.SymbolEntity = symbolIdCode[1];
 
                     //Get feature class name to generate domains
-                    _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.SymbolSet, GeometryType);
+                    _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.DisplayAttributes.SymbolSet, GeometryType);
                     if (_currentFeatureClassName != null && _currentFeatureClassName != "")
                     {
                         //Generate domains
@@ -432,6 +432,9 @@ namespace ProSymbolEditor
                 {
                     IsFavoriteItemSelected = false;
                 }
+
+                //Load Symbol
+                LoadSymbolFile(null);
 
                 NotifyPropertyChanged(() => SelectedFavoriteSymbol);
             }
@@ -822,9 +825,9 @@ namespace ProSymbolEditor
             }
 
             //Get feature class name to generate domains
-            SymbolAttributeSet.SymbolSet = favoriteSet.SymbolSet;
-            SymbolAttributeSet.SymbolEntity = favoriteSet.SymbolEntity;
-            _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.SymbolSet, GeometryType);
+            SymbolAttributeSet.DisplayAttributes.SymbolSet = favoriteSet.DisplayAttributes.SymbolSet;
+            SymbolAttributeSet.DisplayAttributes.SymbolEntity = favoriteSet.DisplayAttributes.SymbolEntity;
+            _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.DisplayAttributes.SymbolSet, GeometryType);
             if (_currentFeatureClassName != null && _currentFeatureClassName != "")
             {
                 //Generate domains and pass in set to update values initially
@@ -854,6 +857,7 @@ namespace ProSymbolEditor
             SymbolAttributeSet favoriteSet = new JavaScriptSerializer().Deserialize<SymbolAttributeSet>(json);
 
             //Add to favorites
+            favoriteSet.GeneratePreviewSymbol();
             Favorites.Add(favoriteSet);
 
             //Serialize Favorites and save to file
