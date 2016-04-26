@@ -416,11 +416,11 @@ namespace ProSymbolEditor
                     return;
 
                 _selectedFavoriteSymbol = value;
+                SelectedFavoriteStyleTags.Clear();
 
                 //Tokenize tags
                 if (_selectedFavoriteSymbol != null)
                 {
-                    SelectedFavoriteStyleTags.Clear();
                     foreach (string tag in _selectedFavoriteSymbol.SymbolTags.Split(';').ToList())
                     {
                         SelectedFavoriteStyleTags.Add(tag);
@@ -785,68 +785,71 @@ namespace ProSymbolEditor
 
             //Clear old attributes
             _symbolAttributeSet.ResetAttributes();
-
-            //Tokenize tags
             SelectedStyleTags.Clear();
-            foreach (string tag in favoriteSet.SymbolTags.Split(';').ToList())
-            {
-                SelectedStyleTags.Add(tag);
-            }
 
-            //Get the geometry type off a tag on the symbol
-            List<string> reverseTags = favoriteSet.SymbolTags.Split(';').ToList();
-            reverseTags.Reverse();
-            string geometryTypeTag = reverseTags[2];
+            if (favoriteSet != null)
+            {
+                //Tokenize tags
+                foreach (string tag in favoriteSet.SymbolTags.Split(';').ToList())
+                {
+                    SelectedStyleTags.Add(tag);
+                }
 
-            if (geometryTypeTag.ToUpper() == "POINT")
-            {
-                GeometryType = GeometryType.Point;
-                PointCoordinateVisibility = Visibility.Visible;
-                PolyCoordinateVisibility = Visibility.Collapsed;
-            }
-            else if (geometryTypeTag.ToUpper() == "LINE")
-            {
-                GeometryType = GeometryType.Polyline;
-                PointCoordinateVisibility = Visibility.Collapsed;
-                PolyCoordinateVisibility = Visibility.Visible;
-            }
-            else if (geometryTypeTag.ToUpper() == "AREA")
-            {
-                GeometryType = GeometryType.Polygon;
-                PointCoordinateVisibility = Visibility.Collapsed;
-                PolyCoordinateVisibility = Visibility.Visible;
-            }
-            else
-            {
-                //No tag found for geometry type, so use it's a point
-                GeometryType = GeometryType.Point;
-                PointCoordinateVisibility = Visibility.Visible;
-                PolyCoordinateVisibility = Visibility.Collapsed;
-            }
+                //Get the geometry type off a tag on the symbol
+                List<string> reverseTags = favoriteSet.SymbolTags.Split(';').ToList();
+                reverseTags.Reverse();
+                string geometryTypeTag = reverseTags[2];
 
-            //Get feature class name to generate domains
-            SymbolAttributeSet.DisplayAttributes.SymbolSet = favoriteSet.DisplayAttributes.SymbolSet;
-            SymbolAttributeSet.DisplayAttributes.SymbolEntity = favoriteSet.DisplayAttributes.SymbolEntity;
-            _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.DisplayAttributes.SymbolSet, GeometryType);
-            if (_currentFeatureClassName != null && _currentFeatureClassName != "")
-            {
-                //Generate domains and pass in set to update values initially
-                GetMilitaryDomainsAsync(favoriteSet);
+                if (geometryTypeTag.ToUpper() == "POINT")
+                {
+                    GeometryType = GeometryType.Point;
+                    PointCoordinateVisibility = Visibility.Visible;
+                    PolyCoordinateVisibility = Visibility.Collapsed;
+                }
+                else if (geometryTypeTag.ToUpper() == "LINE")
+                {
+                    GeometryType = GeometryType.Polyline;
+                    PointCoordinateVisibility = Visibility.Collapsed;
+                    PolyCoordinateVisibility = Visibility.Visible;
+                }
+                else if (geometryTypeTag.ToUpper() == "AREA")
+                {
+                    GeometryType = GeometryType.Polygon;
+                    PointCoordinateVisibility = Visibility.Collapsed;
+                    PolyCoordinateVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    //No tag found for geometry type, so use it's a point
+                    GeometryType = GeometryType.Point;
+                    PointCoordinateVisibility = Visibility.Visible;
+                    PolyCoordinateVisibility = Visibility.Collapsed;
+                }
+
+                //Get feature class name to generate domains
+                SymbolAttributeSet.DisplayAttributes.SymbolSet = favoriteSet.DisplayAttributes.SymbolSet;
+                SymbolAttributeSet.DisplayAttributes.SymbolEntity = favoriteSet.DisplayAttributes.SymbolEntity;
+                _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.DisplayAttributes.SymbolSet, GeometryType);
+                if (_currentFeatureClassName != null && _currentFeatureClassName != "")
+                {
+                    //Generate domains and pass in set to update values initially
+                    GetMilitaryDomainsAsync(favoriteSet);
+                }
+
+                IsStyleItemSelected = true;
+
+                //Set label values (that are not combo boxes)
+                SymbolAttributeSet.LabelAttributes.DateTimeValid = favoriteSet.LabelAttributes.DateTimeValid;
+                SymbolAttributeSet.LabelAttributes.DateTimeExpired = favoriteSet.LabelAttributes.DateTimeExpired;
+                SymbolAttributeSet.LabelAttributes.Type = favoriteSet.LabelAttributes.Type;
+                SymbolAttributeSet.LabelAttributes.CommonIdentifier = favoriteSet.LabelAttributes.CommonIdentifier;
+                SymbolAttributeSet.LabelAttributes.Speed = favoriteSet.LabelAttributes.Speed;
+                SymbolAttributeSet.LabelAttributes.UniqueDesignation = favoriteSet.LabelAttributes.UniqueDesignation;
+                SymbolAttributeSet.LabelAttributes.StaffComments = favoriteSet.LabelAttributes.StaffComments;
+                SymbolAttributeSet.LabelAttributes.AdditionalInformation = favoriteSet.LabelAttributes.AdditionalInformation;
+                SymbolAttributeSet.LabelAttributes.HigherFormation = favoriteSet.LabelAttributes.HigherFormation;
+                SymbolAttributeSet.SymbolTags = favoriteSet.SymbolTags;
             }
-
-            IsStyleItemSelected = true;
-
-            //Set label values (that are not combo boxes)
-            SymbolAttributeSet.LabelAttributes.DateTimeValid = favoriteSet.LabelAttributes.DateTimeValid;
-            SymbolAttributeSet.LabelAttributes.DateTimeExpired = favoriteSet.LabelAttributes.DateTimeExpired;
-            SymbolAttributeSet.LabelAttributes.Type = favoriteSet.LabelAttributes.Type;
-            SymbolAttributeSet.LabelAttributes.CommonIdentifier = favoriteSet.LabelAttributes.CommonIdentifier;
-            SymbolAttributeSet.LabelAttributes.Speed = favoriteSet.LabelAttributes.Speed;
-            SymbolAttributeSet.LabelAttributes.UniqueDesignation = favoriteSet.LabelAttributes.UniqueDesignation;
-            SymbolAttributeSet.LabelAttributes.StaffComments = favoriteSet.LabelAttributes.StaffComments;
-            SymbolAttributeSet.LabelAttributes.AdditionalInformation = favoriteSet.LabelAttributes.AdditionalInformation;
-            SymbolAttributeSet.LabelAttributes.HigherFormation = favoriteSet.LabelAttributes.HigherFormation;
-            SymbolAttributeSet.SymbolTags = favoriteSet.SymbolTags;
         }
 
         private void SaveSymbolAsFavorite(object parameter)
@@ -899,9 +902,20 @@ namespace ProSymbolEditor
 
                 ObservableCollection<SymbolAttributeSet> importedFavorites = new JavaScriptSerializer().Deserialize<ObservableCollection<SymbolAttributeSet>>(json);
 
-                //Go through favorites, generate symbol image and add to main favorites
+                //Go through favorites, find if uid is already in favorites - if so, replace that favorite
+                //If not found, add favorite
                 foreach (SymbolAttributeSet set in importedFavorites)
                 {
+                    foreach (SymbolAttributeSet favSet in Favorites)
+                    {
+                        if (favSet.FavoriteId == set.FavoriteId)
+                        {
+                            //Match found, remove found
+                            Favorites.Remove(favSet);
+                            break;
+                        }
+                    }
+
                     set.GeneratePreviewSymbol();
                     Favorites.Add(set);
                 }
