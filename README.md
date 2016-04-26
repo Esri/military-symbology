@@ -90,7 +90,7 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 ## Workflows
 
 ### Open the add-in in ArcGIS Pro
-1. After you've installed the add-in, Open ArcGIS Pro and click the ADD-IN tab.
+1. After you've installed the add-in, Open ArcGIS Pro and click the **ADD-IN** tab.
 2. Click the **Military Symbol Designer** button.
 	The **Military Symbol Designer** pane will open.
 	If you don't have the Military Overlay geodatabase in your Pro project, you will be prompted to download or add it.
@@ -106,27 +106,30 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 	You can also modify the symbol before you add it to your Favorites.
 	
 ### Modify a symbol
-1. After you've selected a symbol, click the **Modify** tab.
+1. After you've selected a symbol in the Military Symbol Designer, click the **Modify** tab.
 2. Click the dropdown lists to set the **Identity/Affiliation**, **Status**, **TF, FD, HQ**, **Echelon**, **Context**, **Modifier 1**, and **Modifier 2** modifier attributes.
 3. Optionally, click **Add to Map** to add the symbol to the map without further refinement.
 4. Optionally, click **Add Favorite** to add the symbol to your favorites list.
+    
+	**Note:**  The Military Symbol Designer is for designing symbols before you add them to the map. It is not for editing existing features on the map.
+		If you want to change a feature that you've already added to the map, select the feature, click the **Edit** tab in ArcGIS Pro, click **Attributes**, and edit the feature's attributes in the **Attributes pane**.
 
 ### Add text modifiers to a symbol
-1. After you've selected a symbol, click the **Text** tab.
+1. After you've selected a symbol in the Military Symbol Designer, click the **Text** tab.
 2. Click the Date and Time adjustment buttons to set the **Date/Time Valid** and **Date/Time Expired** values for the symbol.
 3. Set the **Speed**, **Unique Designation**, **Reinforced**, **Staff Comments**, **Additional Information**, and **Higher Formation** text modifier attributes.
 4. Optionally, click **Add to Map** to add the symbol to the map.
 5. Optionally, click **Add Favorite** to add the symbol to your favorites list.
 
 ### Add a symbol to the map by clicking on the map.
-1. After you've selected a symbol, click **Add to Map** to add the symbol to the map.
+1. After you've selected a symbol in the Military Symbol Designer, click **Add to Map** to add the symbol to the map.
 2. Click the location on the map where you want to add the symbol.
     If the symbol is for a point feature, the feature is added where you clicked. If the symbol is for a line or area feature, the first vertex is added.
 	Click to add additional vertices. Double-click to finish the feature.
 3. Optionally, click elsewhere on the map to add more instances of the symbol.
 
 ### Add a symbol to the map by entering coordinates
-1. After you've selected a symbol, click the **Enter Coordinates** tab to add the symbol at a particular coordinate location.
+1. After you've selected a symbol in the Military Symbol Designer, click the **Enter Coordinates** tab to add the symbol at a particular coordinate location.
     **Note:**  The Coordinates box accepts coordinates in a variety of formats, including DD, DMS, MGRS, and UTM. 
 2. Type or paste a coordinate value in the Coordinates box.
     If the symbol is for a line or area feature, press the **Enter** key and continue adding coordinates.
@@ -134,11 +137,18 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
     The symbol is added to the map at the coordinates you specified.
 	
 ### Add a symbol to your Favorites
-1. After you've selected a symbol, click the **Add Favorite** button.
+1. After you've selected a symbol in the Military Symbol Designer, click the **Add Favorite** button.
 2. Click the **Favorites** tab.
     You should see the symbol in the favorites box.
 3. Optionally, define other symbols that you will need. Add each one to your Favorites.
     Click a symbol in your favorites to add it to the map.
+	
+### Edit the symbol for a military feature that is already on the map
+1. In an ArcGIS Pro map or table, select the military feature that you want to change.
+2. Click the **Edit** tab in ArcGIS Pro.
+3. Click **Attributes**.
+4. Edit the feature's attributes in the **Attributes pane**.
+   The military symbol for the feature will update to reflect the new attributes, for attributes that are used by the dictionary renderer to specify the military symbol.
 
 ## Resources
 
