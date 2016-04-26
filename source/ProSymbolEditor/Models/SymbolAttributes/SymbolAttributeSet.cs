@@ -29,8 +29,6 @@ namespace ProSymbolEditor
 {
     public class SymbolAttributeSet : PropertyChangedBase
     {
-        private string _symbolSet;
-        private string _symbolEntity;
         private BitmapImage _symbolImage = null;
 
         public SymbolAttributeSet()
@@ -54,36 +52,6 @@ namespace ProSymbolEditor
         public string StandardVersion { get; set; }
 
         public string SymbolTags { get; set; }
-
-        public string SymbolSet
-        {
-            get
-            {
-                return _symbolSet;
-            }
-            set
-            {
-                _symbolSet = value;
-                //GenerateSelectedSymbolTagsString();
-                GeneratePreviewSymbol();
-                NotifyPropertyChanged(() => SymbolSet);
-            }
-        }
-
-        public string SymbolEntity
-        {
-            get
-            {
-                return _symbolEntity;
-            }
-            set
-            {
-                _symbolEntity = value;
-                //GenerateSelectedSymbolTagsString();
-                GeneratePreviewSymbol();
-                NotifyPropertyChanged(() => SymbolEntity);
-            }
-        }
 
         [ScriptIgnore]
         public BitmapImage SymbolImage
@@ -152,14 +120,14 @@ namespace ProSymbolEditor
                 attributeSet["identity"] = DisplayAttributes.Identity;
             }
 
-            if (!string.IsNullOrEmpty(_symbolSet))
+            if (!string.IsNullOrEmpty(DisplayAttributes.SymbolSet))
             {
-                attributeSet["symbolset"] = _symbolSet;
+                attributeSet["symbolset"] = DisplayAttributes.SymbolSet;
             }
 
-            if (!string.IsNullOrEmpty(_symbolEntity))
+            if (!string.IsNullOrEmpty(DisplayAttributes.SymbolEntity))
             {
-                attributeSet["symbolentity"] = _symbolEntity;
+                attributeSet["symbolentity"] = DisplayAttributes.SymbolEntity;
             }
 
             if (!string.IsNullOrEmpty(DisplayAttributes.Indicator))
@@ -217,14 +185,14 @@ namespace ProSymbolEditor
                 rowBuffer["identity"] = DisplayAttributes.Identity;
             }
 
-            if (!string.IsNullOrEmpty(_symbolSet))
+            if (!string.IsNullOrEmpty(DisplayAttributes.SymbolSet))
             {
-                rowBuffer["symbolset"] = Convert.ToInt32(_symbolSet);
+                rowBuffer["symbolset"] = Convert.ToInt32(DisplayAttributes.SymbolSet);
             }
 
-            if (!string.IsNullOrEmpty(_symbolEntity))
+            if (!string.IsNullOrEmpty(DisplayAttributes.SymbolEntity))
             {
-                rowBuffer["symbolentity"] = Convert.ToInt32(_symbolEntity);
+                rowBuffer["symbolentity"] = Convert.ToInt32(DisplayAttributes.SymbolEntity);
             }
 
             //Indicator / HQTFFD /
@@ -340,8 +308,8 @@ namespace ProSymbolEditor
         public void ResetAttributes()
         {
             //Reset attributes
-            SymbolSet = "";
-            SymbolEntity = "";
+            DisplayAttributes.SymbolSet = "";
+            DisplayAttributes.SymbolEntity = "";
             DisplayAttributes.Echelon = "";
             DisplayAttributes.Identity = "";
             DisplayAttributes.OperationalCondition = "";
