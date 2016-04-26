@@ -110,7 +110,8 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 2. Click the dropdown lists to set the **Identity/Affiliation**, **Status**, **TF, FD, HQ**, **Echelon**, **Context**, **Modifier 1**, and **Modifier 2** modifier attributes.
 3. Optionally, click **Add to Map** to add the symbol to the map without further refinement.
 4. Optionally, click **Add Favorite** to add the symbol to your favorites list.
-    **Note:**  The Military Symbol Designer is for designing symbols before you add them to the map. It is not for editing existing features on the map.
+    
+	**Note:**  The Military Symbol Designer is for designing symbols before you add them to the map. It is not for editing existing features on the map.
 		If you want to change a feature that you've already added to the map, select the feature, click the **Edit** tab in ArcGIS Pro, click **Attributes**, and edit the feature's attributes in the **Attributes pane**.
 
 ### Add text modifiers to a symbol
