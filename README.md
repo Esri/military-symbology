@@ -148,7 +148,7 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 2. Click the **Edit** tab in ArcGIS Pro.
 3. Click **Attributes**.
 4. Edit the feature's attributes in the **Attributes pane**.
-   The military symbol for the feature will update to reflect the new attributes, for attributes are used by the dictionary renderer to specify the military symbol.
+   The military symbol for the feature will update to reflect the new attributes, for attributes that are used by the dictionary renderer to specify the military symbol.
 
 ## Resources
 
