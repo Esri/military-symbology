@@ -24,6 +24,9 @@ using System.IO;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Windows;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using System.Diagnostics;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Editing;
@@ -35,6 +38,7 @@ using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Catalog;
 using CoordinateToolLibrary.Models;
 using Microsoft.Win32;
+using System.Web.Script.Serialization;
 
 namespace ProSymbolEditor
 {
@@ -46,9 +50,11 @@ namespace ProSymbolEditor
         private const string _mil2525dRelativePath = @"Resources\Dictionaries\mil2525d\mil2525d.stylx";
         private string _mil2525dStyleFullFilePath;
         private string _currentFeatureClassName = "";
+        private string _favoritesFilePath = "";
         private FeatureClass _currentFeatureClass = null;
         private StyleProjectItem _militaryStyleItem = null;
         private SymbolStyleItem _selectedStyleItem = null;
+        private SymbolAttributeSet _selectedFavoriteSymbol = null;
         private SymbolSetMappings _symbolSetMappings = new SymbolSetMappings();
 
         //Lock objects for ObservableCollections
@@ -80,10 +86,13 @@ namespace ProSymbolEditor
         public bool _coordinateValid = false;
         private bool _isEnabled = false;
         private bool _isStyleItemSelected = false;
+        private bool _isFavoriteItemSelected = false;
         private bool _addToMapToolEnabled = false;
         private Visibility _pointCoordinateVisibility;
         private Visibility _polyCoordinateVisibility;
         private ProgressDialog _progressDialog;
+        private ICollectionView _favoritesView;
+        private string _favoritesSearchFilter = "";
 
         protected MilitarySymbolDockpaneViewModel()
         {
@@ -113,7 +122,7 @@ namespace ProSymbolEditor
             //Create locks for variables that are updated in worker threads
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.IdentityDomainValues, _identityLock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.EcholonDomainValues, _echelonLock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.StatusesDomainValues, _statusesLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.StatusDomainValues, _statusesLock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues, _operationalConditionAmplifierLock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.MobilityDomainValues, _mobilityLock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.TfFdHqDomainValues, _tfFdHqLock);
@@ -130,15 +139,29 @@ namespace ProSymbolEditor
             //ActivateMapToolCommand = new RelayCommand(ActivateCoordinateMapTool, param => true);
             AddCoordinateToMapCommand = new RelayCommand(CreateNewFeatureAsync, CanCreatePolyFeatureFromCoordinates);
             ActivateAddToMapToolCommand = new RelayCommand(ActivateDrawFeatureSketchTool, param => true);
+            CopyImageToClipboardCommand = new RelayCommand(CopyImageToClipboard, param => true);
+            SaveImageToCommand = new RelayCommand(SaveImageAs, param => true);
+            SaveSymbolFileCommand = new RelayCommand(SaveSymbolAsFavorite, param => true);
+            LoadSymbolFileCommand = new RelayCommand(LoadSymbolFile, param => true);
+            DeleteFavoriteSymbolCommand = new RelayCommand(DeleteFavoriteSymbol, param => true);
+            SaveFavoritesFileAsCommand = new RelayCommand(SaveFavoritesAsToFile, param => true);
+            ImportFavoritesFileCommand = new RelayCommand(ImportFavoritesFile, param => true);
 
-            _symbolAttributeSet.DateTimeValid = DateTime.Now;
-            _symbolAttributeSet.DateTimeExpired = DateTime.Now;
+            _symbolAttributeSet.LabelAttributes.DateTimeValid = DateTime.Now;
+            _symbolAttributeSet.LabelAttributes.DateTimeExpired = DateTime.Now;
             IsStyleItemSelected = false;
 
             PolyCoordinates = new ObservableCollection<CoordinateObject>();
+            Favorites = new ObservableCollection<SymbolAttributeSet>();
             SelectedStyleTags = new ObservableCollection<string>();
+            SelectedFavoriteStyleTags = new ObservableCollection<string>();
 
             _progressDialog = new ProgressDialog("Searching...");
+            _symbolAttributeSet.StandardVersion = "2525D";
+
+            //Load saved favorites
+            _favoritesFilePath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "SymbolFavorites.json");
+            LoadAllFavoritesFromFile();
         }
 
         #region General Add-In Getters/Setters
@@ -175,6 +198,8 @@ namespace ProSymbolEditor
             }
         }
 
+        public ObservableCollection<SymbolAttributeSet> Favorites { get; set; }
+
         #endregion
 
         #region Commands Get/Sets
@@ -188,6 +213,20 @@ namespace ProSymbolEditor
         public ICommand AddCoordinateToMapCommand { get; set; }
 
         public ICommand ActivateAddToMapToolCommand { get; set; }
+
+        public ICommand SaveImageToCommand { get; set; }
+
+        public ICommand CopyImageToClipboardCommand { get; set; }
+
+        public ICommand LoadSymbolFileCommand { get; set; }
+
+        public ICommand SaveSymbolFileCommand { get; set; }
+
+        public ICommand DeleteFavoriteSymbolCommand { get; set; }
+
+        public ICommand ImportFavoritesFileCommand { get; set; }
+
+        public ICommand SaveFavoritesFileAsCommand { get; set; }
 
         #endregion
 
@@ -213,6 +252,23 @@ namespace ProSymbolEditor
             }
         }
 
+        public string FavoritesSearchFilter
+        {
+            get
+            {
+                return _favoritesSearchFilter;
+            }
+            set
+            {
+                if (value != _favoritesSearchFilter)
+                {
+                    _favoritesSearchFilter = value;
+                    _favoritesView.Refresh();
+                    NotifyPropertyChanged(() => FavoritesSearchFilter);
+                }
+            }
+        }
+
         public bool IsStyleItemSelected
         {
             get
@@ -223,6 +279,27 @@ namespace ProSymbolEditor
             {
                 _isStyleItemSelected = value;
                 NotifyPropertyChanged(() => IsStyleItemSelected);
+            }
+        }
+
+        public bool IsFavoriteItemSelected
+        {
+            get
+            {
+                return _isFavoriteItemSelected;
+            }
+            set
+            {
+                _isFavoriteItemSelected = value;
+                NotifyPropertyChanged(() => IsFavoriteItemSelected);
+            }
+        }
+
+        public ICollectionView FavoritesView
+        {
+            get
+            {
+                return _favoritesView;
             }
         }
 
@@ -252,6 +329,7 @@ namespace ProSymbolEditor
                     _symbolAttributeSet.ResetAttributes();
 
                     //Tokenize tags
+                    _symbolAttributeSet.SymbolTags = _selectedStyleItem.Tags;
                     SelectedStyleTags.Clear();
                     foreach(string tag in _selectedStyleItem.Tags.Split(';').ToList())
                     {
@@ -306,11 +384,11 @@ namespace ProSymbolEditor
 
                     //Parse key for symbol id codes
                     string[] symbolIdCode = ParseKeyForSymbolIdCode(_selectedStyleItem.Tags);
-                    _symbolAttributeSet.SymbolSet = symbolIdCode[0];
-                    _symbolAttributeSet.SymbolEntity = symbolIdCode[1];
+                    _symbolAttributeSet.DisplayAttributes.SymbolSet = symbolIdCode[0];
+                    _symbolAttributeSet.DisplayAttributes.SymbolEntity = symbolIdCode[1];
 
                     //Get feature class name to generate domains
-                    _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.SymbolSet, GeometryType);
+                    _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.DisplayAttributes.SymbolSet, GeometryType);
                     if (_currentFeatureClassName != null && _currentFeatureClassName != "")
                     {
                         //Generate domains
@@ -326,6 +404,42 @@ namespace ProSymbolEditor
             }
         }
 
+        public SymbolAttributeSet SelectedFavoriteSymbol
+        {
+            get
+            {
+                return _selectedFavoriteSymbol;
+            }
+            set
+            {
+                if (_selectedFavoriteSymbol == value)
+                    return;
+
+                _selectedFavoriteSymbol = value;
+                SelectedFavoriteStyleTags.Clear();
+
+                //Tokenize tags
+                if (_selectedFavoriteSymbol != null)
+                {
+                    foreach (string tag in _selectedFavoriteSymbol.SymbolTags.Split(';').ToList())
+                    {
+                        SelectedFavoriteStyleTags.Add(tag);
+                    }
+
+                    IsFavoriteItemSelected = true;
+                }
+                else
+                {
+                    IsFavoriteItemSelected = false;
+                }
+
+                //Load Symbol
+                LoadSymbolFile(null);
+
+                NotifyPropertyChanged(() => SelectedFavoriteSymbol);
+            }
+        }
+
         #endregion
 
         #region Feature Data and Map Getters/Setters
@@ -334,6 +448,7 @@ namespace ProSymbolEditor
 
         public ObservableCollection<CoordinateObject> PolyCoordinates { get; set; }
         public ObservableCollection<string> SelectedStyleTags { get; set; }
+        public ObservableCollection<string> SelectedFavoriteStyleTags { get; set; }
 
         public bool PointCoordinateValid
         {
@@ -591,6 +706,226 @@ namespace ProSymbolEditor
             return true;
         }
 
+        private void SaveImageAs(object parameter)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = "symbol";
+            saveFileDialog.Filter = "Png Image|*.png";
+            Nullable<bool> result = saveFileDialog.ShowDialog();
+            if (result == true)
+            {
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(SymbolAttributeSet.SymbolImage));
+                using (var stream = saveFileDialog.OpenFile())
+                {
+                    encoder.Save(stream);
+                }
+            }
+        }
+
+        private void CopyImageToClipboard(object parameter)
+        {
+            //There's an issue copying the image directly to the clipboard, where transparency isn't retained, and will have a black background.
+            //The code below will switch that to be a pseudo-transparency with a white background.
+            Size size = new Size(SymbolAttributeSet.SymbolImage.Width, SymbolAttributeSet.SymbolImage.Height);
+
+            // Create a white background render bitmap
+            int dWidth = (int)size.Width;
+            int dHeight = (int)size.Height;
+            int dStride = dWidth * 4;
+            byte[] pixels = new byte[dHeight * dStride];
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                pixels[i] = 0xFF;
+            }
+            BitmapSource bg = BitmapSource.Create(
+                dWidth,
+                dHeight,
+                96,
+                96,
+                PixelFormats.Pbgra32,
+                null,
+                pixels,
+                dStride
+            );
+
+            // Adding those two render bitmap to the same drawing visual
+            DrawingVisual dv = new DrawingVisual();
+            DrawingContext dc = dv.RenderOpen();
+            dc.DrawImage(bg, new Rect(size));
+            dc.DrawImage(SymbolAttributeSet.SymbolImage, new Rect(size));
+            dc.Close();
+
+            // Render the result
+            RenderTargetBitmap resultBitmap =
+                new RenderTargetBitmap(
+                (int)size.Width,
+                (int)size.Height,
+                96d,
+                96d,
+                PixelFormats.Pbgra32
+            );
+            resultBitmap.Render(dv);
+
+            // Copy it to clipboard
+            try
+            {
+                Clipboard.SetImage(resultBitmap);
+            }
+            catch(Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
+        }
+
+        private void LoadSymbolFile(object parameter)
+        {
+            //Load the currently selected favorite
+            SymbolAttributeSet favoriteSet = _selectedFavoriteSymbol;
+
+            //Clear old attributes
+            _symbolAttributeSet.ResetAttributes();
+            SelectedStyleTags.Clear();
+
+            if (favoriteSet != null)
+            {
+                //Tokenize tags
+                foreach (string tag in favoriteSet.SymbolTags.Split(';').ToList())
+                {
+                    SelectedStyleTags.Add(tag);
+                }
+
+                //Get the geometry type off a tag on the symbol
+                List<string> reverseTags = favoriteSet.SymbolTags.Split(';').ToList();
+                reverseTags.Reverse();
+                string geometryTypeTag = reverseTags[2];
+
+                if (geometryTypeTag.ToUpper() == "POINT")
+                {
+                    GeometryType = GeometryType.Point;
+                    PointCoordinateVisibility = Visibility.Visible;
+                    PolyCoordinateVisibility = Visibility.Collapsed;
+                }
+                else if (geometryTypeTag.ToUpper() == "LINE")
+                {
+                    GeometryType = GeometryType.Polyline;
+                    PointCoordinateVisibility = Visibility.Collapsed;
+                    PolyCoordinateVisibility = Visibility.Visible;
+                }
+                else if (geometryTypeTag.ToUpper() == "AREA")
+                {
+                    GeometryType = GeometryType.Polygon;
+                    PointCoordinateVisibility = Visibility.Collapsed;
+                    PolyCoordinateVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    //No tag found for geometry type, so use it's a point
+                    GeometryType = GeometryType.Point;
+                    PointCoordinateVisibility = Visibility.Visible;
+                    PolyCoordinateVisibility = Visibility.Collapsed;
+                }
+
+                //Get feature class name to generate domains
+                SymbolAttributeSet.DisplayAttributes.SymbolSet = favoriteSet.DisplayAttributes.SymbolSet;
+                SymbolAttributeSet.DisplayAttributes.SymbolEntity = favoriteSet.DisplayAttributes.SymbolEntity;
+                _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.DisplayAttributes.SymbolSet, GeometryType);
+                if (_currentFeatureClassName != null && _currentFeatureClassName != "")
+                {
+                    //Generate domains and pass in set to update values initially
+                    GetMilitaryDomainsAsync(favoriteSet);
+                }
+
+                IsStyleItemSelected = true;
+
+                //Set label values (that are not combo boxes)
+                SymbolAttributeSet.LabelAttributes.DateTimeValid = favoriteSet.LabelAttributes.DateTimeValid;
+                SymbolAttributeSet.LabelAttributes.DateTimeExpired = favoriteSet.LabelAttributes.DateTimeExpired;
+                SymbolAttributeSet.LabelAttributes.Type = favoriteSet.LabelAttributes.Type;
+                SymbolAttributeSet.LabelAttributes.CommonIdentifier = favoriteSet.LabelAttributes.CommonIdentifier;
+                SymbolAttributeSet.LabelAttributes.Speed = favoriteSet.LabelAttributes.Speed;
+                SymbolAttributeSet.LabelAttributes.UniqueDesignation = favoriteSet.LabelAttributes.UniqueDesignation;
+                SymbolAttributeSet.LabelAttributes.StaffComments = favoriteSet.LabelAttributes.StaffComments;
+                SymbolAttributeSet.LabelAttributes.AdditionalInformation = favoriteSet.LabelAttributes.AdditionalInformation;
+                SymbolAttributeSet.LabelAttributes.HigherFormation = favoriteSet.LabelAttributes.HigherFormation;
+                SymbolAttributeSet.SymbolTags = favoriteSet.SymbolTags;
+            }
+        }
+
+        private void SaveSymbolAsFavorite(object parameter)
+        {
+            //Create copy by serializing/deserializing
+            SymbolAttributeSet.FavoriteId = Guid.NewGuid().ToString();
+            var json = new JavaScriptSerializer().Serialize(SymbolAttributeSet);
+            SymbolAttributeSet favoriteSet = new JavaScriptSerializer().Deserialize<SymbolAttributeSet>(json);
+
+            //Add to favorites
+            favoriteSet.GeneratePreviewSymbol();
+            Favorites.Add(favoriteSet);
+
+            //Serialize Favorites and save to file
+            var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
+            File.WriteAllText(_favoritesFilePath, favoritesJson);
+        }
+
+        private void DeleteFavoriteSymbol(object parameter)
+        {
+            if (SelectedFavoriteSymbol != null)
+            {
+                Favorites.Remove(SelectedFavoriteSymbol);
+
+                //Serialize Favorites and save to file
+                var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
+                File.WriteAllText(_favoritesFilePath, favoritesJson);
+            }
+        }
+
+        private void SaveFavoritesAsToFile(object parameter)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = "favorites";
+            saveFileDialog.Filter = "JSON|*.json";
+            Nullable<bool> result = saveFileDialog.ShowDialog();
+            if (result == true)
+            {
+                var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
+                File.WriteAllText(saveFileDialog.FileName, favoritesJson);
+            }
+        }
+
+        private void ImportFavoritesFile(object parameter)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string json = File.ReadAllText(openFileDialog.FileName);
+
+                ObservableCollection<SymbolAttributeSet> importedFavorites = new JavaScriptSerializer().Deserialize<ObservableCollection<SymbolAttributeSet>>(json);
+
+                //Go through favorites, find if uid is already in favorites - if so, replace that favorite
+                //If not found, add favorite
+                foreach (SymbolAttributeSet set in importedFavorites)
+                {
+                    foreach (SymbolAttributeSet favSet in Favorites)
+                    {
+                        if (favSet.FavoriteId == set.FavoriteId)
+                        {
+                            //Match found, remove found
+                            Favorites.Remove(favSet);
+                            break;
+                        }
+                    }
+
+                    set.GeneratePreviewSymbol();
+                    Favorites.Add(set);
+                }
+
+                //Re-serialize to save the imported favorites
+                var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
+                File.WriteAllText(_favoritesFilePath, favoritesJson);
+            }
+        }
+
         #endregion
 
         #region Event Listeners
@@ -662,8 +997,6 @@ namespace ProSymbolEditor
                     SearchUniformGridColumns = 2;
                     SearchUniformGridRows = 1;
                 }
-
-                //NotifyPropertyChanged(() => SearchString);
             }
         }
 
@@ -685,7 +1018,7 @@ namespace ProSymbolEditor
             return null;
         }
 
-        private async void GetMilitaryDomainsAsync()
+        private async void GetMilitaryDomainsAsync(SymbolAttributeSet loadSet = null)
         {
             try
             {
@@ -722,34 +1055,55 @@ namespace ProSymbolEditor
                 });
 
                 //Check for affiliation tag
-                string identityCode = "";
-                if (_selectedStyleItem.Tags.ToUpper().Contains("FRIEND"))
+                if (_selectedStyleItem != null)
                 {
-                    identityCode = await GetDomainValueAsync("identity", "Friend");
-                }
-                else if (_selectedStyleItem.Tags.ToUpper().Contains("HOSTILE"))
-                {
-                    identityCode = await GetDomainValueAsync("identity", "Hostile/Faker");
-                }
-                else if (_selectedStyleItem.Tags.ToUpper().Contains("NEUTRAL"))
-                {
-                    identityCode = await GetDomainValueAsync("identity", "Neutral");
-                }
-                else if (_selectedStyleItem.Tags.ToUpper().Contains("UNKNOWN"))
-                {
-                    identityCode = await GetDomainValueAsync("identity", "Unknown");
-                }
-
-                if (identityCode != "")
-                {
-                    foreach (DomainCodedValuePair dcvp in MilitaryFieldsInspectorModel.IdentityDomainValues)
+                    string identityCode = "";
+                    if (_selectedStyleItem.Tags.ToUpper().Contains("FRIEND"))
                     {
-                        if (dcvp.Code.ToString() == identityCode)
+                        identityCode = await GetDomainValueAsync("identity", "Friend");
+                    }
+                    else if (_selectedStyleItem.Tags.ToUpper().Contains("HOSTILE"))
+                    {
+                        identityCode = await GetDomainValueAsync("identity", "Hostile/Faker");
+                    }
+                    else if (_selectedStyleItem.Tags.ToUpper().Contains("NEUTRAL"))
+                    {
+                        identityCode = await GetDomainValueAsync("identity", "Neutral");
+                    }
+                    else if (_selectedStyleItem.Tags.ToUpper().Contains("UNKNOWN"))
+                    {
+                        identityCode = await GetDomainValueAsync("identity", "Unknown");
+                    }
+
+                    if (identityCode != "")
+                    {
+                        foreach (DomainCodedValuePair dcvp in MilitaryFieldsInspectorModel.IdentityDomainValues)
                         {
-                            SymbolAttributeSet.SelectedIdentityDomainPair = dcvp;
-                            break;
+                            if (dcvp.Code.ToString() == identityCode)
+                            {
+                                SymbolAttributeSet.DisplayAttributes.SelectedIdentityDomainPair = dcvp;
+                                break;
+                            }
                         }
                     }
+                }
+
+                //Load any passed in values to selected values for the domain combo boxes
+                if (loadSet != null)
+                {
+                    SymbolAttributeSet.DisplayAttributes.SelectedIdentityDomainPair = MilitaryFieldsInspectorModel.IdentityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Identity);
+                    SymbolAttributeSet.DisplayAttributes.SelectedEchelonDomainPair = MilitaryFieldsInspectorModel.EcholonDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Echelon);
+                    SymbolAttributeSet.DisplayAttributes.SelectedMobilityDomainPair = MilitaryFieldsInspectorModel.MobilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Mobility);
+                    SymbolAttributeSet.DisplayAttributes.SelectedOperationalConditionDomainPair = MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.OperationalCondition);
+                    SymbolAttributeSet.DisplayAttributes.SelectedIndicatorDomainPair = MilitaryFieldsInspectorModel.TfFdHqDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Indicator);
+                    SymbolAttributeSet.DisplayAttributes.SelectedStatusDomainPair = MilitaryFieldsInspectorModel.StatusDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Status);
+                    SymbolAttributeSet.DisplayAttributes.SelectedContextDomainPair = MilitaryFieldsInspectorModel.ContextDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Context);
+                    SymbolAttributeSet.DisplayAttributes.SelectedModifier1DomainPair = MilitaryFieldsInspectorModel.Modifier1DomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Modifier1);
+                    SymbolAttributeSet.DisplayAttributes.SelectedModifier2DomainPair = MilitaryFieldsInspectorModel.Modifier2DomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Modifier2);
+
+                    SymbolAttributeSet.LabelAttributes.SelectedCredibilityDomainPair = MilitaryFieldsInspectorModel.CredibilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Credibility);
+                    SymbolAttributeSet.LabelAttributes.SelectedReinforcedDomainPair = MilitaryFieldsInspectorModel.ReinforcedDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Reinforced);
+                    SymbolAttributeSet.LabelAttributes.SelectedReliabilityDomainPair = MilitaryFieldsInspectorModel.ReliabilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Reliability);
                 }
             }
             catch (Exception exception)
@@ -829,7 +1183,6 @@ namespace ProSymbolEditor
             List<MapPoint> points = new List<MapPoint>();
             foreach (CoordinateObject coordObject in PolyCoordinates)
             {
-                //points.Add(new MapPointBuilder(coordObject.MapPoint.X, coordObject.MapPoint.Y, 0, coordObject.MapPoint.SpatialReference));
                 points.Add(coordObject.MapPoint);
             }
 
@@ -852,26 +1205,6 @@ namespace ProSymbolEditor
 
         private Task SearchSymbols()
         {
-            //return QueuedTask.Run(async () =>
-            //{
-            //    //Get results and populate symbol gallery
-            //    IList<SymbolStyleItem> pointSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PointSymbol, _searchString);
-            //    IList<SymbolStyleItem> lineSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.LineSymbol, _searchString);
-            //    IList<SymbolStyleItem> polygonSymbols = await _militaryStyleItem.SearchSymbolsAsync(StyleItemType.PolygonSymbol, _searchString);
-
-            //    IList<SymbolStyleItem> combinedSymbols = new List<SymbolStyleItem>();
-            //    (combinedSymbols as List<SymbolStyleItem>).AddRange(pointSymbols);
-            //    (combinedSymbols as List<SymbolStyleItem>).AddRange(lineSymbols);
-            //    (combinedSymbols as List<SymbolStyleItem>).AddRange(polygonSymbols);
-
-            //    int outParse;
-            //    _styleItems = combinedSymbols.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) || 
-            //                                             (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))).ToList();
-
-            //    _progressDialog.Hide();
-            //});
-
-
             return QueuedTask.Run(async () =>
             {
                 var list = new List<StyleItemType>() { StyleItemType.PointSymbol, StyleItemType.LineSymbol, StyleItemType.PolygonSymbol };
@@ -893,13 +1226,44 @@ namespace ProSymbolEditor
                                                          (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))));
                 }
 
-                //_styleItems = combinedSymbols.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) || 
-                //                                         (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))).ToList();
-
                 _styleItems = combinedSymbols;
 
                 _progressDialog.Hide();
             });
+        }
+
+        private void LoadAllFavoritesFromFile()
+        {
+            if (File.Exists(_favoritesFilePath))
+            {
+                string json = File.ReadAllText(_favoritesFilePath);
+                Favorites = new JavaScriptSerializer().Deserialize<ObservableCollection<SymbolAttributeSet>>(json);
+            }
+
+            //Go through favorites, generate symbol image
+            foreach (SymbolAttributeSet set in Favorites)
+            {
+                set.GeneratePreviewSymbol();
+            }
+
+            //Set up filter
+            _favoritesView = CollectionViewSource.GetDefaultView(Favorites);
+            _favoritesView.Filter = FavoritesFilter;
+        }
+
+        private bool FavoritesFilter(object item)
+        {
+            SymbolAttributeSet set = item as SymbolAttributeSet;
+
+            //Do case insensitive filter
+            bool idContains = set.FavoriteId.IndexOf(_favoritesSearchFilter, StringComparison.OrdinalIgnoreCase) >= 0;
+            bool tagsContains = set.SymbolTags.IndexOf(_favoritesSearchFilter, StringComparison.OrdinalIgnoreCase) >= 0;
+            if (idContains || tagsContains)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         #endregion
