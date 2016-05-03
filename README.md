@@ -51,6 +51,7 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2015 | Visual Studio Tools | Developer Command Prompt for VS2015
 		* `cd military-symbol-editor-addin-wpf\source`
 		* `msbuild ProSymbolEditor.sln /property:Configuration=Release`
+		* This will build to the location: `source\ProSymbolEditor\bin\Release` and register the add-in
 	* Note : Assembly references are based on a default install of the SDK, you may have to update the references if you chose an alternate install option
 	
 ## Users
