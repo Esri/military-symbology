@@ -49,17 +49,21 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 		* Open and build solution file
 	* To use MSBuild to build the solution
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2015 | Visual Studio Tools | Developer Command Prompt for VS2015
-		* ``` cd military-symbol-editor-addin-wpf\source ```
-		* ``` msbuild ProSymbolEditor.sln /property:Configuration=Release ```
+		* `cd military-symbol-editor-addin-wpf\source`
+		* `msbuild ProSymbolEditor.sln /property:Configuration=Release`
+		* This will build to the location: `source\ProSymbolEditor\bin\Release` and register the add-in
 	* Note : Assembly references are based on a default install of the SDK, you may have to update the references if you chose an alternate install option
 	
 ## Users
 
-> IMPORTANT: This application depends on the Military Overlay datamodel/geodatabase(GDB) that is provided with the ArcGIS Pro Military Overlay Template. If you do not have the Military Overlay GDB included in your project, you will receive a warning when you attempt to use the application.
+> IMPORTANT: This application depends on the Military Overlay Information Model/geodatabase(GDB) that is provided with the [Military Overlay Template](http://esriurl.com/AFDMilitaryOverlay). If you do not have the Military Overlay GDB included in your project, you will receive a warning when you attempt to use the application.
 
 * Running
 	* To run from a stand-alone deployment in ArcGIS Pro
-		* Install the add-in from the application folder by double clicking it
+		* Obtain the add-in. The add-in may be obtained from
+            * As part of the Military Overlay Template (version 1.1.0+) - http://esriurl.com/AFDMilitaryOverlay
+            * Included in the repository releases: https://github.com/Esri/military-symbol-editor-addin-wpf/releases 			 		
+        * Download the and install the add-in by double clicking it
 		* Open ArcGIS Pro 1.2
 		* Open a project that contains the Military Overlay geodatabase (MilitaryOverlay.gdb)
 		    * This geodatabase may be obtained by downloading the Military Overlay template release available at http://esriurl.com/AFDMilitaryOverlay
