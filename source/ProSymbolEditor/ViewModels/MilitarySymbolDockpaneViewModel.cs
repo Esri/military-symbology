@@ -589,6 +589,10 @@ namespace ProSymbolEditor
             _progressDialog.Show();
             await SearchSymbols();
 
+            //Check for Schema again
+            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.DataModel.ShouldAddInBeEnabledAsync();
+            bool enabled = await isEnabledMethod;
+
             NotifyPropertyChanged(() => StyleItems);
         }
 
