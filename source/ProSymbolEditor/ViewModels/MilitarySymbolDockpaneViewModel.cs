@@ -39,6 +39,7 @@ using ArcGIS.Desktop.Catalog;
 using CoordinateToolLibrary.Models;
 using Microsoft.Win32;
 using System.Web.Script.Serialization;
+using System.Windows.Threading;
 
 namespace ProSymbolEditor
 {
@@ -115,6 +116,17 @@ namespace ProSymbolEditor
                 //Add military style to project
                 Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
                 _militaryStyleItem = await getMilitaryStyle;
+
+                //Reset things
+                this.SelectedStyleItem = null;
+                this.IsStyleItemSelected = false;
+                this.IsFavoriteItemSelected = false;
+                this.StyleItems.Clear();
+                this.SelectedTabIndex = 0;
+                this.SearchString = "";
+                _symbolAttributeSet.ResetAttributes();
+                SelectedStyleTags.Clear();
+
             });
 
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
@@ -156,7 +168,7 @@ namespace ProSymbolEditor
             SelectedStyleTags = new ObservableCollection<string>();
             SelectedFavoriteStyleTags = new ObservableCollection<string>();
 
-            _progressDialog = new ProgressDialog("Searching...");
+            _progressDialog = new ProgressDialog("Loading...");
             _symbolAttributeSet.StandardVersion = "2525D";
 
             //Load saved favorites
@@ -177,24 +189,6 @@ namespace ProSymbolEditor
                 _selectedTabIndex = value;
 
                 NotifyPropertyChanged(() => SelectedTabIndex);
-            }
-        }
-
-        public bool IsEnabled
-        {
-            get
-            {
-                return _isEnabled;
-            }
-            set
-            {
-                _isEnabled = value;
-                NotifyPropertyChanged(() => IsEnabled);
-
-                if (!_isEnabled && IsVisible)
-                {
-                    ProSymbolUtilities.ShowAddInNotEnabledMessageBox();
-                }
             }
         }
 
@@ -321,6 +315,14 @@ namespace ProSymbolEditor
             {
                 if (_selectedStyleItem == value)
                     return;
+
+                if (!ProSymbolEditorModule.Current.DataModel.SchemaExists && value != null)
+                {
+                    ShowAddInNotEnabledMessageBox();
+                    _selectedStyleItem = null;
+                    return;
+                }
+
                 _selectedStyleItem = value;
 
                 if (_selectedStyleItem != null)
@@ -620,10 +622,10 @@ namespace ProSymbolEditor
                         if (datastore is UnknownDatastore)
                             continue;
                         Geodatabase geodatabase = datastore as Geodatabase;
-                        // Use the geodatabase.
-
+                        
+                        //Find the correct gdb for the one with the complete schema
                         string geodatabasePath = geodatabase.GetPath();
-                        if (geodatabasePath.Contains(ProSymbolEditorModule.WorkspaceString))
+                        if (geodatabasePath == ProSymbolEditorModule.Current.DataModel.DatabaseName)
                         {
                             //Correct GDB, open the current selected feature class
                             FeatureClass featureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
@@ -1035,7 +1037,7 @@ namespace ProSymbolEditor
                             Geodatabase geodatabase = datastore as Geodatabase;
 
                             string geodatabasePath = geodatabase.GetPath();
-                            if (geodatabasePath.Contains(ProSymbolEditorModule.WorkspaceString))
+                            if (geodatabasePath == ProSymbolEditorModule.Current.DataModel.DatabaseName)
                             {
                                 //Correct GDB, open the current selected feature class
                                 _currentFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
@@ -1129,7 +1131,7 @@ namespace ProSymbolEditor
                             Geodatabase geodatabase = datastore as Geodatabase;
 
                             string geodatabasePath = geodatabase.GetPath();
-                            if (geodatabasePath.Contains(ProSymbolEditorModule.WorkspaceString))
+                            if (geodatabasePath == ProSymbolEditorModule.Current.DataModel.DatabaseName)
                             {
                                 //Correct GDB, open the current selected feature class
                                 _currentFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
@@ -1266,6 +1268,52 @@ namespace ProSymbolEditor
             return false;
         }
 
+        private void ShowAddInNotEnabledMessageBox()
+        {
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
+            {
+                string message = "The Military Overlay schema as not detected in any database in your project, so the Pro Symbol Editor cannot continue.  " +
+                                 "Would you like to add the Military Overlay Layer Package to add the schema to your project?";
+
+                
+                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (result.ToString() == "Yes")
+                { 
+                    if (MapView.Active != null)
+                    {
+                        
+                        AddLayerPackageToMapAsync();
+                    }
+                    else
+                    {
+                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Your project does not contain any active map.  Create one and try again.");
+                    }
+                }
+            }));
+        }
+
+        private async Task AddLayerPackageToMapAsync()
+        {
+            try
+            {
+                _progressDialog.Show();
+
+                await QueuedTask.Run(async () =>
+                {
+                    LayerFactory.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "Files", "MilitaryOverlay.lpkx")), MapView.Active.Map);
+                    Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.DataModel.ShouldAddInBeEnabledAsync();
+                    bool enabled = await isEnabledMethod;
+                    _progressDialog.Hide();
+                });
+            }
+            catch (Exception exception)
+            {
+                // Catch any exception found and display a message box.
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Exception caught: " + exception.Message);
+                return;
+            }
+        }
+
         #endregion
 
         #region IDataErrorInfo Interface
@@ -1314,11 +1362,6 @@ namespace ProSymbolEditor
     {
         protected override void OnClick()
         {
-            if (!ProSymbolEditorModule._isEnabled)
-            {
-                ProSymbolUtilities.ShowAddInNotEnabledMessageBox();
-            }
-
             MilitarySymbolDockpaneViewModel.Show();
         }
     }

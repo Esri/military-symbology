@@ -103,6 +103,7 @@
     <Compile Include="MapTools\DrawFeatureSketchTool.cs" />
     <Compile Include="Models\CoordinateObject.cs" />
     <Compile Include="Models\DomainCodedValuePair.cs" />
+    <Compile Include="Models\SchemaDataModel.cs" />
     <Compile Include="Models\SymbolAttributes\LabelAttributes.cs" />
     <Compile Include="Models\SymbolAttributes\SymbolAttributeSet.cs" />
     <Compile Include="Models\SymbolAttributes\DisplayAttributes.cs" />
@@ -11522,6 +11523,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Content Include="Files\MilitaryOverlay.lpkx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.PackageAddIn" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.CleanAddIn" />
