@@ -85,7 +85,6 @@ namespace ProSymbolEditor
         private int _selectedTabIndex = 0;
         private ArcGIS.Core.Geometry.Geometry _mapCoordinates;
         public bool _coordinateValid = false;
-        private bool _isEnabled = false;
         private bool _isStyleItemSelected = false;
         private bool _isFavoriteItemSelected = false;
         private bool _addToMapToolEnabled = false;
@@ -1285,7 +1284,6 @@ namespace ProSymbolEditor
                 { 
                     if (MapView.Active != null)
                     {
-                        
                         AddLayerPackageToMapAsync();
                     }
                     else

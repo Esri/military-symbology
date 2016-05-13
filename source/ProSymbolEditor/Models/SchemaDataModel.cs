@@ -27,50 +27,66 @@ namespace ProSymbolEditor
 {
     public class SchemaDataModel
     {
-        public bool SchemaExists { get; set; }
-        public string DatabaseName { get; set; }
-        public List<string> FieldsToCheck { get; set; }
-        public Dictionary<string, bool> FeatureClassExists { get; set; }
+        private bool _schemaExists;
+        private string _databaseName;
+        private List<string> _fieldsToCheck;
+        private Dictionary<string, bool> _featureClassExists;
 
         public SchemaDataModel()
         {
             //Set up Feature Class Schema
-            FeatureClassExists = new Dictionary<string, bool>();
-            FeatureClassExists.Add("Activities", false);
-            FeatureClassExists.Add("Air", false);
-            FeatureClassExists.Add("AirMissile", false);
-            FeatureClassExists.Add("Civilian", false);
-            FeatureClassExists.Add("ControlMeasuresAreas", false);
-            FeatureClassExists.Add("ControlMeasuresLines", false);
-            FeatureClassExists.Add("ControlMeasuresPoints", false);
-            FeatureClassExists.Add("Cyberspace", false);
-            FeatureClassExists.Add("Installations", false);
-            FeatureClassExists.Add("LandEquipment", false);
-            FeatureClassExists.Add("METOCAreasAtmospheric", false);
-            FeatureClassExists.Add("METOCAreasOceanographic", false);
-            FeatureClassExists.Add("METOCLinesAtmospheric", false);
-            FeatureClassExists.Add("METOCLinesOceanographic", false);
-            FeatureClassExists.Add("METOCPointsAtmospheric", false);
-            FeatureClassExists.Add("METOCPointsOceanographic", false);
-            FeatureClassExists.Add("MineWarfare", false);
-            FeatureClassExists.Add("SeaSubsurface", false);
-            FeatureClassExists.Add("SeaSurface", false);
-            FeatureClassExists.Add("SIGINT", false);
-            FeatureClassExists.Add("Space", false);
-            FeatureClassExists.Add("SpaceMissile", false);
-            FeatureClassExists.Add("Units", false);
+            _featureClassExists = new Dictionary<string, bool>();
+            _featureClassExists.Add("Activities", false);
+            _featureClassExists.Add("Air", false);
+            _featureClassExists.Add("AirMissile", false);
+            _featureClassExists.Add("Civilian", false);
+            _featureClassExists.Add("ControlMeasuresAreas", false);
+            _featureClassExists.Add("ControlMeasuresLines", false);
+            _featureClassExists.Add("ControlMeasuresPoints", false);
+            _featureClassExists.Add("Cyberspace", false);
+            _featureClassExists.Add("Installations", false);
+            _featureClassExists.Add("LandEquipment", false);
+            _featureClassExists.Add("METOCAreasAtmospheric", false);
+            _featureClassExists.Add("METOCAreasOceanographic", false);
+            _featureClassExists.Add("METOCLinesAtmospheric", false);
+            _featureClassExists.Add("METOCLinesOceanographic", false);
+            _featureClassExists.Add("METOCPointsAtmospheric", false);
+            _featureClassExists.Add("METOCPointsOceanographic", false);
+            _featureClassExists.Add("MineWarfare", false);
+            _featureClassExists.Add("SeaSubsurface", false);
+            _featureClassExists.Add("SeaSurface", false);
+            _featureClassExists.Add("SIGINT", false);
+            _featureClassExists.Add("Space", false);
+            _featureClassExists.Add("SpaceMissile", false);
+            _featureClassExists.Add("Units", false);
 
             //Set up Fields to check
-            FieldsToCheck = new List<string>();
-            FieldsToCheck.Add("symbolset");
-            FieldsToCheck.Add("symbolentity");
+            _fieldsToCheck = new List<string>();
+            _fieldsToCheck.Add("symbolset");
+            _fieldsToCheck.Add("symbolentity");
 
-            SchemaExists = false;
+            _schemaExists = false;
+        }
+
+        public bool SchemaExists
+        {
+            get
+            {
+                return _schemaExists;
+            }
+        }
+
+        public string DatabaseName
+        {
+            get
+            {
+                return _databaseName;
+            }
         }
 
         public bool IsSchemaComplete()
         {
-            foreach(KeyValuePair<string,bool> pair in FeatureClassExists)
+            foreach(KeyValuePair<string,bool> pair in _featureClassExists)
             {
                 if (pair.Value == false)
                 {
@@ -83,7 +99,7 @@ namespace ProSymbolEditor
 
         public async Task<bool> ShouldAddInBeEnabledAsync()
         {
-            SchemaExists = false;
+            _schemaExists = false;
 
             //If we can get the database, then enable the add-in
             if (Project.Current == null)
@@ -108,7 +124,7 @@ namespace ProSymbolEditor
                             Geodatabase geodatabase = datastore as Geodatabase;
 
                             //Reset schema data model to false
-                            FeatureClassExists = FeatureClassExists.ToDictionary(kvp => kvp.Key, kvp => false);
+                            _featureClassExists = _featureClassExists.ToDictionary(kvp => kvp.Key, kvp => false);
 
                             IReadOnlyList<FeatureClassDefinition> featureClassDefinitions = geodatabase.GetDefinitions<FeatureClassDefinition>();
 
@@ -116,11 +132,11 @@ namespace ProSymbolEditor
                             {
                                 string featureClassName = featureClassDefinition.GetName();
 
-                                if (FeatureClassExists.ContainsKey(featureClassName))
+                                if (_featureClassExists.ContainsKey(featureClassName))
                                 {
                                     //Feature Class Exists!  Check for fields
                                     bool fieldsExist = true;
-                                    foreach(string fieldName in FieldsToCheck)
+                                    foreach(string fieldName in _fieldsToCheck)
                                     {
                                         IEnumerable<Field> foundFields = featureClassDefinition.GetFields().Where(x => x.Name == fieldName);
 
@@ -130,7 +146,7 @@ namespace ProSymbolEditor
                                         }
                                     }
 
-                                    FeatureClassExists[featureClassName] = fieldsExist;
+                                    _featureClassExists[featureClassName] = fieldsExist;
                                 }
                                 else
                                 {
@@ -142,8 +158,8 @@ namespace ProSymbolEditor
                             if (IsSchemaComplete())
                             {
                                 //Save geodatabase path to use as the selected database
-                                DatabaseName = geodatabase.GetPath();
-                                SchemaExists = true;
+                                _databaseName = geodatabase.GetPath();
+                                _schemaExists = true;
 
                                 break;
                             }
