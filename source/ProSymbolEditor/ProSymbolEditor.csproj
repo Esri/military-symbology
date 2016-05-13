@@ -103,7 +103,7 @@
     <Compile Include="MapTools\DrawFeatureSketchTool.cs" />
     <Compile Include="Models\CoordinateObject.cs" />
     <Compile Include="Models\DomainCodedValuePair.cs" />
-    <Compile Include="Models\SchemaDataModel.cs" />
+    <Compile Include="Models\MilitaryOverlayDataModel.cs" />
     <Compile Include="Models\SymbolAttributes\LabelAttributes.cs" />
     <Compile Include="Models\SymbolAttributes\SymbolAttributeSet.cs" />
     <Compile Include="Models\SymbolAttributes\DisplayAttributes.cs" />

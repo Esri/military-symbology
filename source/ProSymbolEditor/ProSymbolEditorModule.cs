@@ -28,7 +28,7 @@ namespace ProSymbolEditor
     internal class ProSymbolEditorModule : Module
     {
         private static ProSymbolEditorModule _this = null;
-        public SchemaDataModel DataModel { get; set; }
+        public MilitaryOverlayDataModel MilitaryOverlaySchema { get; set; }
 
         /// <summary>
         /// Retrieve the singleton instance to this module here
@@ -55,15 +55,15 @@ namespace ProSymbolEditor
 
         protected override bool Initialize()
         {
-            if (DataModel == null)
+            if (MilitaryOverlaySchema == null)
             {
-                DataModel = new SchemaDataModel();
+                MilitaryOverlaySchema = new MilitaryOverlayDataModel();
             }
 
             //Add project opened listener
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
-                Task<bool> isEnabledMethod = DataModel.ShouldAddInBeEnabledAsync();
+                Task<bool> isEnabledMethod = MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
                 bool enabled = await isEnabledMethod;
             });
 

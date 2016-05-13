@@ -25,14 +25,14 @@ using System.Threading.Tasks;
 
 namespace ProSymbolEditor
 {
-    public class SchemaDataModel
+    public class MilitaryOverlayDataModel
     {
         private bool _schemaExists;
         private string _databaseName;
         private List<string> _fieldsToCheck;
         private Dictionary<string, bool> _featureClassExists;
 
-        public SchemaDataModel()
+        public MilitaryOverlayDataModel()
         {
             //Set up Feature Class Schema
             _featureClassExists = new Dictionary<string, bool>();

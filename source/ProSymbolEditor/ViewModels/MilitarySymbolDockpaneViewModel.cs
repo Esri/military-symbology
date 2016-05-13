@@ -315,7 +315,7 @@ namespace ProSymbolEditor
                 if (_selectedStyleItem == value)
                     return;
 
-                if (!ProSymbolEditorModule.Current.DataModel.SchemaExists && value != null)
+                if (!ProSymbolEditorModule.Current.MilitaryOverlaySchema.SchemaExists && value != null)
                 {
                     ShowAddInNotEnabledMessageBox();
                     _selectedStyleItem = null;
@@ -589,7 +589,7 @@ namespace ProSymbolEditor
             await SearchSymbols();
 
             //Check for Schema again
-            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.DataModel.ShouldAddInBeEnabledAsync();
+            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
             bool enabled = await isEnabledMethod;
 
             NotifyPropertyChanged(() => StyleItems);
@@ -628,7 +628,7 @@ namespace ProSymbolEditor
                         
                         //Find the correct gdb for the one with the complete schema
                         string geodatabasePath = geodatabase.GetPath();
-                        if (geodatabasePath == ProSymbolEditorModule.Current.DataModel.DatabaseName)
+                        if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
                         {
                             //Correct GDB, open the current selected feature class
                             FeatureClass featureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
@@ -1040,7 +1040,7 @@ namespace ProSymbolEditor
                             Geodatabase geodatabase = datastore as Geodatabase;
 
                             string geodatabasePath = geodatabase.GetPath();
-                            if (geodatabasePath == ProSymbolEditorModule.Current.DataModel.DatabaseName)
+                            if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
                             {
                                 //Correct GDB, open the current selected feature class
                                 _currentFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
@@ -1134,7 +1134,7 @@ namespace ProSymbolEditor
                             Geodatabase geodatabase = datastore as Geodatabase;
 
                             string geodatabasePath = geodatabase.GetPath();
-                            if (geodatabasePath == ProSymbolEditorModule.Current.DataModel.DatabaseName)
+                            if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
                             {
                                 //Correct GDB, open the current selected feature class
                                 _currentFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
@@ -1303,7 +1303,7 @@ namespace ProSymbolEditor
                 await QueuedTask.Run(async () =>
                 {
                     LayerFactory.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "Files", "MilitaryOverlay.lpkx")), MapView.Active.Map);
-                    Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.DataModel.ShouldAddInBeEnabledAsync();
+                    Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
                     bool enabled = await isEnabledMethod;
                     _progressDialog.Hide();
                 });
