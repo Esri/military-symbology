@@ -187,6 +187,7 @@ namespace ProSymbolEditor
             set
             {
                 _reinforced = value;
+                NotifyPropertyChanged(() => Reinforced);
             }
         }
 
@@ -221,6 +222,7 @@ namespace ProSymbolEditor
             set
             {
                 _credibility = value;
+                NotifyPropertyChanged(() => Credibility);
             }
         }
 
@@ -255,7 +257,7 @@ namespace ProSymbolEditor
             set
             {
                 _reliability = value;
-                //NotifyPropertyChanged(() => Reliability);
+                NotifyPropertyChanged(() => Reliability);
             }
         }
 
