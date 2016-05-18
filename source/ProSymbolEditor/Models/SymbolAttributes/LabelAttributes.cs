@@ -27,8 +27,8 @@ namespace ProSymbolEditor
 {
     public class LabelAttributes : PropertyChangedBase
     {
-        private DateTime _dateTimeValid;
-        private DateTime _dateTimeExpired;
+        private DateTime? _dateTimeValid;
+        private DateTime? _dateTimeExpired;
         private string _staffComments;
         private string _additionalInformation;
         private string _uniqueDesignation;
@@ -46,7 +46,7 @@ namespace ProSymbolEditor
         public LabelAttributes() {  }
 
         #region Getters/Setters
-        public DateTime DateTimeValid
+        public DateTime? DateTimeValid
         {
             get
             {
@@ -54,20 +54,13 @@ namespace ProSymbolEditor
             }
             set
             {
-                if (value == null)
-                {
-                    _dateTimeValid = DateTime.Now;
-                }
-                else
-                {
-                    _dateTimeValid = value;
-                }
+                _dateTimeValid = value;
 
                 NotifyPropertyChanged(() => DateTimeValid);
             }
         }
 
-        public DateTime DateTimeExpired
+        public DateTime? DateTimeExpired
         {
             get
             {
@@ -75,14 +68,8 @@ namespace ProSymbolEditor
             }
             set
             {
-                if (value == null)
-                {
-                    _dateTimeExpired = DateTime.Now;
-                }
-                else
-                {
-                    _dateTimeExpired = value;
-                }
+                _dateTimeExpired = value;
+
                 NotifyPropertyChanged(() => DateTimeExpired);
             }
         }

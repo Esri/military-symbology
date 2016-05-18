@@ -711,10 +711,10 @@
                                         </Grid.RowDefinitions>
 
                                         <Label Content="Date/Time Valid" Grid.Row="0" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}"/>
-                                        <xctk:DateTimePicker Grid.Row="0" Grid.Column="1" Margin="3,3,3,3" Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeValid}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}"/>
+                                        <xctk:DateTimePicker Grid.Row="0" Grid.Column="1" Margin="3,3,3,3" Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeValid}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}" DisplayDefaultValueOnEmptyText="False"/>
 
                                         <Label Content="Date/Time Expired" Grid.Row="1" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}"/>
-                                        <xctk:DateTimePicker  Grid.Row="1" Grid.Column="1" Margin="3,3,3,3" Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeExpired}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}"/>
+                                        <xctk:DateTimePicker  Grid.Row="1" Grid.Column="1" Margin="3,3,3,3" Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeExpired}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}" DisplayDefaultValueOnEmptyText="False"/>
 
                                         <!--<Label Content="Location" Grid.Row="2" Grid.Column="0"/>
                                         <TextBox Grid.Row="2" Grid.Column="1" Width="170"/>-->
