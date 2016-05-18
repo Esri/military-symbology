@@ -71,6 +71,7 @@ namespace ProSymbolEditor
         private static object _reinforcedLock = new object();
         private static object _credibilityLock = new object();
         private static object _reliabilityLock = new object();
+        private static object _countryCodeLock = new object();
 
         //Binded Variables - Text Boxes
         private string _searchString = "";
@@ -143,6 +144,7 @@ namespace ProSymbolEditor
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReinforcedDomainValues, _reinforcedLock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReliabilityDomainValues, _reliabilityLock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CredibilityDomainValues, _credibilityLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CountryCodeDomainValues, _countryCodeLock);
 
             //Set up Commands
             SearchResultCommand = new RelayCommand(SearchStylesAsync, param => true);
@@ -1109,6 +1111,7 @@ namespace ProSymbolEditor
                     SymbolAttributeSet.LabelAttributes.SelectedCredibilityDomainPair = MilitaryFieldsInspectorModel.CredibilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Credibility);
                     SymbolAttributeSet.LabelAttributes.SelectedReinforcedDomainPair = MilitaryFieldsInspectorModel.ReinforcedDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Reinforced);
                     SymbolAttributeSet.LabelAttributes.SelectedReliabilityDomainPair = MilitaryFieldsInspectorModel.ReliabilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Reliability);
+                    SymbolAttributeSet.LabelAttributes.SelectedCountryCodeDomainPair = MilitaryFieldsInspectorModel.CountryCodeDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.CountryCode);
                 }
             }
             catch (Exception exception)

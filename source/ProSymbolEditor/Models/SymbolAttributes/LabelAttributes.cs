@@ -42,6 +42,8 @@ namespace ProSymbolEditor
         private DomainCodedValuePair _selectedCredibilityDomainPair;
         private string _reliability;
         private DomainCodedValuePair _selectedReliabilityDomainPair;
+        private string _countryCode;
+        private DomainCodedValuePair _selectedCountryCodeDomainPair;
 
         public LabelAttributes() {  }
 
@@ -267,6 +269,41 @@ namespace ProSymbolEditor
                     Reliability = "";
                 }
                 NotifyPropertyChanged(() => SelectedReliabilityDomainPair);
+            }
+        }
+
+        public string CountryCode
+        {
+            get
+            {
+                return _countryCode;
+            }
+            set
+            {
+                _countryCode = value;
+                NotifyPropertyChanged(() => CountryCode);
+            }
+        }
+
+        [ScriptIgnore, Browsable(false)]
+        public DomainCodedValuePair SelectedCountryCodeDomainPair
+        {
+            get
+            {
+                return _selectedCountryCodeDomainPair;
+            }
+            set
+            {
+                _selectedCountryCodeDomainPair = value;
+                if (_selectedCountryCodeDomainPair != null)
+                {
+                    CountryCode = _selectedCountryCodeDomainPair.Code.ToString();
+                }
+                else
+                {
+                    CountryCode = "";
+                }
+                NotifyPropertyChanged(() => SelectedCountryCodeDomainPair);
             }
         }
 

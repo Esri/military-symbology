@@ -708,6 +708,7 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
                                         <Label Content="Date/Time Valid" Grid.Row="0" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}"/>
@@ -769,6 +770,19 @@
 
                                         <Label Content="Reliability" Grid.Row="12" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding ElementName=reliabilityComboBox, Path=Visibility}"/>
                                         <ComboBox Name="reliabilityComboBox" Grid.Row="12" Grid.Column="1" Margin="3,3,3,3" ItemsSource="{Binding MilitaryFieldsInspectorModel.ReliabilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedReliabilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+
+                                        <Label Content="Country Code" Grid.Row="13" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding ElementName=countryComboBox, Path=Visibility}"/>
+                                        <ComboBox Name="countryComboBox" Grid.Row="13" Grid.Column="1" Margin="3,3,3,3" ItemsSource="{Binding MilitaryFieldsInspectorModel.CountryCodeDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedCountryCodeDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
