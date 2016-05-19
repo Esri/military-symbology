@@ -94,7 +94,7 @@
                                                     <Style.Resources>
                                                         <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                                             <VisualBrush.Visual>
-                                                                <Label Content="Search..." Foreground="DarkGray" />
+                                                                <Label Content="Search..." Foreground="Black"  Background="White" Width="10000"/>
                                                             </VisualBrush.Visual>
                                                         </VisualBrush>
                                                     </Style.Resources>

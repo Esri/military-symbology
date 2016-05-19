@@ -1082,6 +1082,28 @@ namespace ProSymbolEditor
                         identityCode = await GetDomainValueAsync("identity", "Unknown");
                     }
 
+                    //Check name of style last to see if it has an affiliation, but no associated tag
+                    //But only do this if no tag existed
+                    if (identityCode == "")
+                    {
+                        if (_selectedStyleItem.Name.ToUpper().Contains(": FRIEND"))
+                        {
+                            identityCode = await GetDomainValueAsync("identity", "Friend");
+                        }
+                        else if (_selectedStyleItem.Name.ToUpper().Contains(": HOSTILE"))
+                        {
+                            identityCode = await GetDomainValueAsync("identity", "Hostile/Faker");
+                        }
+                        else if (_selectedStyleItem.Name.ToUpper().Contains(": NEUTRAL"))
+                        {
+                            identityCode = await GetDomainValueAsync("identity", "Neutral");
+                        }
+                        else if (_selectedStyleItem.Name.ToUpper().Contains(": UNKNOWN"))
+                        {
+                            identityCode = await GetDomainValueAsync("identity", "Unknown");
+                        }
+                    }
+
                     if (identityCode != "")
                     {
                         foreach (DomainCodedValuePair dcvp in MilitaryFieldsInspectorModel.IdentityDomainValues)
