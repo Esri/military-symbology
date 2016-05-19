@@ -85,7 +85,8 @@
                                     </Grid.ColumnDefinitions>-->
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
-                                            <RowDefinition MaxHeight="310"/>
+                                            <RowDefinition MaxHeight="300"/>
+                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
                                         <TextBox x:Name="searchSymbolsTextBox" HorizontalAlignment="Stretch" Height="23" Margin="5,5,5,5" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=2000}" Grid.Row="0">
@@ -114,7 +115,7 @@
                                         </TextBox>
 
                                         <ListBox x:Name="symbolListBox" Margin="5,5,5,5" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
-                                                SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" MaxHeight="300">
+                                                SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" MaxHeight="290">
 
                                             <ListBox.ItemsPanel>
                                                 <ItemsPanelTemplate>
@@ -138,6 +139,16 @@
                                             </ListBox.ItemTemplate>
                                         </ListBox>
 
+                                        <Grid Grid.Row="2" Margin="5,0,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                                
+                                            <Label Content="Result Count:" Grid.Column="0"/>
+                                            <Label Content="{Binding ResultCount, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
+                                        </Grid>
+                                        
                                     </Grid>
 
                                     <Grid>

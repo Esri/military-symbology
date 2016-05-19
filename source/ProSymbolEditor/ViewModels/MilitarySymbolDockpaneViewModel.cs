@@ -76,6 +76,7 @@ namespace ProSymbolEditor
         //Binded Variables - Text Boxes
         private string _searchString = "";
         private string _mapCoordinatesString = "";
+        private string _resultCount = "";
 
         //Binded Variables - List Boxes
         private IList<SymbolStyleItem> _styleItems = new List<SymbolStyleItem>();
@@ -123,6 +124,7 @@ namespace ProSymbolEditor
                 this.IsFavoriteItemSelected = false;
                 this.StyleItems.Clear();
                 this.SelectedTabIndex = 0;
+                this.ResultCount = "---";
                 this.SearchString = "";
                 _symbolAttributeSet.ResetAttributes();
                 SelectedStyleTags.Clear();
@@ -245,6 +247,21 @@ namespace ProSymbolEditor
                     SearchStylesAsync(null);
                 }
             }
+        }
+
+        public string ResultCount
+        {
+            get
+            {
+                return _resultCount;
+            }
+            set
+            {
+                _resultCount = value;
+
+                NotifyPropertyChanged(() => ResultCount);
+            }
+
         }
 
         public string FavoritesSearchFilter
@@ -575,8 +592,8 @@ namespace ProSymbolEditor
 
         private async void SearchStylesAsync(object parameter)
         {
-            //Make sure we have the military style file
-            if (_militaryStyleItem == null)
+            //Make sure that military style is in project
+            if (!IsStyleInProject() || _militaryStyleItem == null)
             {
                 //Add military style to project
                 Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
@@ -586,6 +603,8 @@ namespace ProSymbolEditor
             //Clear for new search
             if (_styleItems.Count != 0)
                 _styleItems.Clear();
+
+            ResultCount = "---";
 
             _progressDialog.Show();
             await SearchSymbols();
@@ -1025,6 +1044,24 @@ namespace ProSymbolEditor
             return null;
         }
 
+        private bool IsStyleInProject()
+        {
+            if (Project.Current != null)
+            {
+                IEnumerable<StyleProjectItem> projectStyles = Project.Current.GetItems<StyleProjectItem>();
+
+                foreach(StyleProjectItem projectStyle in projectStyles)
+                {
+                    if (projectStyle.Path == _mil2525dStyleFullFilePath)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         private async void GetMilitaryDomainsAsync(SymbolAttributeSet loadSet = null)
         {
             try
@@ -1259,6 +1296,7 @@ namespace ProSymbolEditor
                 _styleItems = combinedSymbols;
 
                 _progressDialog.Hide();
+                ResultCount = combinedSymbols.Count.ToString();
             });
         }
 
