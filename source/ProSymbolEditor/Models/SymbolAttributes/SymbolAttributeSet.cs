@@ -303,6 +303,11 @@ namespace ProSymbolEditor
             {
                 rowBuffer["reliability"] = LabelAttributes.Reliability;
             }
+
+            if (!string.IsNullOrEmpty(LabelAttributes.CountryCode))
+            {
+                rowBuffer["countrycode"] = LabelAttributes.CountryCode;
+            }
         }
         
         public void ResetAttributes()
@@ -333,6 +338,7 @@ namespace ProSymbolEditor
             LabelAttributes.Reinforced = "";
             LabelAttributes.Credibility = null;
             LabelAttributes.Reliability = "";
+            LabelAttributes.CountryCode = "";
 
             SymbolTags = "";
         }

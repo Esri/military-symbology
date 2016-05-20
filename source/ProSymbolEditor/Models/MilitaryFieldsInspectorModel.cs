@@ -53,6 +53,7 @@ namespace ProSymbolEditor
         public ObservableCollection<DomainCodedValuePair> ContextDomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> Modifier1DomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> Modifier2DomainValues { get; set; }
+        public ObservableCollection<DomainCodedValuePair> CountryCodeDomainValues { get; set; }
 
         public Visibility DateTimeValidFieldExists
         {
@@ -187,6 +188,7 @@ namespace ProSymbolEditor
             ContextDomainValues = new ObservableCollection<DomainCodedValuePair>();
             Modifier1DomainValues = new ObservableCollection<DomainCodedValuePair>();
             Modifier2DomainValues = new ObservableCollection<DomainCodedValuePair>();
+            CountryCodeDomainValues = new ObservableCollection<DomainCodedValuePair>();
         }
 
         public void CheckLabelFieldsExistence(IReadOnlyList<ArcGIS.Core.Data.Field> fields)
@@ -263,6 +265,7 @@ namespace ProSymbolEditor
             GetDomainAndPopulateList(fields, "context", ContextDomainValues);
             GetDomainAndPopulateList(fields, "modifier1", Modifier1DomainValues);
             GetDomainAndPopulateList(fields, "modifier2", Modifier2DomainValues);
+            GetDomainAndPopulateList(fields, "countrycode", CountryCodeDomainValues);
         }
 
         private void GetDomainAndPopulateList(IReadOnlyList<Field> fields, string fieldName, ObservableCollection<DomainCodedValuePair> memberCodedValueDomains)//SortedList<object, string> memberCodedValueDomains)

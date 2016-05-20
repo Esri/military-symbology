@@ -27,8 +27,8 @@ namespace ProSymbolEditor
 {
     public class LabelAttributes : PropertyChangedBase
     {
-        private DateTime _dateTimeValid;
-        private DateTime _dateTimeExpired;
+        private DateTime? _dateTimeValid;
+        private DateTime? _dateTimeExpired;
         private string _staffComments;
         private string _additionalInformation;
         private string _uniqueDesignation;
@@ -42,11 +42,13 @@ namespace ProSymbolEditor
         private DomainCodedValuePair _selectedCredibilityDomainPair;
         private string _reliability;
         private DomainCodedValuePair _selectedReliabilityDomainPair;
+        private string _countryCode;
+        private DomainCodedValuePair _selectedCountryCodeDomainPair;
 
         public LabelAttributes() {  }
 
         #region Getters/Setters
-        public DateTime DateTimeValid
+        public DateTime? DateTimeValid
         {
             get
             {
@@ -54,20 +56,13 @@ namespace ProSymbolEditor
             }
             set
             {
-                if (value == null)
-                {
-                    _dateTimeValid = DateTime.Now;
-                }
-                else
-                {
-                    _dateTimeValid = value;
-                }
+                _dateTimeValid = value;
 
                 NotifyPropertyChanged(() => DateTimeValid);
             }
         }
 
-        public DateTime DateTimeExpired
+        public DateTime? DateTimeExpired
         {
             get
             {
@@ -75,14 +70,8 @@ namespace ProSymbolEditor
             }
             set
             {
-                if (value == null)
-                {
-                    _dateTimeExpired = DateTime.Now;
-                }
-                else
-                {
-                    _dateTimeExpired = value;
-                }
+                _dateTimeExpired = value;
+
                 NotifyPropertyChanged(() => DateTimeExpired);
             }
         }
@@ -187,6 +176,7 @@ namespace ProSymbolEditor
             set
             {
                 _reinforced = value;
+                NotifyPropertyChanged(() => Reinforced);
             }
         }
 
@@ -221,6 +211,7 @@ namespace ProSymbolEditor
             set
             {
                 _credibility = value;
+                NotifyPropertyChanged(() => Credibility);
             }
         }
 
@@ -255,7 +246,7 @@ namespace ProSymbolEditor
             set
             {
                 _reliability = value;
-                //NotifyPropertyChanged(() => Reliability);
+                NotifyPropertyChanged(() => Reliability);
             }
         }
 
@@ -278,6 +269,41 @@ namespace ProSymbolEditor
                     Reliability = "";
                 }
                 NotifyPropertyChanged(() => SelectedReliabilityDomainPair);
+            }
+        }
+
+        public string CountryCode
+        {
+            get
+            {
+                return _countryCode;
+            }
+            set
+            {
+                _countryCode = value;
+                NotifyPropertyChanged(() => CountryCode);
+            }
+        }
+
+        [ScriptIgnore, Browsable(false)]
+        public DomainCodedValuePair SelectedCountryCodeDomainPair
+        {
+            get
+            {
+                return _selectedCountryCodeDomainPair;
+            }
+            set
+            {
+                _selectedCountryCodeDomainPair = value;
+                if (_selectedCountryCodeDomainPair != null)
+                {
+                    CountryCode = _selectedCountryCodeDomainPair.Code.ToString();
+                }
+                else
+                {
+                    CountryCode = "";
+                }
+                NotifyPropertyChanged(() => SelectedCountryCodeDomainPair);
             }
         }
 

@@ -71,10 +71,12 @@ namespace ProSymbolEditor
         private static object _reinforcedLock = new object();
         private static object _credibilityLock = new object();
         private static object _reliabilityLock = new object();
+        private static object _countryCodeLock = new object();
 
         //Binded Variables - Text Boxes
         private string _searchString = "";
         private string _mapCoordinatesString = "";
+        private string _resultCount = "";
 
         //Binded Variables - List Boxes
         private IList<SymbolStyleItem> _styleItems = new List<SymbolStyleItem>();
@@ -122,6 +124,7 @@ namespace ProSymbolEditor
                 this.IsFavoriteItemSelected = false;
                 this.StyleItems.Clear();
                 this.SelectedTabIndex = 0;
+                this.ResultCount = "---";
                 this.SearchString = "";
                 _symbolAttributeSet.ResetAttributes();
                 SelectedStyleTags.Clear();
@@ -143,6 +146,7 @@ namespace ProSymbolEditor
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReinforcedDomainValues, _reinforcedLock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReliabilityDomainValues, _reliabilityLock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CredibilityDomainValues, _credibilityLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CountryCodeDomainValues, _countryCodeLock);
 
             //Set up Commands
             SearchResultCommand = new RelayCommand(SearchStylesAsync, param => true);
@@ -243,6 +247,21 @@ namespace ProSymbolEditor
                     SearchStylesAsync(null);
                 }
             }
+        }
+
+        public string ResultCount
+        {
+            get
+            {
+                return _resultCount;
+            }
+            set
+            {
+                _resultCount = value;
+
+                NotifyPropertyChanged(() => ResultCount);
+            }
+
         }
 
         public string FavoritesSearchFilter
@@ -573,8 +592,8 @@ namespace ProSymbolEditor
 
         private async void SearchStylesAsync(object parameter)
         {
-            //Make sure we have the military style file
-            if (_militaryStyleItem == null)
+            //Make sure that military style is in project
+            if (!IsStyleInProject() || _militaryStyleItem == null)
             {
                 //Add military style to project
                 Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
@@ -584,6 +603,8 @@ namespace ProSymbolEditor
             //Clear for new search
             if (_styleItems.Count != 0)
                 _styleItems.Clear();
+
+            ResultCount = "---";
 
             _progressDialog.Show();
             await SearchSymbols();
@@ -1023,6 +1044,24 @@ namespace ProSymbolEditor
             return null;
         }
 
+        private bool IsStyleInProject()
+        {
+            if (Project.Current != null)
+            {
+                IEnumerable<StyleProjectItem> projectStyles = Project.Current.GetItems<StyleProjectItem>();
+
+                foreach(StyleProjectItem projectStyle in projectStyles)
+                {
+                    if (projectStyle.Path == _mil2525dStyleFullFilePath)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         private async void GetMilitaryDomainsAsync(SymbolAttributeSet loadSet = null)
         {
             try
@@ -1080,6 +1119,28 @@ namespace ProSymbolEditor
                         identityCode = await GetDomainValueAsync("identity", "Unknown");
                     }
 
+                    //Check name of style last to see if it has an affiliation, but no associated tag
+                    //But only do this if no tag existed
+                    if (identityCode == "")
+                    {
+                        if (_selectedStyleItem.Name.ToUpper().Contains(": FRIEND"))
+                        {
+                            identityCode = await GetDomainValueAsync("identity", "Friend");
+                        }
+                        else if (_selectedStyleItem.Name.ToUpper().Contains(": HOSTILE"))
+                        {
+                            identityCode = await GetDomainValueAsync("identity", "Hostile/Faker");
+                        }
+                        else if (_selectedStyleItem.Name.ToUpper().Contains(": NEUTRAL"))
+                        {
+                            identityCode = await GetDomainValueAsync("identity", "Neutral");
+                        }
+                        else if (_selectedStyleItem.Name.ToUpper().Contains(": UNKNOWN"))
+                        {
+                            identityCode = await GetDomainValueAsync("identity", "Unknown");
+                        }
+                    }
+
                     if (identityCode != "")
                     {
                         foreach (DomainCodedValuePair dcvp in MilitaryFieldsInspectorModel.IdentityDomainValues)
@@ -1109,6 +1170,7 @@ namespace ProSymbolEditor
                     SymbolAttributeSet.LabelAttributes.SelectedCredibilityDomainPair = MilitaryFieldsInspectorModel.CredibilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Credibility);
                     SymbolAttributeSet.LabelAttributes.SelectedReinforcedDomainPair = MilitaryFieldsInspectorModel.ReinforcedDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Reinforced);
                     SymbolAttributeSet.LabelAttributes.SelectedReliabilityDomainPair = MilitaryFieldsInspectorModel.ReliabilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Reliability);
+                    SymbolAttributeSet.LabelAttributes.SelectedCountryCodeDomainPair = MilitaryFieldsInspectorModel.CountryCodeDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.CountryCode);
                 }
             }
             catch (Exception exception)
@@ -1234,6 +1296,7 @@ namespace ProSymbolEditor
                 _styleItems = combinedSymbols;
 
                 _progressDialog.Hide();
+                ResultCount = combinedSymbols.Count.ToString();
             });
         }
 
