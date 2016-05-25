@@ -326,8 +326,8 @@ namespace ProSymbolEditor
             DisplayAttributes.Modifier2 = "";
 
             //Reset label text attributes
-            LabelAttributes.DateTimeValid = DateTime.Now;
-            LabelAttributes.DateTimeExpired = DateTime.Now;
+            LabelAttributes.DateTimeValid = null;
+            LabelAttributes.DateTimeExpired = null;
             LabelAttributes.UniqueDesignation = "";
             LabelAttributes.StaffComments = "";
             LabelAttributes.AdditionalInformation = "";

@@ -162,8 +162,8 @@ namespace ProSymbolEditor
             SaveFavoritesFileAsCommand = new RelayCommand(SaveFavoritesAsToFile, param => true);
             ImportFavoritesFileCommand = new RelayCommand(ImportFavoritesFile, param => true);
 
-            _symbolAttributeSet.LabelAttributes.DateTimeValid = DateTime.Now;
-            _symbolAttributeSet.LabelAttributes.DateTimeExpired = DateTime.Now;
+            _symbolAttributeSet.LabelAttributes.DateTimeValid = null;
+            _symbolAttributeSet.LabelAttributes.DateTimeExpired = null;
             IsStyleItemSelected = false;
 
             PolyCoordinates = new ObservableCollection<CoordinateObject>();
