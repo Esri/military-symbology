@@ -697,8 +697,8 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <UniformGrid Name="TextUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged" Grid.Row="0">
-                                <ScrollViewer Grid.Row="0">
+                            <ScrollViewer Grid.Row="0">
+                                <UniformGrid Name="TextUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -729,7 +729,7 @@
                                         <xctk:DateTimePicker  Grid.Row="1" Grid.Column="1" Margin="3,3,3,3" Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeExpired}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}" DisplayDefaultValueOnEmptyText="False"/>
 
                                         <!--<Label Content="Location" Grid.Row="2" Grid.Column="0"/>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Width="170"/>-->
+                                    <TextBox Grid.Row="2" Grid.Column="1" Width="170"/>-->
 
                                         <Label Content="Type" Grid.Row="3" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding MilitaryFieldsInspectorModel.TypeFieldExists}"/>
                                         <TextBox Grid.Row="3" Grid.Column="1" Margin="3,3,3,3" Text="{Binding SymbolAttributeSet.LabelAttributes.Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding MilitaryFieldsInspectorModel.TypeFieldExists}"/>
@@ -805,31 +805,31 @@
                                             </ComboBox.Style>
                                         </ComboBox>
                                     </Grid>
-                                </ScrollViewer>
-                                <Grid Grid.Row="1">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Image x:Name="textTabSymbolImage" Grid.Row="0" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <Image.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
-                                                <MenuItem Header="Copy Image to Clipboard" Command="{Binding CopyImageToClipboardCommand}"/>
-                                            </ContextMenu>
-                                        </Image.ContextMenu>
-                                    </Image>
 
-                                    <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
-                                        <xctk:PropertyGrid.PropertyDefinitions>
-                                            <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
-                                            <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
-                                            <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
-                                        </xctk:PropertyGrid.PropertyDefinitions>
-                                    </xctk:PropertyGrid>
-                                </Grid>
-                            </UniformGrid>
+                                    <Grid Grid.Row="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Image x:Name="textTabSymbolImage" Grid.Row="0" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Image.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
+                                                    <MenuItem Header="Copy Image to Clipboard" Command="{Binding CopyImageToClipboardCommand}"/>
+                                                </ContextMenu>
+                                            </Image.ContextMenu>
+                                        </Image>
 
+                                        <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
+                                            <xctk:PropertyGrid.PropertyDefinitions>
+                                                <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
+                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
+                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
+                                            </xctk:PropertyGrid.PropertyDefinitions>
+                                        </xctk:PropertyGrid>
+                                    </Grid>
+                                </UniformGrid>
+                            </ScrollViewer>
                             <Grid Grid.Row="1">
 
                                 <Grid.ColumnDefinitions>

@@ -15,10 +15,11 @@
  ******************************************************************************/
 
 using ArcGIS.Desktop.Framework.Contracts;
+using System;
 
 namespace ProSymbolEditor
 {
-    public class DomainCodedValuePair : PropertyChangedBase
+    public class DomainCodedValuePair : PropertyChangedBase, IComparable
     {
         public object Code { get; set; }
         public string Name { get; set; }
@@ -29,6 +30,14 @@ namespace ProSymbolEditor
         {
             Code = value;
             Name = name;
+        }
+
+        public int CompareTo(object obj)
+        {
+            DomainCodedValuePair a = this;
+            DomainCodedValuePair b = (DomainCodedValuePair)obj;
+
+            return string.Compare(a.Name, b.Name);
         }
     }
 }

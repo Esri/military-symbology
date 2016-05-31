@@ -110,6 +110,7 @@
     <Compile Include="Models\SymbolSetMapping.cs" />
     <Compile Include="Models\SymbolSetMappings.cs" />
     <Compile Include="Models\MilitaryFieldsInspectorModel.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Views\MilitarySymbolDockpane.xaml.cs">
       <DependentUpon>MilitarySymbolDockpane.xaml</DependentUpon>
     </Compile>
