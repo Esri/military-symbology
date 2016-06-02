@@ -53,7 +53,11 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 		* `msbuild ProSymbolEditor.sln /property:Configuration=Release`
 		* This will build to the location: `source\ProSymbolEditor\bin\Release` and register the add-in
 	* Note : Assembly references are based on a default install of the SDK, you may have to update the references if you chose an alternate install option
-	
+	* To run unit tests from the command prompt:
+		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013/2015 | Visual Studio Tools | Developer Command Prompt
+		* `cd military-symbol-editor-addin-wpf\source`
+		* `vstest.console.exe SymbolEditorUnitTests\bin\Release\SymbolEditorUnitTests.dll /InIsolation /platform:x64`
+
 ## Users
 
 > IMPORTANT: This application depends on the Military Overlay Information Model/geodatabase(GDB) that is provided with the [Military Overlay Template](http://esriurl.com/AFDMilitaryOverlay). If you do not have the Military Overlay GDB included in your project, you will receive a warning when you attempt to use the application.
