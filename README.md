@@ -53,10 +53,12 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 		* `msbuild ProSymbolEditor.sln /property:Configuration=Release`
 		* This will build to the location: `source\ProSymbolEditor\bin\Release` and register the add-in
 	* Note : Assembly references are based on a default install of the SDK, you may have to update the references if you chose an alternate install option
+		* There is a Pro SDK Utilities [Visual Studio Extension](https://visualstudiogallery.msdn.microsoft.com/b3f65b91-9d3b-4ca0-b6bc-4d25c7d51fd1) that can be used to quickly fix Pro SDK assembly references. 
 	* To run unit tests from the command prompt:
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013/2015 | Visual Studio Tools | Developer Command Prompt
 		* `cd military-symbol-editor-addin-wpf\source`
 		* `vstest.console.exe SymbolEditorUnitTests\bin\Release\SymbolEditorUnitTests.dll /InIsolation /platform:x64`
+		    * Note: `vstest` must be used instead of `mstest` in order to run as an `x64` process (required by the Pro SDK dependencies)
 
 ## Users
 
