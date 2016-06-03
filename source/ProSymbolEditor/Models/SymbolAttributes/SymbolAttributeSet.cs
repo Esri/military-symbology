@@ -64,10 +64,7 @@ namespace ProSymbolEditor
 
             if (fieldValues.ContainsKey("indicator"))
             {
-                //if (!string.IsNullOrEmpty(fieldValues["indicator"]))
-                //{
-                    DisplayAttributes.Indicator = fieldValues["indicator"];
-                //}
+                DisplayAttributes.Indicator = fieldValues["indicator"];
             }
 
             if (fieldValues.ContainsKey("echelon"))

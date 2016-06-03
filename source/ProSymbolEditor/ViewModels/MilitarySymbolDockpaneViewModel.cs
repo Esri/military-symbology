@@ -509,7 +509,7 @@ namespace ProSymbolEditor
                 }
 
                 //Load Symbol
-                LoadSymbolFile(false);
+                LoadSymbolIntoWorkflow(false);
 
                 NotifyPropertyChanged(() => SelectedFavoriteSymbol);
             }
@@ -727,9 +727,14 @@ namespace ProSymbolEditor
                 }
                 catch (Exception exception)
                 {
-
+                    System.Console.WriteLine(exception.Message);
                 }
             });
+
+            if (!modificationResult)
+            {
+                MessageBox.Show(message);
+            }
         }
             
 
@@ -947,7 +952,12 @@ namespace ProSymbolEditor
             }
         }
 
-        private void LoadSymbolFile(bool isEditSymbol)
+        /// <summary>
+        /// Method that will load either a favorite symbol or a feature that's already been created into the add-in
+        /// to allow users to edid the symbol through the workflow.
+        /// </summary>
+        /// <param name="isEditSymbol">If the symbol to load is a selected edit symbol.  If false, it will load a selected favorite.</param>
+        private void LoadSymbolIntoWorkflow(bool isEditSymbol)
         {
             //Load the currently selected favorite
             SymbolAttributeSet loadSet;
@@ -1491,7 +1501,7 @@ namespace ProSymbolEditor
                 SymbolAttributeSet set = new SymbolAttributeSet(fieldValues);
                 set.SymbolTags = "";
                 EditSelectedFeatureSymbol = set;
-                LoadSymbolFile(true);
+                LoadSymbolIntoWorkflow(true);
             }
             catch (Exception exception)
             {
