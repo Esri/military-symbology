@@ -29,6 +29,8 @@ namespace ProSymbolEditor
         public BasicFeatureLayer FeatureLayer { get; set; }
         public string FeatureLayerName { get; set; }
         public long ObjectId { get; set; }
+        public string SymbolSetName { get; set; }
+        public string EntityName { get; set; }
 
         public SelectedFeature() { }
 

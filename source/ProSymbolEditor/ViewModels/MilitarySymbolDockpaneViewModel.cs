@@ -80,6 +80,7 @@ namespace ProSymbolEditor
         private bool _isStyleItemSelected = false;
         private bool _isFavoriteItemSelected = false;
         private bool _addToMapToolEnabled = false;
+        private bool _selectToolEnabled = false;
         private Visibility _pointCoordinateVisibility;
         private Visibility _polyCoordinateVisibility;
         private ProgressDialog _progressDialog;
@@ -154,6 +155,7 @@ namespace ProSymbolEditor
             DeleteFavoriteSymbolCommand = new RelayCommand(DeleteFavoriteSymbol, param => true);
             SaveFavoritesFileAsCommand = new RelayCommand(SaveFavoritesAsToFile, param => true);
             ImportFavoritesFileCommand = new RelayCommand(ImportFavoritesFile, param => true);
+            SelectToolCommand = new RelayCommand(ActivateSelectTool, param => true);
 
             _symbolAttributeSet.LabelAttributes.DateTimeValid = null;
             _symbolAttributeSet.LabelAttributes.DateTimeExpired = null;
@@ -164,6 +166,7 @@ namespace ProSymbolEditor
             SelectedStyleTags = new ObservableCollection<string>();
             SelectedFavoriteStyleTags = new ObservableCollection<string>();
             SelectedFeaturesCollection = new ObservableCollection<SelectedFeature>();
+            BindingOperations.EnableCollectionSynchronization(SelectedFeaturesCollection, _lock);
 
             _progressDialog = new ProgressDialog("Loading...");
             _symbolAttributeSet.StandardVersion = "2525D";
@@ -218,6 +221,8 @@ namespace ProSymbolEditor
         public ICommand ImportFavoritesFileCommand { get; set; }
 
         public ICommand SaveFavoritesFileAsCommand { get; set; }
+
+        public ICommand SelectToolCommand { get; set; }
 
         #endregion
 
@@ -470,12 +475,15 @@ namespace ProSymbolEditor
 
                 if (_selectedSelectedFeature != null)
                 {
+                    MapView.Active.FlashFeature(_selectedSelectedFeature.FeatureLayer, _selectedSelectedFeature.ObjectId);
                     CreateSymbolSetFromFieldValuesAsync();
                 }
                 else
                 {
                     EditSelectedFeatureSymbol = null;
                 }
+
+                NotifyPropertyChanged(() => SelectedSelectedFeature);
             }
         }
 
@@ -655,6 +663,19 @@ namespace ProSymbolEditor
             }
         }
 
+        public bool SelectToolEnabled
+        {
+            get
+            {
+                return _selectToolEnabled;
+            }
+            set
+            {
+                _selectToolEnabled = value;
+                NotifyPropertyChanged(() => SelectToolEnabled);
+            }
+        }
+
         #endregion
 
         #region Command Methods
@@ -663,6 +684,12 @@ namespace ProSymbolEditor
         {
             FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_DrawFeatureSketchTool");
             AddToMapToolEnabled = true;
+        }
+
+        private void ActivateSelectTool(object parameter)
+        {
+            FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_SelectionMapTool");
+            SelectToolEnabled = true;
         }
 
         private async void SaveEdits(object parameter)
@@ -1160,18 +1187,23 @@ namespace ProSymbolEditor
             {
                 //Toggle all down
                 AddToMapToolEnabled = true;
+                SelectToolEnabled = false;
+            }
+            else if (args.CurrentID == "ProSymbolEditor_SelectionMapTool")
+            {
+                SelectToolEnabled = true;
+                AddToMapToolEnabled = false;
             }
             else
             {
                 //Disable all toggles
                 AddToMapToolEnabled = false;
+                SelectToolEnabled = false;
             }
         }
 
-        private void OnMapSelectionChanged(ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEventArgs args)
+        private async void OnMapSelectionChanged(ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEventArgs args)
         {
-            //Dictionary<MapMember, List<long>> selection = args.Selection;
-
             //Get the selected features from the map and filter out the standalone table selection.
             var selectedFeatures = args.Selection
               .Where(kvp => kvp.Key is BasicFeatureLayer)
@@ -1182,13 +1214,75 @@ namespace ProSymbolEditor
             SelectedFeaturesCollection.Clear();
             foreach (KeyValuePair<BasicFeatureLayer, List<long>> kvp in selectedFeatures)
             {
-                foreach(long id in kvp.Value)
+                await QueuedTask.Run(() =>
                 {
-                    SelectedFeature newSelectedFeature = new SelectedFeature(kvp.Key, id);
-                    SelectedFeaturesCollection.Add(newSelectedFeature);
-                }
+                    ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "symbolset");
+                    CodedValueDomain symbolSetDomain = symbolSetField.GetDomain() as CodedValueDomain;
+                    SortedList<object, string> symbolSetDomainSortedList = symbolSetDomain.GetCodedValuePairs();
+                    ArcGIS.Core.Data.Field symbolEntityField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "symbolentity");
+                    CodedValueDomain symbolEntityDomain = symbolEntityField.GetDomain() as CodedValueDomain;
+                    SortedList<object, string> symbolEntityDomainSortedList = symbolEntityDomain.GetCodedValuePairs();
+
+                    foreach (long id in kvp.Value)
+                    {
+                        //Query for field values
+
+                        string oidFieldName = kvp.Key.GetTable().GetDefinition().GetObjectIDField();
+                        QueryFilter queryFilter = new QueryFilter();
+                        queryFilter.WhereClause = string.Format("{0} = {1}", oidFieldName, id);
+                        RowCursor cursor = kvp.Key.Search(queryFilter);
+                        Row row = null;
+
+                        if (cursor.MoveNext())
+                        {
+                            row = cursor.Current;
+                        }
+
+                        if (row != null)
+                        {
+                            GeometryType geometryType = ArcGIS.Core.Geometry.GeometryType.Point;
+
+                            if (kvp.Key.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPolygon)
+                            {
+                                geometryType = ArcGIS.Core.Geometry.GeometryType.Polygon;
+                            }
+                            else if (kvp.Key.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPoint)
+                            {
+                                geometryType = ArcGIS.Core.Geometry.GeometryType.Point;
+                            }
+                            else if (kvp.Key.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPolyline)
+                            {
+                                geometryType = ArcGIS.Core.Geometry.GeometryType.Polyline;
+                            }
+
+                            SelectedFeature newSelectedFeature = new SelectedFeature(kvp.Key, id);
+                            
+                            foreach(KeyValuePair<object, string> symbolSetKeyValuePair in symbolSetDomainSortedList)
+                            {
+                                if (symbolSetKeyValuePair.Key.ToString() == row["symbolset"].ToString())
+                                {
+                                    newSelectedFeature.SymbolSetName = symbolSetKeyValuePair.Value;
+                                    break;
+                                }
+                            }
+
+                            foreach (KeyValuePair<object, string> symbolEntityKeyValuePair in symbolEntityDomainSortedList)
+                            {
+                                if (symbolEntityKeyValuePair.Key.ToString() == row["symbolentity"].ToString())
+                                {
+                                    newSelectedFeature.EntityName = symbolEntityKeyValuePair.Value;
+                                    break;
+                                }
+                            }
+
+                            SelectedFeaturesCollection.Add(newSelectedFeature);
+                        }
+
+                    }
+                });
             }
-            
+
+            SelectedSelectedFeature = SelectedFeaturesCollection.FirstOrDefault();
         }
 
         #endregion
