@@ -55,23 +55,13 @@ namespace ProSymbolEditor
         private FeatureClass _currentFeatureClass = null;
         private StyleProjectItem _militaryStyleItem = null;
         private SymbolStyleItem _selectedStyleItem = null;
+        private SelectedFeature _selectedSelectedFeature = null;
         private SymbolAttributeSet _selectedFavoriteSymbol = null;
+        private SymbolAttributeSet _editSelectedFeatureSymbol = null;
         private SymbolSetMappings _symbolSetMappings = new SymbolSetMappings();
 
         //Lock objects for ObservableCollections
-        private static object _identityLock = new object();
-        private static object _echelonLock = new object();
-        private static object _statusesLock = new object();
-        private static object _operationalConditionAmplifierLock = new object();
-        private static object _mobilityLock = new object();
-        private static object _tfFdHqLock = new object();
-        private static object _contextLock = new object();
-        private static object _modifier1Lock = new object();
-        private static object _modifier2Lock = new object();
-        private static object _reinforcedLock = new object();
-        private static object _credibilityLock = new object();
-        private static object _reliabilityLock = new object();
-        private static object _countryCodeLock = new object();
+        private static object _lock = new object();
 
         //Binded Variables - Text Boxes
         private string _searchString = "";
@@ -90,11 +80,14 @@ namespace ProSymbolEditor
         private bool _isStyleItemSelected = false;
         private bool _isFavoriteItemSelected = false;
         private bool _addToMapToolEnabled = false;
+        private bool _selectToolEnabled = false;
         private Visibility _pointCoordinateVisibility;
         private Visibility _polyCoordinateVisibility;
         private ProgressDialog _progressDialog;
         private ICollectionView _favoritesView;
         private string _favoritesSearchFilter = "";
+        private bool _isEditing = false;
+        private bool _isAddingNew = false;
 
         protected MilitarySymbolDockpaneViewModel()
         {
@@ -132,21 +125,22 @@ namespace ProSymbolEditor
             });
 
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
+            ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEvent.Subscribe(OnMapSelectionChanged);
 
             //Create locks for variables that are updated in worker threads
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.IdentityDomainValues, _identityLock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.EcholonDomainValues, _echelonLock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.StatusDomainValues, _statusesLock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues, _operationalConditionAmplifierLock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.MobilityDomainValues, _mobilityLock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.TfFdHqDomainValues, _tfFdHqLock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ContextDomainValues, _contextLock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.Modifier1DomainValues, _modifier1Lock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.Modifier2DomainValues, _modifier2Lock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReinforcedDomainValues, _reinforcedLock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReliabilityDomainValues, _reliabilityLock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CredibilityDomainValues, _credibilityLock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CountryCodeDomainValues, _countryCodeLock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.IdentityDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.EcholonDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.StatusDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.MobilityDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.TfFdHqDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ContextDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.Modifier1DomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.Modifier2DomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReinforcedDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReliabilityDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CredibilityDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CountryCodeDomainValues, _lock);
 
             //Set up Commands
             SearchResultCommand = new RelayCommand(SearchStylesAsync, param => true);
@@ -154,13 +148,14 @@ namespace ProSymbolEditor
             //ActivateMapToolCommand = new RelayCommand(ActivateCoordinateMapTool, param => true);
             AddCoordinateToMapCommand = new RelayCommand(CreateNewFeatureAsync, CanCreatePolyFeatureFromCoordinates);
             ActivateAddToMapToolCommand = new RelayCommand(ActivateDrawFeatureSketchTool, param => true);
+            SaveEditsCommand = new RelayCommand(SaveEdits, param => true);
             CopyImageToClipboardCommand = new RelayCommand(CopyImageToClipboard, param => true);
             SaveImageToCommand = new RelayCommand(SaveImageAs, param => true);
             SaveSymbolFileCommand = new RelayCommand(SaveSymbolAsFavorite, param => true);
-            LoadSymbolFileCommand = new RelayCommand(LoadSymbolFile, param => true);
             DeleteFavoriteSymbolCommand = new RelayCommand(DeleteFavoriteSymbol, param => true);
             SaveFavoritesFileAsCommand = new RelayCommand(SaveFavoritesAsToFile, param => true);
             ImportFavoritesFileCommand = new RelayCommand(ImportFavoritesFile, param => true);
+            SelectToolCommand = new RelayCommand(ActivateSelectTool, param => true);
 
             _symbolAttributeSet.LabelAttributes.DateTimeValid = null;
             _symbolAttributeSet.LabelAttributes.DateTimeExpired = null;
@@ -170,6 +165,8 @@ namespace ProSymbolEditor
             Favorites = new ObservableCollection<SymbolAttributeSet>();
             SelectedStyleTags = new ObservableCollection<string>();
             SelectedFavoriteStyleTags = new ObservableCollection<string>();
+            SelectedFeaturesCollection = new ObservableCollection<SelectedFeature>();
+            BindingOperations.EnableCollectionSynchronization(SelectedFeaturesCollection, _lock);
 
             _progressDialog = new ProgressDialog("Loading...");
             _symbolAttributeSet.StandardVersion = "2525D";
@@ -211,11 +208,11 @@ namespace ProSymbolEditor
 
         public ICommand ActivateAddToMapToolCommand { get; set; }
 
+        public ICommand SaveEditsCommand { get; set; }
+
         public ICommand SaveImageToCommand { get; set; }
 
         public ICommand CopyImageToClipboardCommand { get; set; }
-
-        public ICommand LoadSymbolFileCommand { get; set; }
 
         public ICommand SaveSymbolFileCommand { get; set; }
 
@@ -224,6 +221,8 @@ namespace ProSymbolEditor
         public ICommand ImportFavoritesFileCommand { get; set; }
 
         public ICommand SaveFavoritesFileAsCommand { get; set; }
+
+        public ICommand SelectToolCommand { get; set; }
 
         #endregion
 
@@ -304,6 +303,42 @@ namespace ProSymbolEditor
             {
                 _isFavoriteItemSelected = value;
                 NotifyPropertyChanged(() => IsFavoriteItemSelected);
+            }
+        }
+
+        public bool IsEditing
+        {
+            get
+            {
+                return _isEditing;
+            }
+            set
+            {
+                _isEditing = value;
+
+                if (_isEditing == false)
+                {
+                    IsAddingNew = true;
+                }
+                else
+                {
+                    IsAddingNew = false;
+                }
+
+                NotifyPropertyChanged(() => IsEditing);
+            }
+        }
+
+        public bool IsAddingNew
+        {
+            get
+            {
+                return _isAddingNew;
+            }
+            set
+            {
+                _isAddingNew = value;
+                NotifyPropertyChanged(() => IsAddingNew);
             }
         }
 
@@ -416,11 +451,39 @@ namespace ProSymbolEditor
                     }
 
                     IsStyleItemSelected = true;
+                    IsEditing = false;
                 }
                 else
                 {
                     IsStyleItemSelected = false;
                 }
+            }
+        }
+
+        public SelectedFeature SelectedSelectedFeature
+        {
+            get
+            {
+                return _selectedSelectedFeature;
+            }
+            set
+            {
+                if (_selectedSelectedFeature == value)
+                    return;
+
+                _selectedSelectedFeature = value;
+
+                if (_selectedSelectedFeature != null)
+                {
+                    MapView.Active.FlashFeature(_selectedSelectedFeature.FeatureLayer, _selectedSelectedFeature.ObjectId);
+                    CreateSymbolSetFromFieldValuesAsync();
+                }
+                else
+                {
+                    EditSelectedFeatureSymbol = null;
+                }
+
+                NotifyPropertyChanged(() => SelectedSelectedFeature);
             }
         }
 
@@ -454,9 +517,28 @@ namespace ProSymbolEditor
                 }
 
                 //Load Symbol
-                LoadSymbolFile(null);
+                LoadSymbolIntoWorkflow(false);
 
                 NotifyPropertyChanged(() => SelectedFavoriteSymbol);
+            }
+        }
+
+        public SymbolAttributeSet EditSelectedFeatureSymbol
+        {
+            get
+            {
+                return _editSelectedFeatureSymbol;
+            }
+            set
+            {
+                if (_editSelectedFeatureSymbol == value)
+                    return;
+
+                _editSelectedFeatureSymbol = value;
+
+                //Load into editing???
+
+                NotifyPropertyChanged(() => EditSelectedFeatureSymbol);
             }
         }
 
@@ -469,6 +551,7 @@ namespace ProSymbolEditor
         public ObservableCollection<CoordinateObject> PolyCoordinates { get; set; }
         public ObservableCollection<string> SelectedStyleTags { get; set; }
         public ObservableCollection<string> SelectedFavoriteStyleTags { get; set; }
+        public ObservableCollection<SelectedFeature> SelectedFeaturesCollection { get; set; }
 
         public bool PointCoordinateValid
         {
@@ -580,6 +663,19 @@ namespace ProSymbolEditor
             }
         }
 
+        public bool SelectToolEnabled
+        {
+            get
+            {
+                return _selectToolEnabled;
+            }
+            set
+            {
+                _selectToolEnabled = value;
+                NotifyPropertyChanged(() => SelectToolEnabled);
+            }
+        }
+
         #endregion
 
         #region Command Methods
@@ -589,6 +685,85 @@ namespace ProSymbolEditor
             FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_DrawFeatureSketchTool");
             AddToMapToolEnabled = true;
         }
+
+        private void ActivateSelectTool(object parameter)
+        {
+            FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_SelectionMapTool");
+            SelectToolEnabled = true;
+        }
+
+        private async void SaveEdits(object parameter)
+        {
+            string message = String.Empty;
+            bool modificationResult = false;
+
+            IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
+            await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+            {
+                try
+                {
+                    foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
+                    {
+                        using (Datastore datastore = gdbProjectItem.GetDatastore())
+                        {
+                            //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
+                            if (datastore is UnknownDatastore)
+                                continue;
+                            Geodatabase geodatabase = datastore as Geodatabase;
+
+                            //Find the correct gdb for the one with the complete schema
+                            string geodatabasePath = geodatabase.GetPath();
+                            if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
+                            {
+                                EditOperation editOperation = new EditOperation();
+                                editOperation.Callback(context =>
+                                {
+                                    string oidFieldName = _selectedSelectedFeature.FeatureLayer.GetTable().GetDefinition().GetObjectIDField();
+                                    QueryFilter queryFilter = new QueryFilter();
+                                    queryFilter.WhereClause = string.Format("{0} = {1}", oidFieldName, _selectedSelectedFeature.ObjectId);
+
+                                    using (RowCursor cursor = _selectedSelectedFeature.FeatureLayer.GetTable().Search(queryFilter, false))
+                                    {
+                                        while (cursor.MoveNext())
+                                        {
+                                            Feature feature = (Feature)cursor.Current;
+
+                                        // In order to update the Map and/or the attribute table.
+                                        // Has to be called before any changes are made to the row
+                                        context.Invalidate(feature);
+
+                                            _symbolAttributeSet.PopulateFeatureWithAttributes(ref feature);
+
+                                            feature.Store();
+
+                                        // Has to be called after the store too
+                                        context.Invalidate(feature);
+
+                                        }
+                                    }
+                                }, _selectedSelectedFeature.FeatureLayer.GetTable());
+
+                                var task = editOperation.ExecuteAsync();
+                                modificationResult = task.Result;
+                                if (!modificationResult)
+                                    message = editOperation.ErrorMessage;
+                            }
+                        }
+
+                    }
+                }
+                catch (Exception exception)
+                {
+                    System.Console.WriteLine(exception.Message);
+                }
+            });
+
+            if (!modificationResult)
+            {
+                MessageBox.Show(message);
+            }
+        }
+            
 
         private async void SearchStylesAsync(object parameter)
         {
@@ -804,77 +979,127 @@ namespace ProSymbolEditor
             }
         }
 
-        private void LoadSymbolFile(object parameter)
+        /// <summary>
+        /// Method that will load either a favorite symbol or a feature that's already been created into the add-in
+        /// to allow users to edid the symbol through the workflow.
+        /// </summary>
+        /// <param name="isEditSymbol">If the symbol to load is a selected edit symbol.  If false, it will load a selected favorite.</param>
+        private void LoadSymbolIntoWorkflow(bool isEditSymbol)
         {
             //Load the currently selected favorite
-            SymbolAttributeSet favoriteSet = _selectedFavoriteSymbol;
+            SymbolAttributeSet loadSet;
+
+            if (isEditSymbol)
+            {
+                loadSet = _editSelectedFeatureSymbol;
+            }
+            else
+            {
+                loadSet = _selectedFavoriteSymbol;
+            }
 
             //Clear old attributes
             _symbolAttributeSet.ResetAttributes();
             SelectedStyleTags.Clear();
 
-            if (favoriteSet != null)
+            if (loadSet != null)
             {
-                //Tokenize tags
-                foreach (string tag in favoriteSet.SymbolTags.Split(';').ToList())
+                //Tokenize tags (for favorites, edit symbols don't have any)
+                if (!isEditSymbol)
                 {
-                    SelectedStyleTags.Add(tag);
-                }
+                    foreach (string tag in loadSet.SymbolTags.Split(';').ToList())
+                    {
+                        SelectedStyleTags.Add(tag);
+                    }
 
-                //Get the geometry type off a tag on the symbol
-                List<string> reverseTags = favoriteSet.SymbolTags.Split(';').ToList();
-                reverseTags.Reverse();
-                string geometryTypeTag = reverseTags[2];
+                    //Get the geometry type off a tag on the symbol
+                    List<string> reverseTags = loadSet.SymbolTags.Split(';').ToList();
+                    reverseTags.Reverse();
+                    string geometryTypeTag = reverseTags[2];
 
-                if (geometryTypeTag.ToUpper() == "POINT")
-                {
-                    GeometryType = GeometryType.Point;
-                    PointCoordinateVisibility = Visibility.Visible;
-                    PolyCoordinateVisibility = Visibility.Collapsed;
-                }
-                else if (geometryTypeTag.ToUpper() == "LINE")
-                {
-                    GeometryType = GeometryType.Polyline;
-                    PointCoordinateVisibility = Visibility.Collapsed;
-                    PolyCoordinateVisibility = Visibility.Visible;
-                }
-                else if (geometryTypeTag.ToUpper() == "AREA")
-                {
-                    GeometryType = GeometryType.Polygon;
-                    PointCoordinateVisibility = Visibility.Collapsed;
-                    PolyCoordinateVisibility = Visibility.Visible;
+                    if (geometryTypeTag.ToUpper() == "POINT")
+                    {
+                        GeometryType = GeometryType.Point;
+                        PointCoordinateVisibility = Visibility.Visible;
+                        PolyCoordinateVisibility = Visibility.Collapsed;
+                    }
+                    else if (geometryTypeTag.ToUpper() == "LINE")
+                    {
+                        GeometryType = GeometryType.Polyline;
+                        PointCoordinateVisibility = Visibility.Collapsed;
+                        PolyCoordinateVisibility = Visibility.Visible;
+                    }
+                    else if (geometryTypeTag.ToUpper() == "AREA")
+                    {
+                        GeometryType = GeometryType.Polygon;
+                        PointCoordinateVisibility = Visibility.Collapsed;
+                        PolyCoordinateVisibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        //No tag found for geometry type, so use it's a point
+                        GeometryType = GeometryType.Point;
+                        PointCoordinateVisibility = Visibility.Visible;
+                        PolyCoordinateVisibility = Visibility.Collapsed;
+                    }
+
+                    IsEditing = false;
                 }
                 else
                 {
-                    //No tag found for geometry type, so use it's a point
-                    GeometryType = GeometryType.Point;
-                    PointCoordinateVisibility = Visibility.Visible;
-                    PolyCoordinateVisibility = Visibility.Collapsed;
+                    //Get geometry from selected selected layer
+                    if (SelectedSelectedFeature.FeatureLayer.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPoint)
+                    {
+                        GeometryType = GeometryType.Point;
+                        PointCoordinateVisibility = Visibility.Visible;
+                        PolyCoordinateVisibility = Visibility.Collapsed;
+                    }
+                    else if (SelectedSelectedFeature.FeatureLayer.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryLine)
+                    {
+                        GeometryType = GeometryType.Polyline;
+                        PointCoordinateVisibility = Visibility.Collapsed;
+                        PolyCoordinateVisibility = Visibility.Visible;
+                    }
+                    else if (SelectedSelectedFeature.FeatureLayer.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPolygon)
+                    {
+                        GeometryType = GeometryType.Polygon;
+                        PointCoordinateVisibility = Visibility.Collapsed;
+                        PolyCoordinateVisibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        //Other geometry type, so use as a point
+                        GeometryType = GeometryType.Point;
+                        PointCoordinateVisibility = Visibility.Visible;
+                        PolyCoordinateVisibility = Visibility.Collapsed;
+                    }
+
+                    IsEditing = true;
                 }
 
                 //Get feature class name to generate domains
-                SymbolAttributeSet.DisplayAttributes.SymbolSet = favoriteSet.DisplayAttributes.SymbolSet;
-                SymbolAttributeSet.DisplayAttributes.SymbolEntity = favoriteSet.DisplayAttributes.SymbolEntity;
+                SymbolAttributeSet.DisplayAttributes.SymbolSet = loadSet.DisplayAttributes.SymbolSet;
+                SymbolAttributeSet.DisplayAttributes.SymbolEntity = loadSet.DisplayAttributes.SymbolEntity;
                 _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.DisplayAttributes.SymbolSet, GeometryType);
                 if (_currentFeatureClassName != null && _currentFeatureClassName != "")
                 {
                     //Generate domains and pass in set to update values initially
-                    GetMilitaryDomainsAsync(favoriteSet);
+                    GetMilitaryDomainsAsync(loadSet);
                 }
 
                 IsStyleItemSelected = true;
 
                 //Set label values (that are not combo boxes)
-                SymbolAttributeSet.LabelAttributes.DateTimeValid = favoriteSet.LabelAttributes.DateTimeValid;
-                SymbolAttributeSet.LabelAttributes.DateTimeExpired = favoriteSet.LabelAttributes.DateTimeExpired;
-                SymbolAttributeSet.LabelAttributes.Type = favoriteSet.LabelAttributes.Type;
-                SymbolAttributeSet.LabelAttributes.CommonIdentifier = favoriteSet.LabelAttributes.CommonIdentifier;
-                SymbolAttributeSet.LabelAttributes.Speed = favoriteSet.LabelAttributes.Speed;
-                SymbolAttributeSet.LabelAttributes.UniqueDesignation = favoriteSet.LabelAttributes.UniqueDesignation;
-                SymbolAttributeSet.LabelAttributes.StaffComments = favoriteSet.LabelAttributes.StaffComments;
-                SymbolAttributeSet.LabelAttributes.AdditionalInformation = favoriteSet.LabelAttributes.AdditionalInformation;
-                SymbolAttributeSet.LabelAttributes.HigherFormation = favoriteSet.LabelAttributes.HigherFormation;
-                SymbolAttributeSet.SymbolTags = favoriteSet.SymbolTags;
+                SymbolAttributeSet.LabelAttributes.DateTimeValid = loadSet.LabelAttributes.DateTimeValid;
+                SymbolAttributeSet.LabelAttributes.DateTimeExpired = loadSet.LabelAttributes.DateTimeExpired;
+                SymbolAttributeSet.LabelAttributes.Type = loadSet.LabelAttributes.Type;
+                SymbolAttributeSet.LabelAttributes.CommonIdentifier = loadSet.LabelAttributes.CommonIdentifier;
+                SymbolAttributeSet.LabelAttributes.Speed = loadSet.LabelAttributes.Speed;
+                SymbolAttributeSet.LabelAttributes.UniqueDesignation = loadSet.LabelAttributes.UniqueDesignation;
+                SymbolAttributeSet.LabelAttributes.StaffComments = loadSet.LabelAttributes.StaffComments;
+                SymbolAttributeSet.LabelAttributes.AdditionalInformation = loadSet.LabelAttributes.AdditionalInformation;
+                SymbolAttributeSet.LabelAttributes.HigherFormation = loadSet.LabelAttributes.HigherFormation;
+                SymbolAttributeSet.SymbolTags = loadSet.SymbolTags;
             }
         }
 
@@ -962,12 +1187,102 @@ namespace ProSymbolEditor
             {
                 //Toggle all down
                 AddToMapToolEnabled = true;
+                SelectToolEnabled = false;
+            }
+            else if (args.CurrentID == "ProSymbolEditor_SelectionMapTool")
+            {
+                SelectToolEnabled = true;
+                AddToMapToolEnabled = false;
             }
             else
             {
                 //Disable all toggles
                 AddToMapToolEnabled = false;
+                SelectToolEnabled = false;
             }
+        }
+
+        private async void OnMapSelectionChanged(ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEventArgs args)
+        {
+            //Get the selected features from the map and filter out the standalone table selection.
+            var selectedFeatures = args.Selection
+              .Where(kvp => kvp.Key is BasicFeatureLayer)
+              .ToDictionary(kvp => (BasicFeatureLayer)kvp.Key, kvp => kvp.Value);
+
+
+            //TODO:  Further filter features so it only contains ones that are in layers that are in the military schema
+            SelectedFeaturesCollection.Clear();
+            foreach (KeyValuePair<BasicFeatureLayer, List<long>> kvp in selectedFeatures)
+            {
+                await QueuedTask.Run(() =>
+                {
+                    ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "symbolset");
+                    CodedValueDomain symbolSetDomain = symbolSetField.GetDomain() as CodedValueDomain;
+                    SortedList<object, string> symbolSetDomainSortedList = symbolSetDomain.GetCodedValuePairs();
+                    ArcGIS.Core.Data.Field symbolEntityField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "symbolentity");
+                    CodedValueDomain symbolEntityDomain = symbolEntityField.GetDomain() as CodedValueDomain;
+                    SortedList<object, string> symbolEntityDomainSortedList = symbolEntityDomain.GetCodedValuePairs();
+
+                    foreach (long id in kvp.Value)
+                    {
+                        //Query for field values
+
+                        string oidFieldName = kvp.Key.GetTable().GetDefinition().GetObjectIDField();
+                        QueryFilter queryFilter = new QueryFilter();
+                        queryFilter.WhereClause = string.Format("{0} = {1}", oidFieldName, id);
+                        RowCursor cursor = kvp.Key.Search(queryFilter);
+                        Row row = null;
+
+                        if (cursor.MoveNext())
+                        {
+                            row = cursor.Current;
+                        }
+
+                        if (row != null)
+                        {
+                            GeometryType geometryType = ArcGIS.Core.Geometry.GeometryType.Point;
+
+                            if (kvp.Key.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPolygon)
+                            {
+                                geometryType = ArcGIS.Core.Geometry.GeometryType.Polygon;
+                            }
+                            else if (kvp.Key.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPoint)
+                            {
+                                geometryType = ArcGIS.Core.Geometry.GeometryType.Point;
+                            }
+                            else if (kvp.Key.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPolyline)
+                            {
+                                geometryType = ArcGIS.Core.Geometry.GeometryType.Polyline;
+                            }
+
+                            SelectedFeature newSelectedFeature = new SelectedFeature(kvp.Key, id);
+                            
+                            foreach(KeyValuePair<object, string> symbolSetKeyValuePair in symbolSetDomainSortedList)
+                            {
+                                if (symbolSetKeyValuePair.Key.ToString() == row["symbolset"].ToString())
+                                {
+                                    newSelectedFeature.SymbolSetName = symbolSetKeyValuePair.Value;
+                                    break;
+                                }
+                            }
+
+                            foreach (KeyValuePair<object, string> symbolEntityKeyValuePair in symbolEntityDomainSortedList)
+                            {
+                                if (symbolEntityKeyValuePair.Key.ToString() == row["symbolentity"].ToString())
+                                {
+                                    newSelectedFeature.EntityName = symbolEntityKeyValuePair.Value;
+                                    break;
+                                }
+                            }
+
+                            SelectedFeaturesCollection.Add(newSelectedFeature);
+                        }
+
+                    }
+                });
+            }
+
+            SelectedSelectedFeature = SelectedFeaturesCollection.FirstOrDefault();
         }
 
         #endregion
@@ -1228,6 +1543,66 @@ namespace ProSymbolEditor
             }
 
             return null;
+        }
+
+        private async Task CreateSymbolSetFromFieldValuesAsync()
+        {
+            try
+            {
+                Dictionary<string, string> fieldValues = new Dictionary<string, string>();
+                await QueuedTask.Run(() =>
+                {
+                    string oidFieldName = _selectedSelectedFeature.FeatureLayer.GetTable().GetDefinition().GetObjectIDField();
+                    QueryFilter queryFilter = new QueryFilter();
+                    queryFilter.WhereClause = string.Format("{0} = {1}", oidFieldName, _selectedSelectedFeature.ObjectId);
+                    RowCursor cursor = _selectedSelectedFeature.FeatureLayer.Search(queryFilter);
+                    Row row = null;
+
+                    if (cursor.MoveNext())
+                    {
+                        row = cursor.Current;
+                    }
+
+                    if (row == null)
+                    {
+                        return;
+                    }
+
+                    //Dictionary<string, string> fieldValuesThread = new Dictionary<string, string>();
+                    IReadOnlyList<Field> fields = row.GetFields();
+                    lock (_lock)
+                    {
+                        foreach (Field field in fields)
+                        {
+                            if (field.FieldType == FieldType.Geometry)
+                            {
+                                continue;
+                            }
+
+                            var fieldValue = row[field.Name];
+
+                            if (fieldValue != null)
+                            {
+                                fieldValues[field.Name] = fieldValue.ToString();
+                            }
+                        }
+                    }
+
+                    //return fieldVa
+                });
+
+                //Transfer field values into SymbolAttributes
+                SymbolAttributeSet set = new SymbolAttributeSet(fieldValues);
+                set.SymbolTags = "";
+                EditSelectedFeatureSymbol = set;
+                LoadSymbolIntoWorkflow(true);
+            }
+            catch (Exception exception)
+            {
+                System.Diagnostics.Debug.WriteLine(exception.ToString());
+            }
+
+            return;
         }
 
         private string[] ParseKeyForSymbolIdCode(string key)
