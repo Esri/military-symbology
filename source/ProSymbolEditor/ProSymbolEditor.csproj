@@ -98,6 +98,9 @@
     <AddInContent Include="Images\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\StringCharacterValueConverter.cs" />
     <Compile Include="MapTools\CoordinateMapTool.cs" />
     <Compile Include="MapTools\DrawFeatureSketchTool.cs" />
@@ -122,6 +125,10 @@
     <Compile Include="Utilities\ProSymbolUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MilitarySymbolDockpane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -156,6 +156,7 @@ namespace ProSymbolEditor
             SaveFavoritesFileAsCommand = new RelayCommand(SaveFavoritesAsToFile, param => true);
             ImportFavoritesFileCommand = new RelayCommand(ImportFavoritesFile, param => true);
             SelectToolCommand = new RelayCommand(ActivateSelectTool, param => true);
+            ShowAboutWindowCommand = new RelayCommand(ShowAboutWindow, param => true);
 
             _symbolAttributeSet.LabelAttributes.DateTimeValid = null;
             _symbolAttributeSet.LabelAttributes.DateTimeExpired = null;
@@ -223,6 +224,8 @@ namespace ProSymbolEditor
         public ICommand SaveFavoritesFileAsCommand { get; set; }
 
         public ICommand SelectToolCommand { get; set; }
+
+        public ICommand ShowAboutWindowCommand { get; set; }
 
         #endregion
 
@@ -690,6 +693,12 @@ namespace ProSymbolEditor
         {
             FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_SelectionMapTool");
             SelectToolEnabled = true;
+        }
+
+        private void ShowAboutWindow(object parameter)
+        {
+            AboutWindow aboutWindow = new AboutWindow();
+            aboutWindow.ShowDialog(FrameworkApplication.Current.MainWindow);
         }
 
         private async void SaveEdits(object parameter)
