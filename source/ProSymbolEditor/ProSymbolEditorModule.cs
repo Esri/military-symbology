@@ -67,7 +67,6 @@ namespace ProSymbolEditor
                 bool enabled = await isEnabledMethod;
             });
 
-
             return base.Initialize();
         }
 
