@@ -78,6 +78,7 @@ namespace ProSymbolEditor
         private ArcGIS.Core.Geometry.Geometry _mapCoordinates;
         public bool _coordinateValid = false;
         private bool _isStyleItemSelected = false;
+        private bool _isCoordinateTabEnabled = false;
         private bool _isFavoriteItemSelected = false;
         private bool _addToMapToolEnabled = false;
         private bool _selectToolEnabled = false;
@@ -292,7 +293,28 @@ namespace ProSymbolEditor
             set
             {
                 _isStyleItemSelected = value;
+                IsCoordinateTabEnabled = value;
+
                 NotifyPropertyChanged(() => IsStyleItemSelected);
+            }
+        }
+
+        public bool IsCoordinateTabEnabled
+        {
+            get
+            {
+                return _isCoordinateTabEnabled;
+            }
+            set
+            {
+                _isCoordinateTabEnabled = value;
+
+                if (IsEditing)
+                {
+                    _isCoordinateTabEnabled = false;
+                }
+
+                NotifyPropertyChanged(() => IsCoordinateTabEnabled);
             }
         }
 
@@ -453,8 +475,8 @@ namespace ProSymbolEditor
                         GetMilitaryDomainsAsync();
                     }
 
-                    IsStyleItemSelected = true;
                     IsEditing = false;
+                    IsStyleItemSelected = true;
                 }
                 else
                 {
@@ -484,6 +506,13 @@ namespace ProSymbolEditor
                 else
                 {
                     EditSelectedFeatureSymbol = null;
+                    IsStyleItemSelected = false;
+
+                    if (SelectedTabIndex > 2)
+                    {
+                        //Reset tab to modify if the user is in symbol/text/coordinates (since they'll be disabled)
+                        SelectedTabIndex = 1;
+                    }
                 }
 
                 NotifyPropertyChanged(() => SelectedSelectedFeature);
@@ -1156,33 +1185,41 @@ namespace ProSymbolEditor
         private void ImportFavoritesFile(object parameter)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "JSON Files (*.json)|*.json";
             if (openFileDialog.ShowDialog() == true)
             {
-                string json = File.ReadAllText(openFileDialog.FileName);
-
-                ObservableCollection<SymbolAttributeSet> importedFavorites = new JavaScriptSerializer().Deserialize<ObservableCollection<SymbolAttributeSet>>(json);
-
-                //Go through favorites, find if uid is already in favorites - if so, replace that favorite
-                //If not found, add favorite
-                foreach (SymbolAttributeSet set in importedFavorites)
+                if (Path.GetExtension(openFileDialog.FileName).ToUpper() == "JSON")
                 {
-                    foreach (SymbolAttributeSet favSet in Favorites)
+                    string json = File.ReadAllText(openFileDialog.FileName);
+
+                    ObservableCollection<SymbolAttributeSet> importedFavorites = new JavaScriptSerializer().Deserialize<ObservableCollection<SymbolAttributeSet>>(json);
+
+                    //Go through favorites, find if uid is already in favorites - if so, replace that favorite
+                    //If not found, add favorite
+                    foreach (SymbolAttributeSet set in importedFavorites)
                     {
-                        if (favSet.FavoriteId == set.FavoriteId)
+                        foreach (SymbolAttributeSet favSet in Favorites)
                         {
-                            //Match found, remove found
-                            Favorites.Remove(favSet);
-                            break;
+                            if (favSet.FavoriteId == set.FavoriteId)
+                            {
+                                //Match found, remove found
+                                Favorites.Remove(favSet);
+                                break;
+                            }
                         }
+
+                        set.GeneratePreviewSymbol();
+                        Favorites.Add(set);
                     }
 
-                    set.GeneratePreviewSymbol();
-                    Favorites.Add(set);
+                    //Re-serialize to save the imported favorites
+                    var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
+                    File.WriteAllText(_favoritesFilePath, favoritesJson);
                 }
-
-                //Re-serialize to save the imported favorites
-                var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
-                File.WriteAllText(_favoritesFilePath, favoritesJson);
+                else
+                {
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The import file you selected is invalid - please choose a valid JSON file.");
+                }
             }
         }
 
