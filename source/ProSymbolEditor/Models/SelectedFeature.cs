@@ -15,29 +15,30 @@
  ******************************************************************************/
 
 using ArcGIS.Desktop.Framework.Contracts;
+using ArcGIS.Desktop.Mapping;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ProSymbolEditor
 {
-    public class DomainCodedValuePair : PropertyChangedBase, IComparable
+    public class SelectedFeature : PropertyChangedBase
     {
-        public object Code { get; set; }
-        public string Name { get; set; }
+        public BasicFeatureLayer FeatureLayer { get; set; }
+        public string FeatureLayerName { get; set; }
+        public long ObjectId { get; set; }
+        public string SymbolSetName { get; set; }
+        public string EntityName { get; set; }
 
-        public DomainCodedValuePair() { }
-            
-        public DomainCodedValuePair(object value, string name)
+        public SelectedFeature() { }
+
+        public SelectedFeature(BasicFeatureLayer featureLayer, long objectId)
         {
-            Code = value;
-            Name = name;
-        }
-
-        public int CompareTo(object obj)
-        {
-            DomainCodedValuePair a = this;
-            DomainCodedValuePair b = (DomainCodedValuePair)obj;
-
-            return string.Compare(a.Name, b.Name);
+            FeatureLayer = featureLayer;
+            FeatureLayerName = featureLayer.Name;
+            ObjectId = objectId;
         }
     }
 }

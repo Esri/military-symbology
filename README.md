@@ -49,17 +49,27 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 		* Open and build solution file
 	* To use MSBuild to build the solution
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2015 | Visual Studio Tools | Developer Command Prompt for VS2015
-		* ``` cd military-symbol-editor-addin-wpf\source ```
-		* ``` msbuild ProSymbolEditor.sln /property:Configuration=Release ```
+		* `cd military-symbol-editor-addin-wpf\source`
+		* `msbuild ProSymbolEditor.sln /property:Configuration=Release`
+		* This will build to the location: `source\ProSymbolEditor\bin\Release` and register the add-in
 	* Note : Assembly references are based on a default install of the SDK, you may have to update the references if you chose an alternate install option
-	
+		* There is a Pro SDK Utilities [Visual Studio Extension](https://visualstudiogallery.msdn.microsoft.com/b3f65b91-9d3b-4ca0-b6bc-4d25c7d51fd1) that can be used to quickly fix Pro SDK assembly references. 
+	* To run unit tests from the command prompt:
+		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2013/2015 | Visual Studio Tools | Developer Command Prompt
+		* `cd military-symbol-editor-addin-wpf\source`
+		* `vstest.console.exe SymbolEditorUnitTests\bin\Release\SymbolEditorUnitTests.dll /InIsolation /platform:x64`
+		    * Note: `vstest` must be used instead of `mstest` in order to run as an `x64` process (required by the Pro SDK dependencies)
+
 ## Users
 
-> IMPORTANT: This application depends on the Military Overlay datamodel/geodatabase(GDB) that is provided with the ArcGIS Pro Military Overlay Template. If you do not have the Military Overlay GDB included in your project, you will receive a warning when you attempt to use the application.
+> IMPORTANT: This application depends on the Military Overlay Information Model/geodatabase(GDB) that is provided with the [Military Overlay Template](http://esriurl.com/AFDMilitaryOverlay). If you do not have the Military Overlay GDB included in your project, you will receive a warning when you attempt to use the application.
 
 * Running
 	* To run from a stand-alone deployment in ArcGIS Pro
-		* Install the add-in from the application folder by double clicking it
+		* Obtain the add-in. The add-in may be obtained from
+            * As part of the Military Overlay Template (version 1.1.0+) - http://esriurl.com/AFDMilitaryOverlay
+            * Included in the repository releases: https://github.com/Esri/military-symbol-editor-addin-wpf/releases 			 		
+        * Download the and install the add-in by double clicking it
 		* Open ArcGIS Pro 1.2
 		* Open a project that contains the Military Overlay geodatabase (MilitaryOverlay.gdb)
 		    * This geodatabase may be obtained by downloading the Military Overlay template release available at http://esriurl.com/AFDMilitaryOverlay
@@ -72,14 +82,22 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 			* Selecting a search result will show a preview and associated tags with that symbol
 			* Click the next arrow button or the modify tab when you have selected a style
 		* The Modify tab is the second tab:
+			* Use the select tool in ArcGIS Pro to select already existing features
+			* When selected, this will populate a list on this tab
+			* Select a feature in this list to start editing it.  The feature's data will be loading into the other tabs for editing.
+		* The Favorites tab is the third tab:
+			* Users can save a symbol that they've created so that they can easily go back to it against
+			* The favorites save in a user's account, and show up on this tab
+			* Selecting a favorite from the list will load it into the pre-existing workflow.
+		* The Symbol tab is the fourth tab:
 			* The application will display all attributes associated with the chosen style, with combo boxes for selecting values
 			* As you select values, the symbol will update to incorporate those changes
 			* A table below has a summary of the values you select
 			* After you are finished loading values, click the next arrow or the Text tab
-		* The Text tab is the third tab:
+		* The Label tab is the fifth tab:
 			* Various values that will be saved into the feature are available for edit here.  These values will appear around the symbol on the map.
 			* After you are finished populating any text values, you can click the next arrow button to go the last tab.
-		* The Coordinate tab is the fourth tab:
+		* The Coordinate tab is the sixth tab:
 			* Coordinates can be entered in DD, DMS, DD, or other coordinate systems.
 			* Once valid coordinates are entered, a button can be clicked to add a feature to those coordinates.
 			* Invalid coordinates will show with a red box around it.
@@ -105,8 +123,8 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 5. Optionally, click **Add Favorite** to add the symbol to your favorites list.
 	You can also modify the symbol before you add it to your Favorites.
 	
-### Modify a symbol
-1. After you've selected a symbol in the Military Symbol Designer, click the **Modify** tab.
+### Modify a new symbol
+1. After you've selected a symbol in the Military Symbol Designer, click the **Symbol** tab.
 2. Click the dropdown lists to set the **Identity/Affiliation**, **Status**, **TF, FD, HQ**, **Echelon**, **Context**, **Modifier 1**, and **Modifier 2** modifier attributes.
 3. Optionally, click **Add to Map** to add the symbol to the map without further refinement.
 4. Optionally, click **Add Favorite** to add the symbol to your favorites list.
@@ -114,8 +132,8 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 	**Note:**  The Military Symbol Designer is for designing symbols before you add them to the map. It is not for editing existing features on the map.
 		If you want to change a feature that you've already added to the map, select the feature, click the **Edit** tab in ArcGIS Pro, click **Attributes**, and edit the feature's attributes in the **Attributes pane**.
 
-### Add text modifiers to a symbol
-1. After you've selected a symbol in the Military Symbol Designer, click the **Text** tab.
+### Add text modifiers to a new symbol
+1. After you've selected a symbol in the Military Symbol Designer, click the **Label** tab.
 2. Click the Date and Time adjustment buttons to set the **Date/Time Valid** and **Date/Time Expired** values for the symbol.
 3. Set the **Speed**, **Unique Designation**, **Reinforced**, **Staff Comments**, **Additional Information**, and **Higher Formation** text modifier attributes.
 4. Optionally, click **Add to Map** to add the symbol to the map.
@@ -144,11 +162,11 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
     Click a symbol in your favorites to add it to the map.
 	
 ### Edit the symbol for a military feature that is already on the map
-1. In an ArcGIS Pro map or table, select the military feature that you want to change.
-2. Click the **Edit** tab in ArcGIS Pro.
-3. Click **Attributes**.
-4. Edit the feature's attributes in the **Attributes pane**.
-   The military symbol for the feature will update to reflect the new attributes, for attributes that are used by the dictionary renderer to specify the military symbol.
+1. In an ArcGIS Pro map or table, select the military feature that you want to change with the select tool.
+2. Click the **Modify** tab in in the Military Symbol Designer.
+3. Click the appropriate feature in the list on this tab.
+4. The feature's attribute data will load into the **Symbol** and **Label** tabs for editing.
+5. Click the Save Edits button to write the edits back to the feature.
 
 ## Resources
 

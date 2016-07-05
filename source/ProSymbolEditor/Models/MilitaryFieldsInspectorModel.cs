@@ -53,6 +53,7 @@ namespace ProSymbolEditor
         public ObservableCollection<DomainCodedValuePair> ContextDomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> Modifier1DomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> Modifier2DomainValues { get; set; }
+        public ObservableCollection<DomainCodedValuePair> CountryCodeDomainValues { get; set; }
 
         public Visibility DateTimeValidFieldExists
         {
@@ -187,6 +188,7 @@ namespace ProSymbolEditor
             ContextDomainValues = new ObservableCollection<DomainCodedValuePair>();
             Modifier1DomainValues = new ObservableCollection<DomainCodedValuePair>();
             Modifier2DomainValues = new ObservableCollection<DomainCodedValuePair>();
+            CountryCodeDomainValues = new ObservableCollection<DomainCodedValuePair>();
         }
 
         public void CheckLabelFieldsExistence(IReadOnlyList<ArcGIS.Core.Data.Field> fields)
@@ -263,9 +265,10 @@ namespace ProSymbolEditor
             GetDomainAndPopulateList(fields, "context", ContextDomainValues);
             GetDomainAndPopulateList(fields, "modifier1", Modifier1DomainValues);
             GetDomainAndPopulateList(fields, "modifier2", Modifier2DomainValues);
+            GetDomainAndPopulateList(fields, "countrycode", CountryCodeDomainValues, true);
         }
 
-        private void GetDomainAndPopulateList(IReadOnlyList<Field> fields, string fieldName, ObservableCollection<DomainCodedValuePair> memberCodedValueDomains)//SortedList<object, string> memberCodedValueDomains)
+        private void GetDomainAndPopulateList(IReadOnlyList<Field> fields, string fieldName, ObservableCollection<DomainCodedValuePair> memberCodedValueDomains, bool orderbyName = false)
         {
             ArcGIS.Core.Data.Field foundField = fields.FirstOrDefault(field => field.Name == fieldName);
 
@@ -281,7 +284,13 @@ namespace ProSymbolEditor
                 foreach (KeyValuePair<object, string> pair in codedValuePairs)
                 {
                     DomainCodedValuePair domainObjectPair = new DomainCodedValuePair(pair.Key, pair.Value);
-                    memberCodedValueDomains.Add(domainObjectPair);//pair.Value);
+                    memberCodedValueDomains.Add(domainObjectPair);
+                }
+
+                if (orderbyName)
+                {
+                    //Order the collection alphabetically by the names, rather than the default by the code
+                    memberCodedValueDomains.Sort();
                 }
             }
         }

@@ -88,6 +88,7 @@ namespace ProSymbolEditor
             set
             {
                 _identity = value;
+                NotifyPropertyChanged(() => Identity);
                 //GenerateSelectedSymbolTagsString();
                 //GeneratePreviewSymbol();
             }
@@ -124,6 +125,7 @@ namespace ProSymbolEditor
             set
             {
                 _echelon = value;
+                NotifyPropertyChanged(() => Echelon);
                 //GenerateSelectedSymbolTagsString();
                 //GeneratePreviewSymbol();
             }
@@ -160,6 +162,7 @@ namespace ProSymbolEditor
             set
             {
                 _operationalCondition = value;
+                NotifyPropertyChanged(() => OperationalCondition);
                 //GenerateSelectedSymbolTagsString();
                 //GeneratePreviewSymbol();
             }
@@ -196,6 +199,7 @@ namespace ProSymbolEditor
             set
             {
                 _status = value;
+                NotifyPropertyChanged(() => Status);
                 //GenerateSelectedSymbolTagsString();
                 //GeneratePreviewSymbol();
             }
@@ -232,6 +236,7 @@ namespace ProSymbolEditor
             set
             {
                 _indicator = value;
+                NotifyPropertyChanged(() => Indicator);
                 //GenerateSelectedSymbolTagsString();
                 //GeneratePreviewSymbol();
             }
@@ -268,6 +273,7 @@ namespace ProSymbolEditor
             set
             {
                 _mobility = value;
+                NotifyPropertyChanged(() => Mobility);
                 //GenerateSelectedSymbolTagsString();
                 //GeneratePreviewSymbol();
             }
@@ -304,6 +310,7 @@ namespace ProSymbolEditor
             set
             {
                 _context = value;
+                NotifyPropertyChanged(() => Context);
                 //GenerateSelectedSymbolTagsString();
                 //GeneratePreviewSymbol();
             }
@@ -340,6 +347,7 @@ namespace ProSymbolEditor
             set
             {
                 _modifier1 = value;
+                NotifyPropertyChanged(() => Modifier1);
                 //GenerateSelectedSymbolTagsString();
                 //GeneratePreviewSymbol();
             }
@@ -376,6 +384,7 @@ namespace ProSymbolEditor
             set
             {
                 _modifier2 = value;
+                NotifyPropertyChanged(() => Modifier2);
                 //GenerateSelectedSymbolTagsString();
                 //GeneratePreviewSymbol();
             }

@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ProSymbolEditor</RootNamespace>
-    <AssemblyName>ProSymbolEditor</AssemblyName>
+    <AssemblyName>MilitarySymbolEditor</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -98,17 +98,24 @@
     <AddInContent Include="Images\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\StringCharacterValueConverter.cs" />
     <Compile Include="MapTools\CoordinateMapTool.cs" />
     <Compile Include="MapTools\DrawFeatureSketchTool.cs" />
+    <Compile Include="MapTools\SelectionMapTool.cs" />
     <Compile Include="Models\CoordinateObject.cs" />
     <Compile Include="Models\DomainCodedValuePair.cs" />
+    <Compile Include="Models\MilitaryOverlayDataModel.cs" />
+    <Compile Include="Models\SelectedFeature.cs" />
     <Compile Include="Models\SymbolAttributes\LabelAttributes.cs" />
     <Compile Include="Models\SymbolAttributes\SymbolAttributeSet.cs" />
     <Compile Include="Models\SymbolAttributes\DisplayAttributes.cs" />
     <Compile Include="Models\SymbolSetMapping.cs" />
     <Compile Include="Models\SymbolSetMappings.cs" />
     <Compile Include="Models\MilitaryFieldsInspectorModel.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Views\MilitarySymbolDockpane.xaml.cs">
       <DependentUpon>MilitarySymbolDockpane.xaml</DependentUpon>
     </Compile>
@@ -118,6 +125,10 @@
     <Compile Include="Utilities\ProSymbolUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MilitarySymbolDockpane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -11520,8 +11531,14 @@
     <Content Include="Images\MIL_STD_2525D_Symbols\OCA\4.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\SelectionSelectTool16.png" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Content Include="Files\MilitaryOverlay.lpkx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.PackageAddIn" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.CleanAddIn" />

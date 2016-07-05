@@ -16,6 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <local:StringCharacterValueConverter x:Key="StringCharacterValueConverter"/>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             
             <DataTemplate x:Key="NameTokenTemplate">
                 <DataTemplate.Resources>
@@ -58,10 +59,13 @@
         <DockPanel>
 
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-                <TabControl x:Name="tabControl" IsEnabled="{Binding IsEnabled}" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="3,3,3,3">
+                <TabControl x:Name="tabControl" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="3,3,3,3" Grid.Row="0">
                     <TabItem Header="Search">
-
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
@@ -85,7 +89,8 @@
                                     </Grid.ColumnDefinitions>-->
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
-                                            <RowDefinition MaxHeight="310"/>
+                                            <RowDefinition MaxHeight="300"/>
+                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
                                         <TextBox x:Name="searchSymbolsTextBox" HorizontalAlignment="Stretch" Height="23" Margin="5,5,5,5" Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=2000}" Grid.Row="0">
@@ -94,7 +99,7 @@
                                                     <Style.Resources>
                                                         <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                                             <VisualBrush.Visual>
-                                                                <Label Content="Search..." Foreground="DarkGray" />
+                                                                <Label Content="Search..." Foreground="Black"  Background="White" Width="10000"/>
                                                             </VisualBrush.Visual>
                                                         </VisualBrush>
                                                     </Style.Resources>
@@ -114,7 +119,7 @@
                                         </TextBox>
 
                                         <ListBox x:Name="symbolListBox" Margin="5,5,5,5" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
-                                                SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" MaxHeight="300">
+                                                SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" MaxHeight="290">
 
                                             <ListBox.ItemsPanel>
                                                 <ItemsPanelTemplate>
@@ -138,6 +143,16 @@
                                             </ListBox.ItemTemplate>
                                         </ListBox>
 
+                                        <Grid Grid.Row="2" Margin="5,0,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                                
+                                            <Label Content="Result Count:" Grid.Column="0"/>
+                                            <Label Content="{Binding ResultCount, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
+                                        </Grid>
+                                        
                                     </Grid>
 
                                     <Grid>
@@ -197,8 +212,142 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Button Content="Add Favorite" Grid.Column="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
-                                <ToggleButton Name="searchAddToMapButton" Grid.Column="1" Content="Add to Map" IsEnabled="{Binding IsStyleItemSelected}" IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}" Command="{Binding ActivateAddToMapToolCommand}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" ToolTip="Add to Map" HorizontalAlignment="Center" Width="90"/>
-                                <Button x:Name="modifyButton" Grid.Column="2" IsEnabled="{Binding IsStyleItemSelected}" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="2" ToolTip="Go to Modify Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                <ToggleButton Name="searchAddToMapButton" Grid.Column="1" Content="Add to Map" IsEnabled="{Binding IsStyleItemSelected}" IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}" Command="{Binding ActivateAddToMapToolCommand}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" ToolTip="Add to Map" HorizontalAlignment="Center" Width="90" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
+                                <Button x:Name="modifyButton" Grid.Column="2" IsEnabled="{Binding IsStyleItemSelected}" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Go to Modify Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                    <Button.RenderTransform>
+                                        <ScaleTransform ScaleX="-1" />
+                                    </Button.RenderTransform>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Modify">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <ScrollViewer Grid.Row="0">
+                                <UniformGrid Name="editUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="300"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Content="Use the select tool to select a feature to modify" Grid.Column="0" Margin="5,0,0,0"/>
+
+                                            <ToggleButton Grid.Column="1" Margin="2,0,0,0" Command="{Binding SelectToolCommand}" IsChecked="{Binding SelectToolEnabled}" >
+                                                <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="pack://application:,,,/MilitarySymbolEditor;component/Images/SelectionSelectTool16.png" />
+                                                <!--<ToggleButton.Style>
+                                                    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                                        <Setter Property="Width" Value="20"/>
+                                                        <Setter Property="Height" Value="20"/>
+                                                        <Setter Property="Padding" Value="1"/>
+                                                        --><!--<Style.Triggers>
+                                                            <Trigger Property="IsEnabled" Value="false">
+                                                                <Setter Property="Opacity" Value="0.5"/>
+                                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                                <Setter Property="Background" Value="Transparent"/>
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                                            <ContentPresenter Margin="2" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}" RecognizesAccessKey="True" Content="{TemplateBinding ContentControl.Content}" />
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Trigger>
+                                                        </Style.Triggers>--><!--
+                                                    </Style>
+                                                </ToggleButton.Style>-->
+                                            </ToggleButton>
+                                        </Grid>
+                                        
+                                        <ListBox x:Name="editSelectionList" Margin="5,5,5,5" ItemsSource="{Binding SelectedFeaturesCollection, UpdateSourceTrigger=PropertyChanged}" 
+                                                HorizontalAlignment="Stretch" SelectedItem="{Binding SelectedSelectedFeature, Mode=TwoWay}" VerticalAlignment="Stretch" Grid.Row="1" MaxHeight="290">
+
+                                            <ListBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel>
+                                                        <!--Memory footprint is only 200 mb-->
+                                                    </VirtualizingStackPanel>
+                                                </ItemsPanelTemplate>
+                                            </ListBox.ItemsPanel>
+
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="2,0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" TextAlignment="Left" Text="{Binding FeatureLayerName}"/>
+                                                        <TextBlock Grid.Column="1" TextAlignment="Left" Text=" : "/>
+                                                        <TextBlock Grid.Column="2" TextAlignment="Left" Text="{Binding SymbolSetName}"/>
+                                                        <TextBlock Grid.Column="3" TextAlignment="Left" Text=" : "/>
+                                                        <TextBlock Grid.Column="4" TextAlignment="Left" Text="{Binding EntityName}"/>
+                                                        <TextBlock Grid.Column="5" TextAlignment="Left" Text=" : Object ID "/>
+                                                        <TextBlock Grid.Column="6" TextAlignment="Left" Text="{Binding ObjectId}"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Image Grid.Row="0" Source="{Binding EditSelectedFeatureSymbol.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="190" Height="190" Margin="20,5,20,5" VerticalAlignment="Bottom">
+                                            <Image.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
+                                                    <MenuItem Header="Copy Image to Clipboard" Command="{Binding CopyImageToClipboardCommand}"/>
+                                                </ContextMenu>
+                                            </Image.ContextMenu>
+                                        </Image>
+
+                                        <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding EditSelectedFeatureSymbol}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
+                                            <xctk:PropertyGrid.PropertyDefinitions>
+                                                <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
+                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
+                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
+                                            </xctk:PropertyGrid.PropertyDefinitions>
+                                        </xctk:PropertyGrid>
+
+                                    </Grid>
+                                    
+
+
+                                </UniformGrid>
+                            </ScrollViewer>
+
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!--<Button Content="Add Favorite" Grid.Column="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>-->
+                                <!--<ToggleButton Name="searchAddToMapButton" Grid.Column="1" Content="Add to Map" IsEnabled="{Binding IsStyleItemSelected}" IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}" Command="{Binding ActivateAddToMapToolCommand}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" ToolTip="Add to Map" HorizontalAlignment="Center" Width="90"/>-->
+                                <Button Grid.Column="2" IsEnabled="{Binding IsStyleItemSelected}" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Go to Modify Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
                                     </Button.RenderTransform>
@@ -369,8 +518,8 @@
 
                                 <Button Grid.Column="0" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="0" HorizontalAlignment="Left" ToolTip="Back to Search"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="81" Visibility="Collapsed"/>
-                                <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Add to Map" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82"/>
-                                <Button Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="0" ToolTip="New Symbol" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Add to Map" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
+                                <Button Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="New Symbol" HorizontalAlignment="Right" Margin="0,0,-26,0">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
                                     </Button.RenderTransform>
@@ -378,7 +527,7 @@
                             </Grid>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="Modify" IsEnabled="{Binding IsStyleItemSelected}">
+                    <TabItem Header="Symbol" IsEnabled="{Binding IsStyleItemSelected}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
@@ -544,7 +693,7 @@
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*"/>
                                             <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
+                                            <!--<RowDefinition Height="Auto"/>-->
                                         </Grid.RowDefinitions>
 
                                         <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
@@ -556,10 +705,18 @@
                                             </Image.ContextMenu>
                                         </Image>
 
+                                        <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
+                                            <xctk:PropertyGrid.PropertyDefinitions>
+                                                <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
+                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
+                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
+                                            </xctk:PropertyGrid.PropertyDefinitions>
+                                        </xctk:PropertyGrid>
+
                                         <!-- All Selected Symbol Tags-->
                                         <!--<TextBlock x:Name="selectedSymbolTagsTextBlock" Margin="10,0,10,10" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Stretch"/>-->
 
-                                        <Grid Grid.Row="1" Margin="0,10,0,0">
+                                        <!--<Grid Grid.Row="1" Margin="0,10,0,0">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="*"/>
@@ -574,10 +731,10 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <!--<Label Content="Set A" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
+                                            --><!--<Label Content="Set A" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
 
                                             <!--<Label Content="1" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="0" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>-->
+                                        <Label Content="0" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>--><!--
                                             <Label Content="{Binding ElementName=contextComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                             <Label Content="{Binding ElementName=identityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
                                             <Label Content="{Binding SymbolAttributeSet.DisplayAttributes.SymbolSet, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
@@ -586,7 +743,7 @@
                                             <Label Content="{Binding ElementName=tfFdHqComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="5" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
 
 
-                                            <!--<Label Content="Version" FontSize="10" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
+                                            --><!--<Label Content="Version" FontSize="10" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>--><!--
                                             <Label Content="Context" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                             <Label Content="Identity" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
                                             <Label Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
@@ -599,7 +756,7 @@
                                             <Label Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
                                                 <TextBlock Text="TF/FD/HQ" FontSize="10" TextWrapping="Wrap"/>
                                             </Label>
-                                            <!--<Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
+                                            --><!--<Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
                                             <TextBlock Text="Standard Identity" FontSize="10" TextWrapping="Wrap"/>
                                         </Label>-->
 
@@ -607,7 +764,7 @@
 
                                             <!--<Label Grid.Column="6" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
                                             <TextBlock Text="Amplifier / Descriptor" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>-->
+                                        </Label>--><!--
 
                                         </Grid>
 
@@ -627,7 +784,7 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <!--<Label Content="Set B" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
+                                            --><!--<Label Content="Set B" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>--><!--
                                             <Label Content="{Binding ElementName=operationalConditionAmplifierComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                             <Label Content="{Binding ElementName=mobilityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
                                             <Label Content="{Binding ElementName=echelonComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
@@ -646,7 +803,7 @@
                                                 <TextBlock Text="Modifier 2" FontSize="10" TextWrapping="Wrap"/>
                                             </Label>
 
-                                        </Grid>
+                                        </Grid>-->
                                     </Grid>
                                 </UniformGrid>
                             </ScrollViewer>
@@ -660,8 +817,9 @@
 
                                 <Button Grid.Column="0" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="0" HorizontalAlignment="Left" ToolTip="Back to Search"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
-                                <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Add to Map" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82"/>
-                                <Button Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Text" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Add to Map" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
+                                <Button Content="Save Edits" Grid.Column="2" Grid.Row="0" ToolTip="Save Edits" Command="{Binding SaveEditsCommand}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>
+                                <Button Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Text" HorizontalAlignment="Right" Margin="0,0,-26,0">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
                                     </Button.RenderTransform>
@@ -670,7 +828,7 @@
                             </Grid>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="Text" IsEnabled="{Binding IsStyleItemSelected}">
+                    <TabItem Header="Label" IsEnabled="{Binding IsStyleItemSelected}">
 
                         <Grid>
                             <Grid.RowDefinitions>
@@ -678,8 +836,8 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <UniformGrid Name="TextUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged" Grid.Row="0">
-                                <ScrollViewer Grid.Row="0">
+                            <ScrollViewer Grid.Row="0">
+                                <UniformGrid Name="TextUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -700,16 +858,17 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
                                         <Label Content="Date/Time Valid" Grid.Row="0" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}"/>
-                                        <xctk:DateTimePicker Grid.Row="0" Grid.Column="1" Margin="3,3,3,3" Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeValid}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}"/>
+                                        <xctk:DateTimePicker Grid.Row="0" Grid.Column="1" Margin="3,3,3,3" Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeValid}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}" DisplayDefaultValueOnEmptyText="False"/>
 
                                         <Label Content="Date/Time Expired" Grid.Row="1" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}"/>
-                                        <xctk:DateTimePicker  Grid.Row="1" Grid.Column="1" Margin="3,3,3,3" Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeExpired}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}"/>
+                                        <xctk:DateTimePicker  Grid.Row="1" Grid.Column="1" Margin="3,3,3,3" Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeExpired}" Format="Custom" FormatString="MMM-dd-yy hh:mm tt" Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}" DisplayDefaultValueOnEmptyText="False"/>
 
                                         <!--<Label Content="Location" Grid.Row="2" Grid.Column="0"/>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Width="170"/>-->
+                                    <TextBox Grid.Row="2" Grid.Column="1" Width="170"/>-->
 
                                         <Label Content="Type" Grid.Row="3" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding MilitaryFieldsInspectorModel.TypeFieldExists}"/>
                                         <TextBox Grid.Row="3" Grid.Column="1" Margin="3,3,3,3" Text="{Binding SymbolAttributeSet.LabelAttributes.Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding MilitaryFieldsInspectorModel.TypeFieldExists}"/>
@@ -771,20 +930,45 @@
                                                 </Style>
                                             </ComboBox.Style>
                                         </ComboBox>
-                                    </Grid>
-                                </ScrollViewer>
-                                <Grid Grid.Row="1">
-                                    <Image x:Name="textTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <Image.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
-                                                <MenuItem Header="Copy Image to Clipboard" Command="{Binding CopyImageToClipboardCommand}"/>
-                                            </ContextMenu>
-                                        </Image.ContextMenu>
-                                    </Image>
-                                </Grid>
-                            </UniformGrid>
 
+                                        <Label Content="Country Code" Grid.Row="13" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding ElementName=countryComboBox, Path=Visibility}"/>
+                                        <ComboBox Name="countryComboBox" Grid.Row="13" Grid.Column="1" Margin="3,3,3,3" ItemsSource="{Binding MilitaryFieldsInspectorModel.CountryCodeDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedCountryCodeDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+                                    </Grid>
+
+                                    <Grid Grid.Row="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Image x:Name="textTabSymbolImage" Grid.Row="0" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Image.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
+                                                    <MenuItem Header="Copy Image to Clipboard" Command="{Binding CopyImageToClipboardCommand}"/>
+                                                </ContextMenu>
+                                            </Image.ContextMenu>
+                                        </Image>
+
+                                        <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
+                                            <xctk:PropertyGrid.PropertyDefinitions>
+                                                <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
+                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
+                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
+                                            </xctk:PropertyGrid.PropertyDefinitions>
+                                        </xctk:PropertyGrid>
+                                    </Grid>
+                                </UniformGrid>
+                            </ScrollViewer>
                             <Grid Grid.Row="1">
 
                                 <Grid.ColumnDefinitions>
@@ -794,10 +978,11 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Grid.Column="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="2" HorizontalAlignment="Left" ToolTip="Back to Modify"/>
+                                <Button Grid.Column="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" HorizontalAlignment="Left" ToolTip="Back to Modify"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
-                                <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Add to Map"/>
-                                <Button Grid.Column="3" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Enter Coordinates" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Add to Map" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
+                                <Button Content="Save Edits" Grid.Column="2" Command="{Binding SaveEditsCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Save Edits" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>
+                                <Button Grid.Column="3" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="5" ToolTip="Enter Coordinates" HorizontalAlignment="Right" Margin="0,0,-26,0">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
                                     </Button.RenderTransform>
@@ -806,7 +991,7 @@
                         </Grid>
 
                     </TabItem>
-                    <TabItem Header="Enter Coordinates" IsEnabled="{Binding IsStyleItemSelected}">
+                    <TabItem Header="Enter Coordinates" IsEnabled="{Binding IsCoordinateTabEnabled}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
@@ -843,13 +1028,12 @@
 
                                     <!--<Button Grid.Row="2" Content="Get Location from Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding ActivateMapToolCommand}" Width="200"/>-->
 
-                                    <Button Grid.Row="2" Content="Add Coordinates to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddCoordinateToMapCommand}" CommandParameter="True" Width="175"/>
+                                        <Button Grid.Row="2" Content="Add Coordinates to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddCoordinateToMapCommand}" CommandParameter="True" Width="175" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
                                     <!--IsEnabled="{Binding CoordinateValid}"/>-->
                                 </Grid>
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
-                                        <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
@@ -862,10 +1046,18 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                    <!-- All Selected Symbol Tags-->
+                                        <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
+                                            <xctk:PropertyGrid.PropertyDefinitions>
+                                                <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
+                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
+                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
+                                            </xctk:PropertyGrid.PropertyDefinitions>
+                                        </xctk:PropertyGrid>
+
+                                        <!-- All Selected Symbol Tags-->
                                     <!--<TextBlock x:Name="selectedSymbolTagsTextBlock" Margin="10,0,10,10" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Stretch"/>-->
 
-                                    <Grid Grid.Row="1" Margin="0,10,0,0">
+                                    <!--<Grid Grid.Row="1" Margin="0,10,0,0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="*"/>
@@ -880,10 +1072,10 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <!--<Label Content="Set A" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
+                                        --><!--<Label Content="Set A" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
 
                                         <!--<Label Content="1" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="0" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>-->
+                                        <Label Content="0" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>--><!--
                                         <Label Content="{Binding ElementName=contextComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="{Binding ElementName=identityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
                                             <Label Content="{Binding SymbolAttributeSet.DisplayAttributes.SymbolSet, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
@@ -892,7 +1084,7 @@
                                         <Label Content="{Binding ElementName=tfFdHqComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="5" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
 
 
-                                        <!--<Label Content="Version" FontSize="10" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
+                                        --><!--<Label Content="Version" FontSize="10" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>--><!--
                                         <Label Content="Context" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="Identity" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
@@ -905,7 +1097,7 @@
                                         <Label Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
                                             <TextBlock Text="TF/FD/HQ" FontSize="10" TextWrapping="Wrap"/>
                                         </Label>
-                                        <!--<Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
+                                        --><!--<Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
                                             <TextBlock Text="Standard Identity" FontSize="10" TextWrapping="Wrap"/>
                                         </Label>-->
 
@@ -913,7 +1105,7 @@
 
                                         <!--<Label Grid.Column="6" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
                                             <TextBlock Text="Amplifier / Descriptor" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>-->
+                                        </Label>--><!--
 
                                     </Grid>
 
@@ -933,7 +1125,7 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <!--<Label Content="Set B" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
+                                        --><!--<Label Content="Set B" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>--><!--
                                         <Label Content="{Binding ElementName=operationalConditionAmplifierComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="{Binding ElementName=mobilityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="{Binding ElementName=echelonComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
@@ -942,7 +1134,7 @@
 
 
 
-                                        <!--<Label Content="12" FontSize="8" Grid.Column="0"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
+                                        --><!--<Label Content="12" FontSize="8" Grid.Column="0"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="12" FontSize="8" Grid.Column="1"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="13" FontSize="8" Grid.Column="2"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="14" FontSize="8" Grid.Column="3"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
@@ -951,7 +1143,7 @@
                                         <Label Content="17" FontSize="8" Grid.Column="6"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="18" FontSize="8" Grid.Column="7"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
                                         <Label Content="19" FontSize="8" Grid.Column="8"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="20" FontSize="8" Grid.Column="9"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
+                                        <Label Content="20" FontSize="8" Grid.Column="9"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>--><!--
                                         <Label Content="Operational" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
 
                                         <Label Content="Mobility" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
@@ -963,7 +1155,7 @@
                                             <TextBlock Text="Modifier 2" FontSize="10" TextWrapping="Wrap"/>
                                         </Label>
 
-                                    </Grid>
+                                    </Grid>-->
                                 </Grid>
                             </UniformGrid>
                             </ScrollViewer>
@@ -975,14 +1167,35 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Grid.Column="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Back to Text" HorizontalAlignment="Left"/>
+                                <Button Grid.Column="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Back to Text" HorizontalAlignment="Left"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
-                                <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="101" ToolTip="Add to Map"/>
+                                <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="101" ToolTip="Add to Map" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
+                                <Button Content="Save Edits" Grid.Column="2" Command="{Binding SaveEditsCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="101" ToolTip="Save Edits" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>                            
                             </Grid>
                         </Grid>
                     </TabItem>
 
                 </TabControl>
+
+                <Button Margin="5" Content="About" Cursor="Hand" Grid.Row="1" Command="{Binding ShowAboutWindowCommand}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <TextBlock TextDecorations="Underline">
+                                <ContentPresenter />
+                            </TextBlock>
+                        </ControlTemplate>
+                    </Button.Template>
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Foreground" Value="Blue" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="Foreground" Value="Red" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </Grid>
         </DockPanel>
     </Grid>
