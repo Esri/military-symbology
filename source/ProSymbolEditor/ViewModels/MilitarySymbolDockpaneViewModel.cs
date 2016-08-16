@@ -1188,7 +1188,7 @@ namespace ProSymbolEditor
             openFileDialog.Filter = "JSON Files (*.json)|*.json";
             if (openFileDialog.ShowDialog() == true)
             {
-                if (Path.GetExtension(openFileDialog.FileName).ToUpper() == "JSON")
+                if (Path.GetExtension(openFileDialog.FileName).ToUpper() == ".JSON")
                 {
                     string json = File.ReadAllText(openFileDialog.FileName);
 
