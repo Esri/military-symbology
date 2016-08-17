@@ -99,7 +99,7 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 			* Various values that will be saved into the feature are available for edit here. These values will appear around the symbol on the map.
 			* After you are finished populating any text values, you can click the next arrow button to go the last tab.
 		* The Enter Coordinates tab is the sixth tab:
-			* Coordinates can be entered in DD, DMS, DD, or other coordinate systems.
+			* Coordinates can be entered in DD, DMS, DD, MGRS, or [other coordinate systems] (https://github.com/Esri/coordinate-conversion-addin-dotnet#features).
 			* Once valid coordinates are entered, a button can be clicked to add a feature to those coordinates.
 			* Invalid coordinates will show with a red box around it.
 		* At any time/tab in this process, the "Add to Map" button, included on every tab, can be clicked to graphically add the feature to the map by clicking.
