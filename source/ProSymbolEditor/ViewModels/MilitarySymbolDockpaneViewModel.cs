@@ -1263,7 +1263,15 @@ namespace ProSymbolEditor
                 await QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "symbolset");
+
+                    if (symbolSetField == null) // then does not have required field
+                        return;
+ 
                     CodedValueDomain symbolSetDomain = symbolSetField.GetDomain() as CodedValueDomain;
+
+                    if (symbolSetDomain == null) // then field does not have domain (this should not normally happen)
+                        return;
+
                     SortedList<object, string> symbolSetDomainSortedList = symbolSetDomain.GetCodedValuePairs();
                     ArcGIS.Core.Data.Field symbolEntityField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "symbolentity");
                     CodedValueDomain symbolEntityDomain = symbolEntityField.GetDomain() as CodedValueDomain;
