@@ -49,7 +49,7 @@ namespace ProSymbolEditor
         private const string _dockPaneID = "ProSymbolEditor_MilitarySymbolDockpane";
         private const string _menuID = "ProSymbolEditor_MilitarySymbolDockpane_Menu";
 
-        private static string _milStandard
+        private static string MilitaryStyleName
         {
             get
             {
@@ -57,16 +57,47 @@ namespace ProSymbolEditor
             }
         }
 
-        private string _mil2525RelativePath
+        private string Mil2525RelativePath
         {
             get
             {
                 return @"Resources\Dictionaries\"
-             + _milStandard + Path.DirectorySeparatorChar + _milStandard + ".stylx";
+             + MilitaryStyleName + Path.DirectorySeparatorChar + MilitaryStyleName + ".stylx";
             }
         }
 
-        private string _mil2525StyleFullFilePath;
+        private string ProInstallPath
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_proInstallPath))
+                    return _proInstallPath;
+
+                //Get Military Symbol Style Install Path
+                _proInstallPath = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\ESRI\ArcGISPro\", "InstallDir", null);
+
+                if (string.IsNullOrEmpty(_proInstallPath))
+                {
+                    //Try to get the install path from current user instead of local machine
+                    _proInstallPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\ESRI\ArcGISPro\", "InstallDir", null);
+                }
+                return _proInstallPath;
+            }
+        }
+        private string _proInstallPath = string.Empty;
+
+        private string Mil2525StyleFullFilePath
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ProInstallPath))
+                {
+                    return Path.Combine(ProInstallPath, Mil2525RelativePath);
+                }
+
+                return "";
+            }
+        }
 
         private string _currentFeatureClassName = "";
         private string _favoritesFilePath = "";
@@ -115,21 +146,6 @@ namespace ProSymbolEditor
                 ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
             else
                 ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
-
-// TODO: move to getter - so lookup/style add still happens after startup when setting changed: 
-//Get Military Symbol Style Install Path
-            string installPath = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\ESRI\ArcGISPro\", "InstallDir", null);
-
-            if (installPath == null || installPath == "")
-            {
-                //Try to get the install path from current user instead of local machine
-                installPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\ESRI\ArcGISPro\", "InstallDir", null);
-            }
-
-            if (installPath != null)
-            {
-                _mil2525StyleFullFilePath = Path.Combine(installPath, _mil2525RelativePath);
-            }
 
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
@@ -791,7 +807,10 @@ if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil
                 Properties.Settings.Default.DefaultStandard = 
                     ProSymbolUtilities.GetStandardString(ProSymbolUtilities.Standard);
 
-                // TODO: enable save:
+                // Minor hack: reset this so standard change will force new Style lookup 
+                _militaryStyleItem = null;
+
+                // TODO: enable save (or do this in close/unload):
                 // Properties.Settings.Default.Save();
             }
         }
@@ -874,6 +893,11 @@ if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil
             //Make sure that military style is in project
             if (!IsStyleInProject() || _militaryStyleItem == null)
             {
+                if (!File.Exists(Mil2525StyleFullFilePath))
+                {
+                    ShowMilitaryStyleNotFoundMessageBox();
+                }
+
                 //Add military style to project
                 Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
                 _militaryStyleItem = await getMilitaryStyle;
@@ -1525,15 +1549,13 @@ else
         {
             if (Project.Current != null)
             {
-                await Project.Current.AddStyleAsync(_mil2525StyleFullFilePath);
+                await Project.Current.AddStyleAsync(Mil2525StyleFullFilePath);
 
                 //Get all styles in the project
                 var styles = Project.Current.GetItems<StyleProjectItem>();
 
                 //Get a specific style in the project
-                return styles.FirstOrDefault(x => x.Name == _milStandard); 
-
-                // "mil2525d");  // CSM Changed
+                return styles.FirstOrDefault(x => x.Name == MilitaryStyleName); 
             }
 
             return null;
@@ -1547,7 +1569,7 @@ else
 
                 foreach(StyleProjectItem projectStyle in projectStyles)
                 {
-                    if (projectStyle.Path == _mil2525StyleFullFilePath)
+                    if (projectStyle.Path == Mil2525StyleFullFilePath)
                     {
                         return true;
                     }
@@ -1909,11 +1931,21 @@ else
                     var nextTask = await Task.WhenAny(searchTasks);
                     var results = await nextTask;
                     searchTasks.Remove(nextTask);
+if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+{  
+// TODO: also include 2525C keys in search                                         
                     combinedSymbols.AddRange(results.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
                                                          (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse)) &&  
 // TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
 ((ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2) && !x.Tags.Contains("NEW_AT_2525D"))
                                                          ));
+}
+else // 2525D
+{
+                    combinedSymbols.AddRange(results.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
+                                                         (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))  
+                                                         ));
+}
                 }
 
                 _styleItems = combinedSymbols;
@@ -1963,11 +1995,18 @@ else
             return false;
         }
 
+        private void ShowMilitaryStyleNotFoundMessageBox()
+        {
+            string message = "The Required Military Style is not detected in Pro Install.";
+
+            MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+        }
+
         private void ShowAddInNotEnabledMessageBox()
         {
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
             {
-                string message = "The Military Overlay schema as not detected in any database in your project, so the Pro Symbol Editor cannot continue.  " +
+                string message = "The Military Overlay schema is not detected in any database in your project, so the Pro Symbol Editor cannot continue.  " +
                                  "Would you like to add the Military Overlay Layer Package to add the schema to your project?";
 
                 
