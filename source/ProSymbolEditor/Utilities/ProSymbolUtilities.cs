@@ -30,6 +30,30 @@ namespace ProSymbolEditor
 {
     public class ProSymbolUtilities
     {
+        public enum SupportedStandardsType { mil2525d, mil2525c_b2 };
+
+        public static SupportedStandardsType Standard
+        {
+            get;
+            set;
+        } = SupportedStandardsType.mil2525c_b2;
+
+        public static string StandardString
+        {
+            get
+            {
+                return GetStandardString(Standard);
+            }
+        }
+
+        public static string GetStandardString(SupportedStandardsType standardIn)
+        {
+            if (standardIn == SupportedStandardsType.mil2525c_b2)
+                return "2525C_B2";
+            else
+                return "2525D";
+        }
+
         public static BitmapImage BitMapToBitmapImage(System.Drawing.Bitmap source)
         {
             BitmapImage bitmapImage = new BitmapImage();

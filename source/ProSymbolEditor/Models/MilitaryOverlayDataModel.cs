@@ -36,34 +36,61 @@ namespace ProSymbolEditor
         {
             //Set up Feature Class Schema
             _featureClassExists = new Dictionary<string, bool>();
-            _featureClassExists.Add("Activities", false);
-            _featureClassExists.Add("Air", false);
-            _featureClassExists.Add("AirMissile", false);
-            _featureClassExists.Add("Civilian", false);
-            _featureClassExists.Add("ControlMeasuresAreas", false);
-            _featureClassExists.Add("ControlMeasuresLines", false);
-            _featureClassExists.Add("ControlMeasuresPoints", false);
-            _featureClassExists.Add("Cyberspace", false);
-            _featureClassExists.Add("Installations", false);
-            _featureClassExists.Add("LandEquipment", false);
-            _featureClassExists.Add("METOCAreasAtmospheric", false);
-            _featureClassExists.Add("METOCAreasOceanographic", false);
-            _featureClassExists.Add("METOCLinesAtmospheric", false);
-            _featureClassExists.Add("METOCLinesOceanographic", false);
-            _featureClassExists.Add("METOCPointsAtmospheric", false);
-            _featureClassExists.Add("METOCPointsOceanographic", false);
-            _featureClassExists.Add("MineWarfare", false);
-            _featureClassExists.Add("SeaSubsurface", false);
-            _featureClassExists.Add("SeaSurface", false);
-            _featureClassExists.Add("SIGINT", false);
-            _featureClassExists.Add("Space", false);
-            _featureClassExists.Add("SpaceMissile", false);
-            _featureClassExists.Add("Units", false);
 
             //Set up Fields to check
             _fieldsToCheck = new List<string>();
-            _fieldsToCheck.Add("symbolset");
-            _fieldsToCheck.Add("symbolentity");
+
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            {
+                // 2525c_b2
+                _featureClassExists.Add("Activities", false);
+                _featureClassExists.Add("Air", false);
+                _featureClassExists.Add("ControlMeasuresAreas", false);
+                _featureClassExists.Add("ControlMeasuresLines", false);
+                _featureClassExists.Add("ControlMeasuresPoints", false);
+                _featureClassExists.Add("Installations", false);
+                _featureClassExists.Add("LandEquipment", false);
+                _featureClassExists.Add("METOCAreas", false);
+                _featureClassExists.Add("METOCLines", false);
+                _featureClassExists.Add("METOCPoints", false);
+                _featureClassExists.Add("SeaSubsurface", false);
+                _featureClassExists.Add("SeaSurface", false);
+                _featureClassExists.Add("SIGINT", false);
+                _featureClassExists.Add("Space", false);
+                _featureClassExists.Add("Units", false);
+
+                _fieldsToCheck.Add("extendedfunctioncode");
+            }
+            else
+            { 
+                // 2525d
+                _featureClassExists.Add("Activities", false);
+                _featureClassExists.Add("Air", false);
+                _featureClassExists.Add("AirMissile", false);
+                _featureClassExists.Add("Civilian", false);
+                _featureClassExists.Add("ControlMeasuresAreas", false);
+                _featureClassExists.Add("ControlMeasuresLines", false);
+                _featureClassExists.Add("ControlMeasuresPoints", false);
+                _featureClassExists.Add("Cyberspace", false);
+                _featureClassExists.Add("Installations", false);
+                _featureClassExists.Add("LandEquipment", false);
+                _featureClassExists.Add("METOCAreasAtmospheric", false);
+                _featureClassExists.Add("METOCAreasOceanographic", false);
+                _featureClassExists.Add("METOCLinesAtmospheric", false);
+                _featureClassExists.Add("METOCLinesOceanographic", false);
+                _featureClassExists.Add("METOCPointsAtmospheric", false);
+                _featureClassExists.Add("METOCPointsOceanographic", false);
+                _featureClassExists.Add("MineWarfare", false);
+                _featureClassExists.Add("SeaSubsurface", false);
+                _featureClassExists.Add("SeaSurface", false);
+                _featureClassExists.Add("SIGINT", false);
+                _featureClassExists.Add("Space", false);
+                _featureClassExists.Add("SpaceMissile", false);
+                _featureClassExists.Add("Units", false);
+
+                _fieldsToCheck.Add("symbolset");
+                _fieldsToCheck.Add("symbolentity");
+            }
 
             _schemaExists = false;
         }
@@ -116,6 +143,9 @@ namespace ProSymbolEditor
                 {
                     foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
                     {
+                        if (gdbProjectItem.Name == "Map") // ignore the project Map GDB
+                            continue;
+
                         using (Datastore datastore = gdbProjectItem.GetDatastore())
                         {
                             //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore

@@ -44,8 +44,9 @@ namespace ProSymbolEditor
         public ObservableCollection<DomainCodedValuePair> ReliabilityDomainValues { get; set; }
 
         //Domains for attribute combo boxes
+
         public ObservableCollection<DomainCodedValuePair> IdentityDomainValues { get; set; }
-        public ObservableCollection<DomainCodedValuePair> EcholonDomainValues { get; set; }
+        public ObservableCollection<DomainCodedValuePair> EchelonDomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> StatusDomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> OperationalConditionAmplifierDomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> MobilityDomainValues { get; set; }
@@ -54,6 +55,7 @@ namespace ProSymbolEditor
         public ObservableCollection<DomainCodedValuePair> Modifier1DomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> Modifier2DomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> CountryCodeDomainValues { get; set; }
+        public ObservableCollection<DomainCodedValuePair> ExtendedFunctionCodeValues { get; set; }
 
         public Visibility DateTimeValidFieldExists
         {
@@ -179,8 +181,9 @@ namespace ProSymbolEditor
             ReinforcedDomainValues = new ObservableCollection<DomainCodedValuePair>();
             CredibilityDomainValues = new ObservableCollection<DomainCodedValuePair>();
             ReliabilityDomainValues = new ObservableCollection<DomainCodedValuePair>();
+            ExtendedFunctionCodeValues = new ObservableCollection<DomainCodedValuePair>();
             IdentityDomainValues = new ObservableCollection<DomainCodedValuePair>();
-            EcholonDomainValues = new ObservableCollection<DomainCodedValuePair>();
+            EchelonDomainValues = new ObservableCollection<DomainCodedValuePair>();
             StatusDomainValues = new ObservableCollection<DomainCodedValuePair>();
             OperationalConditionAmplifierDomainValues = new ObservableCollection<DomainCodedValuePair>();
             MobilityDomainValues = new ObservableCollection<DomainCodedValuePair>();
@@ -256,12 +259,24 @@ namespace ProSymbolEditor
             GetDomainAndPopulateList(fields, "reliability", ReliabilityDomainValues);
 
             //Get domains for attributes
-            GetDomainAndPopulateList(fields, "identity", IdentityDomainValues);
-            GetDomainAndPopulateList(fields, "echelon", EcholonDomainValues);
+
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            {
+                GetDomainAndPopulateList(fields, "affiliation", IdentityDomainValues);
+                GetDomainAndPopulateList(fields, "echelonmobility", EchelonDomainValues);
+                GetDomainAndPopulateList(fields, "extendedfunctioncode", ExtendedFunctionCodeValues);
+                GetDomainAndPopulateList(fields, "hqtffd", TfFdHqDomainValues);
+            }
+            else // 2525D
+            { 
+                GetDomainAndPopulateList(fields, "identity", IdentityDomainValues);
+                GetDomainAndPopulateList(fields, "echelon", EchelonDomainValues);
+                GetDomainAndPopulateList(fields, "indicator", TfFdHqDomainValues);
+            }
+
             GetDomainAndPopulateList(fields, "status", StatusDomainValues);
             GetDomainAndPopulateList(fields, "operationalcondition", OperationalConditionAmplifierDomainValues);
             GetDomainAndPopulateList(fields, "mobility", MobilityDomainValues);
-            GetDomainAndPopulateList(fields, "indicator", TfFdHqDomainValues);
             GetDomainAndPopulateList(fields, "context", ContextDomainValues);
             GetDomainAndPopulateList(fields, "modifier1", Modifier1DomainValues);
             GetDomainAndPopulateList(fields, "modifier2", Modifier2DomainValues);
