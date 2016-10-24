@@ -328,6 +328,7 @@
                                                 <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
                                                 <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
                                                 <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
+                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="3"/>
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
 
@@ -500,6 +501,7 @@
                                                 <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
                                                 <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
                                                 <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
+                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="3"/>
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
 

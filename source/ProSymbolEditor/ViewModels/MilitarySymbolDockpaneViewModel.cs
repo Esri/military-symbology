@@ -511,15 +511,17 @@ namespace ProSymbolEditor
                     _symbolAttributeSet.DisplayAttributes.SymbolSet = symbolIdCode[0];
                     _symbolAttributeSet.DisplayAttributes.SymbolEntity = symbolIdCode[1];
 
-SymbolAttributeSet loadSet = null;
-if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-{
-    string functionCode = symbolIdCode[2];
-    _symbolAttributeSet.DisplayAttributes.ExtendedFunctionCode = functionCode;
+                    SymbolAttributeSet loadSet = null;
 
-    loadSet = new SymbolAttributeSet();
-    loadSet.DisplayAttributes.ExtendedFunctionCode = functionCode;
-}
+                    // Set 2525C_B2 SIDC/attribute if applicable
+                    if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                    {
+                        string functionCode = symbolIdCode[2];
+                        _symbolAttributeSet.DisplayAttributes.ExtendedFunctionCode = functionCode;
+
+                        loadSet = new SymbolAttributeSet();
+                        loadSet.DisplayAttributes.ExtendedFunctionCode = functionCode;
+                    }
 
                     //Get feature class name to generate domains
                     _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(
@@ -704,6 +706,8 @@ if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil
         {
             get
             {
+                _symbolAttributeSet.StandardVersion = ProSymbolUtilities.StandardString;
+
                 return _symbolAttributeSet;
             }
         }
@@ -790,7 +794,7 @@ if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil
             aboutWindow.ShowDialog(FrameworkApplication.Current.MainWindow);
         }
 
-        private void ShowSettingsWindow(object parameter)
+        private async void ShowSettingsWindow(object parameter)
         {
             SettingsWindow settingsWindow = new SettingsWindow();
             settingsWindow.Checked2525D =
@@ -804,11 +808,25 @@ if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil
                 else
                     ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
 
-                Properties.Settings.Default.DefaultStandard = 
+                Properties.Settings.Default.DefaultStandard =
                     ProSymbolUtilities.GetStandardString(ProSymbolUtilities.Standard);
 
                 // Minor hack: reset this so standard change will force new Style lookup 
                 _militaryStyleItem = null;
+
+                // re-load the favorites
+                // HACK: (to get the preview to update based on current standard)
+                foreach (SymbolAttributeSet set in Favorites)
+                {
+                    set.GeneratePreviewSymbol();
+                }
+                // END HACK
+
+                _favoritesView.Refresh();
+
+                //Check for Schema again
+                Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+                bool enabled = await isEnabledMethod;
 
                 // TODO: enable save (or do this in close/unload):
                 // Properties.Settings.Default.Save();
@@ -1240,6 +1258,7 @@ if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil
         {
             //Create copy by serializing/deserializing
             SymbolAttributeSet.FavoriteId = Guid.NewGuid().ToString();
+
             var json = new JavaScriptSerializer().Serialize(SymbolAttributeSet);
             SymbolAttributeSet favoriteSet = new JavaScriptSerializer().Deserialize<SymbolAttributeSet>(json);
 

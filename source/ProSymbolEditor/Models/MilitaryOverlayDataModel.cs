@@ -29,70 +29,64 @@ namespace ProSymbolEditor
     {
         private bool _schemaExists;
         private string _databaseName;
-        private List<string> _fieldsToCheck;
-        private Dictionary<string, bool> _featureClassExists;
 
         public MilitaryOverlayDataModel()
         {
-            //Set up Feature Class Schema
-            _featureClassExists = new Dictionary<string, bool>();
+            _schemaExists = false;
+        }
 
-            //Set up Fields to check
-            _fieldsToCheck = new List<string>();
+        Dictionary<string, bool> GetFeatureClassExistsMap()
+        {
+            Dictionary<string, bool> featureClassExists = new Dictionary<string, bool>();
 
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
                 // 2525c_b2
-                _featureClassExists.Add("Activities", false);
-                _featureClassExists.Add("Air", false);
-                _featureClassExists.Add("ControlMeasuresAreas", false);
-                _featureClassExists.Add("ControlMeasuresLines", false);
-                _featureClassExists.Add("ControlMeasuresPoints", false);
-                _featureClassExists.Add("Installations", false);
-                _featureClassExists.Add("LandEquipment", false);
-                _featureClassExists.Add("METOCAreas", false);
-                _featureClassExists.Add("METOCLines", false);
-                _featureClassExists.Add("METOCPoints", false);
-                _featureClassExists.Add("SeaSubsurface", false);
-                _featureClassExists.Add("SeaSurface", false);
-                _featureClassExists.Add("SIGINT", false);
-                _featureClassExists.Add("Space", false);
-                _featureClassExists.Add("Units", false);
-
-                _fieldsToCheck.Add("extendedfunctioncode");
+                featureClassExists.Add("Activities", false);
+                featureClassExists.Add("Air", false);
+                featureClassExists.Add("ControlMeasuresAreas", false);
+                featureClassExists.Add("ControlMeasuresLines", false);
+                featureClassExists.Add("ControlMeasuresPoints", false);
+                featureClassExists.Add("Installations", false);
+                featureClassExists.Add("LandEquipment", false);
+                featureClassExists.Add("METOCAreas", false);
+                featureClassExists.Add("METOCLines", false);
+                featureClassExists.Add("METOCPoints", false);
+                featureClassExists.Add("SeaSubsurface", false);
+                featureClassExists.Add("SeaSurface", false);
+                featureClassExists.Add("SIGINT", false);
+                featureClassExists.Add("Space", false);
+                featureClassExists.Add("Units", false);
             }
             else
-            { 
+            {
                 // 2525d
-                _featureClassExists.Add("Activities", false);
-                _featureClassExists.Add("Air", false);
-                _featureClassExists.Add("AirMissile", false);
-                _featureClassExists.Add("Civilian", false);
-                _featureClassExists.Add("ControlMeasuresAreas", false);
-                _featureClassExists.Add("ControlMeasuresLines", false);
-                _featureClassExists.Add("ControlMeasuresPoints", false);
-                _featureClassExists.Add("Cyberspace", false);
-                _featureClassExists.Add("Installations", false);
-                _featureClassExists.Add("LandEquipment", false);
-                _featureClassExists.Add("METOCAreasAtmospheric", false);
-                _featureClassExists.Add("METOCAreasOceanographic", false);
-                _featureClassExists.Add("METOCLinesAtmospheric", false);
-                _featureClassExists.Add("METOCLinesOceanographic", false);
-                _featureClassExists.Add("METOCPointsAtmospheric", false);
-                _featureClassExists.Add("METOCPointsOceanographic", false);
-                _featureClassExists.Add("MineWarfare", false);
-                _featureClassExists.Add("SeaSubsurface", false);
-                _featureClassExists.Add("SeaSurface", false);
-                _featureClassExists.Add("SIGINT", false);
-                _featureClassExists.Add("Space", false);
-                _featureClassExists.Add("SpaceMissile", false);
-                _featureClassExists.Add("Units", false);
-
-                _fieldsToCheck.Add("symbolset");
-                _fieldsToCheck.Add("symbolentity");
+                featureClassExists.Add("Activities", false);
+                featureClassExists.Add("Air", false);
+                featureClassExists.Add("AirMissile", false);
+                featureClassExists.Add("Civilian", false);
+                featureClassExists.Add("ControlMeasuresAreas", false);
+                featureClassExists.Add("ControlMeasuresLines", false);
+                featureClassExists.Add("ControlMeasuresPoints", false);
+                featureClassExists.Add("Cyberspace", false);
+                featureClassExists.Add("Installations", false);
+                featureClassExists.Add("LandEquipment", false);
+                featureClassExists.Add("METOCAreasAtmospheric", false);
+                featureClassExists.Add("METOCAreasOceanographic", false);
+                featureClassExists.Add("METOCLinesAtmospheric", false);
+                featureClassExists.Add("METOCLinesOceanographic", false);
+                featureClassExists.Add("METOCPointsAtmospheric", false);
+                featureClassExists.Add("METOCPointsOceanographic", false);
+                featureClassExists.Add("MineWarfare", false);
+                featureClassExists.Add("SeaSubsurface", false);
+                featureClassExists.Add("SeaSurface", false);
+                featureClassExists.Add("SIGINT", false);
+                featureClassExists.Add("Space", false);
+                featureClassExists.Add("SpaceMissile", false);
+                featureClassExists.Add("Units", false);
             }
 
-            _schemaExists = false;
+            return featureClassExists;
         }
 
         public bool SchemaExists
@@ -109,19 +103,6 @@ namespace ProSymbolEditor
             {
                 return _databaseName;
             }
-        }
-
-        public bool IsSchemaComplete()
-        {
-            foreach(KeyValuePair<string,bool> pair in _featureClassExists)
-            {
-                if (pair.Value == false)
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         public async Task<bool> ShouldAddInBeEnabledAsync()
@@ -153,13 +134,32 @@ namespace ProSymbolEditor
                                 continue;
                             Geodatabase geodatabase = datastore as Geodatabase;
 
+                            //Set up Fields to check
+                            List<string> _fieldsToCheck = new List<string>();
+
+                            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                            {
+                                _fieldsToCheck.Add("extendedfunctioncode");
+                            }
+                            else
+                            {   // 2525d
+                                _fieldsToCheck.Add("symbolset");
+                                _fieldsToCheck.Add("symbolentity");
+                            }
+
                             //Reset schema data model to false
-                            _featureClassExists = _featureClassExists.ToDictionary(kvp => kvp.Key, kvp => false);
+                            // _featureClassExists = _featureClassExists.ToDictionary(kvp => kvp.Key, kvp => false);
+                            Dictionary<string, bool> _featureClassExists = GetFeatureClassExistsMap();
 
                             IReadOnlyList<FeatureClassDefinition> featureClassDefinitions = geodatabase.GetDefinitions<FeatureClassDefinition>();
 
+                            bool stopLooking = false;
                             foreach(FeatureClassDefinition featureClassDefinition in featureClassDefinitions)
                             {
+                                // stop looking after the first feature class not found
+                                if (stopLooking)
+                                    break;
+
                                 string featureClassName = featureClassDefinition.GetName();
 
                                 if (_featureClassExists.ContainsKey(featureClassName))
@@ -173,6 +173,8 @@ namespace ProSymbolEditor
                                         if (foundFields.Count() < 1)
                                         {
                                             fieldsExist = false;
+                                            stopLooking = true;
+                                            break;
                                         }
                                     }
 
@@ -184,8 +186,19 @@ namespace ProSymbolEditor
                                 }
                             }
 
+                            bool isSchemaComplete = true;
+       
+                            foreach (KeyValuePair<string, bool> pair in _featureClassExists)
+                            {
+                                if (pair.Value == false)
+                                {
+                                    isSchemaComplete =  false;
+                                    break;
+                                }
+                            }
+
                             //Check if schema is all there
-                            if (IsSchemaComplete())
+                            if (isSchemaComplete)
                             {
                                 //Save geodatabase path to use as the selected database
                                 _databaseName = geodatabase.GetPath();
