@@ -49,6 +49,22 @@ namespace ProSymbolEditor
         private const string _dockPaneID = "ProSymbolEditor_MilitarySymbolDockpane";
         private const string _menuID = "ProSymbolEditor_MilitarySymbolDockpane_Menu";
 
+        public string StatusMessage
+        {
+            get
+            {
+                return _statusMessage + 
+                    " (" + ProSymbolUtilities.StandardString.Replace('_','/') + ")";
+            }
+            set
+            {
+                _statusMessage = value;
+
+                NotifyPropertyChanged(() => StatusMessage);
+            }
+        }
+        private string _statusMessage;
+
         private static string MilitaryStyleName
         {
             get
@@ -147,6 +163,7 @@ namespace ProSymbolEditor
             else
                 ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
 
+            
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
                 //Add military style to project
@@ -440,7 +457,7 @@ namespace ProSymbolEditor
                 if (!ProSymbolEditorModule.Current.MilitaryOverlaySchema.SchemaExists && value != null)
                 {
 // TODO: Re-enable this:
-//                    ShowAddInNotEnabledMessageBox();
+                    ShowAddInNotEnabledMessageBox();
                     _selectedStyleItem = null;
                     return;
                 }
@@ -562,8 +579,18 @@ namespace ProSymbolEditor
 
                 if (_selectedSelectedFeature != null)
                 {
-                    MapView.Active.FlashFeature(_selectedSelectedFeature.FeatureLayer, _selectedSelectedFeature.ObjectId);
-                    CreateSymbolSetFromFieldValuesAsync();
+                    try
+                    {
+                        // TODO: there is an exception here when:
+                        // 1: Multiple Maps are open
+                        // 2: Trying to flash a feature that is selected on another map, that is not the active map
+                        MapView.Active.FlashFeature(_selectedSelectedFeature.FeatureLayer, _selectedSelectedFeature.ObjectId);
+                        CreateSymbolSetFromFieldValuesAsync();
+                    }
+                    catch (Exception exception)
+                    {
+                        System.Diagnostics.Debug.WriteLine(exception.ToString());
+                    }
                 }
                 else
                 {
@@ -824,12 +851,17 @@ namespace ProSymbolEditor
 
                 _favoritesView.Refresh();
 
+                // TODO/IMPORTANT: we will probably need to refresh all tabs.....
+
+                // Notify the user (and update this label)
+                StatusMessage = "Standard Changed";
+
                 //Check for Schema again
                 Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
                 bool enabled = await isEnabledMethod;
 
-                // TODO: enable save (or do this in close/unload):
-                // Properties.Settings.Default.Save();
+                // Save this settings (TODO: or do this in close/unload):
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -895,7 +927,7 @@ namespace ProSymbolEditor
                 }
                 catch (Exception exception)
                 {
-                    System.Console.WriteLine(exception.Message);
+                    System.Diagnostics.Debug.WriteLine(exception.ToString());
                 }
             });
 
@@ -1121,7 +1153,7 @@ namespace ProSymbolEditor
             }
             catch(Exception exception)
             {
-                Console.WriteLine(exception.Message);
+                System.Diagnostics.Debug.WriteLine(exception.ToString());
             }
         }
 
@@ -1956,7 +1988,7 @@ if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil
                     combinedSymbols.AddRange(results.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
                                                          (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse)) &&  
 // TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
-((ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2) && !x.Tags.Contains("NEW_AT_2525D"))
+(!x.Tags.Contains("NEW_AT_2525D"))
                                                          ));
 }
 else // 2525D
@@ -2025,10 +2057,11 @@ else // 2525D
         {
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
             {
-                string message = "The Military Overlay schema is not detected in any database in your project, so the Pro Symbol Editor cannot continue.  " +
-                                 "Would you like to add the Military Overlay Layer Package to add the schema to your project?";
-
-                
+                string message = "The " + ProSymbolUtilities.StandardString + 
+                    " Military Overlay schema is not detected in any database in your project," +
+                    " so the Pro Symbol Editor cannot continue." +
+                    " Would you like to add the Military Overlay Layer Package to add the schema to your project?";
+               
                 MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result.ToString() == "Yes")
                 { 
@@ -2052,7 +2085,9 @@ else // 2525D
 
                 await QueuedTask.Run(async () =>
                 {
-                    LayerFactory.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "Files", "MilitaryOverlay.lpkx")), MapView.Active.Map);
+                    // "MilitaryOverlay.lpkx"
+                    string layerFileName = "MilitaryOverlay-" + ProSymbolUtilities.StandardString.ToLower() + ".lpkx";
+                    LayerFactory.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
                     Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
                     bool enabled = await isEnabledMethod;
                     _progressDialog.Hide();

@@ -1237,6 +1237,9 @@
                         </Button.Style>
                     </Button>
                 </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                    <Label HorizontalAlignment="Right" Margin="0,0,10,0" Content="{Binding StatusMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
             </Grid>
         </DockPanel>
     </Grid>
