@@ -1,11 +1,11 @@
 ﻿<ArcGIS defaultAssembly="MilitarySymbolEditor.dll" defaultNamespace="ProSymbolEditor" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
-  <AddInInfo id="{4ff462b0-2910-47f3-b6fd-d1d17e5f7dfc}" version="1.1.0" desktopVersion="1.2.4950">
+  <AddInInfo id="{4ff462b0-2910-47f3-b6fd-d1d17e5f7dfc}" version="1.2.0" desktopVersion="1.2.4950">
     <Name>MilitarySymbolEditor</Name>
     <Description>A user-focused add-in for searching, creating, and editing military symbols in ArcGIS Pro.</Description>
     <Image>Images\AddinDesktop32.png</Image>
     <Author>Esri, Inc.</Author>
     <Company>Esri, Inc.</Company>
-    <Date>5/10/2016</Date>
+    <Date>10/26/2016</Date>
     <Subject>Editing, Map Authoring</Subject>
     <!-- Note subject can be one or more of these topics:
                     Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
@@ -28,7 +28,7 @@
       </groups>
       <controls>
         <!-- add your controls here -->
-        <button id="ProSymbolEditor_MilitarySymbolDockpane_ShowButton" caption="Military Symbol Designer " className="MilitarySymbolDockpane_ShowButton" loadOnClick="true" smallImage="Images\MIL-16x16.png" largeImage="Images\MIL-32x32.png">
+        <button id="ProSymbolEditor_MilitarySymbolDockpane_ShowButton" caption="Military Symbol Editor" className="MilitarySymbolDockpane_ShowButton" loadOnClick="true" smallImage="Images\MIL-16x16.png" largeImage="Images\MIL-32x32.png">
           <tooltip heading="Show Dockpane">Show Dockpane<disabledText /></tooltip>
         </button>
         <!--<button id="ProSymbolEditor_MilitarySymbolDockpane_MenuButton" caption="Burger Menu Button" className="MilitarySymbolDockpane_MenuButton" loadOnClick="true" smallImage="Images\GenericButtonPurple16.png" largeImage="Images\GenericButtonPurple32.png">
@@ -45,7 +45,7 @@
         </tool>
       </controls>
       <dockPanes>
-        <dockPane id="ProSymbolEditor_MilitarySymbolDockpane" caption="Military Symbol Designer" className="MilitarySymbolDockpaneViewModel" dock="group" dockWith="esri_core_contentsDockPane">
+        <dockPane id="ProSymbolEditor_MilitarySymbolDockpane" caption="Military Symbol Editor" className="MilitarySymbolDockpaneViewModel" dock="group" dockWith="esri_core_contentsDockPane">
           <content className="MilitarySymbolDockpaneView" />
         </dockPane>
       </dockPanes>
