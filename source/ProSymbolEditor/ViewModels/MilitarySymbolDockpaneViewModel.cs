@@ -1032,6 +1032,10 @@ namespace ProSymbolEditor
                                 }, featureClass);
 
                                 var task = editOperation.ExecuteAsync();
+
+                                // TODO/Potential Bug: 
+                                // if the operation fails (ex. for "spatial index invalid")
+                                // this method does not return:
                                 creationResult = task.Result;
                                 if (!creationResult)
                                 {
