@@ -14,14 +14,17 @@
  *   limitations under the License.
  ******************************************************************************/
 
-using ArcGIS.Core.Data;
-using ArcGIS.Desktop.Catalog;
-using ArcGIS.Desktop.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using ArcGIS.Core.Data;
+using ArcGIS.Desktop.Catalog;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Mapping;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 
 namespace ProSymbolEditor
 {
@@ -103,6 +106,58 @@ namespace ProSymbolEditor
             {
                 return _databaseName;
             }
+        }
+
+        private async Task<Geodatabase> GetGDBFromLayer(BasicFeatureLayer layer)
+        {
+            if (layer == null)
+                return null;
+
+            Geodatabase geodatabase = null;
+            await QueuedTask.Run(() => geodatabase = (layer.GetTable().GetDatastore() as Geodatabase));
+            return geodatabase;
+        }
+
+        public async Task<bool> IsGDBAndFeatureClassInActiveView(string featureClassName)
+        {
+            string activeGdbPath = DatabaseName;
+
+            IEnumerable<FeatureLayer> mapLayers = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>(); ;
+
+            bool isFeatureClassInActiveView = false;
+
+            await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(async () =>
+            {
+                foreach (var layer in mapLayers)
+                {
+                    string fcName = layer.GetFeatureClass().GetName();
+
+                    // GDB and View feature class name match?
+                    if (fcName == featureClassName)
+                    {
+                        Geodatabase geodatabase = await GetGDBFromLayer(layer);
+                        if (geodatabase == null)
+                        {
+                            isFeatureClassInActiveView = false;
+                        }
+                        else
+                        {
+                            string gdbPath = geodatabase.GetPath();
+
+                            // same GDB?
+                            if (gdbPath == activeGdbPath)
+                                isFeatureClassInActiveView = true;
+                            else
+                                isFeatureClassInActiveView = false;
+                        }
+                        break;
+                    }
+                }
+
+                return isFeatureClassInActiveView;
+            });
+
+            return isFeatureClassInActiveView;
         }
 
         public async Task<bool> ShouldAddInBeEnabledAsync()

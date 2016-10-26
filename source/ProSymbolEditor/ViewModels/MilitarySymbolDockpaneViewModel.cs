@@ -860,6 +860,9 @@ namespace ProSymbolEditor
                 Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
                 bool enabled = await isEnabledMethod;
 
+                if (!enabled)
+                    StatusMessage = "GDB Not Found";
+
                 // Save this settings (TODO: or do this in close/unload):
                 Properties.Settings.Default.Save();
             }
@@ -966,6 +969,11 @@ namespace ProSymbolEditor
             Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
             bool enabled = await isEnabledMethod;
 
+            if (enabled)
+                StatusMessage = ""; // TODO: add message
+            else
+                StatusMessage = "Addin Not Enabled";
+
             NotifyPropertyChanged(() => StyleItems);
         }
 
@@ -978,6 +986,25 @@ namespace ProSymbolEditor
         {
             string message = String.Empty;
             bool creationResult = false;
+
+            // WARNING HERE IF: the feature class is in the Project BUT *NOT* in Active Map/View
+
+            Task<bool> isLayerInActiveViewMethod =
+                ProSymbolEditorModule.Current.MilitaryOverlaySchema.IsGDBAndFeatureClassInActiveView(
+                    _currentFeatureClassName);
+            bool isLayerInActiveView = await isLayerInActiveViewMethod;
+
+            if (!isLayerInActiveView)
+            {
+                string warningMessage = "The required layer is not in the Active Map. " +
+                    " - Required Layer: " + _currentFeatureClassName +
+                    " in Project GDB: " + ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName;
+                Debug.WriteLine(warningMessage);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, "Could Not Create New Map Feature", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+                // Warning then return;
+                return;
+            }
 
             //Generate geometry if polygon or polyline, if adding new feature is from using coordinates and not the map tool
             if (Convert.ToBoolean(parameter) == true)
@@ -2059,19 +2086,19 @@ else // 2525D
 
         private void ShowAddInNotEnabledMessageBox()
         {
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
             {
-                string message = "The " + ProSymbolUtilities.StandardString + 
+                string message = "The " + ProSymbolUtilities.StandardString +
                     " Military Overlay schema is not detected in any database in your project," +
                     " so the Pro Symbol Editor cannot continue." +
                     " Would you like to add the Military Overlay Layer Package to add the schema to your project?";
-               
+
                 MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result.ToString() == "Yes")
-                { 
+                {
                     if (MapView.Active != null)
                     {
-                        AddLayerPackageToMapAsync();
+                        await AddLayerPackageToMapAsync();
                     }
                     else
                     {
@@ -2094,6 +2121,12 @@ else // 2525D
                     LayerFactory.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
                     Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
                     bool enabled = await isEnabledMethod;
+
+                    if (enabled)
+                        StatusMessage = "Military Layers Added";
+                    else
+                        StatusMessage = "Addin Not Enabled";
+
                     _progressDialog.Hide();
                 });
             }
