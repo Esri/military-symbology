@@ -24,9 +24,7 @@
         We can't figure out a way to look up from the DAML file - but the 3 versions - 
         DAML, Assembly, this label - should match
         -->
-        <TextBlock Grid.Row="1" Margin="5,0,0,0">
-            Version 1.2.0
-        </TextBlock>
+        <TextBlock x:Name="VersionBox" Grid.Row="1" Margin="5,0,0,0" Text="{Binding VersionString}"/>
         <TextBlock TextWrapping="Wrap" Grid.Row="2" Margin="10,5,5,5">
             The Military Symbol Editor is a tool for quickly creating military overlays in ArcGIS Pro using the Military Overlay template. 
             The tool is useful for searching, modifying attributes, and previewing military symbols. These military symbols can then be added 
