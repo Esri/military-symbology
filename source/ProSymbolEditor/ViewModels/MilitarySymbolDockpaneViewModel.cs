@@ -120,6 +120,7 @@ namespace ProSymbolEditor
         private FeatureClass _currentFeatureClass = null;
         private StyleProjectItem _militaryStyleItem = null;
         private SymbolStyleItem _selectedStyleItem = null;
+        private SymbolStyleItem _savedStyleItem = null;
         private SelectedFeature _selectedSelectedFeature = null;
         private SymbolAttributeSet _selectedFavoriteSymbol = null;
         private SymbolAttributeSet _editSelectedFeatureSymbol = null;
@@ -454,15 +455,14 @@ namespace ProSymbolEditor
                 if (_selectedStyleItem == value)
                     return;
 
+                _selectedStyleItem = value;
+
                 if (!ProSymbolEditorModule.Current.MilitaryOverlaySchema.SchemaExists && value != null)
                 {
-// TODO: Re-enable this:
+                    _savedStyleItem = _selectedStyleItem;
                     ShowAddInNotEnabledMessageBox();
-                    _selectedStyleItem = null;
                     return;
                 }
-
-                _selectedStyleItem = value;
 
                 if (_selectedStyleItem != null)
                 {
@@ -2086,6 +2086,8 @@ else // 2525D
 
         private void ShowAddInNotEnabledMessageBox()
         {
+            SelectedStyleItem = null;
+
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
             {
                 string message = "The " + ProSymbolUtilities.StandardString +
@@ -2099,11 +2101,22 @@ else // 2525D
                     if (MapView.Active != null)
                     {
                         await AddLayerPackageToMapAsync();
+                        // HACK: reselect this style item onced the layer package is added
+                        SelectedStyleItem = _savedStyleItem;
                     }
                     else
                     {
                         ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Your project does not contain any active map.  Create one and try again.");
                     }
+                }
+                else
+                {
+                    // Not sure why this didn't work:
+                    // Clear the search list
+                    // StyleItems.Clear();
+                    // NotifyPropertyChanged(() => StyleItems);
+                    // WORKAROUND:
+                    SearchString = "ADDIN NOT ENABLED";
                 }
             }));
         }
