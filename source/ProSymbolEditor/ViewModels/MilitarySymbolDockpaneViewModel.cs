@@ -163,10 +163,27 @@ namespace ProSymbolEditor
                 ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
             else
                 ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
-
-            
+  
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
+                // Somewhat tricky, see if the project has an existing standard, if see just see to that
+                Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
+                bool enabled = await isEnabledMethod;
+                if (enabled)
+                {
+                    ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                }
+                else
+                {
+                    Task<bool> isEnabledMethod2 = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
+                    bool enabled2 = await isEnabledMethod2;
+
+                    if (enabled2)
+                    {
+                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+                    }
+                }
+
                 //Add military style to project
                 Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
                 _militaryStyleItem = await getMilitaryStyle;
@@ -179,6 +196,7 @@ namespace ProSymbolEditor
                 this.SelectedTabIndex = 0;
                 this.ResultCount = "---";
                 this.SearchString = "";
+                this.StatusMessage = "";
                 _symbolAttributeSet.ResetAttributes();
                 SelectedStyleTags.Clear();
 
@@ -301,7 +319,9 @@ namespace ProSymbolEditor
             }
             set
             {
-                //SetProperty(ref _searchString, value, () => SearchString);
+                if (_searchString == value)
+                    return;
+
                 _searchString = value;
 
                 NotifyPropertyChanged(() => SearchString);
@@ -309,6 +329,15 @@ namespace ProSymbolEditor
                 if (_searchString.Length > 0)
                 {
                     SearchStylesAsync(null);
+                }
+                else
+                {
+                    // clear item list if search term cleared
+                    if (StyleItems.Count > 0)
+                    {
+                        StyleItems.Clear();
+                        NotifyPropertyChanged(() => StyleItems);
+                    }
                 }
             }
         }
@@ -827,44 +856,78 @@ namespace ProSymbolEditor
             settingsWindow.Checked2525D =
                 (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525d);
 
+            ProSymbolUtilities.SupportedStandardsType previousSettingStandard = ProSymbolUtilities.Standard;
+
             settingsWindow.ShowDialog(FrameworkApplication.Current.MainWindow);
             if (settingsWindow.DialogResult == true)
             {
+                ProSymbolUtilities.SupportedStandardsType newSettingStandard;
+
                 if (settingsWindow.Checked2525D == true)
-                    ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                    newSettingStandard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
                 else
-                    ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+                    newSettingStandard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
 
-                Properties.Settings.Default.DefaultStandard =
-                    ProSymbolUtilities.GetStandardString(ProSymbolUtilities.Standard);
-
-                // Minor hack: reset this so standard change will force new Style lookup 
-                _militaryStyleItem = null;
-
-                // re-load the favorites
-                // HACK: (to get the preview to update based on current standard)
-                foreach (SymbolAttributeSet set in Favorites)
+                // If standard has been changed
+                if (previousSettingStandard != newSettingStandard)
                 {
-                    set.GeneratePreviewSymbol();
+                    Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+                    bool enabledWithPreviousStandard = await isEnabledMethod;
+
+                    ProSymbolUtilities.Standard = newSettingStandard;
+
+                    // TODO/IMPORTANT: we will probably need to refresh all tabs.....
+
+                    //Check for Schema again
+                    Task<bool> isEnabledMethodAfterChange = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+                    bool enabledWithCurrentStandard = await isEnabledMethodAfterChange;
+
+                    if (enabledWithPreviousStandard && !enabledWithCurrentStandard)
+                    {
+                        // TRICKY: If Enabled with previous standard but not current, don't allow the switch
+                        // Adding new lpkx will not work
+                        string message = "Could not switch standard version. " +
+                            "The project already contains a GDB with Standard " +
+                            ProSymbolUtilities.GetStandardString(previousSettingStandard) +
+                            ". Please create a new project to use " + 
+                            ProSymbolUtilities.GetStandardString(newSettingStandard) + ".";
+                        MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Could Not Switch Standard Version", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+                        ProSymbolUtilities.Standard = previousSettingStandard;
+
+                        return;
+                    }
+                    else if (!enabledWithCurrentStandard)
+                    {
+                        StatusMessage = "GDB Not Found";
+                        SearchString = "ADDIN NOT ENABLED";
+                    }
+                    else
+                    {
+                        // clear any previous search
+                        StatusMessage = "Standard Changed";
+                        SearchString = "";
+                    }
+
+                    Properties.Settings.Default.DefaultStandard =
+                        ProSymbolUtilities.GetStandardString(ProSymbolUtilities.Standard);
+
+                    // Minor hack: reset this so standard change will force new Style lookup 
+                    _militaryStyleItem = null;
+
+                    // re-load the favorites
+                    // HACK: (to get the preview to update based on current standard)
+                    foreach (SymbolAttributeSet set in Favorites)
+                    {
+                        set.GeneratePreviewSymbol();
+                    }
+                    // END HACK
+
+                    _favoritesView.Refresh();
+
+                    // Save this settings (TODO: or do this in close/unload):
+                    Properties.Settings.Default.Save();
                 }
-                // END HACK
-
-                _favoritesView.Refresh();
-
-                // TODO/IMPORTANT: we will probably need to refresh all tabs.....
-
-                // Notify the user (and update this label)
-                StatusMessage = "Standard Changed";
-
-                //Check for Schema again
-                Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
-                bool enabled = await isEnabledMethod;
-
-                if (!enabled)
-                    StatusMessage = "GDB Not Found";
-
-                // Save this settings (TODO: or do this in close/unload):
-                Properties.Settings.Default.Save();
             }
         }
 
@@ -2016,11 +2079,12 @@ else
 if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
 {  
 // TODO: also include 2525C keys in search                                         
-                    combinedSymbols.AddRange(results.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
-                                                         (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse)) &&  
-// TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
-(!x.Tags.Contains("NEW_AT_2525D"))
-                                                         ));
+                    combinedSymbols.AddRange(results.Where(x =>
+                      (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
+                       ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
+                    // TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
+                    && (!x.Tags.Contains("NEW_AT_2525D"))
+                    ));
 }
 else // 2525D
 {

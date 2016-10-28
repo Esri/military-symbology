@@ -53,7 +53,15 @@ namespace ProSymbolEditor
 
         public string VersionString
         {
-            get { return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
+            get
+            {
+                // only use Major.Minor.Build numbers
+                string versionString = 
+                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." +
+                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString() + "." +
+                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build.ToString();
+                return versionString;
+            }
         }
 
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)

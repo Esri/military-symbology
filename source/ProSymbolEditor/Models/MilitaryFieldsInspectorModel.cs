@@ -268,7 +268,8 @@ namespace ProSymbolEditor
                 GetDomainAndPopulateList(fields, "hqtffd", TfFdHqDomainValues);
             }
             else // 2525D
-            { 
+            {
+                ExtendedFunctionCodeValues.Clear();
                 GetDomainAndPopulateList(fields, "identity", IdentityDomainValues);
                 GetDomainAndPopulateList(fields, "echelon", EchelonDomainValues);
                 GetDomainAndPopulateList(fields, "indicator", TfFdHqDomainValues);

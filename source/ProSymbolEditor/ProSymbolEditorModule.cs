@@ -60,13 +60,6 @@ namespace ProSymbolEditor
                 MilitaryOverlaySchema = new MilitaryOverlayDataModel();
             }
 
-            //Add project opened listener
-            ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
-            {
-                Task<bool> isEnabledMethod = MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
-                bool enabled = await isEnabledMethod;
-            });
-
             return base.Initialize();
         }
 

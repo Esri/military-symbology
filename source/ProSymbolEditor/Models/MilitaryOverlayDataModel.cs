@@ -38,11 +38,11 @@ namespace ProSymbolEditor
             _schemaExists = false;
         }
 
-        Dictionary<string, bool> GetFeatureClassExistsMap()
+        Dictionary<string, bool> GetFeatureClassExistsMap(ProSymbolUtilities.SupportedStandardsType standard)
         {
             Dictionary<string, bool> featureClassExists = new Dictionary<string, bool>();
 
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
                 // 2525c_b2
                 featureClassExists.Add("Activities", false);
@@ -162,6 +162,11 @@ namespace ProSymbolEditor
 
         public async Task<bool> ShouldAddInBeEnabledAsync()
         {
+            return await ShouldAddInBeEnabledAsync(ProSymbolUtilities.Standard);
+        }
+
+        public async Task<bool> ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType standard)
+        {
             _schemaExists = false;
 
             //If we can get the database, then enable the add-in
@@ -192,7 +197,7 @@ namespace ProSymbolEditor
                             //Set up Fields to check
                             List<string> _fieldsToCheck = new List<string>();
 
-                            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                            if (standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
                             {
                                 _fieldsToCheck.Add("extendedfunctioncode");
                             }
@@ -204,7 +209,7 @@ namespace ProSymbolEditor
 
                             //Reset schema data model to false
                             // _featureClassExists = _featureClassExists.ToDictionary(kvp => kvp.Key, kvp => false);
-                            Dictionary<string, bool> _featureClassExists = GetFeatureClassExistsMap();
+                            Dictionary<string, bool> _featureClassExists = GetFeatureClassExistsMap(standard);
 
                             IReadOnlyList<FeatureClassDefinition> featureClassDefinitions = geodatabase.GetDefinitions<FeatureClassDefinition>();
 
