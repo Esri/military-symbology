@@ -156,8 +156,25 @@ namespace ProSymbolEditor
         private bool _isEditing = false;
         private bool _isAddingNew = false;
 
-        protected MilitarySymbolDockpaneViewModel()
+        private void resetViewModelState()
         {
+            //Reset things
+            this.SelectedStyleItem = null;
+            this.IsStyleItemSelected = false;
+            this.IsFavoriteItemSelected = false;
+            this.StyleItems.Clear();
+            this.SelectedTabIndex = 0;
+            this.ResultCount = "---";
+            this.SearchString = "";
+            this.StatusMessage = "";
+            _symbolAttributeSet.ResetAttributes();
+            SelectedStyleTags.Clear();
+
+            _favoritesView.Refresh();
+        }
+
+    protected MilitarySymbolDockpaneViewModel()
+    {
             if (Properties.Settings.Default.DefaultStandard ==
                 ProSymbolUtilities.GetStandardString(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2))
                 ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
@@ -166,7 +183,7 @@ namespace ProSymbolEditor
   
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
-                // Somewhat tricky, see if the project has an existing standard, if see just see to that
+                // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
                 Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
                 bool enabled = await isEnabledMethod;
                 if (enabled)
@@ -189,17 +206,7 @@ namespace ProSymbolEditor
                 _militaryStyleItem = await getMilitaryStyle;
 
                 //Reset things
-                this.SelectedStyleItem = null;
-                this.IsStyleItemSelected = false;
-                this.IsFavoriteItemSelected = false;
-                this.StyleItems.Clear();
-                this.SelectedTabIndex = 0;
-                this.ResultCount = "---";
-                this.SearchString = "";
-                this.StatusMessage = "";
-                _symbolAttributeSet.ResetAttributes();
-                SelectedStyleTags.Clear();
-
+                resetViewModelState();
             });
 
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
@@ -686,6 +693,9 @@ namespace ProSymbolEditor
 
                 _editSelectedFeatureSymbol = value;
 
+                if (_editSelectedFeatureSymbol != null)
+                    _editSelectedFeatureSymbol.StandardVersion = ProSymbolUtilities.StandardString;
+
                 //Load into editing???
 
                 NotifyPropertyChanged(() => EditSelectedFeatureSymbol);
@@ -871,12 +881,13 @@ namespace ProSymbolEditor
                 // If standard has been changed
                 if (previousSettingStandard != newSettingStandard)
                 {
+                    // Reset everything when standard changed
+                    resetViewModelState();
+
                     Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
                     bool enabledWithPreviousStandard = await isEnabledMethod;
 
                     ProSymbolUtilities.Standard = newSettingStandard;
-
-                    // TODO/IMPORTANT: we will probably need to refresh all tabs.....
 
                     //Check for Schema again
                     Task<bool> isEnabledMethodAfterChange = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
@@ -899,14 +910,11 @@ namespace ProSymbolEditor
                     }
                     else if (!enabledWithCurrentStandard)
                     {
-                        StatusMessage = "GDB Not Found";
-                        SearchString = "ADDIN NOT ENABLED";
+                        StatusMessage = "Addin Not Enabled";
                     }
                     else
                     {
-                        // clear any previous search
                         StatusMessage = "Standard Changed";
-                        SearchString = "";
                     }
 
                     Properties.Settings.Default.DefaultStandard =
@@ -916,14 +924,18 @@ namespace ProSymbolEditor
                     _militaryStyleItem = null;
 
                     // re-load the favorites
-                    // HACK: (to get the preview to update based on current standard)
+                    // HACKS:
+                    // HACK 1: to get the preview to update based on current standard)
                     foreach (SymbolAttributeSet set in Favorites)
                     {
                         set.GeneratePreviewSymbol();
                     }
-                    // END HACK
-
-                    _favoritesView.Refresh();
+                    // HACK 2:
+                    // StyleItems list update was not updating the view
+                    // Force the tab to be redrawn to workaround the issue
+                    SelectedTabIndex = 1;
+                    SelectedTabIndex = 0;
+                    // END HACKS
 
                     // Save this settings (TODO: or do this in close/unload):
                     Properties.Settings.Default.Save();
@@ -1012,11 +1024,14 @@ namespace ProSymbolEditor
                 if (!File.Exists(Mil2525StyleFullFilePath))
                 {
                     ShowMilitaryStyleNotFoundMessageBox();
+                    return;
                 }
-
-                //Add military style to project
-                Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
-                _militaryStyleItem = await getMilitaryStyle;
+                else
+                {
+                    //Add military style to project
+                    Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
+                    _militaryStyleItem = await getMilitaryStyle;
+                }
             }
 
             //Clear for new search
@@ -1353,7 +1368,7 @@ namespace ProSymbolEditor
                 SymbolAttributeSet.DisplayAttributes.SymbolSet = loadSet.DisplayAttributes.SymbolSet;
                 SymbolAttributeSet.DisplayAttributes.SymbolEntity = loadSet.DisplayAttributes.SymbolEntity;
 
- SymbolAttributeSet.DisplayAttributes.ExtendedFunctionCode = loadSet.DisplayAttributes.ExtendedFunctionCode;
+                SymbolAttributeSet.DisplayAttributes.ExtendedFunctionCode = loadSet.DisplayAttributes.ExtendedFunctionCode;
 
                 _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(
                     _symbolAttributeSet.DisplayAttributes, GeometryType);
@@ -1377,6 +1392,9 @@ namespace ProSymbolEditor
                 SymbolAttributeSet.LabelAttributes.AdditionalInformation = loadSet.LabelAttributes.AdditionalInformation;
                 SymbolAttributeSet.LabelAttributes.HigherFormation = loadSet.LabelAttributes.HigherFormation;
                 SymbolAttributeSet.SymbolTags = loadSet.SymbolTags;
+
+                SymbolAttributeSet.StandardVersion = ProSymbolUtilities.StandardString;
+
             }
         }
 
@@ -1692,6 +1710,12 @@ else
 
         private async Task<StyleProjectItem> GetMilitaryStyleAsync()
         {
+            if (!File.Exists(Mil2525StyleFullFilePath))
+            {
+                ShowMilitaryStyleNotFoundMessageBox();
+                return null;
+            }
+
             if (Project.Current != null)
             {
                 await Project.Current.AddStyleAsync(Mil2525StyleFullFilePath);
@@ -2143,7 +2167,8 @@ else // 2525D
 
         private void ShowMilitaryStyleNotFoundMessageBox()
         {
-            string message = "The Required Military Style is not detected in Pro Install.";
+            string message = "The Required Military Style (" + ProSymbolUtilities.StandardString +
+                ") is not detected in Pro Install.";
 
             MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
@@ -2165,7 +2190,7 @@ else // 2525D
                     if (MapView.Active != null)
                     {
                         await AddLayerPackageToMapAsync();
-                        // HACK: reselect this style item onced the layer package is added
+                        // Reselect this style item onced the layer package is added
                         SelectedStyleItem = _savedStyleItem;
                     }
                     else
