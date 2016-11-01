@@ -39,7 +39,7 @@
             </Hyperlink>
         </TextBlock>
         <TextBlock Grid.Row="5" Margin="10,0,0,0">
-            <Hyperlink NavigateUri="http://solutions.arcgis.com/defense/templates/military-overlay-information-model/" RequestNavigate="Hyperlink_RequestNavigate">
+            <Hyperlink NavigateUri="http://esriurl.com/MilitaryOverlayInformationModel" RequestNavigate="Hyperlink_RequestNavigate">
                 Military Overlay Information Model
             </Hyperlink>
         </TextBlock>
