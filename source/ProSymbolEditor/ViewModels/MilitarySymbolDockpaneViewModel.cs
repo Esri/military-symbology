@@ -169,36 +169,47 @@ namespace ProSymbolEditor
             this.StatusMessage = "";
             _symbolAttributeSet.ResetAttributes();
             SelectedStyleTags.Clear();
+            SelectedFeaturesCollection.Clear();
+            SelectedSelectedFeature = null;
+
+            // reset this so standard change will force new Style lookup:
+            _militaryStyleItem = null;
 
             _favoritesView.Refresh();
         }
 
-    protected MilitarySymbolDockpaneViewModel()
-    {
+        private void setStandardFromSettings()
+        {
             if (Properties.Settings.Default.DefaultStandard ==
-                ProSymbolUtilities.GetStandardString(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2))
+                    ProSymbolUtilities.GetStandardString(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2))
                 ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
             else
                 ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
-  
+        }
+
+        protected MilitarySymbolDockpaneViewModel()
+        {
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
                 // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
                 Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
-                bool enabled = await isEnabledMethod;
-                if (enabled)
+                bool enabled2525D = await isEnabledMethod;
+
+                Task<bool> isEnabledMethod2 = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
+                bool enabled2525C_B2 = await isEnabledMethod2;
+
+                // However, if both standards in project (or neither) - use the default setting
+                if ((enabled2525D && enabled2525C_B2) ||
+                    (!enabled2525D && !enabled2525C_B2))
                 {
-                    ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                    setStandardFromSettings();
                 }
                 else
                 {
-                    Task<bool> isEnabledMethod2 = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
-                    bool enabled2 = await isEnabledMethod2;
-
-                    if (enabled2)
-                    {
+                    if (enabled2525D)
+                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                    else
                         ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
-                    }
                 }
 
                 //Add military style to project
@@ -881,19 +892,14 @@ namespace ProSymbolEditor
                 // If standard has been changed
                 if (previousSettingStandard != newSettingStandard)
                 {
-                    // Reset everything when standard changed
-                    resetViewModelState();
-
                     Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
                     bool enabledWithPreviousStandard = await isEnabledMethod;
 
-                    ProSymbolUtilities.Standard = newSettingStandard;
-
                     //Check for Schema again
-                    Task<bool> isEnabledMethodAfterChange = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
-                    bool enabledWithCurrentStandard = await isEnabledMethodAfterChange;
+                    Task<bool> isEnabledMethodAfterChange = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(newSettingStandard);
+                    bool enabledWithNewStandard = await isEnabledMethodAfterChange;
 
-                    if (enabledWithPreviousStandard && !enabledWithCurrentStandard)
+                    if (enabledWithPreviousStandard && !enabledWithNewStandard)
                     {
                         // TRICKY: If Enabled with previous standard but not current, don't allow the switch
                         // Adding new lpkx will not work
@@ -904,11 +910,9 @@ namespace ProSymbolEditor
                             ProSymbolUtilities.GetStandardString(newSettingStandard) + ".";
                         MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Could Not Switch Standard Version", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
-                        ProSymbolUtilities.Standard = previousSettingStandard;
-
                         return;
                     }
-                    else if (!enabledWithCurrentStandard)
+                    else if (!enabledWithNewStandard)
                     {
                         StatusMessage = "Addin Not Enabled";
                     }
@@ -917,11 +921,10 @@ namespace ProSymbolEditor
                         StatusMessage = "Standard Changed";
                     }
 
-                    Properties.Settings.Default.DefaultStandard =
-                        ProSymbolUtilities.GetStandardString(ProSymbolUtilities.Standard);
+                    ProSymbolUtilities.Standard = newSettingStandard;
 
-                    // Minor hack: reset this so standard change will force new Style lookup 
-                    _militaryStyleItem = null;
+                    // Reset everything when standard changed
+                    resetViewModelState();
 
                     // re-load the favorites
                     // HACKS:
@@ -938,6 +941,8 @@ namespace ProSymbolEditor
                     // END HACKS
 
                     // Save settings (or TODO: or do this in close/unload):
+                    Properties.Settings.Default.DefaultStandard =
+                        ProSymbolUtilities.GetStandardString(ProSymbolUtilities.Standard);
                     Properties.Settings.Default.Save();
                 }
             }
@@ -1394,7 +1399,6 @@ namespace ProSymbolEditor
                 SymbolAttributeSet.SymbolTags = loadSet.SymbolTags;
 
                 SymbolAttributeSet.StandardVersion = ProSymbolUtilities.StandardString;
-
             }
         }
 
@@ -1523,67 +1527,19 @@ namespace ProSymbolEditor
 
             foreach (KeyValuePair<BasicFeatureLayer, List<long>> kvp in selectedFeatures)
             {
+
+                string symbolSetFieldName = "symbolset";
+                string symbolEntityFieldName = "symbolentity";
+
+                if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                {
+                    symbolSetFieldName = "extendedfunctioncode";
+                    symbolEntityFieldName = ""; // not used
+                }
+
                 await QueuedTask.Run(() =>
                 {
-
-// TODO: Cleanup
-if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-{
-    ArcGIS.Core.Data.Field extendedFunctionCodeField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "extendedfunctioncode");
-    if (extendedFunctionCodeField == null) // then does not have required field
-    {
-        if (!warnedOnce) // only issue this warning once 
-        { 
-            ShowMilitaryFeatureNotFoundMessageBox();
-            warnedOnce = true;
-        }                  
-        return;
-    }
-
-    CodedValueDomain extendedFunctionCodeDomain = extendedFunctionCodeField.GetDomain() as CodedValueDomain;
-    if (extendedFunctionCodeDomain == null) // then field does not have domain
-        return;
-
-    SortedList<object, string> extendedFunctionCodeDomainSortedList = extendedFunctionCodeDomain.GetCodedValuePairs();
-
-    foreach (long id in kvp.Value)
-    {
-        //Query for field values
-
-        string oidFieldName = kvp.Key.GetTable().GetDefinition().GetObjectIDField();
-        QueryFilter queryFilter = new QueryFilter();
-        queryFilter.WhereClause = string.Format("{0} = {1}", oidFieldName, id);
-        RowCursor cursor = kvp.Key.Search(queryFilter);
-        Row row = null;
-
-        if (cursor.MoveNext())
-        {
-            row = cursor.Current;
-        }
-
-        if (row != null)
-        {
-            SelectedFeature newSelectedFeature = new SelectedFeature(kvp.Key, id);
-                            
-            foreach(KeyValuePair<object, string> extendedFunctionCodeKeyValuePair in extendedFunctionCodeDomainSortedList)
-            {
-                if (extendedFunctionCodeKeyValuePair.Key.ToString() == row["extendedfunctioncode"].ToString())
-                {
-                    newSelectedFeature.ExtendedFunctionCode = extendedFunctionCodeKeyValuePair.Value;
-                    break;
-                }
-            }
-
-            SelectedFeaturesCollection.Add(newSelectedFeature);
-
-        }
-    }
-
-}
-else
-{ 
-
-                    ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "symbolset");
+                    ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == symbolSetFieldName);
                     if (symbolSetField == null) // then does not have required field
                     {
                         if (!warnedOnce) // only issue this warning once 
@@ -1599,9 +1555,17 @@ else
                         return;
 
                     SortedList<object, string> symbolSetDomainSortedList = symbolSetDomain.GetCodedValuePairs();
-                    ArcGIS.Core.Data.Field symbolEntityField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "symbolentity");
-                    CodedValueDomain symbolEntityDomain = symbolEntityField.GetDomain() as CodedValueDomain;
-                    SortedList<object, string> symbolEntityDomainSortedList = symbolEntityDomain.GetCodedValuePairs();
+
+                    ArcGIS.Core.Data.Field symbolEntityField = null;
+                    SortedList<object, string> symbolEntityDomainSortedList = null;
+
+                    if (!string.IsNullOrEmpty(symbolEntityFieldName))
+                    {
+                        symbolEntityField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == symbolEntityFieldName);
+                        CodedValueDomain symbolEntityDomain = symbolEntityField.GetDomain() as CodedValueDomain;
+                        if (symbolEntityDomain != null)
+                            symbolEntityDomainSortedList = symbolEntityDomain.GetCodedValuePairs();
+                    }
 
                     foreach (long id in kvp.Value)
                     {
@@ -1624,27 +1588,29 @@ else
                             
                             foreach(KeyValuePair<object, string> symbolSetKeyValuePair in symbolSetDomainSortedList)
                             {
-                                if (symbolSetKeyValuePair.Key.ToString() == row["symbolset"].ToString())
+                                if (symbolSetKeyValuePair.Key.ToString() == row[symbolSetFieldName].ToString())
                                 {
                                     newSelectedFeature.SymbolSetName = symbolSetKeyValuePair.Value;
                                     break;
                                 }
                             }
 
-                            foreach (KeyValuePair<object, string> symbolEntityKeyValuePair in symbolEntityDomainSortedList)
+                            if (!string.IsNullOrEmpty(symbolEntityFieldName) && 
+                                (symbolEntityDomainSortedList !=null))
                             {
-                                if (symbolEntityKeyValuePair.Key.ToString() == row["symbolentity"].ToString())
+                                foreach (KeyValuePair<object, string> symbolEntityKeyValuePair in symbolEntityDomainSortedList)
                                 {
-                                    newSelectedFeature.EntityName = symbolEntityKeyValuePair.Value;
-                                    break;
+                                    if (symbolEntityKeyValuePair.Key.ToString() == row[symbolEntityFieldName].ToString())
+                                    {
+                                        newSelectedFeature.EntityName = symbolEntityKeyValuePair.Value;
+                                        break;
+                                    }
                                 }
                             }
 
                             SelectedFeaturesCollection.Add(newSelectedFeature);
                         }
-
-                    }
-} // if Standard == mil2525c_b2
+                    } // for each id
                 });
             }
 

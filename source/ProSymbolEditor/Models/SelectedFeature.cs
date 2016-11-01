@@ -31,7 +31,6 @@ namespace ProSymbolEditor
         public long ObjectId { get; set; }
         public string SymbolSetName { get; set; }
         public string EntityName { get; set; }
-        public string ExtendedFunctionCode { get; set; }
 
         public SelectedFeature() { }
 
