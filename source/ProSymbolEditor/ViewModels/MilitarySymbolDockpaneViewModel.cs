@@ -937,7 +937,7 @@ namespace ProSymbolEditor
                     SelectedTabIndex = 0;
                     // END HACKS
 
-                    // Save this settings (TODO: or do this in close/unload):
+                    // Save settings (or TODO: or do this in close/unload):
                     Properties.Settings.Default.Save();
                 }
             }
@@ -1516,8 +1516,11 @@ namespace ProSymbolEditor
             if (selectedFeatures.Count < 1)
                 return;
 
-            //TODO:  Further filter features so it only contains ones that are in layers that are in the military schema
+            // TODO:  Further filter features so it only contains ones that are in layers that are in the military schema
+            // Just warn the user for now 
             SelectedFeaturesCollection.Clear();
+            bool warnedOnce = false;
+
             foreach (KeyValuePair<BasicFeatureLayer, List<long>> kvp in selectedFeatures)
             {
                 await QueuedTask.Run(() =>
@@ -1528,7 +1531,14 @@ if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil
 {
     ArcGIS.Core.Data.Field extendedFunctionCodeField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "extendedfunctioncode");
     if (extendedFunctionCodeField == null) // then does not have required field
+    {
+        if (!warnedOnce) // only issue this warning once 
+        { 
+            ShowMilitaryFeatureNotFoundMessageBox();
+            warnedOnce = true;
+        }                  
         return;
+    }
 
     CodedValueDomain extendedFunctionCodeDomain = extendedFunctionCodeField.GetDomain() as CodedValueDomain;
     if (extendedFunctionCodeDomain == null) // then field does not have domain
@@ -1575,7 +1585,14 @@ else
 
                     ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "symbolset");
                     if (symbolSetField == null) // then does not have required field
+                    {
+                        if (!warnedOnce) // only issue this warning once 
+                        {
+                            ShowMilitaryFeatureNotFoundMessageBox();
+                            warnedOnce = true;
+                        }
                         return;
+                    }
 
                     CodedValueDomain symbolSetDomain = symbolSetField.GetDomain() as CodedValueDomain;
                     if (symbolSetDomain == null) // then field does not have domain
@@ -1603,22 +1620,6 @@ else
 
                         if (row != null)
                         {
-// CSM - Removed unused code:
-                            //GeometryType geometryType = ArcGIS.Core.Geometry.GeometryType.Point;
-
-                            //if (kvp.Key.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPolygon)
-                            //{
-                            //    geometryType = ArcGIS.Core.Geometry.GeometryType.Polygon;
-                            //}
-                            //else if (kvp.Key.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPoint)
-                            //{
-                            //    geometryType = ArcGIS.Core.Geometry.GeometryType.Point;
-                            //}
-                            //else if (kvp.Key.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPolyline)
-                            //{
-                            //    geometryType = ArcGIS.Core.Geometry.GeometryType.Polyline;
-                            //}
-
                             SelectedFeature newSelectedFeature = new SelectedFeature(kvp.Key, id);
                             
                             foreach(KeyValuePair<object, string> symbolSetKeyValuePair in symbolSetDomainSortedList)
@@ -1643,7 +1644,7 @@ else
                         }
 
                     }
-}
+} // if Standard == mil2525c_b2
                 });
             }
 
@@ -2163,6 +2164,15 @@ else // 2525D
             }
 
             return false;
+        }
+
+        private void ShowMilitaryFeatureNotFoundMessageBox()
+        {
+            string message = "The Selected Feature does not seem to be a Military Feature or " +
+                "does not match the Military Standard in use (" + ProSymbolUtilities.StandardString +
+                ").";
+
+            MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Invalid Selection", MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
         private void ShowMilitaryStyleNotFoundMessageBox()

@@ -22,7 +22,7 @@
         </WrapPanel>
     </StackPanel>
     <StackPanel Margin="5 5 5 5" Grid.Row="1" VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-        <Button Margin="10 0 0 0" x:Name="ok" Click="OkClick" Content="Ok" IsDefault="True" Width="70" />
+        <Button Margin="10 0 0 0" x:Name="ok" Click="OkClick" Content="OK" IsDefault="True" Width="70" />
         <Button Margin="10 0 0 0" Content="Cancel" IsCancel="True" Width="70" />
     </StackPanel>
     </Grid>
