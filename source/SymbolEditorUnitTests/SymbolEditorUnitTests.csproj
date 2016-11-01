@@ -78,7 +78,9 @@
     <Reference Include="ArcGIS.Desktop.Mapping">
       <HintPath>C:\Program Files\ArcGIS\Pro\bin\Extensions\Mapping\ArcGIS.Desktop.Mapping.dll</HintPath>
     </Reference>
-    <Reference Include="CoordinateToolLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="CoordinateConversionLibrary">
+      <HintPath>..\ProSymbolEditor\Dependencies\Coordinate Library\CoordinateConversionLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>

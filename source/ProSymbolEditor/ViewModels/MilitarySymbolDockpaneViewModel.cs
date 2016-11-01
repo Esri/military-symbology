@@ -36,7 +36,7 @@ using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Catalog;
-using CoordinateToolLibrary.Models;
+using CoordinateConversionLibrary.Models;
 using Microsoft.Win32;
 using System.Web.Script.Serialization;
 using System.Windows.Threading;
@@ -1346,7 +1346,8 @@ namespace ProSymbolEditor
                         PointCoordinateVisibility = Visibility.Visible;
                         PolyCoordinateVisibility = Visibility.Collapsed;
                     }
-                    else if (SelectedSelectedFeature.FeatureLayer.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryLine)
+                    else if ((SelectedSelectedFeature.FeatureLayer.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryLine) ||
+                        (SelectedSelectedFeature.FeatureLayer.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPolyline))
                     {
                         GeometryType = GeometryType.Polyline;
                         PointCoordinateVisibility = Visibility.Collapsed;

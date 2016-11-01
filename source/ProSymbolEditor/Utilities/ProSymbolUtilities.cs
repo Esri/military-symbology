@@ -22,7 +22,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using CoordinateToolLibrary.Models;
+using CoordinateConversionLibrary.Models;
 using ArcGIS.Desktop.Mapping;
 using System.Threading.Tasks;
 

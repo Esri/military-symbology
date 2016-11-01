@@ -38,9 +38,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoordinateToolLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependencies\Coordinate Library\CoordinateToolLibrary.dll</HintPath>
+    <Reference Include="CoordinateConversionLibrary">
+      <HintPath>Dependencies\Coordinate Library\CoordinateConversionLibrary.dll</HintPath>
     </Reference>
     <Reference Include="MilitarySymbols, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

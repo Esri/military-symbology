@@ -49,6 +49,8 @@ namespace ProSymbolEditor
 
             LabelAttributes = new LabelAttributes();
 
+            StandardVersion = ProSymbolUtilities.StandardString;
+
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
                 if (fieldValues.ContainsKey("extendedfunctioncode"))
