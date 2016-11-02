@@ -1079,8 +1079,12 @@ namespace ProSymbolEditor
 
             if (!isLayerInActiveView)
             {
+                string requiredLayerName = _currentFeatureClassName;
+                if (string.IsNullOrEmpty(requiredLayerName))
+                    requiredLayerName = "{Layer Not Found}";
+
                 string warningMessage = "The required layer is not in the Active Map. " +
-                    " - Required Layer: " + _currentFeatureClassName +
+                    " - Required Layer: " + requiredLayerName +
                     " in Project GDB: " + ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName;
                 Debug.WriteLine(warningMessage);
                 ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, "Could Not Create New Map Feature", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -2068,22 +2072,24 @@ namespace ProSymbolEditor
                     var nextTask = await Task.WhenAny(searchTasks);
                     var results = await nextTask;
                     searchTasks.Remove(nextTask);
-if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-{  
-// TODO: also include 2525C keys in search                                         
-                    combinedSymbols.AddRange(results.Where(x =>
-                      (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
-                       ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
-                    // TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
-                    && (!x.Tags.Contains("NEW_AT_2525D"))
-                    ));
-}
-else // 2525D
-{
-                    combinedSymbols.AddRange(results.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
-                                                         (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))  
-                                                         ));
-}
+
+                    // Change style query based on current standard
+                    if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                    {  
+                    // TODO: also include 2525C keys in search                                         
+                                        combinedSymbols.AddRange(results.Where(x =>
+                                          (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
+                                           ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
+                                        // TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
+                                        && (!x.Tags.Contains("NEW_AT_2525D"))
+                                        ));
+                    }
+                    else // 2525D
+                    {
+                                        combinedSymbols.AddRange(results.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
+                                            (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))  
+                                            ));
+                    }
                 }
 
                 _styleItems = combinedSymbols;
