@@ -175,6 +175,12 @@ namespace ProSymbolEditor
             // reset this so standard change will force new Style lookup:
             _militaryStyleItem = null;
 
+            // re-load the favorites
+            foreach (SymbolAttributeSet set in Favorites)
+            {
+                set.GeneratePreviewSymbol();
+            }
+
             _favoritesView.Refresh();
         }
 
@@ -575,7 +581,7 @@ namespace ProSymbolEditor
                     _symbolAttributeSet.DisplayAttributes.SymbolSet = symbolIdCode[0];
                     _symbolAttributeSet.DisplayAttributes.SymbolEntity = symbolIdCode[1];
 
-                    SymbolAttributeSet loadSet = null;
+                    SymbolAttributeSet loadSet = new SymbolAttributeSet();
 
                     // Set 2525C_B2 SIDC/attribute if applicable
                     if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
@@ -583,7 +589,6 @@ namespace ProSymbolEditor
                         string functionCode = symbolIdCode[2];
                         _symbolAttributeSet.DisplayAttributes.ExtendedFunctionCode = functionCode;
 
-                        loadSet = new SymbolAttributeSet();
                         loadSet.DisplayAttributes.ExtendedFunctionCode = functionCode;
                     }
 
@@ -926,19 +931,12 @@ namespace ProSymbolEditor
                     // Reset everything when standard changed
                     resetViewModelState();
 
-                    // re-load the favorites
-                    // HACKS:
-                    // HACK 1: to get the preview to update based on current standard)
-                    foreach (SymbolAttributeSet set in Favorites)
-                    {
-                        set.GeneratePreviewSymbol();
-                    }
-                    // HACK 2:
+                    // HACK:
                     // StyleItems list update was not updating the view
                     // Force the tab to be redrawn to workaround the issue
                     SelectedTabIndex = 1;
                     SelectedTabIndex = 0;
-                    // END HACKS
+                    // END HACK
 
                     // Save settings (or TODO: or do this in close/unload):
                     Properties.Settings.Default.DefaultStandard =
