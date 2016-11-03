@@ -55,7 +55,9 @@ namespace ProSymbolEditor
         {
             get
             {
-                // only use Major.Minor.Build numbers
+                // NOTE: We can't figure out a way to look this up from the DAML file
+                // but the 3 versions - DAML, Assembly, and this label/string - should match
+                // Only use Major.Minor.Build numbers (not Revision)
                 string versionString = 
                     System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." +
                     System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString() + "." +

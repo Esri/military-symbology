@@ -255,9 +255,6 @@ namespace ProSymbolEditor
 
             System.Drawing.Bitmap exportBitmap;
 
-
-            // Utilities.ConvertCodeCharlieToDelta()
-
             bool success = Utilities.ExportSymbolFromAttributes(attributeSet, out exportBitmap, exportSize);
 
             if (success && exportBitmap != null)
