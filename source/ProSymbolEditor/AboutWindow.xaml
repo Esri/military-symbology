@@ -19,9 +19,7 @@
         <TextBlock Grid.Row="0" FontSize="14" Margin="5,0,0,0">
             Military Symbol Editor
         </TextBlock>
-        <TextBlock Grid.Row="1" Margin="5,0,0,0">
-            Version 1.1.0
-        </TextBlock>
+        <TextBlock x:Name="VersionBox" Grid.Row="1" Margin="5,0,0,0" Text="{Binding VersionString}"/>
         <TextBlock TextWrapping="Wrap" Grid.Row="2" Margin="10,5,5,5">
             The Military Symbol Editor is a tool for quickly creating military overlays in ArcGIS Pro using the Military Overlay template. 
             The tool is useful for searching, modifying attributes, and previewing military symbols. These military symbols can then be added 
@@ -36,7 +34,7 @@
             </Hyperlink>
         </TextBlock>
         <TextBlock Grid.Row="5" Margin="10,0,0,0">
-            <Hyperlink NavigateUri="http://solutions.arcgis.com/defense/templates/military-overlay-information-model/" RequestNavigate="Hyperlink_RequestNavigate">
+            <Hyperlink NavigateUri="http://esriurl.com/MilitaryOverlayInformationModel" RequestNavigate="Hyperlink_RequestNavigate">
                 Military Overlay Information Model
             </Hyperlink>
         </TextBlock>

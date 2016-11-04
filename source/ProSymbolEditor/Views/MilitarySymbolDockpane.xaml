@@ -213,7 +213,7 @@
 
                                 <Button Content="Add Favorite" Grid.Column="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
                                 <ToggleButton Name="searchAddToMapButton" Grid.Column="1" Content="Add to Map" IsEnabled="{Binding IsStyleItemSelected}" IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}" Command="{Binding ActivateAddToMapToolCommand}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" ToolTip="Add to Map" HorizontalAlignment="Center" Width="90" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
-                                <Button x:Name="modifyButton" Grid.Column="2" IsEnabled="{Binding IsStyleItemSelected}" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Go to Modify Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                <Button x:Name="modifyButton" Grid.Column="2" IsEnabled="{Binding IsStyleItemSelected}" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Go to Symbol Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
                                     </Button.RenderTransform>
@@ -328,6 +328,7 @@
                                                 <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
                                                 <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
                                                 <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
+                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="3"/>
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
 
@@ -347,7 +348,7 @@
 
                                 <!--<Button Content="Add Favorite" Grid.Column="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>-->
                                 <!--<ToggleButton Name="searchAddToMapButton" Grid.Column="1" Content="Add to Map" IsEnabled="{Binding IsStyleItemSelected}" IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}" Command="{Binding ActivateAddToMapToolCommand}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" ToolTip="Add to Map" HorizontalAlignment="Center" Width="90"/>-->
-                                <Button Grid.Column="2" IsEnabled="{Binding IsStyleItemSelected}" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Go to Modify Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                <Button Grid.Column="2" IsEnabled="{Binding IsStyleItemSelected}" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Go to Symbol Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
                                     </Button.RenderTransform>
@@ -500,6 +501,7 @@
                                                 <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
                                                 <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
                                                 <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
+                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="3"/>
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
 
@@ -519,7 +521,7 @@
                                 <Button Grid.Column="0" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="0" HorizontalAlignment="Left" ToolTip="Back to Search"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="81" Visibility="Collapsed"/>
                                 <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Add to Map" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
-                                <Button Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="New Symbol" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                <Button Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Go to Symbol Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
                                     </Button.RenderTransform>
@@ -617,7 +619,7 @@
                                         <!-- Echelon or Mobility -->
 
                                         <Label Content="Echelon" Margin="5,5,5,5" Grid.Column="0" Grid.Row="4" Visibility="{Binding ElementName=echelonComboBox, Path=Visibility}"/>
-                                        <ComboBox x:Name="echelonComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.EcholonDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedEchelonDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4">
+                                        <ComboBox x:Name="echelonComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.EchelonDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedEchelonDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -686,6 +688,23 @@
                                                 </Style>
                                             </ComboBox.Style>
                                         </ComboBox>
+
+                                        <!-- Extended Function Code (2525C_B2 Only) -->
+                                        <Label Content="Function" Margin="5,5,5,5" Grid.Column="0" Grid.Row="5" Visibility="{Binding ElementName=extendedFunctionCodeComboBox, Path=Visibility}"/>
+                                        <ComboBox x:Name="extendedFunctionCodeComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="5" ItemsSource="{Binding MilitaryFieldsInspectorModel.ExtendedFunctionCodeValues}" 
+                                                  DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedExtendedFunctionCodeDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  ToolTip="{Binding Path=SelectedItem.Name, RelativeSource={RelativeSource Self}}">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="HasItems" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+
                                     </Grid>
 
 
@@ -710,6 +729,7 @@
                                                 <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
                                                 <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
                                                 <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
+                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="3"/>
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
 
@@ -819,7 +839,7 @@
                                 <Button Content="Add Favorite" Grid.Column="1" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
                                 <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Add to Map" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
                                 <Button Content="Save Edits" Grid.Column="2" Grid.Row="0" ToolTip="Save Edits" Command="{Binding SaveEditsCommand}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>
-                                <Button Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Text" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                <Button Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Go to Label Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
                                     </Button.RenderTransform>
@@ -978,7 +998,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Grid.Column="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" HorizontalAlignment="Left" ToolTip="Back to Modify"/>
+                                <Button Grid.Column="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" HorizontalAlignment="Left" ToolTip="Back to Symbol"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
                                 <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Add to Map" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
                                 <Button Content="Save Edits" Grid.Column="2" Command="{Binding SaveEditsCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Save Edits" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>
@@ -1167,7 +1187,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Grid.Column="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Back to Text" HorizontalAlignment="Left"/>
+                                <Button Grid.Column="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Back to Label" HorizontalAlignment="Left"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
                                 <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="101" ToolTip="Add to Map" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
                                 <Button Content="Save Edits" Grid.Column="2" Command="{Binding SaveEditsCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="101" ToolTip="Save Edits" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>                            
@@ -1177,25 +1197,49 @@
 
                 </TabControl>
 
-                <Button Margin="5" Content="About" Cursor="Hand" Grid.Row="1" Command="{Binding ShowAboutWindowCommand}">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <TextBlock TextDecorations="Underline">
+                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                    <Button Margin="5" Content="About" Cursor="Hand" Command="{Binding ShowAboutWindowCommand}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <TextBlock TextDecorations="Underline">
                                 <ContentPresenter />
-                            </TextBlock>
-                        </ControlTemplate>
-                    </Button.Template>
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Foreground" Value="Blue" />
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="true">
-                                    <Setter Property="Foreground" Value="Red" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
+                                </TextBlock>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Foreground" Value="Blue" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="true">
+                                        <Setter Property="Foreground" Value="Red" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Margin="5" Content="Settings" Cursor="Hand" Command="{Binding ShowSettingsWindowCommand}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <TextBlock TextDecorations="Underline">
+                                <ContentPresenter />
+                                </TextBlock>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Foreground" Value="Blue" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="true">
+                                        <Setter Property="Foreground" Value="Red" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                    <Label HorizontalAlignment="Right" Margin="0,0,10,0" Content="{Binding StatusMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
             </Grid>
         </DockPanel>
     </Grid>

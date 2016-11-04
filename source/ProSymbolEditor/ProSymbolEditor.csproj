@@ -38,12 +38,12 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoordinateToolLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependencies\Coordinate Library\CoordinateToolLibrary.dll</HintPath>
+    <Reference Include="CoordinateConversionLibrary">
+      <HintPath>Dependencies\Coordinate Library\CoordinateConversionLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="MilitarySymbols">
-      <HintPath>Dependencies\MilitarySymbols\debug\MilitarySymbols.dll</HintPath>
+    <Reference Include="MilitarySymbols, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependencies\MilitarySymbols\MilitarySymbols.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -115,6 +115,14 @@
     <Compile Include="Models\SymbolSetMapping.cs" />
     <Compile Include="Models\SymbolSetMappings.cs" />
     <Compile Include="Models\MilitaryFieldsInspectorModel.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Views\MilitarySymbolDockpane.xaml.cs">
       <DependentUpon>MilitarySymbolDockpane.xaml</DependentUpon>
@@ -126,6 +134,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -11533,11 +11545,23 @@
     </Content>
     <Resource Include="Images\SelectionSelectTool16.png" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="Files\MilitaryOverlay.lpkx">
+    <Content Include="LayerFiles\MilitaryOverlay-2525d.lpkx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <Content Include="Data\LegacyMappingTableCtoD.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LayerFiles\MilitaryOverlay-2525c_b2.lpkx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.PackageAddIn" />
