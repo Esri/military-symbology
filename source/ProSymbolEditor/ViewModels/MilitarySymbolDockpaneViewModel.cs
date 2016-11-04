@@ -932,7 +932,9 @@ namespace ProSymbolEditor
                     resetViewModelState();
 
                     // HACK:
-                    // StyleItems list update was not updating the view
+                    // StyleItems list update was not updating the view, 
+                    // not sure why this bound property is not updating the UI
+                    // TODO: test switching this to an ObservableCollection
                     // Force the tab to be redrawn to workaround the issue
                     SelectedTabIndex = 1;
                     SelectedTabIndex = 0;
@@ -1515,6 +1517,13 @@ namespace ProSymbolEditor
 
         private async void OnMapSelectionChanged(ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEventArgs args)
         {
+            // Only allow selection event if addin enabled
+            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+            bool enabled = await isEnabledMethod;
+
+            if (!enabled)
+                return;
+
             //Get the selected features from the map and filter out the standalone table selection.
             var selectedFeatures = args.Selection
               .Where(kvp => kvp.Key is BasicFeatureLayer)

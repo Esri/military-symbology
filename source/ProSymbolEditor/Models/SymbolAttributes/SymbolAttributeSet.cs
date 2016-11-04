@@ -78,7 +78,13 @@ namespace ProSymbolEditor
                 }
                 if (fieldValues.ContainsKey("symbolset"))
                 {
-                    DisplayAttributes.SymbolSet = fieldValues["symbolset"];
+                    // Tricky symbolset string expected to be len 2 - fixes bug with "01" "02" "05" symbol sets
+                    string symbolSetValue = fieldValues["symbolset"];
+                    if (!string.IsNullOrEmpty(symbolSetValue))
+                    {
+                        string paddedSymbolSet = symbolSetValue.PadLeft(2, '0');
+                        DisplayAttributes.SymbolSet = paddedSymbolSet;
+                    }
                 }
 
                 if (fieldValues.ContainsKey("symbolentity"))
