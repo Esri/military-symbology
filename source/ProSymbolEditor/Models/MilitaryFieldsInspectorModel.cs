@@ -295,18 +295,21 @@ namespace ProSymbolEditor
             {
                 Domain domain = foundField.GetDomain();
                 var codedValueDomain = domain as CodedValueDomain;
-                SortedList<object, string> codedValuePairs = codedValueDomain.GetCodedValuePairs();
-
-                foreach (KeyValuePair<object, string> pair in codedValuePairs)
+                if (codedValueDomain != null)
                 {
-                    DomainCodedValuePair domainObjectPair = new DomainCodedValuePair(pair.Key, pair.Value);
-                    memberCodedValueDomains.Add(domainObjectPair);
-                }
+                    SortedList<object, string> codedValuePairs = codedValueDomain.GetCodedValuePairs();
 
-                if (orderbyName)
-                {
-                    //Order the collection alphabetically by the names, rather than the default by the code
-                    memberCodedValueDomains.Sort();
+                    foreach (KeyValuePair<object, string> pair in codedValuePairs)
+                    {
+                        DomainCodedValuePair domainObjectPair = new DomainCodedValuePair(pair.Key, pair.Value);
+                        memberCodedValueDomains.Add(domainObjectPair);
+                    }
+
+                    if (orderbyName)
+                    {
+                        //Order the collection alphabetically by the names, rather than the default by the code
+                        memberCodedValueDomains.Sort();
+                    }
                 }
             }
         }
