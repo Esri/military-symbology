@@ -18,7 +18,7 @@
         <Label Content="Default _Symbology Standard:"/>
         <WrapPanel>
             <RadioButton GroupName="standardgroup" IsChecked="{Binding Path=Checked2525D,Mode=TwoWay}" Content="MIL-STD-2525D" Margin="3"/>
-            <RadioButton GroupName="standardgroup" IsChecked="{Binding Path=Checked2525C_B2,Mode=TwoWay}" Content="MIL-STD-2525C/B Change 2" Margin="3"/>
+            <RadioButton GroupName="standardgroup" IsChecked="{Binding Path=Checked2525C_B2,Mode=TwoWay}" Content="MIL-STD-2525B Change 2" Margin="3"/>
         </WrapPanel>
     </StackPanel>
     <StackPanel Margin="5 5 5 5" Grid.Row="1" VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">

@@ -46,6 +46,22 @@ namespace ProSymbolEditor
             }
         }
 
+        public static string StandardLabel
+        {
+            get
+            {
+                return GetStandardLabel(Standard);
+            }
+        }
+
+        public static string GetStandardLabel(SupportedStandardsType standardIn)
+        {           
+            if (standardIn == SupportedStandardsType.mil2525d)
+                return "2525D";
+            else
+                return "2525B";
+        }
+
         public static string GetStandardString(SupportedStandardsType standardIn)
         {
             if (standardIn == SupportedStandardsType.mil2525c_b2)

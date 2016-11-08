@@ -54,7 +54,7 @@ namespace ProSymbolEditor
             get
             {
                 return _statusMessage + 
-                    " (" + ProSymbolUtilities.StandardString.Replace('_','/') + ")";
+                    " (" + ProSymbolUtilities.StandardLabel + ")";
             }
             set
             {
@@ -910,9 +910,9 @@ namespace ProSymbolEditor
                         // Adding new lpkx will not work
                         string message = "Could not switch standard version. " +
                             "The project already contains a GDB with Standard " +
-                            ProSymbolUtilities.GetStandardString(previousSettingStandard) +
+                            ProSymbolUtilities.GetStandardLabel(previousSettingStandard) +
                             ". Please create a new project to use " + 
-                            ProSymbolUtilities.GetStandardString(newSettingStandard) + ".";
+                            ProSymbolUtilities.GetStandardLabel(newSettingStandard) + ".";
                         MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Could Not Switch Standard Version", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
                         return;
@@ -1416,6 +1416,9 @@ namespace ProSymbolEditor
             SymbolAttributeSet favoriteSet = new JavaScriptSerializer().Deserialize<SymbolAttributeSet>(json);
 
             //Add to favorites
+            if (favoriteSet == null) // nothing to do
+                return;
+
             favoriteSet.GeneratePreviewSymbol();
             Favorites.Add(favoriteSet);
 
@@ -2149,7 +2152,7 @@ namespace ProSymbolEditor
         private void ShowMilitaryFeatureNotFoundMessageBox()
         {
             string message = "The Selected Feature does not seem to be a Military Feature or " +
-                "does not match the Military Standard in use (" + ProSymbolUtilities.StandardString +
+                "does not match the Military Standard in use (" + ProSymbolUtilities.StandardLabel +
                 ").";
 
             MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Invalid Selection", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -2169,7 +2172,7 @@ namespace ProSymbolEditor
 
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
             {
-                string message = "The " + ProSymbolUtilities.StandardString +
+                string message = "The " + ProSymbolUtilities.StandardLabel +
                     " Military Overlay schema is not detected in any database in your project," +
                     " so the Pro Symbol Editor cannot continue." +
                     " Would you like to add the Military Overlay Layer Package to add the schema to your project?";
@@ -2208,7 +2211,7 @@ namespace ProSymbolEditor
 
                 await QueuedTask.Run(async () =>
                 {
-                    // "MilitaryOverlay.lpkx"
+                    // "MilitaryOverlay-{standard}.lpkx"
                     string layerFileName = "MilitaryOverlay-" + ProSymbolUtilities.StandardString.ToLower() + ".lpkx";
                     LayerFactory.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
                     Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
