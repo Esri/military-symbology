@@ -36,7 +36,7 @@ namespace ProSymbolEditor
         {
             get;
             set;
-        } = SupportedStandardsType.mil2525c_b2;
+        }
 
         public static string StandardString
         {
