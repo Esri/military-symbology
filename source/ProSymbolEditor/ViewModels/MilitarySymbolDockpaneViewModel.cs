@@ -1409,22 +1409,36 @@ namespace ProSymbolEditor
 
         private void SaveSymbolAsFavorite(object parameter)
         {
-            //Create copy by serializing/deserializing
-            SymbolAttributeSet.FavoriteId = Guid.NewGuid().ToString();
+            try
+            {
+                // If it is not a valid or exportable symbol error+return
+                if ((SymbolAttributeSet == null) || !SymbolAttributeSet.IsValid)
+                {
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The current favorite is not valid.", 
+                    "Invalid Favorite", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    return;
+                }
 
-            var json = new JavaScriptSerializer().Serialize(SymbolAttributeSet);
-            SymbolAttributeSet favoriteSet = new JavaScriptSerializer().Deserialize<SymbolAttributeSet>(json);
+                SymbolAttributeSet.FavoriteId = Guid.NewGuid().ToString();
+                //Create copy by serializing/deserializing
+                var json = new JavaScriptSerializer().Serialize(SymbolAttributeSet);
+                SymbolAttributeSet favoriteSet = new JavaScriptSerializer().Deserialize<SymbolAttributeSet>(json);
 
-            //Add to favorites
-            if (favoriteSet == null) // nothing to do
-                return;
+                //Add to favorites
+                if (favoriteSet == null) // should not happen
+                    throw new Exception("Could not create Favorite");
 
-            favoriteSet.GeneratePreviewSymbol();
-            Favorites.Add(favoriteSet);
+                favoriteSet.GeneratePreviewSymbol();
+                Favorites.Add(favoriteSet);
 
-            //Serialize Favorites and save to file
-            var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
-            File.WriteAllText(_favoritesFilePath, favoritesJson);
+                //Serialize Favorites and save to file
+                var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
+                File.WriteAllText(_favoritesFilePath, favoritesJson);
+            }
+            catch (Exception ex)
+            {
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Unable to add the current favorite. Message: " + ex.Message);
+            }
         }
 
         private void DeleteFavoriteSymbol(object parameter)
