@@ -215,6 +215,22 @@ namespace ProSymbolEditor
 
         public string SymbolTags { get; set; }
 
+        public bool IsValid
+        {
+            get
+            {
+                if (DisplayAttributes == null)
+                    return false;
+
+                // Check any properties that indicate this object is not initialized/valid
+                if (string.IsNullOrEmpty(DisplayAttributes.SymbolSet) &&
+                    string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode))
+                    return false;
+
+                return true;
+            }
+        }
+
         [ScriptIgnore]
         public BitmapImage SymbolImage
         {
