@@ -17,7 +17,7 @@
 using System.ComponentModel;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Contracts;
-using CoordinateToolLibrary.Models;
+using CoordinateConversionLibrary.Models;
 
 namespace ProSymbolEditor
 {

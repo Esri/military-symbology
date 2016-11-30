@@ -77,18 +77,29 @@ namespace SymbolEditorUnitTests
         {
 
             SymbolSetMappings symbolSetMappings = new SymbolSetMappings();
-            string featureClassName = symbolSetMappings.GetFeatureClassFromMapping("01", GeometryType.Point);
+            string featureClassName = symbolSetMappings.GetFeatureClassFromSymbolSet("01", GeometryType.Point);
             Assert.IsTrue(featureClassName == "Air", "Feature Class from mapping is incorrect");
 
-            featureClassName = symbolSetMappings.GetFeatureClassFromMapping("40", GeometryType.Point);
+            featureClassName = symbolSetMappings.GetFeatureClassFromSymbolSet("40", GeometryType.Point);
             Assert.IsTrue(featureClassName == "Activities", "Feature Class from mapping is incorrect");
 
-            featureClassName = symbolSetMappings.GetFeatureClassFromMapping("60", GeometryType.Point);
+            featureClassName = symbolSetMappings.GetFeatureClassFromSymbolSet("60", GeometryType.Point);
             Assert.IsTrue(featureClassName == "Cyberspace", "Feature Class from mapping is incorrect");
 
-            featureClassName = symbolSetMappings.GetFeatureClassFromMapping("BOGUS", GeometryType.Point);
+            featureClassName = symbolSetMappings.GetFeatureClassFromSymbolSet("BOGUS", GeometryType.Point);
             Assert.IsTrue(string.IsNullOrEmpty(featureClassName), "Feature Class from mapping is incorrect");
 
+            featureClassName = symbolSetMappings.GetFeatureClassFromExtendedFunctionCode("OHVP123456", GeometryType.Point);
+            Assert.IsTrue(featureClassName == "Activities", "Feature Class from mapping is incorrect");
+
+            featureClassName = symbolSetMappings.GetFeatureClassFromExtendedFunctionCode("SFGPUCIL--", GeometryType.Point);
+            Assert.IsTrue(featureClassName == "Units", "Feature Class from mapping is incorrect");
+
+            featureClassName = symbolSetMappings.GetFeatureClassFromExtendedFunctionCode("SFGPE-----", GeometryType.Point);
+            Assert.IsTrue(featureClassName == "LandEquipment", "Feature Class from mapping is incorrect");
+
+            featureClassName = symbolSetMappings.GetFeatureClassFromExtendedFunctionCode("SFGPI-----", GeometryType.Point);
+            Assert.IsTrue(featureClassName == "Installations", "Feature Class from mapping is incorrect");
         }
 
         [TestMethod, STAThread]

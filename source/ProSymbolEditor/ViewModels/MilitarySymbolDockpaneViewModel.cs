@@ -36,7 +36,7 @@ using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Catalog;
-using CoordinateToolLibrary.Models;
+using CoordinateConversionLibrary.Models;
 using Microsoft.Win32;
 using System.Web.Script.Serialization;
 using System.Windows.Threading;
@@ -48,13 +48,79 @@ namespace ProSymbolEditor
         //Member Variables
         private const string _dockPaneID = "ProSymbolEditor_MilitarySymbolDockpane";
         private const string _menuID = "ProSymbolEditor_MilitarySymbolDockpane_Menu";
-        private const string _mil2525dRelativePath = @"Resources\Dictionaries\mil2525d\mil2525d.stylx";
-        private string _mil2525dStyleFullFilePath;
+
+        public string StatusMessage
+        {
+            get
+            {
+                return _statusMessage + 
+                    " (" + ProSymbolUtilities.StandardLabel + ")";
+            }
+            set
+            {
+                _statusMessage = value;
+
+                NotifyPropertyChanged(() => StatusMessage);
+            }
+        }
+        private string _statusMessage;
+
+        private static string MilitaryStyleName
+        {
+            get
+            {
+                return "mil" + ProSymbolUtilities.StandardString.ToLower();
+            }
+        }
+
+        private string Mil2525RelativePath
+        {
+            get
+            {
+                return @"Resources\Dictionaries\"
+             + MilitaryStyleName + Path.DirectorySeparatorChar + MilitaryStyleName + ".stylx";
+            }
+        }
+
+        private string ProInstallPath
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_proInstallPath))
+                    return _proInstallPath;
+
+                //Get Military Symbol Style Install Path
+                _proInstallPath = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\ESRI\ArcGISPro\", "InstallDir", null);
+
+                if (string.IsNullOrEmpty(_proInstallPath))
+                {
+                    //Try to get the install path from current user instead of local machine
+                    _proInstallPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\ESRI\ArcGISPro\", "InstallDir", null);
+                }
+                return _proInstallPath;
+            }
+        }
+        private string _proInstallPath = string.Empty;
+
+        private string Mil2525StyleFullFilePath
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ProInstallPath))
+                {
+                    return Path.Combine(ProInstallPath, Mil2525RelativePath);
+                }
+
+                return "";
+            }
+        }
+
         private string _currentFeatureClassName = "";
         private string _favoritesFilePath = "";
         private FeatureClass _currentFeatureClass = null;
         private StyleProjectItem _militaryStyleItem = null;
         private SymbolStyleItem _selectedStyleItem = null;
+        private SymbolStyleItem _savedStyleItem = null;
         private SelectedFeature _selectedSelectedFeature = null;
         private SymbolAttributeSet _selectedFavoriteSymbol = null;
         private SymbolAttributeSet _editSelectedFeatureSymbol = null;
@@ -90,39 +156,74 @@ namespace ProSymbolEditor
         private bool _isEditing = false;
         private bool _isAddingNew = false;
 
+        private void resetViewModelState()
+        {
+            //Reset things
+            this.SelectedStyleItem = null;
+            this.IsStyleItemSelected = false;
+            this.IsFavoriteItemSelected = false;
+            this.StyleItems.Clear();
+            this.SelectedTabIndex = 0;
+            this.ResultCount = "---";
+            this.SearchString = "";
+            this.StatusMessage = "";
+            _symbolAttributeSet.ResetAttributes();
+            SelectedStyleTags.Clear();
+            SelectedFeaturesCollection.Clear();
+            SelectedSelectedFeature = null;
+
+            // reset this so standard change will force new Style lookup:
+            _militaryStyleItem = null;
+
+            // re-load the favorites
+            foreach (SymbolAttributeSet set in Favorites)
+            {
+                set.GeneratePreviewSymbol();
+            }
+
+            _favoritesView.Refresh();
+        }
+
+        private void setStandardFromSettings()
+        {
+            if (Properties.Settings.Default.DefaultStandard ==
+                    ProSymbolUtilities.GetStandardString(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2))
+                ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+            else
+                ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+        }
+
         protected MilitarySymbolDockpaneViewModel()
         {
-            //Get Military Symbol Style Install Path
-            string installPath = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\ESRI\ArcGISPro\", "InstallDir", null);
-
-            if (installPath == null || installPath == "")
-            {
-                //Try to get the install path from current user instead of local machine
-                installPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\ESRI\ArcGISPro\", "InstallDir", null);
-            }
-
-            if (installPath != null)
-            {
-                _mil2525dStyleFullFilePath = Path.Combine(installPath, _mil2525dRelativePath);
-            }
-
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
+                // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
+                Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
+                bool enabled2525D = await isEnabledMethod;
+
+                Task<bool> isEnabledMethod2 = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
+                bool enabled2525C_B2 = await isEnabledMethod2;
+
+                // However, if both standards in project (or neither) - use the default setting
+                if ((enabled2525D && enabled2525C_B2) ||
+                    (!enabled2525D && !enabled2525C_B2))
+                {
+                    setStandardFromSettings();
+                }
+                else
+                {
+                    if (enabled2525D)
+                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                    else
+                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+                }
+
                 //Add military style to project
                 Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
                 _militaryStyleItem = await getMilitaryStyle;
 
                 //Reset things
-                this.SelectedStyleItem = null;
-                this.IsStyleItemSelected = false;
-                this.IsFavoriteItemSelected = false;
-                this.StyleItems.Clear();
-                this.SelectedTabIndex = 0;
-                this.ResultCount = "---";
-                this.SearchString = "";
-                _symbolAttributeSet.ResetAttributes();
-                SelectedStyleTags.Clear();
-
+                resetViewModelState();
             });
 
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
@@ -130,7 +231,7 @@ namespace ProSymbolEditor
 
             //Create locks for variables that are updated in worker threads
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.IdentityDomainValues, _lock);
-            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.EcholonDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.EchelonDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.StatusDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.MobilityDomainValues, _lock);
@@ -142,6 +243,7 @@ namespace ProSymbolEditor
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReliabilityDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CredibilityDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CountryCodeDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ExtendedFunctionCodeValues, _lock);
 
             //Set up Commands
             SearchResultCommand = new RelayCommand(SearchStylesAsync, param => true);
@@ -158,6 +260,7 @@ namespace ProSymbolEditor
             ImportFavoritesFileCommand = new RelayCommand(ImportFavoritesFile, param => true);
             SelectToolCommand = new RelayCommand(ActivateSelectTool, param => true);
             ShowAboutWindowCommand = new RelayCommand(ShowAboutWindow, param => true);
+            ShowSettingsWindowCommand = new RelayCommand(ShowSettingsWindow, param => true);
 
             _symbolAttributeSet.LabelAttributes.DateTimeValid = null;
             _symbolAttributeSet.LabelAttributes.DateTimeExpired = null;
@@ -171,7 +274,6 @@ namespace ProSymbolEditor
             BindingOperations.EnableCollectionSynchronization(SelectedFeaturesCollection, _lock);
 
             _progressDialog = new ProgressDialog("Loading...");
-            _symbolAttributeSet.StandardVersion = "2525D";
 
             //Load saved favorites
             _favoritesFilePath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "SymbolFavorites.json");
@@ -228,6 +330,7 @@ namespace ProSymbolEditor
 
         public ICommand ShowAboutWindowCommand { get; set; }
 
+        public ICommand ShowSettingsWindowCommand { get; set; }
         #endregion
 
         #region Style Getters/Setters
@@ -240,7 +343,9 @@ namespace ProSymbolEditor
             }
             set
             {
-                //SetProperty(ref _searchString, value, () => SearchString);
+                if (_searchString == value)
+                    return;
+
                 _searchString = value;
 
                 NotifyPropertyChanged(() => SearchString);
@@ -248,6 +353,15 @@ namespace ProSymbolEditor
                 if (_searchString.Length > 0)
                 {
                     SearchStylesAsync(null);
+                }
+                else
+                {
+                    // clear item list if search term cleared
+                    if (StyleItems.Count > 0)
+                    {
+                        StyleItems.Clear();
+                        NotifyPropertyChanged(() => StyleItems);
+                    }
                 }
             }
         }
@@ -394,14 +508,14 @@ namespace ProSymbolEditor
                 if (_selectedStyleItem == value)
                     return;
 
+                _selectedStyleItem = value;
+
                 if (!ProSymbolEditorModule.Current.MilitaryOverlaySchema.SchemaExists && value != null)
                 {
+                    _savedStyleItem = _selectedStyleItem;
                     ShowAddInNotEnabledMessageBox();
-                    _selectedStyleItem = null;
                     return;
                 }
-
-                _selectedStyleItem = value;
 
                 if (_selectedStyleItem != null)
                 {
@@ -467,12 +581,29 @@ namespace ProSymbolEditor
                     _symbolAttributeSet.DisplayAttributes.SymbolSet = symbolIdCode[0];
                     _symbolAttributeSet.DisplayAttributes.SymbolEntity = symbolIdCode[1];
 
+                    SymbolAttributeSet loadSet = new SymbolAttributeSet();
+
+                    // Set 2525C_B2 SIDC/attribute if applicable
+                    if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                    {
+                        string functionCode = symbolIdCode[2];
+                        _symbolAttributeSet.DisplayAttributes.ExtendedFunctionCode = functionCode;
+
+                        loadSet.DisplayAttributes.ExtendedFunctionCode = functionCode;
+                    }
+
                     //Get feature class name to generate domains
-                    _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.DisplayAttributes.SymbolSet, GeometryType);
+                    _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(
+                        _symbolAttributeSet.DisplayAttributes, GeometryType);
+
                     if (_currentFeatureClassName != null && _currentFeatureClassName != "")
                     {
                         //Generate domains
-                        GetMilitaryDomainsAsync();
+                        GetMilitaryDomainsAsync(loadSet);
+                    }
+                    else
+                    {
+                        // LogError - notify user
                     }
 
                     IsEditing = false;
@@ -500,8 +631,18 @@ namespace ProSymbolEditor
 
                 if (_selectedSelectedFeature != null)
                 {
-                    MapView.Active.FlashFeature(_selectedSelectedFeature.FeatureLayer, _selectedSelectedFeature.ObjectId);
-                    CreateSymbolSetFromFieldValuesAsync();
+                    try
+                    {
+                        // TODO: there is an exception here when:
+                        // 1: Multiple Maps are open
+                        // 2: Trying to flash a feature that is selected on another map, that is not the active map
+                        MapView.Active.FlashFeature(_selectedSelectedFeature.FeatureLayer, _selectedSelectedFeature.ObjectId);
+                        CreateSymbolSetFromFieldValuesAsync();
+                    }
+                    catch (Exception exception)
+                    {
+                        System.Diagnostics.Debug.WriteLine(exception.ToString());
+                    }
                 }
                 else
                 {
@@ -567,6 +708,9 @@ namespace ProSymbolEditor
                     return;
 
                 _editSelectedFeatureSymbol = value;
+
+                if (_editSelectedFeatureSymbol != null)
+                    _editSelectedFeatureSymbol.StandardVersion = ProSymbolUtilities.StandardString;
 
                 //Load into editing???
 
@@ -644,6 +788,8 @@ namespace ProSymbolEditor
         {
             get
             {
+                _symbolAttributeSet.StandardVersion = ProSymbolUtilities.StandardString;
+
                 return _symbolAttributeSet;
             }
         }
@@ -730,6 +876,78 @@ namespace ProSymbolEditor
             aboutWindow.ShowDialog(FrameworkApplication.Current.MainWindow);
         }
 
+        private async void ShowSettingsWindow(object parameter)
+        {
+            SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.Checked2525D =
+                (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525d);
+
+            ProSymbolUtilities.SupportedStandardsType previousSettingStandard = ProSymbolUtilities.Standard;
+
+            settingsWindow.ShowDialog(FrameworkApplication.Current.MainWindow);
+            if (settingsWindow.DialogResult == true)
+            {
+                ProSymbolUtilities.SupportedStandardsType newSettingStandard;
+
+                if (settingsWindow.Checked2525D == true)
+                    newSettingStandard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                else
+                    newSettingStandard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+
+                // If standard has been changed
+                if (previousSettingStandard != newSettingStandard)
+                {
+                    Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+                    bool enabledWithPreviousStandard = await isEnabledMethod;
+
+                    //Check for Schema again
+                    Task<bool> isEnabledMethodAfterChange = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(newSettingStandard);
+                    bool enabledWithNewStandard = await isEnabledMethodAfterChange;
+
+                    if (enabledWithPreviousStandard && !enabledWithNewStandard)
+                    {
+                        // TRICKY: If Enabled with previous standard but not current, don't allow the switch
+                        // Adding new lpkx will not work
+                        string message = "Could not switch standard version. " +
+                            "The project already contains a GDB with Standard " +
+                            ProSymbolUtilities.GetStandardLabel(previousSettingStandard) +
+                            ". Please create a new project to use " + 
+                            ProSymbolUtilities.GetStandardLabel(newSettingStandard) + ".";
+                        MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Could Not Switch Standard Version", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+                        return;
+                    }
+                    else if (!enabledWithNewStandard)
+                    {
+                        StatusMessage = "Addin Not Enabled";
+                    }
+                    else
+                    {
+                        StatusMessage = "Standard Changed";
+                    }
+
+                    ProSymbolUtilities.Standard = newSettingStandard;
+
+                    // Reset everything when standard changed
+                    resetViewModelState();
+
+                    // HACK:
+                    // StyleItems list update was not updating the view, 
+                    // not sure why this bound property is not updating the UI
+                    // TODO: test switching this to an ObservableCollection
+                    // Force the tab to be redrawn to workaround the issue
+                    SelectedTabIndex = 1;
+                    SelectedTabIndex = 0;
+                    // END HACK
+
+                    // Save settings (or TODO: or do this in close/unload):
+                    Properties.Settings.Default.DefaultStandard =
+                        ProSymbolUtilities.GetStandardString(ProSymbolUtilities.Standard);
+                    Properties.Settings.Default.Save();
+                }
+            }
+        }
+
         private async void SaveEdits(object parameter)
         {
             string message = String.Empty;
@@ -792,7 +1010,7 @@ namespace ProSymbolEditor
                 }
                 catch (Exception exception)
                 {
-                    System.Console.WriteLine(exception.Message);
+                    System.Diagnostics.Debug.WriteLine(exception.ToString());
                 }
             });
 
@@ -808,9 +1026,17 @@ namespace ProSymbolEditor
             //Make sure that military style is in project
             if (!IsStyleInProject() || _militaryStyleItem == null)
             {
-                //Add military style to project
-                Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
-                _militaryStyleItem = await getMilitaryStyle;
+                if (!File.Exists(Mil2525StyleFullFilePath))
+                {
+                    ShowMilitaryStyleNotFoundMessageBox();
+                    return;
+                }
+                else
+                {
+                    //Add military style to project
+                    Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
+                    _militaryStyleItem = await getMilitaryStyle;
+                }
             }
 
             //Clear for new search
@@ -826,6 +1052,11 @@ namespace ProSymbolEditor
             Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
             bool enabled = await isEnabledMethod;
 
+            if (enabled)
+                StatusMessage = ""; // TODO: add message
+            else
+                StatusMessage = "Addin Not Enabled";
+
             NotifyPropertyChanged(() => StyleItems);
         }
 
@@ -838,6 +1069,29 @@ namespace ProSymbolEditor
         {
             string message = String.Empty;
             bool creationResult = false;
+
+            // WARNING HERE IF: the feature class is in the Project BUT *NOT* in Active Map/View
+
+            Task<bool> isLayerInActiveViewMethod =
+                ProSymbolEditorModule.Current.MilitaryOverlaySchema.IsGDBAndFeatureClassInActiveView(
+                    _currentFeatureClassName);
+            bool isLayerInActiveView = await isLayerInActiveViewMethod;
+
+            if (!isLayerInActiveView)
+            {
+                string requiredLayerName = _currentFeatureClassName;
+                if (string.IsNullOrEmpty(requiredLayerName))
+                    requiredLayerName = "{Layer Not Found}";
+
+                string warningMessage = "The required layer is not in the Active Map. " +
+                    " - Required Layer: " + requiredLayerName +
+                    " in Project GDB: " + ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName;
+                Debug.WriteLine(warningMessage);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, "Could Not Create New Map Feature", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+                // Warning then return;
+                return;
+            }
 
             //Generate geometry if polygon or polyline, if adding new feature is from using coordinates and not the map tool
             if (Convert.ToBoolean(parameter) == true)
@@ -892,6 +1146,10 @@ namespace ProSymbolEditor
                                 }, featureClass);
 
                                 var task = editOperation.ExecuteAsync();
+
+                                // TODO/Potential Bug: 
+                                // if the operation fails (ex. for "spatial index invalid")
+                                // this method does not return:
                                 creationResult = task.Result;
                                 if (!creationResult)
                                 {
@@ -1013,7 +1271,7 @@ namespace ProSymbolEditor
             }
             catch(Exception exception)
             {
-                Console.WriteLine(exception.Message);
+                System.Diagnostics.Debug.WriteLine(exception.ToString());
             }
         }
 
@@ -1045,23 +1303,24 @@ namespace ProSymbolEditor
                 //Tokenize tags (for favorites, edit symbols don't have any)
                 if (!isEditSymbol)
                 {
-                    foreach (string tag in loadSet.SymbolTags.Split(';').ToList())
+                    string geometryTypeTag = "POINT";
+
+                    if (!string.IsNullOrEmpty(loadSet.SymbolTags))
                     {
-                        SelectedStyleTags.Add(tag);
+                        foreach (string tag in loadSet.SymbolTags.Split(';').ToList())
+                        {
+                            SelectedStyleTags.Add(tag);
+                        }
+
+                        //Get the geometry type off a tag on the symbol
+                        List<string> reverseTags = loadSet.SymbolTags.Split(';').ToList();
+                        reverseTags.Reverse();
+
+                        if (reverseTags.Count >= 2)
+                            geometryTypeTag = reverseTags[2];
                     }
 
-                    //Get the geometry type off a tag on the symbol
-                    List<string> reverseTags = loadSet.SymbolTags.Split(';').ToList();
-                    reverseTags.Reverse();
-                    string geometryTypeTag = reverseTags[2];
-
-                    if (geometryTypeTag.ToUpper() == "POINT")
-                    {
-                        GeometryType = GeometryType.Point;
-                        PointCoordinateVisibility = Visibility.Visible;
-                        PolyCoordinateVisibility = Visibility.Collapsed;
-                    }
-                    else if (geometryTypeTag.ToUpper() == "LINE")
+                    if (geometryTypeTag.ToUpper() == "LINE")
                     {
                         GeometryType = GeometryType.Polyline;
                         PointCoordinateVisibility = Visibility.Collapsed;
@@ -1073,9 +1332,8 @@ namespace ProSymbolEditor
                         PointCoordinateVisibility = Visibility.Collapsed;
                         PolyCoordinateVisibility = Visibility.Visible;
                     }
-                    else
+                    else // "POINT"
                     {
-                        //No tag found for geometry type, so use it's a point
                         GeometryType = GeometryType.Point;
                         PointCoordinateVisibility = Visibility.Visible;
                         PolyCoordinateVisibility = Visibility.Collapsed;
@@ -1092,7 +1350,8 @@ namespace ProSymbolEditor
                         PointCoordinateVisibility = Visibility.Visible;
                         PolyCoordinateVisibility = Visibility.Collapsed;
                     }
-                    else if (SelectedSelectedFeature.FeatureLayer.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryLine)
+                    else if ((SelectedSelectedFeature.FeatureLayer.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryLine) ||
+                        (SelectedSelectedFeature.FeatureLayer.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPolyline))
                     {
                         GeometryType = GeometryType.Polyline;
                         PointCoordinateVisibility = Visibility.Collapsed;
@@ -1118,7 +1377,12 @@ namespace ProSymbolEditor
                 //Get feature class name to generate domains
                 SymbolAttributeSet.DisplayAttributes.SymbolSet = loadSet.DisplayAttributes.SymbolSet;
                 SymbolAttributeSet.DisplayAttributes.SymbolEntity = loadSet.DisplayAttributes.SymbolEntity;
-                _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(_symbolAttributeSet.DisplayAttributes.SymbolSet, GeometryType);
+
+                SymbolAttributeSet.DisplayAttributes.ExtendedFunctionCode = loadSet.DisplayAttributes.ExtendedFunctionCode;
+
+                _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(
+                    _symbolAttributeSet.DisplayAttributes, GeometryType);
+
                 if (_currentFeatureClassName != null && _currentFeatureClassName != "")
                 {
                     //Generate domains and pass in set to update values initially
@@ -1138,23 +1402,43 @@ namespace ProSymbolEditor
                 SymbolAttributeSet.LabelAttributes.AdditionalInformation = loadSet.LabelAttributes.AdditionalInformation;
                 SymbolAttributeSet.LabelAttributes.HigherFormation = loadSet.LabelAttributes.HigherFormation;
                 SymbolAttributeSet.SymbolTags = loadSet.SymbolTags;
+
+                SymbolAttributeSet.StandardVersion = ProSymbolUtilities.StandardString;
             }
         }
 
         private void SaveSymbolAsFavorite(object parameter)
         {
-            //Create copy by serializing/deserializing
-            SymbolAttributeSet.FavoriteId = Guid.NewGuid().ToString();
-            var json = new JavaScriptSerializer().Serialize(SymbolAttributeSet);
-            SymbolAttributeSet favoriteSet = new JavaScriptSerializer().Deserialize<SymbolAttributeSet>(json);
+            try
+            {
+                // If it is not a valid or exportable symbol error+return
+                if ((SymbolAttributeSet == null) || !SymbolAttributeSet.IsValid)
+                {
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The current favorite is not valid.", 
+                    "Invalid Favorite", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    return;
+                }
 
-            //Add to favorites
-            favoriteSet.GeneratePreviewSymbol();
-            Favorites.Add(favoriteSet);
+                SymbolAttributeSet.FavoriteId = Guid.NewGuid().ToString();
+                //Create copy by serializing/deserializing
+                var json = new JavaScriptSerializer().Serialize(SymbolAttributeSet);
+                SymbolAttributeSet favoriteSet = new JavaScriptSerializer().Deserialize<SymbolAttributeSet>(json);
 
-            //Serialize Favorites and save to file
-            var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
-            File.WriteAllText(_favoritesFilePath, favoritesJson);
+                //Add to favorites
+                if (favoriteSet == null) // should not happen
+                    throw new Exception("Could not create Favorite");
+
+                favoriteSet.GeneratePreviewSymbol();
+                Favorites.Add(favoriteSet);
+
+                //Serialize Favorites and save to file
+                var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
+                File.WriteAllText(_favoritesFilePath, favoritesJson);
+            }
+            catch (Exception ex)
+            {
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Unable to add the current favorite. Message: " + ex.Message);
+            }
         }
 
         private void DeleteFavoriteSymbol(object parameter)
@@ -1250,24 +1534,67 @@ namespace ProSymbolEditor
 
         private async void OnMapSelectionChanged(ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEventArgs args)
         {
+            // Only allow selection event if addin enabled
+            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+            bool enabled = await isEnabledMethod;
+
+            if (!enabled)
+                return;
+
             //Get the selected features from the map and filter out the standalone table selection.
             var selectedFeatures = args.Selection
               .Where(kvp => kvp.Key is BasicFeatureLayer)
               .ToDictionary(kvp => (BasicFeatureLayer)kvp.Key, kvp => kvp.Value);
 
+            if (selectedFeatures.Count < 1)
+                return;
 
-            //TODO:  Further filter features so it only contains ones that are in layers that are in the military schema
+            // TODO:  Further filter features so it only contains ones that are in layers that are in the military schema
+            // Just warn the user for now 
             SelectedFeaturesCollection.Clear();
+            bool warnedOnce = false;
+
             foreach (KeyValuePair<BasicFeatureLayer, List<long>> kvp in selectedFeatures)
             {
+
+                string symbolSetFieldName = "symbolset";
+                string symbolEntityFieldName = "symbolentity";
+
+                if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                {
+                    symbolSetFieldName = "extendedfunctioncode";
+                    symbolEntityFieldName = ""; // not used
+                }
+
                 await QueuedTask.Run(() =>
                 {
-                    ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "symbolset");
+                    ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == symbolSetFieldName);
+                    if (symbolSetField == null) // then does not have required field
+                    {
+                        if (!warnedOnce) // only issue this warning once 
+                        {
+                            ShowMilitaryFeatureNotFoundMessageBox();
+                            warnedOnce = true;
+                        }
+                        return;
+                    }
+
                     CodedValueDomain symbolSetDomain = symbolSetField.GetDomain() as CodedValueDomain;
+                    if (symbolSetDomain == null) // then field does not have domain
+                        return;
+
                     SortedList<object, string> symbolSetDomainSortedList = symbolSetDomain.GetCodedValuePairs();
-                    ArcGIS.Core.Data.Field symbolEntityField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == "symbolentity");
-                    CodedValueDomain symbolEntityDomain = symbolEntityField.GetDomain() as CodedValueDomain;
-                    SortedList<object, string> symbolEntityDomainSortedList = symbolEntityDomain.GetCodedValuePairs();
+
+                    ArcGIS.Core.Data.Field symbolEntityField = null;
+                    SortedList<object, string> symbolEntityDomainSortedList = null;
+
+                    if (!string.IsNullOrEmpty(symbolEntityFieldName))
+                    {
+                        symbolEntityField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == symbolEntityFieldName);
+                        CodedValueDomain symbolEntityDomain = symbolEntityField.GetDomain() as CodedValueDomain;
+                        if (symbolEntityDomain != null)
+                            symbolEntityDomainSortedList = symbolEntityDomain.GetCodedValuePairs();
+                    }
 
                     foreach (long id in kvp.Value)
                     {
@@ -1286,45 +1613,33 @@ namespace ProSymbolEditor
 
                         if (row != null)
                         {
-                            GeometryType geometryType = ArcGIS.Core.Geometry.GeometryType.Point;
-
-                            if (kvp.Key.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPolygon)
-                            {
-                                geometryType = ArcGIS.Core.Geometry.GeometryType.Polygon;
-                            }
-                            else if (kvp.Key.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPoint)
-                            {
-                                geometryType = ArcGIS.Core.Geometry.GeometryType.Point;
-                            }
-                            else if (kvp.Key.ShapeType == ArcGIS.Core.CIM.esriGeometryType.esriGeometryPolyline)
-                            {
-                                geometryType = ArcGIS.Core.Geometry.GeometryType.Polyline;
-                            }
-
                             SelectedFeature newSelectedFeature = new SelectedFeature(kvp.Key, id);
                             
                             foreach(KeyValuePair<object, string> symbolSetKeyValuePair in symbolSetDomainSortedList)
                             {
-                                if (symbolSetKeyValuePair.Key.ToString() == row["symbolset"].ToString())
+                                if (symbolSetKeyValuePair.Key.ToString() == row[symbolSetFieldName].ToString())
                                 {
                                     newSelectedFeature.SymbolSetName = symbolSetKeyValuePair.Value;
                                     break;
                                 }
                             }
 
-                            foreach (KeyValuePair<object, string> symbolEntityKeyValuePair in symbolEntityDomainSortedList)
+                            if (!string.IsNullOrEmpty(symbolEntityFieldName) && 
+                                (symbolEntityDomainSortedList !=null))
                             {
-                                if (symbolEntityKeyValuePair.Key.ToString() == row["symbolentity"].ToString())
+                                foreach (KeyValuePair<object, string> symbolEntityKeyValuePair in symbolEntityDomainSortedList)
                                 {
-                                    newSelectedFeature.EntityName = symbolEntityKeyValuePair.Value;
-                                    break;
+                                    if (symbolEntityKeyValuePair.Key.ToString() == row[symbolEntityFieldName].ToString())
+                                    {
+                                        newSelectedFeature.EntityName = symbolEntityKeyValuePair.Value;
+                                        break;
+                                    }
                                 }
                             }
 
                             SelectedFeaturesCollection.Add(newSelectedFeature);
                         }
-
-                    }
+                    } // for each id
                 });
             }
 
@@ -1391,15 +1706,21 @@ namespace ProSymbolEditor
 
         private async Task<StyleProjectItem> GetMilitaryStyleAsync()
         {
+            if (!File.Exists(Mil2525StyleFullFilePath))
+            {
+                ShowMilitaryStyleNotFoundMessageBox();
+                return null;
+            }
+
             if (Project.Current != null)
             {
-                await Project.Current.AddStyleAsync(_mil2525dStyleFullFilePath);
+                await Project.Current.AddStyleAsync(Mil2525StyleFullFilePath);
 
                 //Get all styles in the project
                 var styles = Project.Current.GetItems<StyleProjectItem>();
 
                 //Get a specific style in the project
-                return styles.First(x => x.Name == "mil2525d");
+                return styles.FirstOrDefault(x => x.Name == MilitaryStyleName); 
             }
 
             return null;
@@ -1413,7 +1734,7 @@ namespace ProSymbolEditor
 
                 foreach(StyleProjectItem projectStyle in projectStyles)
                 {
-                    if (projectStyle.Path == _mil2525dStyleFullFilePath)
+                    if (projectStyle.Path == Mil2525StyleFullFilePath)
                     {
                         return true;
                     }
@@ -1421,6 +1742,62 @@ namespace ProSymbolEditor
             }
 
             return false;
+        }
+
+        private async Task SetIdentityFromTags()
+        {
+            // TRICKY:
+            // Set the Identity Combo Box based on the Style tag/name is it is implied by the tag/name
+
+            //Check for affiliation tag or style item name to suss out the affiliation
+            if (_selectedStyleItem == null)
+                return;
+
+            // These differ between 2525D & C_B2 schemas              
+            string affiliationField = "identity";
+            string hostileValue = "Hostile/Faker";
+            string friendValue = "Friend";
+
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            {
+                affiliationField = "affiliation";
+                hostileValue = "Hostile";
+                friendValue = "Friendly";
+            }
+
+            string identityCode = "";
+            if (_selectedStyleItem.Tags.ToUpper().Contains("FRIEND") ||
+                _selectedStyleItem.Name.ToUpper().Contains(": FRIEND"))
+            {
+                identityCode = await GetDomainValueAsync(affiliationField, friendValue);
+            }
+            else if (_selectedStyleItem.Tags.ToUpper().Contains("HOSTILE") ||
+                _selectedStyleItem.Name.ToUpper().Contains(": HOSTILE"))
+            {
+                identityCode = await GetDomainValueAsync(affiliationField, hostileValue);
+            }
+            else if (_selectedStyleItem.Tags.ToUpper().Contains("NEUTRAL") ||
+                _selectedStyleItem.Name.ToUpper().Contains(": NEUTRAL"))
+            {
+                identityCode = await GetDomainValueAsync(affiliationField, "Neutral");
+            }
+            else if (_selectedStyleItem.Tags.ToUpper().Contains("UNKNOWN") ||
+                _selectedStyleItem.Name.ToUpper().Contains(": UNKNOWN"))
+            {
+                identityCode = await GetDomainValueAsync(affiliationField, "Unknown");
+            }
+
+            if (identityCode != "")
+            {
+                foreach (DomainCodedValuePair dcvp in MilitaryFieldsInspectorModel.IdentityDomainValues)
+                {
+                    if (dcvp.Code.ToString() == identityCode)
+                    {
+                        SymbolAttributeSet.DisplayAttributes.SelectedIdentityDomainPair = dcvp;
+                        break;
+                    }
+                }
+            }
         }
 
         private async void GetMilitaryDomainsAsync(SymbolAttributeSet loadSet = null)
@@ -1459,79 +1836,67 @@ namespace ProSymbolEditor
                     }
                 });
 
-                //Check for affiliation tag
-                if (_selectedStyleItem != null)
-                {
-                    string identityCode = "";
-                    if (_selectedStyleItem.Tags.ToUpper().Contains("FRIEND"))
-                    {
-                        identityCode = await GetDomainValueAsync("identity", "Friend");
-                    }
-                    else if (_selectedStyleItem.Tags.ToUpper().Contains("HOSTILE"))
-                    {
-                        identityCode = await GetDomainValueAsync("identity", "Hostile/Faker");
-                    }
-                    else if (_selectedStyleItem.Tags.ToUpper().Contains("NEUTRAL"))
-                    {
-                        identityCode = await GetDomainValueAsync("identity", "Neutral");
-                    }
-                    else if (_selectedStyleItem.Tags.ToUpper().Contains("UNKNOWN"))
-                    {
-                        identityCode = await GetDomainValueAsync("identity", "Unknown");
-                    }
-
-                    //Check name of style last to see if it has an affiliation, but no associated tag
-                    //But only do this if no tag existed
-                    if (identityCode == "")
-                    {
-                        if (_selectedStyleItem.Name.ToUpper().Contains(": FRIEND"))
-                        {
-                            identityCode = await GetDomainValueAsync("identity", "Friend");
-                        }
-                        else if (_selectedStyleItem.Name.ToUpper().Contains(": HOSTILE"))
-                        {
-                            identityCode = await GetDomainValueAsync("identity", "Hostile/Faker");
-                        }
-                        else if (_selectedStyleItem.Name.ToUpper().Contains(": NEUTRAL"))
-                        {
-                            identityCode = await GetDomainValueAsync("identity", "Neutral");
-                        }
-                        else if (_selectedStyleItem.Name.ToUpper().Contains(": UNKNOWN"))
-                        {
-                            identityCode = await GetDomainValueAsync("identity", "Unknown");
-                        }
-                    }
-
-                    if (identityCode != "")
-                    {
-                        foreach (DomainCodedValuePair dcvp in MilitaryFieldsInspectorModel.IdentityDomainValues)
-                        {
-                            if (dcvp.Code.ToString() == identityCode)
-                            {
-                                SymbolAttributeSet.DisplayAttributes.SelectedIdentityDomainPair = dcvp;
-                                break;
-                            }
-                        }
-                    }
-                }
+                await SetIdentityFromTags();
 
                 //Load any passed in values to selected values for the domain combo boxes
                 if (loadSet != null)
                 {
-                    SymbolAttributeSet.DisplayAttributes.SelectedIdentityDomainPair = MilitaryFieldsInspectorModel.IdentityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Identity);
-                    SymbolAttributeSet.DisplayAttributes.SelectedEchelonDomainPair = MilitaryFieldsInspectorModel.EcholonDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Echelon);
-                    SymbolAttributeSet.DisplayAttributes.SelectedMobilityDomainPair = MilitaryFieldsInspectorModel.MobilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Mobility);
-                    SymbolAttributeSet.DisplayAttributes.SelectedOperationalConditionDomainPair = MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.OperationalCondition);
-                    SymbolAttributeSet.DisplayAttributes.SelectedIndicatorDomainPair = MilitaryFieldsInspectorModel.TfFdHqDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Indicator);
-                    SymbolAttributeSet.DisplayAttributes.SelectedStatusDomainPair = MilitaryFieldsInspectorModel.StatusDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Status);
-                    SymbolAttributeSet.DisplayAttributes.SelectedContextDomainPair = MilitaryFieldsInspectorModel.ContextDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Context);
-                    SymbolAttributeSet.DisplayAttributes.SelectedModifier1DomainPair = MilitaryFieldsInspectorModel.Modifier1DomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Modifier1);
-                    SymbolAttributeSet.DisplayAttributes.SelectedModifier2DomainPair = MilitaryFieldsInspectorModel.Modifier2DomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Modifier2);
+                    // Only set the non-null properties of the loadset 
+                    if (loadSet.DisplayAttributes.ExtendedFunctionCode != null)
+                        SymbolAttributeSet.DisplayAttributes.SelectedExtendedFunctionCodeDomainPair 
+                            = MilitaryFieldsInspectorModel.ExtendedFunctionCodeValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.ExtendedFunctionCode);
 
-                    SymbolAttributeSet.LabelAttributes.SelectedCredibilityDomainPair = MilitaryFieldsInspectorModel.CredibilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Credibility);
-                    SymbolAttributeSet.LabelAttributes.SelectedReinforcedDomainPair = MilitaryFieldsInspectorModel.ReinforcedDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Reinforced);
-                    SymbolAttributeSet.LabelAttributes.SelectedReliabilityDomainPair = MilitaryFieldsInspectorModel.ReliabilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Reliability);
-                    SymbolAttributeSet.LabelAttributes.SelectedCountryCodeDomainPair = MilitaryFieldsInspectorModel.CountryCodeDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.CountryCode);
+                    if (loadSet.DisplayAttributes.Identity != null)
+                        SymbolAttributeSet.DisplayAttributes.SelectedIdentityDomainPair 
+                            = MilitaryFieldsInspectorModel.IdentityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Identity);
+
+                    if (loadSet.DisplayAttributes.Echelon != null)
+                        SymbolAttributeSet.DisplayAttributes.SelectedEchelonDomainPair 
+                            = MilitaryFieldsInspectorModel.EchelonDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Echelon);
+
+                    if (loadSet.DisplayAttributes.Mobility != null)
+                        SymbolAttributeSet.DisplayAttributes.SelectedMobilityDomainPair 
+                            = MilitaryFieldsInspectorModel.MobilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Mobility);
+
+                    if (loadSet.DisplayAttributes.OperationalCondition != null)
+                        SymbolAttributeSet.DisplayAttributes.SelectedOperationalConditionDomainPair 
+                            = MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.OperationalCondition);
+
+                    if (loadSet.DisplayAttributes.Indicator != null)
+                        SymbolAttributeSet.DisplayAttributes.SelectedIndicatorDomainPair 
+                            = MilitaryFieldsInspectorModel.TfFdHqDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Indicator);
+
+                    if (loadSet.DisplayAttributes.Status != null)
+                        SymbolAttributeSet.DisplayAttributes.SelectedStatusDomainPair 
+                            = MilitaryFieldsInspectorModel.StatusDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Status);
+
+                    if (loadSet.DisplayAttributes.Context != null)
+                        SymbolAttributeSet.DisplayAttributes.SelectedContextDomainPair 
+                            = MilitaryFieldsInspectorModel.ContextDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Context);
+
+                    if (loadSet.DisplayAttributes.Modifier1 != null)
+                        SymbolAttributeSet.DisplayAttributes.SelectedModifier1DomainPair = 
+                            MilitaryFieldsInspectorModel.Modifier1DomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Modifier1);
+
+                    if (loadSet.DisplayAttributes.Modifier2 != null)
+                        SymbolAttributeSet.DisplayAttributes.SelectedModifier2DomainPair = 
+                            MilitaryFieldsInspectorModel.Modifier2DomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.Modifier2);
+
+                    if (loadSet.LabelAttributes.Credibility != null)
+                        SymbolAttributeSet.LabelAttributes.SelectedCredibilityDomainPair = 
+                            MilitaryFieldsInspectorModel.CredibilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Credibility);
+
+                    if (loadSet.LabelAttributes.Reinforced != null)
+                        SymbolAttributeSet.LabelAttributes.SelectedReinforcedDomainPair = 
+                            MilitaryFieldsInspectorModel.ReinforcedDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Reinforced);
+
+                    if (loadSet.LabelAttributes.Reliability != null)
+                        SymbolAttributeSet.LabelAttributes.SelectedReliabilityDomainPair = 
+                            MilitaryFieldsInspectorModel.ReliabilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Reliability);
+
+                    if (loadSet.LabelAttributes.SelectedCountryCodeDomainPair != null)
+                        SymbolAttributeSet.LabelAttributes.SelectedCountryCodeDomainPair = 
+                            MilitaryFieldsInspectorModel.CountryCodeDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.CountryCode);
                 }
             }
             catch (Exception exception)
@@ -1651,16 +2016,37 @@ namespace ProSymbolEditor
             return;
         }
 
-        private string[] ParseKeyForSymbolIdCode(string key)
+        private string[] ParseKeyForSymbolIdCode(string tags)
         {
-            string[] symbolId = new string[2];
+            string[] symbolId = new string[3];
 
-            //todo check if symbolid is in key
+            //TODO: check if symbolid is in key
 
-            int lastSemicolon = key.LastIndexOf(';');
-            string symbolIdCode = key.Substring(lastSemicolon + 1, key.Length - lastSemicolon - 1);
+            int lastSemicolon = tags.LastIndexOf(';');
+            string symbolIdCode = tags.Substring(lastSemicolon + 1, tags.Length - lastSemicolon - 1);
             symbolId[0] = string.Format("{0}{1}", symbolIdCode[0], symbolIdCode[1]);
             symbolId[1] = string.Format("{0}{1}{2}{3}{4}{5}", symbolIdCode[2], symbolIdCode[3], symbolIdCode[4], symbolIdCode[5], symbolIdCode[6], symbolIdCode[7]);
+
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525d)
+            {
+                symbolId[2] = String.Empty;
+            }
+            else // mil2525c_b2
+            {
+                string[] tagArray = tags.Split(';');
+                int tagCount = tagArray.Count();
+                if (tagCount > 5)
+                {
+                    // Tricky - Legacy SIDC always Tags[-5]
+                    string legacySidc = tagArray[tagCount - 5];
+
+                    if (legacySidc.Count() >= 10)
+                    {
+                        symbolId[2] = string.Format("{0}-{1}-{2}", legacySidc[0], legacySidc[2], legacySidc.Substring(4, 6));
+                    }
+
+                }
+            }
 
             return symbolId;
         }
@@ -1710,8 +2096,24 @@ namespace ProSymbolEditor
                     var nextTask = await Task.WhenAny(searchTasks);
                     var results = await nextTask;
                     searchTasks.Remove(nextTask);
-                    combinedSymbols.AddRange(results.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
-                                                         (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))));
+
+                    // Change style query based on current standard
+                    if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                    {  
+                    // TODO: also include 2525C keys in search                                         
+                                        combinedSymbols.AddRange(results.Where(x =>
+                                          (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
+                                           ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
+                                        // TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
+                                        && (!x.Tags.Contains("NEW_AT_2525D"))
+                                        ));
+                    }
+                    else // 2525D
+                    {
+                                        combinedSymbols.AddRange(results.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
+                                            (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))  
+                                            ));
+                    }
                 }
 
                 _styleItems = combinedSymbols;
@@ -1744,6 +2146,12 @@ namespace ProSymbolEditor
         {
             SymbolAttributeSet set = item as SymbolAttributeSet;
 
+            // filter out those who standard version doesn't match
+            if (set.StandardVersion != ProSymbolUtilities.StandardString)
+            {
+                return false;
+            }
+
             //Do case insensitive filter
             bool idContains = set.FavoriteId.IndexOf(_favoritesSearchFilter, StringComparison.OrdinalIgnoreCase) >= 0;
             bool tagsContains = set.SymbolTags.IndexOf(_favoritesSearchFilter, StringComparison.OrdinalIgnoreCase) >= 0;
@@ -1755,25 +2163,56 @@ namespace ProSymbolEditor
             return false;
         }
 
+        private void ShowMilitaryFeatureNotFoundMessageBox()
+        {
+            string message = "The Selected Feature does not seem to be a Military Feature or " +
+                "does not match the Military Standard in use (" + ProSymbolUtilities.StandardLabel +
+                ").";
+
+            MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Invalid Selection", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+        }
+
+        private void ShowMilitaryStyleNotFoundMessageBox()
+        {
+            string message = "The Required Military Style (" + ProSymbolUtilities.StandardString +
+                ") is not detected in Pro Install.";
+
+            MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+        }
+
         private void ShowAddInNotEnabledMessageBox()
         {
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
-            {
-                string message = "The Military Overlay schema as not detected in any database in your project, so the Pro Symbol Editor cannot continue.  " +
-                                 "Would you like to add the Military Overlay Layer Package to add the schema to your project?";
+            SelectedStyleItem = null;
 
-                
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
+            {
+                string message = "The " + ProSymbolUtilities.StandardLabel +
+                    " Military Overlay schema is not detected in any database in your project," +
+                    " so the Pro Symbol Editor cannot continue." +
+                    " Would you like to add the Military Overlay Layer Package to add the schema to your project?";
+
                 MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result.ToString() == "Yes")
-                { 
+                {
                     if (MapView.Active != null)
                     {
-                        AddLayerPackageToMapAsync();
+                        await AddLayerPackageToMapAsync();
+                        // Reselect this style item onced the layer package is added
+                        SelectedStyleItem = _savedStyleItem;
                     }
                     else
                     {
                         ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Your project does not contain any active map.  Create one and try again.");
                     }
+                }
+                else
+                {
+                    // Not sure why this didn't work:
+                    // Clear the search list
+                    // StyleItems.Clear();
+                    // NotifyPropertyChanged(() => StyleItems);
+                    // WORKAROUND:
+                    SearchString = "ADDIN NOT ENABLED";
                 }
             }));
         }
@@ -1786,9 +2225,17 @@ namespace ProSymbolEditor
 
                 await QueuedTask.Run(async () =>
                 {
-                    LayerFactory.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "Files", "MilitaryOverlay.lpkx")), MapView.Active.Map);
+                    // "MilitaryOverlay-{standard}.lpkx"
+                    string layerFileName = "MilitaryOverlay-" + ProSymbolUtilities.StandardString.ToLower() + ".lpkx";
+                    LayerFactory.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
                     Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
                     bool enabled = await isEnabledMethod;
+
+                    if (enabled)
+                        StatusMessage = "Military Layers Added";
+                    else
+                        StatusMessage = "Addin Not Enabled";
+
                     _progressDialog.Hide();
                 });
             }

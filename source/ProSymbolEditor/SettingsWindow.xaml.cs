@@ -13,11 +13,9 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  ******************************************************************************/
-
-using ArcGIS.Desktop.Framework.Contracts;
+ 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,20 +27,43 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Xml;
 
 namespace ProSymbolEditor
 {
     /// <summary>
-    /// Interaction logic for AboutWindow.xaml
+    /// Interaction logic for SettingsWindow.xaml
     /// </summary>
-    public partial class AboutWindow : Window
+    public partial class SettingsWindow : Window
     {
-        public AboutWindow()
+
+        // Radio Button binding special binding case:
+        public bool Checked2525D
+        {
+            get { return _checked2525D; }
+            set
+            {
+                _checked2525D = value;
+                _checked2525C_B2 = !_checked2525D;
+            }
+        }
+        bool _checked2525D;
+
+        public bool Checked2525C_B2
+        {
+            get { return _checked2525C_B2; }
+            set
+            {
+                _checked2525C_B2 = value;
+                _checked2525D = !_checked2525C_B2;
+            }
+        }
+        bool _checked2525C_B2;
+
+        public SettingsWindow()
         {
             InitializeComponent();
 
-            this.VersionBox.DataContext = this;
+            this.DataContext = this;
         }
 
         public void ShowDialog(Window owner)
@@ -51,25 +72,9 @@ namespace ProSymbolEditor
             this.ShowDialog();
         }
 
-        public string VersionString
+        private void OkClick(object sender, RoutedEventArgs e)
         {
-            get
-            {
-                // NOTE: We can't figure out a way to look this up from the DAML file
-                // but the 3 versions - DAML, Assembly, and this label/string - should match
-                // Only use Major.Minor.Build numbers (not Revision)
-                string versionString = 
-                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." +
-                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString() + "." +
-                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build.ToString();
-                return versionString;
-            }
-        }
-
-        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
-            e.Handled = true;
+            this.DialogResult = true;
         }
     }
 }
