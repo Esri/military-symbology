@@ -596,7 +596,7 @@ namespace ProSymbolEditor
                     _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(
                         _symbolAttributeSet.DisplayAttributes, GeometryType);
 
-                    if (_currentFeatureClassName != null && _currentFeatureClassName != "")
+                    if (!string.IsNullOrEmpty(_currentFeatureClassName))
                     {
                         //Generate domains
                         GetMilitaryDomainsAsync(loadSet);
@@ -965,10 +965,13 @@ namespace ProSymbolEditor
                             //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
                             if (datastore is UnknownDatastore)
                                 continue;
+
                             Geodatabase geodatabase = datastore as Geodatabase;
+                            if (geodatabase == null)
+                                continue;
 
                             //Find the correct gdb for the one with the complete schema
-                            string geodatabasePath = geodatabase.GetPath();
+                            string geodatabasePath = gdbProjectItem.Path; 
                             if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
                             {
                                 EditOperation editOperation = new EditOperation();
@@ -1113,9 +1116,9 @@ namespace ProSymbolEditor
                         if (datastore is UnknownDatastore)
                             continue;
                         Geodatabase geodatabase = datastore as Geodatabase;
-                        
+
                         //Find the correct gdb for the one with the complete schema
-                        string geodatabasePath = geodatabase.GetPath();
+                        string geodatabasePath = gdbProjectItem.Path;
                         if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
                         {
                             //Correct GDB, open the current selected feature class
@@ -1383,7 +1386,7 @@ namespace ProSymbolEditor
                 _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(
                     _symbolAttributeSet.DisplayAttributes, GeometryType);
 
-                if (_currentFeatureClassName != null && _currentFeatureClassName != "")
+                if (!string.IsNullOrEmpty(_currentFeatureClassName))
                 {
                     //Generate domains and pass in set to update values initially
                     GetMilitaryDomainsAsync(loadSet);
@@ -1591,6 +1594,9 @@ namespace ProSymbolEditor
                     if (!string.IsNullOrEmpty(symbolEntityFieldName))
                     {
                         symbolEntityField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == symbolEntityFieldName);
+                        if (symbolEntityField == null) // then does not have required field
+                            return;
+
                         CodedValueDomain symbolEntityDomain = symbolEntityField.GetDomain() as CodedValueDomain;
                         if (symbolEntityDomain != null)
                             symbolEntityDomainSortedList = symbolEntityDomain.GetCodedValuePairs();
@@ -1614,10 +1620,11 @@ namespace ProSymbolEditor
                         if (row != null)
                         {
                             SelectedFeature newSelectedFeature = new SelectedFeature(kvp.Key, id);
-                            
-                            foreach(KeyValuePair<object, string> symbolSetKeyValuePair in symbolSetDomainSortedList)
+
+                            string symbolSetString = row[symbolSetFieldName].ToString();
+                            foreach (KeyValuePair<object, string> symbolSetKeyValuePair in symbolSetDomainSortedList)
                             {
-                                if (symbolSetKeyValuePair.Key.ToString() == row[symbolSetFieldName].ToString())
+                                if (symbolSetKeyValuePair.Key.ToString() == symbolSetString)
                                 {
                                     newSelectedFeature.SymbolSetName = symbolSetKeyValuePair.Value;
                                     break;
@@ -1627,9 +1634,11 @@ namespace ProSymbolEditor
                             if (!string.IsNullOrEmpty(symbolEntityFieldName) && 
                                 (symbolEntityDomainSortedList !=null))
                             {
+                                string symbolEntityString = row[symbolEntityFieldName].ToString();
+
                                 foreach (KeyValuePair<object, string> symbolEntityKeyValuePair in symbolEntityDomainSortedList)
                                 {
-                                    if (symbolEntityKeyValuePair.Key.ToString() == row[symbolEntityFieldName].ToString())
+                                    if (symbolEntityKeyValuePair.Key.ToString() == symbolEntityString)
                                     {
                                         newSelectedFeature.EntityName = symbolEntityKeyValuePair.Value;
                                         break;
@@ -1816,9 +1825,18 @@ namespace ProSymbolEditor
                                     continue;
                             Geodatabase geodatabase = datastore as Geodatabase;
 
-                            string geodatabasePath = geodatabase.GetPath();
+                            string geodatabasePath = gdbProjectItem.Path;
                             if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
                             {
+                                GeodatabaseType gdbType = geodatabase.GetGeodatabaseType();
+                                if (gdbType == GeodatabaseType.RemoteDatabase)
+                                {
+                                    // if an SDE/EGDB, then feature class name format will differ:
+                                    // Database + User + Feature Class Name 
+                                    ConnectionProperties cps = geodatabase.GetConnectionProperties();
+                                    _currentFeatureClassName = cps.Database + "." + cps.User + "." + _currentFeatureClassName;
+                                }
+
                                 //Correct GDB, open the current selected feature class
                                 _currentFeatureClass = geodatabase.OpenDataset<FeatureClass>(_currentFeatureClassName);
                                 using (_currentFeatureClass)
@@ -1921,7 +1939,7 @@ namespace ProSymbolEditor
                                 continue;
                             Geodatabase geodatabase = datastore as Geodatabase;
 
-                            string geodatabasePath = geodatabase.GetPath();
+                            string geodatabasePath = gdbProjectItem.Path;
                             if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
                             {
                                 //Correct GDB, open the current selected feature class
