@@ -54,6 +54,7 @@ namespace ProSymbolEditor
                 hashcode = (hashcode * PRIME) ^ (_context != null ? _context.GetHashCode() : 0);
                 hashcode = (hashcode * PRIME) ^ (_modifier1 != null ? _context.GetHashCode() : 0);
                 hashcode = (hashcode * PRIME) ^ (_modifier2 != null ? _context.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_extendedFunctionCode != null ? _extendedFunctionCode.GetHashCode() : 0);
             }
 
             return hashcode;
@@ -80,6 +81,8 @@ namespace ProSymbolEditor
         private DomainCodedValuePair _selectedModifier1DomainPair;
         private string _modifier2;
         private DomainCodedValuePair _selectedModifier2DomainPair;
+        private string _extendedFunctionCode;
+        private DomainCodedValuePair _selectedExtendedFunctionCodeDomainPair;
 
         public string LegacySymbolIdCode
         {
@@ -134,7 +137,6 @@ namespace ProSymbolEditor
                 NotifyPropertyChanged(() => LegacySymbolIdCode);
             }
         }
-        private string _extendedFunctionCode;
 
         [ScriptIgnore, Browsable(false)]
         public DomainCodedValuePair SelectedExtendedFunctionCodeDomainPair
@@ -157,7 +159,6 @@ namespace ProSymbolEditor
                 }
             }
         }
-        private DomainCodedValuePair _selectedExtendedFunctionCodeDomainPair;
 
         public DisplayAttributes()  {    }
 
