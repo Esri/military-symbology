@@ -1422,6 +1422,11 @@ namespace ProSymbolEditor
                     return;
                 }
 
+                if (Favorites.Contains(SymbolAttributeSet))
+                {
+                    throw new Exception("Favorite already exists.");
+                }
+
                 SymbolAttributeSet.FavoriteId = Guid.NewGuid().ToString();
                 //Create copy by serializing/deserializing
                 var json = new JavaScriptSerializer().Serialize(SymbolAttributeSet);
@@ -1429,7 +1434,7 @@ namespace ProSymbolEditor
 
                 //Add to favorites
                 if (favoriteSet == null) // should not happen
-                    throw new Exception("Could not create Favorite");
+                    throw new Exception("Could not create Favorite.");
 
                 favoriteSet.GeneratePreviewSymbol();
                 Favorites.Add(favoriteSet);
@@ -1440,7 +1445,7 @@ namespace ProSymbolEditor
             }
             catch (Exception ex)
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Unable to add the current favorite. Message: " + ex.Message);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Unable to add the current favorite. " + ex.Message, "Error Adding Favorite", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 

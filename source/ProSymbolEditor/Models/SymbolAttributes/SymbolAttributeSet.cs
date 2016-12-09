@@ -201,6 +201,28 @@ namespace ProSymbolEditor
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            if ((obj == null) || (GetType() != obj.GetType()))
+                return false;
+
+            SymbolAttributeSet compareObj = obj as SymbolAttributeSet;
+
+            if ((DisplayAttributes == null) || (LabelAttributes == null))
+                return false;
+
+            return DisplayAttributes.Equals(compareObj.DisplayAttributes)
+             && LabelAttributes.Equals(compareObj.LabelAttributes);
+        }
+
+        public override int GetHashCode()
+        {
+            if ((DisplayAttributes == null) || (LabelAttributes == null))
+                return 0;
+            else
+                return DisplayAttributes.GetHashCode() ^ LabelAttributes.GetHashCode();
+        }
+
         #region Getters/Setters
 
         [ExpandableObject]
