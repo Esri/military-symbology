@@ -271,25 +271,16 @@ namespace ProSymbolEditor
 
             if (attributeSet.Count == 0)
             {
-                // Warning?
                 return;
             }
 
             // Step 2: Set the SVG Home Folder
-            // This should be within the git clone of joint-military-symbology-xml 
-            // ex: C:\Github\joint-military-symbology-xml\svg\MIL_STD_2525D_Symbols
-
-            // This is called in CheckSettings below, but you should call yourself if
-            // reusing this method 
-            //Utilities.SetImageFilesHome(@"C:\Projects\Github\joint-military-symbology-xml\svg\MIL_STD_2525D_Symbols");
-
             string militarySymbolsPath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "Images", "MIL_STD_2525D_Symbols");
             bool pathExists = Utilities.SetImageFilesHome(militarySymbolsPath);
 
             if (!Utilities.CheckImageFilesHomeExists())
-            //if (!CheckSettings())
             {
-                Console.WriteLine("No SVG Folder, can't continue.");
+                System.Diagnostics.Trace.WriteLine("Export Failed! No SVGs in Folder: " + militarySymbolsPath);
                 return;
             }
 
