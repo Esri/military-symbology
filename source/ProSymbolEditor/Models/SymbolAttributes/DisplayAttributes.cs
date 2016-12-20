@@ -27,6 +27,39 @@ namespace ProSymbolEditor
 {
     public class DisplayAttributes : PropertyChangedBase
     {
+        public override bool Equals(object obj)
+        {
+            if ((obj == null) || (GetType() != obj.GetType()))
+                return false;
+
+            bool equals = GetHashCode() == obj.GetHashCode();
+
+            return equals;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashcode;
+            const int PRIME = 263;
+            unchecked
+            {
+                hashcode = PRIME * (_symbolSet != null ? _symbolSet.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_symbolEntity != null ? _symbolEntity.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_identity != null ? _identity.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_status != null ? _status.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_operationalCondition != null ? _operationalCondition.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_echelon != null ? _echelon.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_indicator != null ? _indicator.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_mobility != null ? _mobility.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_context != null ? _context.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_modifier1 != null ? _context.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_modifier2 != null ? _context.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_extendedFunctionCode != null ? _extendedFunctionCode.GetHashCode() : 0);
+            }
+
+            return hashcode;
+        }
+
         //Base attributes
         private string _symbolSet;
         private string _symbolEntity;
@@ -48,6 +81,8 @@ namespace ProSymbolEditor
         private DomainCodedValuePair _selectedModifier1DomainPair;
         private string _modifier2;
         private DomainCodedValuePair _selectedModifier2DomainPair;
+        private string _extendedFunctionCode;
+        private DomainCodedValuePair _selectedExtendedFunctionCodeDomainPair;
 
         public string LegacySymbolIdCode
         {
@@ -102,7 +137,6 @@ namespace ProSymbolEditor
                 NotifyPropertyChanged(() => LegacySymbolIdCode);
             }
         }
-        private string _extendedFunctionCode;
 
         [ScriptIgnore, Browsable(false)]
         public DomainCodedValuePair SelectedExtendedFunctionCodeDomainPair
@@ -125,7 +159,6 @@ namespace ProSymbolEditor
                 }
             }
         }
-        private DomainCodedValuePair _selectedExtendedFunctionCodeDomainPair;
 
         public DisplayAttributes()  {    }
 
