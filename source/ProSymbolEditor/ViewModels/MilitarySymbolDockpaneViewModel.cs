@@ -627,6 +627,17 @@ namespace ProSymbolEditor
                 if (_selectedSelectedFeature == value)
                     return;
 
+                if (SelectedTabIndex == 0)
+                {
+                    // Don't allow selection from the Search Tab
+                    return;
+                }
+                else
+                {
+                    // for other tabs - clear the search selection (so user has to reselect)
+                    ClearSearchSelection();
+                }
+
                 _selectedSelectedFeature = value;
 
                 if (_selectedSelectedFeature != null)
@@ -683,6 +694,8 @@ namespace ProSymbolEditor
                     }
 
                     IsFavoriteItemSelected = true;
+
+                    ClearSearchSelection();
                 }
                 else
                 {
@@ -866,8 +879,26 @@ namespace ProSymbolEditor
 
         private void ActivateSelectTool(object parameter)
         {
-            FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_SelectionMapTool");
-            SelectToolEnabled = true;
+            if (FrameworkApplication.CurrentTool == "ProSymbolEditor_SelectionMapTool")
+            {
+                // If selection tool already active, turn this tool off, by switching to default map tool
+                FrameworkApplication.SetCurrentToolAsync("esri_mapping_exploreTool");
+
+                // then clear the selection using the built-in Pro button/command
+                IPlugInWrapper wrapper = FrameworkApplication.GetPlugInWrapper("esri_mapping_clearSelectionButton");
+                var command = wrapper as ICommand; 
+                if ((command != null) && command.CanExecute(null))
+                    command.Execute(null);
+
+                SelectedFeaturesCollection.Clear();
+
+                SelectToolEnabled = false;
+            }
+            else
+            {
+                FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_SelectionMapTool");
+                SelectToolEnabled = true;
+            }
         }
 
         private void ShowAboutWindow(object parameter)
@@ -1661,6 +1692,12 @@ namespace ProSymbolEditor
         }
 
         #endregion
+
+        private void ClearSearchSelection()
+        {
+            _selectedStyleItem = null;
+            NotifyPropertyChanged(() => SelectedStyleItem);
+        }
 
         private int _searchUniformGridRows = 2;
         public int SearchUniformGridRows
