@@ -879,8 +879,26 @@ namespace ProSymbolEditor
 
         private void ActivateSelectTool(object parameter)
         {
-            FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_SelectionMapTool");
-            SelectToolEnabled = true;
+            if (FrameworkApplication.CurrentTool == "ProSymbolEditor_SelectionMapTool")
+            {
+                // If selection tool already active, turn this tool off, by switching to default map tool
+                FrameworkApplication.SetCurrentToolAsync("esri_mapping_exploreTool");
+
+                // then clear the selection using the built-in Pro button/command
+                IPlugInWrapper wrapper = FrameworkApplication.GetPlugInWrapper("esri_mapping_clearSelectionButton");
+                var command = wrapper as ICommand; 
+                if ((command != null) && command.CanExecute(null))
+                    command.Execute(null);
+
+                SelectedFeaturesCollection.Clear();
+
+                SelectToolEnabled = false;
+            }
+            else
+            {
+                FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_SelectionMapTool");
+                SelectToolEnabled = true;
+            }
         }
 
         private void ShowAboutWindow(object parameter)
