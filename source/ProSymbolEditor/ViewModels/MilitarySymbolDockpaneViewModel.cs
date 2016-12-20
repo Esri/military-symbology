@@ -627,6 +627,17 @@ namespace ProSymbolEditor
                 if (_selectedSelectedFeature == value)
                     return;
 
+                if (SelectedTabIndex == 0)
+                {
+                    // Don't allow selection from the Search Tab
+                    return;
+                }
+                else
+                {
+                    // for other tabs - clear the search selection (so user has to reselect)
+                    ClearSearchSelection();
+                }
+
                 _selectedSelectedFeature = value;
 
                 if (_selectedSelectedFeature != null)
@@ -683,6 +694,8 @@ namespace ProSymbolEditor
                     }
 
                     IsFavoriteItemSelected = true;
+
+                    ClearSearchSelection();
                 }
                 else
                 {
@@ -1661,6 +1674,12 @@ namespace ProSymbolEditor
         }
 
         #endregion
+
+        private void ClearSearchSelection()
+        {
+            _selectedStyleItem = null;
+            NotifyPropertyChanged(() => SelectedStyleItem);
+        }
 
         private int _searchUniformGridRows = 2;
         public int SearchUniformGridRows
