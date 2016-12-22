@@ -261,6 +261,7 @@ namespace ProSymbolEditor
             SelectToolCommand = new RelayCommand(ActivateSelectTool, param => true);
             ShowAboutWindowCommand = new RelayCommand(ShowAboutWindow, param => true);
             ShowSettingsWindowCommand = new RelayCommand(ShowSettingsWindow, param => true);
+            ClearSearchTextCommand = new RelayCommand(ClearSearchText, param => true);
 
             _symbolAttributeSet.LabelAttributes.DateTimeValid = null;
             _symbolAttributeSet.LabelAttributes.DateTimeExpired = null;
@@ -331,6 +332,8 @@ namespace ProSymbolEditor
         public ICommand ShowAboutWindowCommand { get; set; }
 
         public ICommand ShowSettingsWindowCommand { get; set; }
+
+        public ICommand ClearSearchTextCommand { get; set; }
         #endregion
 
         #region Style Getters/Setters
@@ -1546,6 +1549,10 @@ namespace ProSymbolEditor
             }
         }
 
+        private void ClearSearchText(object parameter)
+        {
+            SearchString = string.Empty;
+        }
         #endregion
 
         #region Event Listeners
@@ -2262,7 +2269,8 @@ namespace ProSymbolEditor
                     }
                     else
                     {
-                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Your project does not contain any active map.  Create one and try again.");
+                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Your project does not contain any active map.  Create one and try again.", "Please Add Map to Your Project", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        SearchString = "ADD MAP TO PROJECT";
                     }
                 }
                 else

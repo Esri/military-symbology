@@ -117,7 +117,16 @@
                                                 </Style>
                                             </TextBox.Style>
                                         </TextBox>
-
+                                        <Button
+                                             Background="{Binding Backgound, ElementName=searchSymbolsTextBox}" Grid.Row="0" 
+                                             Margin="{Binding Margin, ElementName=searchSymbolsTextBox}"
+                                             Height="{Binding Height, ElementName=searchSymbolsTextBox}"
+                                             HorizontalAlignment="Right" Content="X"
+                                             Command="{Binding ClearSearchTextCommand}"    
+                                             HorizontalContentAlignment="Center"
+                                             VerticalContentAlignment="Center" >
+                                        </Button>
+                                        
                                         <ListBox x:Name="symbolListBox" Margin="5,5,5,5" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
                                                 SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" MaxHeight="290">
 
