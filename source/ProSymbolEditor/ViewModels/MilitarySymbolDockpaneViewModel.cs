@@ -159,12 +159,10 @@ namespace ProSymbolEditor
         private void resetViewModelState()
         {
             //Reset things
-            this.SelectedStyleItem = null;
-            this.IsStyleItemSelected = false;
+            ClearSearch();
+
             this.IsFavoriteItemSelected = false;
-            this.StyleItems.Clear();
             this.SelectedTabIndex = 0;
-            this.ResultCount = "---";
             this.SearchString = "";
             this.StatusMessage = "";
             _symbolAttributeSet.ResetAttributes();
@@ -520,11 +518,11 @@ namespace ProSymbolEditor
                     return;
                 }
 
+                //Clear old attributes
+                _symbolAttributeSet.ResetAttributes();
+
                 if (_selectedStyleItem != null)
                 {
-                    //Clear old attributes
-                    _symbolAttributeSet.ResetAttributes();
-
                     //Tokenize tags
                     _symbolAttributeSet.SymbolTags = _selectedStyleItem.Tags;
                     SelectedStyleTags.Clear();
@@ -964,15 +962,6 @@ namespace ProSymbolEditor
 
                     // Reset everything when standard changed
                     resetViewModelState();
-
-                    // HACK:
-                    // StyleItems list update was not updating the view, 
-                    // not sure why this bound property is not updating the UI
-                    // TODO: test switching this to an ObservableCollection
-                    // Force the tab to be redrawn to workaround the issue
-                    SelectedTabIndex = 1;
-                    SelectedTabIndex = 0;
-                    // END HACK
 
                     // Save settings (or TODO: or do this in close/unload):
                     Properties.Settings.Default.DefaultStandard =
@@ -1552,7 +1541,29 @@ namespace ProSymbolEditor
         private void ClearSearchText(object parameter)
         {
             SearchString = string.Empty;
+
+            ClearSearch();
         }
+
+        private void ClearSearch()
+        {
+            SelectedStyleTags.Clear();
+            SelectedStyleItem = null;
+            IsStyleItemSelected = false;
+            StyleItems.Clear();
+
+            ResultCount = "---";
+            // HACK:
+            // NotifyPropertyChanged(() => StyleItems);
+            // StyleItems list update was not updating the view, 
+            // not sure why this bound property is not updating the UI
+            // TODO: test switching this to an ObservableCollection
+            // Force the tab to be redrawn to workaround the issue
+            SelectedTabIndex = 1;
+            SelectedTabIndex = 0;
+            // END HACK
+        }
+
         #endregion
 
         #region Event Listeners
@@ -1704,60 +1715,6 @@ namespace ProSymbolEditor
         {
             _selectedStyleItem = null;
             NotifyPropertyChanged(() => SelectedStyleItem);
-        }
-
-        private int _searchUniformGridRows = 2;
-        public int SearchUniformGridRows
-        {
-            get
-            {
-                return _searchUniformGridRows;
-            }
-            set
-            {
-                _searchUniformGridRows = value;
-
-                NotifyPropertyChanged(() => SearchUniformGridRows);
-            }
-        }
-
-        private int _searchUniformGridColumns = 1;
-        public int SearchUniformGridColumns
-        {
-            get
-            {
-                return _searchUniformGridColumns;
-            }
-            set
-            {
-                _searchUniformGridColumns = value;
-
-                NotifyPropertyChanged(() => SearchUniformGridColumns);
-            }
-        }
-
-        private int _searchUniformGridWith;
-        public int SearchUniformGridWidth
-        {
-            get
-            {
-                return _searchUniformGridWith;
-            }
-            set
-            {
-                _searchUniformGridWith = value;
-
-                if (_searchUniformGridColumns < 600)
-                {
-                    SearchUniformGridColumns = 1;
-                    SearchUniformGridRows = 2;
-                }
-                else
-                {
-                    SearchUniformGridColumns = 2;
-                    SearchUniformGridRows = 1;
-                }
-            }
         }
 
         #region Private Methods
