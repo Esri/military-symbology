@@ -73,23 +73,11 @@
                             </Grid.RowDefinitions>
 
                             <ScrollViewer Grid.Row="0">
-                                <UniformGrid Name="SearchUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged">
-                                    <!--<Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>-->
-
-
+                                <StackPanel>
                                     <Grid>
-                                        <!--<Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>-->
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
-                                            <RowDefinition MaxHeight="300"/>
+                                            <RowDefinition MinHeight="120" MaxHeight="240"/>
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
@@ -117,9 +105,18 @@
                                                 </Style>
                                             </TextBox.Style>
                                         </TextBox>
-
+                                        <Button
+                                             Background="{Binding Backgound, ElementName=searchSymbolsTextBox}" Grid.Row="0" 
+                                             Margin="{Binding Margin, ElementName=searchSymbolsTextBox}"
+                                             Height="{Binding Height, ElementName=searchSymbolsTextBox}"
+                                             HorizontalAlignment="Right" Content="X"
+                                             Command="{Binding ClearSearchTextCommand}"    
+                                             HorizontalContentAlignment="Center"
+                                             VerticalContentAlignment="Center" >
+                                        </Button>
+                                        
                                         <ListBox x:Name="symbolListBox" Margin="5,5,5,5" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
-                                                SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" MaxHeight="290">
+                                                SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" MaxHeight="240">
 
                                             <ListBox.ItemsPanel>
                                                 <ItemsPanelTemplate>
@@ -161,12 +158,7 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
 
-                                        <!--<Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>-->
-
-                                        <Image x:Name="searchTabImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Margin="20,5,20,5" Grid.Row="0" VerticalAlignment="Bottom">
+                                        <Image x:Name="searchTabImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Margin="20,1,20,1" Grid.Row="0" VerticalAlignment="Top">
                                             <Image.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
@@ -200,8 +192,7 @@
                                         </ItemsControl>
                                     </Grid>
 
-
-                                </UniformGrid>
+                                </StackPanel>
                             </ScrollViewer>
 
                             <Grid Grid.Row="1">
@@ -229,11 +220,11 @@
                             </Grid.RowDefinitions>
 
                             <ScrollViewer Grid.Row="0">
-                                <UniformGrid Name="editUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged">
+                                <StackPanel>
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="300"/>
+                                            <RowDefinition MaxHeight="240"/>
                                         </Grid.RowDefinitions>
 
                                         <Grid Grid.Row="0">
@@ -273,7 +264,7 @@
                                         </Grid>
                                         
                                         <ListBox x:Name="editSelectionList" Margin="5,5,5,5" ItemsSource="{Binding SelectedFeaturesCollection, UpdateSourceTrigger=PropertyChanged}" 
-                                                HorizontalAlignment="Stretch" SelectedItem="{Binding SelectedSelectedFeature, Mode=TwoWay}" VerticalAlignment="Stretch" Grid.Row="1" MaxHeight="290">
+                                                HorizontalAlignment="Stretch" SelectedItem="{Binding SelectedSelectedFeature, Mode=TwoWay}" VerticalAlignment="Stretch" Grid.Row="1" MinHeight="120" MaxHeight="240">
 
                                             <ListBox.ItemsPanel>
                                                 <ItemsPanelTemplate>
@@ -314,7 +305,7 @@
                                             <RowDefinition Height="*"/>
                                         </Grid.RowDefinitions>
 
-                                        <Image Grid.Row="0" Source="{Binding EditSelectedFeatureSymbol.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="190" Height="190" Margin="20,5,20,5" VerticalAlignment="Bottom">
+                                        <Image Grid.Row="0" Source="{Binding EditSelectedFeatureSymbol.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Margin="20,1,20,1" VerticalAlignment="Top">
                                             <Image.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
@@ -333,10 +324,7 @@
                                         </xctk:PropertyGrid>
 
                                     </Grid>
-                                    
-
-
-                                </UniformGrid>
+                                </StackPanel>
                             </ScrollViewer>
 
                             <Grid Grid.Row="1">
@@ -364,7 +352,7 @@
                             </Grid.RowDefinitions>
 
                             <ScrollViewer Grid.Row="0">
-                                <UniformGrid Rows="2" Columns="1" SizeChanged="SearchUniformGrid_SizeChanged">
+                                <StackPanel>
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
@@ -487,7 +475,7 @@
 
                                         <!--<Image Source="{Binding SelectedFavoriteSymbol.SymbolImage, UpdateSourceTrigger=PropertyChanged}" Width="200" Height="200" Grid.Column="0"/>-->
 
-                                        <Image Grid.Row="0" Source="{Binding SelectedFavoriteSymbol.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="190" Height="190" Margin="20,5,20,5" VerticalAlignment="Bottom">
+                                        <Image Grid.Row="0" Source="{Binding SelectedFavoriteSymbol.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Margin="20,1,20,1" VerticalAlignment="Bottom">
                                             <Image.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
@@ -506,8 +494,7 @@
                                         </xctk:PropertyGrid>
 
                                     </Grid>
-
-                                </UniformGrid>
+                                </StackPanel>
                             </ScrollViewer>
 
                             <Grid Grid.Row="1">
@@ -537,10 +524,9 @@
                             </Grid.RowDefinitions>
 
                             <ScrollViewer>
-                                <UniformGrid Name="modifyUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged" Grid.Row="0">
+                                <StackPanel>
 
-
-                                    <Grid>
+                                <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
@@ -707,15 +693,13 @@
 
                                     </Grid>
 
-
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*"/>
                                             <RowDefinition Height="Auto"/>
-                                            <!--<RowDefinition Height="Auto"/>-->
                                         </Grid.RowDefinitions>
 
-                                        <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                        <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
                                             <Image.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
@@ -733,99 +717,8 @@
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
 
-                                        <!-- All Selected Symbol Tags-->
-                                        <!--<TextBlock x:Name="selectedSymbolTagsTextBlock" Margin="10,0,10,10" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Stretch"/>-->
-
-                                        <!--<Grid Grid.Row="1" Margin="0,10,0,0">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="*"/>
-                                            </Grid.RowDefinitions>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            --><!--<Label Content="Set A" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
-
-                                            <!--<Label Content="1" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="0" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>--><!--
-                                            <Label Content="{Binding ElementName=contextComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding ElementName=identityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding SymbolAttributeSet.DisplayAttributes.SymbolSet, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding SymbolAttributeSet.DisplayAttributes.SymbolEntity, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding ElementName=statusComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding ElementName=tfFdHqComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="5" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-
-
-                                            --><!--<Label Content="Version" FontSize="10" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>--><!--
-                                            <Label Content="Context" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="Identity" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
-                                                <TextBlock Text="Symbol Set" FontSize="10" TextWrapping="Wrap"/>
-                                            </Label>
-                                            <Label Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
-                                                <TextBlock Text="Symbol Entity" FontSize="10" TextWrapping="Wrap"/>
-                                            </Label>
-                                            <Label Content="Status" FontSize="10" Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
-                                                <TextBlock Text="TF/FD/HQ" FontSize="10" TextWrapping="Wrap"/>
-                                            </Label>
-                                            --><!--<Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="Standard Identity" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>-->
-
-
-
-                                            <!--<Label Grid.Column="6" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="Amplifier / Descriptor" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>--><!--
-
-                                        </Grid>
-
-                                        <Grid Grid.Row="2" Margin="0,10,0,10">
-
-
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="*"/>
-                                            </Grid.RowDefinitions>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            --><!--<Label Content="Set B" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>--><!--
-                                            <Label Content="{Binding ElementName=operationalConditionAmplifierComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding ElementName=mobilityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding ElementName=echelonComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding ElementName=modifier1ComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding ElementName=modifier2ComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-
-
-                                            <Label Content="Operational" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-
-                                            <Label Content="Mobility" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="Echelon" FontSize="10" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Grid.Column="3"  Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
-                                                <TextBlock Text="Modifier 1" FontSize="10" TextWrapping="Wrap"/>
-                                            </Label>
-                                            <Label Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
-                                                <TextBlock Text="Modifier 2" FontSize="10" TextWrapping="Wrap"/>
-                                            </Label>
-
-                                        </Grid>-->
                                     </Grid>
-                                </UniformGrid>
+                                </StackPanel>
                             </ScrollViewer>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -857,7 +750,7 @@
                             </Grid.RowDefinitions>
 
                             <ScrollViewer Grid.Row="0">
-                                <UniformGrid Name="TextUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged">
+                                <StackPanel>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -970,7 +863,7 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
-                                        <Image x:Name="textTabSymbolImage" Grid.Row="0" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Image x:Name="textTabSymbolImage" Grid.Row="0" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" HorizontalAlignment="Center" VerticalAlignment="Top">
                                             <Image.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
@@ -987,7 +880,7 @@
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
                                     </Grid>
-                                </UniformGrid>
+                                </StackPanel>
                             </ScrollViewer>
                             <Grid Grid.Row="1">
 
@@ -1002,7 +895,7 @@
                                 <Button Content="Add Favorite" Grid.Column="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
                                 <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Add to Map" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
                                 <Button Content="Save Edits" Grid.Column="2" Command="{Binding SaveEditsCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Save Edits" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>
-                                <Button Grid.Column="3" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="5" ToolTip="Enter Coordinates" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                <Button Grid.Column="3" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="5" ToolTip="Enter Coordinates" HorizontalAlignment="Right" Margin="0,0,-26,0" IsEnabled="{Binding IsCoordinateTabEnabled}">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
                                     </Button.RenderTransform>
@@ -1019,7 +912,7 @@
                             </Grid.RowDefinitions>
 
                             <ScrollViewer Grid.Row="0">
-                            <UniformGrid Name="CoordinatesUniformGrid" Columns="1" Rows="2" SizeChanged="SearchUniformGrid_SizeChanged">
+                                <StackPanel>
                                 <Grid>
 
                                     <Grid.RowDefinitions>
@@ -1036,7 +929,7 @@
                                                 <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>
 
-                                            <TextBox Grid.Row="0" Margin="5" Text="{Binding MapPointCoordinatesString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Visibility="{Binding PointCoordinateVisibility}"/>
+                                            <TextBox Grid.Row="0" Margin="5" Text="{Binding MapPointCoordinatesString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Visibility="{Binding PointCoordinateVisibility}" IsEnabled="{Binding IsCoordinateTabEnabled}"/>
                                             <DataGrid x:Name="dataGrid" Grid.Row="1" ItemsSource="{Binding PolyCoordinates, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="True" AutoGenerateColumns="False" Visibility="{Binding PolyCoordinateVisibility}">
                                                 <DataGrid.Columns>
                                                     <DataGridTextColumn Header="List of Coordinates" Binding="{Binding Coordinate, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Width="*"/>
@@ -1046,10 +939,7 @@
 
                                     </AdornerDecorator>
 
-                                    <!--<Button Grid.Row="2" Content="Get Location from Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding ActivateMapToolCommand}" Width="200"/>-->
-
-                                        <Button Grid.Row="2" Content="Add Coordinates to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddCoordinateToMapCommand}" CommandParameter="True" Width="175" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
-                                    <!--IsEnabled="{Binding CoordinateValid}"/>-->
+                                    <Button Grid.Row="2" Content="Add Coordinates to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddCoordinateToMapCommand}" CommandParameter="True" Width="175" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
                                 </Grid>
                                 <Grid>
                                     <Grid.RowDefinitions>
@@ -1057,7 +947,7 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                        <Image x:Name="mapTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="200" Height="200" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                        <Image x:Name="mapTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
                                             <Image.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
@@ -1073,111 +963,8 @@
                                                 <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
-
-                                        <!-- All Selected Symbol Tags-->
-                                    <!--<TextBlock x:Name="selectedSymbolTagsTextBlock" Margin="10,0,10,10" Text="{Binding SymbolAttributeSet.SelectedSymbolTags}" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Stretch"/>-->
-
-                                    <!--<Grid Grid.Row="1" Margin="0,10,0,0">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="*"/>
-                                        </Grid.RowDefinitions>
-
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        --><!--<Label Content="Set A" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>-->
-
-                                        <!--<Label Content="1" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="0" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>--><!--
-                                        <Label Content="{Binding ElementName=contextComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=identityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding SymbolAttributeSet.DisplayAttributes.SymbolSet, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                            <Label Content="{Binding SymbolAttributeSet.DisplayAttributes.SymbolEntity, UpdateSourceTrigger=PropertyChanged, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=statusComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=tfFdHqComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="5" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-
-
-                                        --><!--<Label Content="Version" FontSize="10" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>--><!--
-                                        <Label Content="Context" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="Identity" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="Symbol Set" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>
-                                        <Label Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="Symbol Entity" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>
-                                        <Label Content="Status" FontSize="10" Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="TF/FD/HQ" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>
-                                        --><!--<Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="Standard Identity" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>-->
-
-
-
-                                        <!--<Label Grid.Column="6" Grid.ColumnSpan="2" Grid.Row="3" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="Amplifier / Descriptor" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>--><!--
-
                                     </Grid>
-
-                                    <Grid Grid.Row="2" Margin="0,10,0,10">
-
-
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="*"/>
-                                        </Grid.RowDefinitions>
-
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        --><!--<Label Content="Set B" Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>--><!--
-                                        <Label Content="{Binding ElementName=operationalConditionAmplifierComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=mobilityComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=echelonComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=modifier1ComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="{Binding ElementName=modifier2ComboBox, Path=SelectedItem.Code, TargetNullValue='-', FallbackValue='-'}" FontSize="10" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-
-
-
-                                        --><!--<Label Content="12" FontSize="8" Grid.Column="0"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="12" FontSize="8" Grid.Column="1"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="13" FontSize="8" Grid.Column="2"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="14" FontSize="8" Grid.Column="3"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="15" FontSize="8" Grid.Column="4"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="16" FontSize="8" Grid.Column="5"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="17" FontSize="8" Grid.Column="6"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="18" FontSize="8" Grid.Column="7"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="19" FontSize="8" Grid.Column="8"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="20" FontSize="8" Grid.Column="9"  Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>--><!--
-                                        <Label Content="Operational" FontSize="10" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-
-                                        <Label Content="Mobility" FontSize="10" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Content="Echelon" FontSize="10" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1"/>
-                                        <Label Grid.Column="3"  Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="Beige" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="Modifier 1" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>
-                                        <Label Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Background="AliceBlue" BorderBrush="Black" BorderThickness="1">
-                                            <TextBlock Text="Modifier 2" FontSize="10" TextWrapping="Wrap"/>
-                                        </Label>
-
-                                    </Grid>-->
-                                </Grid>
-                            </UniformGrid>
+                                </StackPanel>
                             </ScrollViewer>
 
                             <Grid Grid.Row="1">

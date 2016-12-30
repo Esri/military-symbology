@@ -29,20 +29,5 @@ namespace ProSymbolEditor
         {
             InitializeComponent();
         }
-
-        private void SearchUniformGrid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            var grid = sender as UniformGrid;
-            if (grid.ActualWidth > 1000)
-            {
-                grid.Columns = 2;
-                grid.Rows = 1;
-            }
-            else
-            {
-                grid.Columns = 1;
-                grid.Rows = 2;
-            }
-        }
     }
 }
