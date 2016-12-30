@@ -14,13 +14,12 @@
  *   limitations under the License.
  ******************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+
 using ArcGIS.Desktop.Mapping;
+using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ProSymbolEditor
 {
@@ -54,7 +53,18 @@ namespace ProSymbolEditor
                 //Return all the features that intersect the sketch geometry
                 var result = MapView.Active.GetFeatures(geometry);
 
-                MapView.Active.SelectFeatures(geometry, SelectionCombinationMethod.New);
+                if ((result == null) || (result.Count == 0))
+                {
+                    // Clear any previous selection using the built-in Pro button/command
+                    IPlugInWrapper wrapper = FrameworkApplication.GetPlugInWrapper("esri_mapping_clearSelectionButton");
+                    var command = wrapper as ICommand;
+                    if ((command != null) && command.CanExecute(null))
+                        command.Execute(null);
+                }
+                else
+                {
+                    MapView.Active.SelectFeatures(geometry, SelectionCombinationMethod.New);
+                }
 
                 return true;
             });

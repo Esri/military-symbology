@@ -895,7 +895,7 @@
                                 <Button Content="Add Favorite" Grid.Column="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
                                 <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Add to Map" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
                                 <Button Content="Save Edits" Grid.Column="2" Command="{Binding SaveEditsCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Save Edits" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>
-                                <Button Grid.Column="3" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="5" ToolTip="Enter Coordinates" HorizontalAlignment="Right" Margin="0,0,-26,0">
+                                <Button Grid.Column="3" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="5" ToolTip="Enter Coordinates" HorizontalAlignment="Right" Margin="0,0,-26,0" IsEnabled="{Binding IsCoordinateTabEnabled}">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
                                     </Button.RenderTransform>
@@ -929,7 +929,7 @@
                                                 <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>
 
-                                            <TextBox Grid.Row="0" Margin="5" Text="{Binding MapPointCoordinatesString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Visibility="{Binding PointCoordinateVisibility}"/>
+                                            <TextBox Grid.Row="0" Margin="5" Text="{Binding MapPointCoordinatesString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Visibility="{Binding PointCoordinateVisibility}" IsEnabled="{Binding IsCoordinateTabEnabled}"/>
                                             <DataGrid x:Name="dataGrid" Grid.Row="1" ItemsSource="{Binding PolyCoordinates, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="True" AutoGenerateColumns="False" Visibility="{Binding PolyCoordinateVisibility}">
                                                 <DataGrid.Columns>
                                                     <DataGridTextColumn Header="List of Coordinates" Binding="{Binding Coordinate, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Width="*"/>
@@ -939,10 +939,7 @@
 
                                     </AdornerDecorator>
 
-                                    <!--<Button Grid.Row="2" Content="Get Location from Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding ActivateMapToolCommand}" Width="200"/>-->
-
-                                        <Button Grid.Row="2" Content="Add Coordinates to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddCoordinateToMapCommand}" CommandParameter="True" Width="175" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
-                                    <!--IsEnabled="{Binding CoordinateValid}"/>-->
+                                    <Button Grid.Row="2" Content="Add Coordinates to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddCoordinateToMapCommand}" CommandParameter="True" Width="175" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
                                 </Grid>
                                 <Grid>
                                     <Grid.RowDefinitions>

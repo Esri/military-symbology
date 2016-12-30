@@ -408,7 +408,11 @@ namespace ProSymbolEditor
             set
             {
                 _isStyleItemSelected = value;
-                IsCoordinateTabEnabled = value;
+
+                if (IsEditing)
+                    IsCoordinateTabEnabled = false;
+                else
+                    IsCoordinateTabEnabled = value;
 
                 NotifyPropertyChanged(() => IsStyleItemSelected);
             }
@@ -423,11 +427,6 @@ namespace ProSymbolEditor
             set
             {
                 _isCoordinateTabEnabled = value;
-
-                if (IsEditing)
-                {
-                    _isCoordinateTabEnabled = false;
-                }
 
                 NotifyPropertyChanged(() => IsCoordinateTabEnabled);
             }
@@ -868,6 +867,12 @@ namespace ProSymbolEditor
             }
         }
 
+        public void ClearFeatureSelection()
+        {
+            SelectedFeaturesCollection.Clear();
+
+            IsEditing = false;
+        }
         #endregion
 
         #region Command Methods
@@ -891,7 +896,7 @@ namespace ProSymbolEditor
                 if ((command != null) && command.CanExecute(null))
                     command.Execute(null);
 
-                SelectedFeaturesCollection.Clear();
+                ClearFeatureSelection();
 
                 SelectToolEnabled = false;
             }
@@ -1604,7 +1609,10 @@ namespace ProSymbolEditor
               .ToDictionary(kvp => (BasicFeatureLayer)kvp.Key, kvp => kvp.Value);
 
             if (selectedFeatures.Count < 1)
+            {
+                ClearFeatureSelection();
                 return;
+            }
 
             // TODO:  Further filter features so it only contains ones that are in layers that are in the military schema
             // Just warn the user for now 
