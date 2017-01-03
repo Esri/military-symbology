@@ -159,12 +159,10 @@ namespace ProSymbolEditor
         private void resetViewModelState()
         {
             //Reset things
-            this.SelectedStyleItem = null;
-            this.IsStyleItemSelected = false;
+            ClearSearch();
+
             this.IsFavoriteItemSelected = false;
-            this.StyleItems.Clear();
             this.SelectedTabIndex = 0;
-            this.ResultCount = "---";
             this.SearchString = "";
             this.StatusMessage = "";
             _symbolAttributeSet.ResetAttributes();
@@ -261,6 +259,7 @@ namespace ProSymbolEditor
             SelectToolCommand = new RelayCommand(ActivateSelectTool, param => true);
             ShowAboutWindowCommand = new RelayCommand(ShowAboutWindow, param => true);
             ShowSettingsWindowCommand = new RelayCommand(ShowSettingsWindow, param => true);
+            ClearSearchTextCommand = new RelayCommand(ClearSearchText, param => true);
 
             _symbolAttributeSet.LabelAttributes.DateTimeValid = null;
             _symbolAttributeSet.LabelAttributes.DateTimeExpired = null;
@@ -331,6 +330,8 @@ namespace ProSymbolEditor
         public ICommand ShowAboutWindowCommand { get; set; }
 
         public ICommand ShowSettingsWindowCommand { get; set; }
+
+        public ICommand ClearSearchTextCommand { get; set; }
         #endregion
 
         #region Style Getters/Setters
@@ -407,7 +408,11 @@ namespace ProSymbolEditor
             set
             {
                 _isStyleItemSelected = value;
-                IsCoordinateTabEnabled = value;
+
+                if (IsEditing)
+                    IsCoordinateTabEnabled = false;
+                else
+                    IsCoordinateTabEnabled = value;
 
                 NotifyPropertyChanged(() => IsStyleItemSelected);
             }
@@ -422,11 +427,6 @@ namespace ProSymbolEditor
             set
             {
                 _isCoordinateTabEnabled = value;
-
-                if (IsEditing)
-                {
-                    _isCoordinateTabEnabled = false;
-                }
 
                 NotifyPropertyChanged(() => IsCoordinateTabEnabled);
             }
@@ -517,11 +517,11 @@ namespace ProSymbolEditor
                     return;
                 }
 
+                //Clear old attributes
+                _symbolAttributeSet.ResetAttributes();
+
                 if (_selectedStyleItem != null)
                 {
-                    //Clear old attributes
-                    _symbolAttributeSet.ResetAttributes();
-
                     //Tokenize tags
                     _symbolAttributeSet.SymbolTags = _selectedStyleItem.Tags;
                     SelectedStyleTags.Clear();
@@ -867,6 +867,12 @@ namespace ProSymbolEditor
             }
         }
 
+        public void ClearFeatureSelection()
+        {
+            SelectedFeaturesCollection.Clear();
+
+            IsEditing = false;
+        }
         #endregion
 
         #region Command Methods
@@ -890,7 +896,7 @@ namespace ProSymbolEditor
                 if ((command != null) && command.CanExecute(null))
                     command.Execute(null);
 
-                SelectedFeaturesCollection.Clear();
+                ClearFeatureSelection();
 
                 SelectToolEnabled = false;
             }
@@ -961,15 +967,6 @@ namespace ProSymbolEditor
 
                     // Reset everything when standard changed
                     resetViewModelState();
-
-                    // HACK:
-                    // StyleItems list update was not updating the view, 
-                    // not sure why this bound property is not updating the UI
-                    // TODO: test switching this to an ObservableCollection
-                    // Force the tab to be redrawn to workaround the issue
-                    SelectedTabIndex = 1;
-                    SelectedTabIndex = 0;
-                    // END HACK
 
                     // Save settings (or TODO: or do this in close/unload):
                     Properties.Settings.Default.DefaultStandard =
@@ -1546,6 +1543,32 @@ namespace ProSymbolEditor
             }
         }
 
+        private void ClearSearchText(object parameter)
+        {
+            SearchString = string.Empty;
+
+            ClearSearch();
+        }
+
+        private void ClearSearch()
+        {
+            SelectedStyleTags.Clear();
+            SelectedStyleItem = null;
+            IsStyleItemSelected = false;
+            StyleItems.Clear();
+
+            ResultCount = "---";
+            // HACK:
+            // NotifyPropertyChanged(() => StyleItems);
+            // StyleItems list update was not updating the view, 
+            // not sure why this bound property is not updating the UI
+            // TODO: test switching this to an ObservableCollection
+            // Force the tab to be redrawn to workaround the issue
+            SelectedTabIndex = 1;
+            SelectedTabIndex = 0;
+            // END HACK
+        }
+
         #endregion
 
         #region Event Listeners
@@ -1586,7 +1609,10 @@ namespace ProSymbolEditor
               .ToDictionary(kvp => (BasicFeatureLayer)kvp.Key, kvp => kvp.Value);
 
             if (selectedFeatures.Count < 1)
+            {
+                ClearFeatureSelection();
                 return;
+            }
 
             // TODO:  Further filter features so it only contains ones that are in layers that are in the military schema
             // Just warn the user for now 
@@ -1697,60 +1723,6 @@ namespace ProSymbolEditor
         {
             _selectedStyleItem = null;
             NotifyPropertyChanged(() => SelectedStyleItem);
-        }
-
-        private int _searchUniformGridRows = 2;
-        public int SearchUniformGridRows
-        {
-            get
-            {
-                return _searchUniformGridRows;
-            }
-            set
-            {
-                _searchUniformGridRows = value;
-
-                NotifyPropertyChanged(() => SearchUniformGridRows);
-            }
-        }
-
-        private int _searchUniformGridColumns = 1;
-        public int SearchUniformGridColumns
-        {
-            get
-            {
-                return _searchUniformGridColumns;
-            }
-            set
-            {
-                _searchUniformGridColumns = value;
-
-                NotifyPropertyChanged(() => SearchUniformGridColumns);
-            }
-        }
-
-        private int _searchUniformGridWith;
-        public int SearchUniformGridWidth
-        {
-            get
-            {
-                return _searchUniformGridWith;
-            }
-            set
-            {
-                _searchUniformGridWith = value;
-
-                if (_searchUniformGridColumns < 600)
-                {
-                    SearchUniformGridColumns = 1;
-                    SearchUniformGridRows = 2;
-                }
-                else
-                {
-                    SearchUniformGridColumns = 2;
-                    SearchUniformGridRows = 1;
-                }
-            }
         }
 
         #region Private Methods
@@ -2262,7 +2234,8 @@ namespace ProSymbolEditor
                     }
                     else
                     {
-                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Your project does not contain any active map.  Create one and try again.");
+                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Your project does not contain any active map.  Create one and try again.", "Please Add Map to Your Project", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        SearchString = "ADD MAP TO PROJECT";
                     }
                 }
                 else
