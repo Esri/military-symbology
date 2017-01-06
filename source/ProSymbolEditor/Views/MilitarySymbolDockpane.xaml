@@ -316,10 +316,9 @@
 
                                         <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding EditSelectedFeatureSymbol}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
                                             <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
-                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
-                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
-                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="3"/>
+                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="0"/>
+                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="1"/>
+                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="2"/>
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
 
@@ -486,10 +485,9 @@
 
                                         <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SelectedFavoriteSymbol}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
                                             <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
-                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
-                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
-                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="3"/>
+                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="0"/>
+                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="1"/>
+                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="2"/>
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
 
@@ -710,10 +708,9 @@
 
                                         <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
                                             <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
-                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
-                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
-                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="3"/>
+                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="0"/>
+                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="1"/>
+                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="2"/>
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
 
@@ -874,9 +871,9 @@
 
                                         <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
                                             <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
-                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
-                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
+                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="0"/>
+                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="1"/>
+                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="2"/>
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
                                     </Grid>
@@ -958,9 +955,9 @@
 
                                         <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
                                             <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition TargetProperties="FavoriteId" DisplayName="Favorite ID" DisplayOrder="0"/>
-                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
-                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="2"/>
+                                                <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="0"/>
+                                                <xctk:PropertyDefinition TargetProperties="LabelAttributes" DisplayName="Label Attributes" DisplayOrder="1"/>
+                                                <xctk:PropertyDefinition TargetProperties="StandardVersion" DisplayName="Standard" DisplayOrder="2"/>
                                             </xctk:PropertyGrid.PropertyDefinitions>
                                         </xctk:PropertyGrid>
                                     </Grid>

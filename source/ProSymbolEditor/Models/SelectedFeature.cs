@@ -40,5 +40,20 @@ namespace ProSymbolEditor
             FeatureLayerName = featureLayer.Name;
             ObjectId = objectId;
         }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(FeatureLayerName);
+            sb.Append(ProSymbolUtilities.NameSeparator);
+            sb.Append(SymbolSetName);
+            if (!string.IsNullOrEmpty(EntityName))
+            {
+                sb.Append(ProSymbolUtilities.NameSeparator);
+                sb.Append(EntityName);
+            }
+
+            return sb.ToString();
+        }
     }
 }

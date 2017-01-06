@@ -47,6 +47,30 @@ namespace ProSymbolEditor
 
         public LabelAttributes() {  }
 
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(UniqueDesignation))
+                sb.Append(UniqueDesignation + ProSymbolUtilities.NameSeparator);
+
+            if (!string.IsNullOrEmpty(HigherFormation))
+                sb.Append(HigherFormation + ProSymbolUtilities.NameSeparator);
+
+            if (!string.IsNullOrEmpty(AdditionalInformation))
+                sb.Append(AdditionalInformation + ProSymbolUtilities.NameSeparator);
+
+            if (!string.IsNullOrEmpty(CountryCode))
+                sb.Append(CountryCode);
+
+            if (sb.Length == 0)
+            {
+                sb.Append("Label Attributes");
+            }
+
+            return sb.ToString();
+        }
+
         public override bool Equals(object obj)
         {
             if ((obj == null) || (GetType() != obj.GetType()))

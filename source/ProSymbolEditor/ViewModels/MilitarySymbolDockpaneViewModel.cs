@@ -180,6 +180,8 @@ namespace ProSymbolEditor
             }
 
             _favoritesView.Refresh();
+
+            SymbolAttributeSet.StandardVersion = ProSymbolUtilities.StandardString;
         }
 
         private void setStandardFromSettings()
@@ -887,10 +889,8 @@ namespace ProSymbolEditor
         {
             if (FrameworkApplication.CurrentTool == "ProSymbolEditor_SelectionMapTool")
             {
-                // If selection tool already active, turn this tool off, by switching to default map tool
-                FrameworkApplication.SetCurrentToolAsync("esri_mapping_exploreTool");
-
-                // then clear the selection using the built-in Pro button/command
+                // Clear the selection using the built-in Pro button/command
+                // TRICKY: must be called on main thread, so can't be done in QueuedTask below
                 IPlugInWrapper wrapper = FrameworkApplication.GetPlugInWrapper("esri_mapping_clearSelectionButton");
                 var command = wrapper as ICommand; 
                 if ((command != null) && command.CanExecute(null))
@@ -899,11 +899,15 @@ namespace ProSymbolEditor
                 ClearFeatureSelection();
 
                 SelectToolEnabled = false;
+
+                FrameworkApplication.SetCurrentToolAsync("esri_mapping_exploreTool");
             }
             else
             {
-                FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_SelectionMapTool");
                 SelectToolEnabled = true;
+
+                // If selection tool already active, turn this tool off, by switching to default map tool
+                FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_SelectionMapTool");
             }
         }
 
@@ -2031,12 +2035,12 @@ namespace ProSymbolEditor
                         }
                     }
 
-                    //return fieldVa
+                    //return fieldValues
                 });
 
                 //Transfer field values into SymbolAttributes
                 SymbolAttributeSet set = new SymbolAttributeSet(fieldValues);
-                set.SymbolTags = "";
+                set.SymbolTags = _selectedSelectedFeature.ToString().Replace(ProSymbolUtilities.NameSeparator,";");
                 EditSelectedFeatureSymbol = set;
                 LoadSymbolIntoWorkflow(true);
             }

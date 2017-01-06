@@ -709,6 +709,7 @@ namespace ProSymbolEditor
         public void ResetAttributes()
         {
             //Reset attributes
+
             DisplayAttributes.SymbolSet = "";
             DisplayAttributes.SymbolEntity = "";
             DisplayAttributes.ExtendedFunctionCode = "";
@@ -738,6 +739,8 @@ namespace ProSymbolEditor
             LabelAttributes.CountryCode = "";
 
             SymbolTags = "";
+
+            StandardVersion = ProSymbolUtilities.StandardString;
         }
 
         private void Attributes_PropertyChanged(object sender, PropertyChangedEventArgs e)
