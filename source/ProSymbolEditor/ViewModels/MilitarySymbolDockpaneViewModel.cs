@@ -193,37 +193,42 @@ namespace ProSymbolEditor
                 ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
         }
 
+        private async Task Initialize()
+        {
+            // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
+            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
+            bool enabled2525D = await isEnabledMethod;
+
+            Task<bool> isEnabledMethod2 = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
+            bool enabled2525C_B2 = await isEnabledMethod2;
+
+            // However, if both standards in project (or neither) - use the default setting
+            if ((enabled2525D && enabled2525C_B2) ||
+                (!enabled2525D && !enabled2525C_B2))
+            {
+                setStandardFromSettings();
+            }
+            else
+            {
+                if (enabled2525D)
+                    ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                else
+                    ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+            }
+
+            //Add military style to project
+            Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
+            _militaryStyleItem = await getMilitaryStyle;
+
+            //Reset things
+            resetViewModelState();
+        }
+
         protected MilitarySymbolDockpaneViewModel()
         {
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
-                // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
-                Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
-                bool enabled2525D = await isEnabledMethod;
-
-                Task<bool> isEnabledMethod2 = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
-                bool enabled2525C_B2 = await isEnabledMethod2;
-
-                // However, if both standards in project (or neither) - use the default setting
-                if ((enabled2525D && enabled2525C_B2) ||
-                    (!enabled2525D && !enabled2525C_B2))
-                {
-                    setStandardFromSettings();
-                }
-                else
-                {
-                    if (enabled2525D)
-                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
-                    else
-                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
-                }
-
-                //Add military style to project
-                Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
-                _militaryStyleItem = await getMilitaryStyle;
-
-                //Reset things
-                resetViewModelState();
+                await Initialize();
             });
 
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
@@ -279,6 +284,10 @@ namespace ProSymbolEditor
             //Load saved favorites
             _favoritesFilePath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "SymbolFavorites.json");
             LoadAllFavoritesFromFile();
+
+            // If the Addin has been opened while there is already a Military Overlay loaded, set the state/standard
+            if (MapView.Active != null)
+                Initialize();
         }
 
         #region General Add-In Getters/Setters
