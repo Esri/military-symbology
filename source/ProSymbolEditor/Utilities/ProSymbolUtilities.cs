@@ -70,6 +70,11 @@ namespace ProSymbolEditor
                 return "2525D";
         }
 
+        public static string NameSeparator
+        {
+            get { return " : "; }
+        }
+
         public static BitmapImage BitMapToBitmapImage(System.Drawing.Bitmap source)
         {
             BitmapImage bitmapImage = new BitmapImage();
