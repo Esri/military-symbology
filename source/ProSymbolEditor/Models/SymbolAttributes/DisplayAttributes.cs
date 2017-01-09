@@ -29,42 +29,50 @@ namespace ProSymbolEditor
     {
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            return "Display Attributes";
+        }
 
-            if (SelectedIdentityDomainPair != null)
-                sb.Append(SelectedIdentityDomainPair.Name + ProSymbolUtilities.NameSeparator);
-
-            if (SelectedExtendedFunctionCodeDomainPair != null)
-                sb.Append(SelectedExtendedFunctionCodeDomainPair.Name + ProSymbolUtilities.NameSeparator);
-
-            if (!string.IsNullOrEmpty(SymbolSet))
-                sb.Append(SymbolSet + ProSymbolUtilities.NameSeparator);
-
-            if (!string.IsNullOrEmpty(SymbolEntity))
-                sb.Append(SymbolEntity + ProSymbolUtilities.NameSeparator);
-
-            if (SelectedEchelonDomainPair != null)
-                sb.Append(SelectedEchelonDomainPair.Name + ProSymbolUtilities.NameSeparator);
-
-            if (SelectedIndicatorDomainPair != null)
-                sb.Append(SelectedIndicatorDomainPair.Name + ProSymbolUtilities.NameSeparator);
-
-            if (SelectedModifier1DomainPair != null)
-                sb.Append(SelectedModifier1DomainPair.Name + ProSymbolUtilities.NameSeparator);
-
-            if (SelectedModifier2DomainPair != null)
-                sb.Append(SelectedModifier2DomainPair.Name + ProSymbolUtilities.NameSeparator);
-
-            if (sb.Length == 0)
+        public string Name
+        {
+            get
             {
-                // use an alternate (the SIDC) if Coded Domains not yet set
-                if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-                    sb.Append(LegacySymbolIdCode);
-                else
-                    sb.Append(SymbolSet + ProSymbolUtilities.NameSeparator + SymbolEntity);
-            }
+                StringBuilder sb = new StringBuilder();
 
-            return sb.ToString();
+                if (SelectedIdentityDomainPair != null)
+                    sb.Append(SelectedIdentityDomainPair.Name + ProSymbolUtilities.NameSeparator);
+
+                if (SelectedExtendedFunctionCodeDomainPair != null)
+                    sb.Append(SelectedExtendedFunctionCodeDomainPair.Name + ProSymbolUtilities.NameSeparator);
+
+                if (!string.IsNullOrEmpty(SymbolSet))
+                    sb.Append(SymbolSet + ProSymbolUtilities.NameSeparator);
+
+                if (!string.IsNullOrEmpty(SymbolEntity))
+                    sb.Append(SymbolEntity + ProSymbolUtilities.NameSeparator);
+
+                if (SelectedEchelonDomainPair != null)
+                    sb.Append(SelectedEchelonDomainPair.Name + ProSymbolUtilities.NameSeparator);
+
+                if (SelectedIndicatorDomainPair != null)
+                    sb.Append(SelectedIndicatorDomainPair.Name + ProSymbolUtilities.NameSeparator);
+
+                if (SelectedModifier1DomainPair != null)
+                    sb.Append(SelectedModifier1DomainPair.Name + ProSymbolUtilities.NameSeparator);
+
+                if (SelectedModifier2DomainPair != null)
+                    sb.Append(SelectedModifier2DomainPair.Name + ProSymbolUtilities.NameSeparator);
+
+                if (sb.Length == 0)
+                {
+                    // use an alternate (the SIDC) if Coded Domains not yet set
+                    if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                        sb.Append(LegacySymbolIdCode);
+                    else
+                        sb.Append(SymbolSet + ProSymbolUtilities.NameSeparator + SymbolEntity);
+                }
+
+                return sb.ToString();
+            }
         }
 
         public override bool Equals(object obj)

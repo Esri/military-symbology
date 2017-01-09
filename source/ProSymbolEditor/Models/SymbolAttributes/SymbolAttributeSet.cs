@@ -231,9 +231,25 @@ namespace ProSymbolEditor
         [ExpandableObject]
         public LabelAttributes LabelAttributes { get; set; }
 
+        public string Name 
+        {
+            get { return DisplayAttributes.Name; }
+        }
+
         public string FavoriteId { get; set; }
 
-        public string StandardVersion { get; set; }
+        private string _standardVersion = string.Empty;
+        public string StandardVersion {
+            get { return _standardVersion; }
+            set
+            {
+                if (value != _standardVersion)
+                {
+                    _standardVersion = value;
+                    NotifyPropertyChanged(() => StandardVersion);
+                }
+            }
+        }
 
         public string SymbolTags { get; set; }
 
@@ -746,6 +762,9 @@ namespace ProSymbolEditor
         private void Attributes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             GeneratePreviewSymbol();
+
+            // Tell the XCTK grid to get the updated label for this 
+            NotifyPropertyChanged(() => Name);
         }
     }
 }

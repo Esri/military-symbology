@@ -49,26 +49,34 @@ namespace ProSymbolEditor
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            return "Label Attributes";
+        }
 
-            if (!string.IsNullOrEmpty(UniqueDesignation))
-                sb.Append(UniqueDesignation + ProSymbolUtilities.NameSeparator);
-
-            if (!string.IsNullOrEmpty(HigherFormation))
-                sb.Append(HigherFormation + ProSymbolUtilities.NameSeparator);
-
-            if (!string.IsNullOrEmpty(AdditionalInformation))
-                sb.Append(AdditionalInformation + ProSymbolUtilities.NameSeparator);
-
-            if (!string.IsNullOrEmpty(CountryCode))
-                sb.Append(CountryCode);
-
-            if (sb.Length == 0)
+        public string Name
+        {
+            get
             {
-                sb.Append("Label Attributes");
-            }
+                StringBuilder sb = new StringBuilder();
 
-            return sb.ToString();
+                if (!string.IsNullOrEmpty(UniqueDesignation))
+                    sb.Append(UniqueDesignation + ProSymbolUtilities.NameSeparator);
+
+                if (!string.IsNullOrEmpty(HigherFormation))
+                    sb.Append(HigherFormation + ProSymbolUtilities.NameSeparator);
+
+                if (!string.IsNullOrEmpty(AdditionalInformation))
+                    sb.Append(AdditionalInformation + ProSymbolUtilities.NameSeparator);
+
+                if (!string.IsNullOrEmpty(CountryCode))
+                    sb.Append(CountryCode);
+
+                if (sb.Length == 0)
+                {
+                    sb.Append("Label Attributes");
+                }
+
+                return sb.ToString();
+            }
         }
 
         public override bool Equals(object obj)
