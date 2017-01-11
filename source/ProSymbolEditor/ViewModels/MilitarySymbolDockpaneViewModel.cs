@@ -193,37 +193,42 @@ namespace ProSymbolEditor
                 ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
         }
 
+        private async Task Initialize()
+        {
+            // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
+            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
+            bool enabled2525D = await isEnabledMethod;
+
+            Task<bool> isEnabledMethod2 = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
+            bool enabled2525C_B2 = await isEnabledMethod2;
+
+            // However, if both standards in project (or neither) - use the default setting
+            if ((enabled2525D && enabled2525C_B2) ||
+                (!enabled2525D && !enabled2525C_B2))
+            {
+                setStandardFromSettings();
+            }
+            else
+            {
+                if (enabled2525D)
+                    ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                else
+                    ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+            }
+
+            //Add military style to project
+            Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
+            _militaryStyleItem = await getMilitaryStyle;
+
+            //Reset things
+            resetViewModelState();
+        }
+
         protected MilitarySymbolDockpaneViewModel()
         {
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
-                // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
-                Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
-                bool enabled2525D = await isEnabledMethod;
-
-                Task<bool> isEnabledMethod2 = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
-                bool enabled2525C_B2 = await isEnabledMethod2;
-
-                // However, if both standards in project (or neither) - use the default setting
-                if ((enabled2525D && enabled2525C_B2) ||
-                    (!enabled2525D && !enabled2525C_B2))
-                {
-                    setStandardFromSettings();
-                }
-                else
-                {
-                    if (enabled2525D)
-                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
-                    else
-                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
-                }
-
-                //Add military style to project
-                Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
-                _militaryStyleItem = await getMilitaryStyle;
-
-                //Reset things
-                resetViewModelState();
+                await Initialize();
             });
 
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
@@ -250,6 +255,8 @@ namespace ProSymbolEditor
             GoToTabCommand = new RelayCommand(GoToTab, param => true);
             //ActivateMapToolCommand = new RelayCommand(ActivateCoordinateMapTool, param => true);
             AddCoordinateToMapCommand = new RelayCommand(CreateNewFeatureAsync, CanCreatePolyFeatureFromCoordinates);
+            MarkCoordinateOnMapCommand = new RelayCommand(MarkCoordinateOnMap, CanCreatePolyFeatureFromCoordinates);
+
             ActivateAddToMapToolCommand = new RelayCommand(ActivateDrawFeatureSketchTool, param => true);
             SaveEditsCommand = new RelayCommand(SaveEdits, param => true);
             CopyImageToClipboardCommand = new RelayCommand(CopyImageToClipboard, param => true);
@@ -279,6 +286,10 @@ namespace ProSymbolEditor
             //Load saved favorites
             _favoritesFilePath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "SymbolFavorites.json");
             LoadAllFavoritesFromFile();
+
+            // If the Addin has been opened while there is already a Military Overlay loaded, set the state/standard
+            if (MapView.Active != null)
+                Initialize();
         }
 
         #region General Add-In Getters/Setters
@@ -291,6 +302,10 @@ namespace ProSymbolEditor
             }
             set
             {
+                // if switching from the Coordinate Tab, clear any coordinate marker
+                if (_selectedTabIndex == 5)
+                    RemoveCoordinateMarker();
+
                 _selectedTabIndex = value;
 
                 NotifyPropertyChanged(() => SelectedTabIndex);
@@ -310,6 +325,8 @@ namespace ProSymbolEditor
         //public ICommand ActivateMapToolCommand { get; set; }
 
         public ICommand AddCoordinateToMapCommand { get; set; }
+
+        public ICommand MarkCoordinateOnMapCommand { get; set; }
 
         public ICommand ActivateAddToMapToolCommand { get; set; }
 
@@ -879,6 +896,55 @@ namespace ProSymbolEditor
 
         #region Command Methods
 
+        private System.IDisposable _overlayObject = null;
+
+        private void RemoveCoordinateMarker()
+        {
+            if (_overlayObject == null)
+                return;
+
+            _overlayObject.Dispose();
+            _overlayObject = null;
+        }
+
+        private async void MarkCoordinateOnMap(object parameter)
+        {
+            if (MapView.Active == null) // should not happen
+                return;
+
+            MapPoint markerPoint = null;
+
+            if (MapGeometry is MapPoint)
+            {
+                markerPoint = MapGeometry as MapPoint;
+            }
+            else if ((PolyCoordinates != null) && (PolyCoordinates.Count > 1))
+            {
+                // Use the last point in the collection to mark/zoom to
+                CoordinateObject coordObject = PolyCoordinates.Last();
+
+                markerPoint = coordObject.MapPoint;
+            }
+
+            if (markerPoint == null)  // should not happen, but last check 
+                return;
+
+            await QueuedTask.Run(() =>
+            {
+                RemoveCoordinateMarker();
+
+                var coordinateMarker = ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Desktop.Mapping.ColorFactory.Red, 12,
+                    ArcGIS.Desktop.Mapping.SimpleMarkerStyle.Circle);
+
+                ArcGIS.Core.CIM.CIMPointSymbol _pointCoordSymbol =
+                    ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(coordinateMarker);
+
+                _overlayObject = MapView.Active.AddOverlay(markerPoint, _pointCoordSymbol.MakeSymbolReference());
+
+                MapView.Active.ZoomTo(markerPoint);
+            });
+        }
+
         private void ActivateDrawFeatureSketchTool(object parameter)
         {
             FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_DrawFeatureSketchTool");
@@ -1102,6 +1168,8 @@ namespace ProSymbolEditor
 
         public async void CreateNewFeatureAsync(object parameter)
         {
+            RemoveCoordinateMarker();
+
             string message = String.Empty;
             bool creationResult = false;
 
