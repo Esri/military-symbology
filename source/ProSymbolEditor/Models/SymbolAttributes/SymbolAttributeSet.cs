@@ -27,6 +27,7 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace ProSymbolEditor
 {
+    [DisplayName("Symbol Attributes")]
     public class SymbolAttributeSet : PropertyChangedBase
     {
         private BitmapImage _symbolImage = null;
