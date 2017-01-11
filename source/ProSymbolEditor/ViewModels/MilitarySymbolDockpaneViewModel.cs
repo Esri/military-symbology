@@ -255,6 +255,8 @@ namespace ProSymbolEditor
             GoToTabCommand = new RelayCommand(GoToTab, param => true);
             //ActivateMapToolCommand = new RelayCommand(ActivateCoordinateMapTool, param => true);
             AddCoordinateToMapCommand = new RelayCommand(CreateNewFeatureAsync, CanCreatePolyFeatureFromCoordinates);
+            MarkCoordinateOnMapCommand = new RelayCommand(MarkCoordinateOnMap, CanCreatePolyFeatureFromCoordinates);
+
             ActivateAddToMapToolCommand = new RelayCommand(ActivateDrawFeatureSketchTool, param => true);
             SaveEditsCommand = new RelayCommand(SaveEdits, param => true);
             CopyImageToClipboardCommand = new RelayCommand(CopyImageToClipboard, param => true);
@@ -300,6 +302,10 @@ namespace ProSymbolEditor
             }
             set
             {
+                // if switching from the Coordinate Tab, clear any coordinate marker
+                if (_selectedTabIndex == 5)
+                    RemoveCoordinateMarker();
+
                 _selectedTabIndex = value;
 
                 NotifyPropertyChanged(() => SelectedTabIndex);
@@ -319,6 +325,8 @@ namespace ProSymbolEditor
         //public ICommand ActivateMapToolCommand { get; set; }
 
         public ICommand AddCoordinateToMapCommand { get; set; }
+
+        public ICommand MarkCoordinateOnMapCommand { get; set; }
 
         public ICommand ActivateAddToMapToolCommand { get; set; }
 
@@ -888,6 +896,55 @@ namespace ProSymbolEditor
 
         #region Command Methods
 
+        private System.IDisposable _overlayObject = null;
+
+        private void RemoveCoordinateMarker()
+        {
+            if (_overlayObject == null)
+                return;
+
+            _overlayObject.Dispose();
+            _overlayObject = null;
+        }
+
+        private async void MarkCoordinateOnMap(object parameter)
+        {
+            if (MapView.Active == null) // should not happen
+                return;
+
+            MapPoint markerPoint = null;
+
+            if (MapGeometry is MapPoint)
+            {
+                markerPoint = MapGeometry as MapPoint;
+            }
+            else if ((PolyCoordinates != null) && (PolyCoordinates.Count > 1))
+            {
+                // Use the last point in the collection to mark/zoom to
+                CoordinateObject coordObject = PolyCoordinates.Last();
+
+                markerPoint = coordObject.MapPoint;
+            }
+
+            if (markerPoint == null)  // should not happen, but last check 
+                return;
+
+            await QueuedTask.Run(() =>
+            {
+                RemoveCoordinateMarker();
+
+                var coordinateMarker = ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Desktop.Mapping.ColorFactory.Red, 12,
+                    ArcGIS.Desktop.Mapping.SimpleMarkerStyle.Circle);
+
+                ArcGIS.Core.CIM.CIMPointSymbol _pointCoordSymbol =
+                    ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(coordinateMarker);
+
+                _overlayObject = MapView.Active.AddOverlay(markerPoint, _pointCoordSymbol.MakeSymbolReference());
+
+                MapView.Active.ZoomTo(markerPoint);
+            });
+        }
+
         private void ActivateDrawFeatureSketchTool(object parameter)
         {
             FrameworkApplication.SetCurrentToolAsync("ProSymbolEditor_DrawFeatureSketchTool");
@@ -1111,6 +1168,8 @@ namespace ProSymbolEditor
 
         public async void CreateNewFeatureAsync(object parameter)
         {
+            RemoveCoordinateMarker();
+
             string message = String.Empty;
             bool creationResult = false;
 
