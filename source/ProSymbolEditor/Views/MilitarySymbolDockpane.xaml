@@ -116,7 +116,8 @@
                                         </Button>
                                         
                                         <ListBox x:Name="symbolListBox" Margin="5,5,5,5" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding StyleItems, UpdateSourceTrigger=PropertyChanged}" 
-                                                SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" MaxHeight="240">
+                                                SelectedItem="{Binding SelectedStyleItem, Mode=TwoWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" MaxHeight="240"
+                                                 ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
 
                                             <ListBox.ItemsPanel>
                                                 <ItemsPanelTemplate>
@@ -202,8 +203,13 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Content="Add Favorite" Grid.Column="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
-                                <ToggleButton Name="searchAddToMapButton" Grid.Column="1" Content="Add to Map" IsEnabled="{Binding IsStyleItemSelected}" IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}" Command="{Binding ActivateAddToMapToolCommand}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" ToolTip="Add to Map" HorizontalAlignment="Center" Width="90" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
+                                <Button Content="Add Favorite" Grid.Column="0" Style="{DynamicResource Esri_SimpleButton}" 
+                                        Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
+                                <ToggleButton Name="searchAddToMapButton" Grid.Column="1" Content="Add to Map" 
+                                              IsEnabled="{Binding IsStyleItemSelected}" IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}" 
+                                              Command="{Binding ActivateAddToMapToolCommand}" Height="24" Foreground="Black" Background="White" BorderBrush="Black" BorderThickness="0.5" 
+                                              ToolTip="Add to Map" HorizontalAlignment="Center" Width="90" 
+                                              Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
                                 <Button x:Name="modifyButton" Grid.Column="2" IsEnabled="{Binding IsStyleItemSelected}" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Go to Symbol Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
@@ -314,7 +320,7 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding EditSelectedFeatureSymbol}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
+                                        <xctk:PropertyGrid Grid.Row="1" Foreground="Black" SelectedObject="{Binding EditSelectedFeatureSymbol}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
                                             <xctk:PropertyGrid.PropertyDefinitions>
                                                 <xctk:PropertyDefinition TargetProperties="Name" DisplayName="Name" DisplayOrder="0"/>
                                                 <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
@@ -484,7 +490,7 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SelectedFavoriteSymbol}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
+                                        <xctk:PropertyGrid Grid.Row="1" Foreground="Black" SelectedObject="{Binding SelectedFavoriteSymbol}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5">
                                             <xctk:PropertyGrid.PropertyDefinitions>
                                                 <xctk:PropertyDefinition TargetProperties="Name" DisplayName="Name" DisplayOrder="0"/>
                                                 <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
@@ -507,7 +513,8 @@
 
                                 <Button Grid.Column="0" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="0" HorizontalAlignment="Left" ToolTip="Back to Search"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding GoToTabCommand}" CommandParameter="1" HorizontalAlignment="Center" Width="81" Visibility="Collapsed"/>
-                                <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Add to Map" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
+                                <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Add to Map" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Foreground="Black" Background="White" 
+                                              BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
                                 <Button Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" ToolTip="Go to Symbol Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
@@ -547,7 +554,10 @@
                                         <!-- Identity/Affiliation -->
 
                                         <Label Content="Identity/Affiliation" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0" Visibility="{Binding ElementName=identityComboBox, Path=Visibility}"/>
-                                        <ComboBox x:Name="identityComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.IdentityDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedIdentityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0">
+                                        <ComboBox x:Name="identityComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.IdentityDomainValues, UpdateSourceTrigger=PropertyChanged}" 
+                                                  DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedIdentityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                  Grid.Column="1" Grid.Row="0" 
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -562,7 +572,9 @@
                                         <!-- Status or Operation -->
 
                                         <Label Grid.Column="0" Grid.Row="1" Margin="5,5,5,5" Content="Status/Planned" Visibility="{Binding ElementName=statusComboBox, Path=Visibility}"/>
-                                        <ComboBox x:Name="statusComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.StatusDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedStatusDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1">
+                                        <ComboBox x:Name="statusComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.StatusDomainValues}" 
+                                                  DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedStatusDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -574,8 +586,12 @@
                                             </ComboBox.Style>
                                         </ComboBox>
 
-                                        <Label Content="Operational Condition Amplifier" Margin="5,5,5,5" Grid.Column="0" Grid.Row="2" Visibility="{Binding ElementName=operationalConditionAmplifierComboBox, Path=Visibility}"/>
-                                        <ComboBox x:Name="operationalConditionAmplifierComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedOperationalConditionDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2">
+                                        <Label Content="Operational Condition Amplifier" Margin="5,5,5,5" Grid.Column="0" Grid.Row="2" 
+                                               Visibility="{Binding ElementName=operationalConditionAmplifierComboBox, Path=Visibility}"/>
+                                        <ComboBox x:Name="operationalConditionAmplifierComboBox" Margin="5,5,5,5" 
+                                                  ItemsSource="{Binding MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues, UpdateSourceTrigger=PropertyChanged}" 
+                                                  DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedOperationalConditionDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -590,7 +606,10 @@
                                         <!-- TFFDHQ/Indicator -->
 
                                         <Label Content="TF, FD, HQ" Margin="5,5,5,5" Grid.Column="0" Grid.Row="3" Visibility="{Binding ElementName=tfFdHqComboBox, Path=Visibility}"/>
-                                        <ComboBox x:Name="tfFdHqComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="3" ItemsSource="{Binding MilitaryFieldsInspectorModel.TfFdHqDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedIndicatorDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox x:Name="tfFdHqComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="3" 
+                                                  ItemsSource="{Binding MilitaryFieldsInspectorModel.TfFdHqDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" 
+                                                  SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedIndicatorDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -605,7 +624,10 @@
                                         <!-- Echelon or Mobility -->
 
                                         <Label Content="Echelon" Margin="5,5,5,5" Grid.Column="0" Grid.Row="4" Visibility="{Binding ElementName=echelonComboBox, Path=Visibility}"/>
-                                        <ComboBox x:Name="echelonComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.EchelonDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedEchelonDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4">
+                                        <ComboBox x:Name="echelonComboBox" Margin="5,5,5,5" ItemsSource="{Binding MilitaryFieldsInspectorModel.EchelonDomainValues}" 
+                                                  DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedEchelonDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                  Grid.Column="1" Grid.Row="4"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -618,7 +640,8 @@
                                         </ComboBox>
 
                                         <Label Content="Mobility" Margin="5,5,5,5" Grid.Column="0" Grid.Row="5" Visibility="{Binding ElementName=mobilityComboBox, Path=Visibility}"/>
-                                        <ComboBox x:Name="mobilityComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="5" ItemsSource="{Binding MilitaryFieldsInspectorModel.MobilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedMobilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox x:Name="mobilityComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="5" ItemsSource="{Binding MilitaryFieldsInspectorModel.MobilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedMobilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -633,7 +656,9 @@
                                         <!-- Identity/Reality/Context -->
 
                                         <Label Content="Context" Margin="5,5,5,5" Grid.Column="0" Grid.Row="6" Visibility="{Binding ElementName=contextComboBox, Path=Visibility}"/>
-                                        <ComboBox x:Name="contextComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="6" ItemsSource="{Binding MilitaryFieldsInspectorModel.ContextDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedContextDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox x:Name="contextComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="6" ItemsSource="{Binding MilitaryFieldsInspectorModel.ContextDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" 
+                                                  SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedContextDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -648,7 +673,9 @@
                                         <!-- Modifier 1 -->
 
                                         <Label Content="Modifier 1" Margin="5,5,5,5" Grid.Column="0" Grid.Row="7" Visibility="{Binding ElementName=modifier1ComboBox, Path=Visibility}"/>
-                                        <ComboBox x:Name="modifier1ComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="7" ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier1DomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedModifier1DomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox x:Name="modifier1ComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="7" 
+                                                  ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier1DomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedModifier1DomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -663,7 +690,9 @@
                                         <!-- Modifier 2 -->
 
                                         <Label Content="Modifier 2" Margin="5,5,5,5" Grid.Column="0" Grid.Row="8" Visibility="{Binding ElementName=modifier2ComboBox, Path=Visibility}"/>
-                                        <ComboBox x:Name="modifier2ComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="8" ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier2DomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedModifier2DomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox x:Name="modifier2ComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="8" 
+                                                  ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier2DomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedModifier2DomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -679,7 +708,8 @@
                                         <Label Content="Function" Margin="5,5,5,5" Grid.Column="0" Grid.Row="5" Visibility="{Binding ElementName=extendedFunctionCodeComboBox, Path=Visibility}"/>
                                         <ComboBox x:Name="extendedFunctionCodeComboBox" Margin="5,5,5,5" Grid.Column="1" Grid.Row="5" ItemsSource="{Binding MilitaryFieldsInspectorModel.ExtendedFunctionCodeValues}" 
                                                   DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedExtendedFunctionCodeDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                  ToolTip="{Binding Path=SelectedItem.Name, RelativeSource={RelativeSource Self}}">
+                                                  ToolTip="{Binding Path=SelectedItem.Name, RelativeSource={RelativeSource Self}}"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -708,7 +738,7 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5" ToolTip="{Binding SymbolAttributeSet.Name}">
+                                        <xctk:PropertyGrid Grid.Row="1" Foreground="Black" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5" ToolTip="{Binding SymbolAttributeSet.Name}">
                                             <xctk:PropertyGrid.PropertyDefinitions>
                                                 <xctk:PropertyDefinition TargetProperties="Name" DisplayName="Name" DisplayOrder="0"/>
                                                 <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
@@ -730,8 +760,8 @@
 
                                 <Button Grid.Column="0" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="0" HorizontalAlignment="Left" ToolTip="Back to Search"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Grid.Row="0" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
-                                <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Add to Map" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
-                                <Button Content="Save Edits" Grid.Column="2" Grid.Row="0" ToolTip="Save Edits" Command="{Binding SaveEditsCommand}" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>
+                                <ToggleButton Content="Add to Map" Grid.Column="2" Grid.Row="0" ToolTip="Add to Map" Command="{Binding ActivateAddToMapToolCommand}" IsChecked="{Binding AddToMapToolEnabled}" Height="24" Foreground="Black" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
+                                <Button Content="Save Edits" Grid.Column="2" Grid.Row="0" ToolTip="Save Edits" Command="{Binding SaveEditsCommand}" Height="24" Foreground="Black" Background="White" BorderBrush="Black" BorderThickness="0.5" HorizontalAlignment="Center" Width="82" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>
                                 <Button Grid.Column="3" Grid.Row="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Go to Label Tab" HorizontalAlignment="Right" Margin="0,0,-26,0">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
@@ -797,7 +827,10 @@
                                         <TextBox Grid.Row="6" Grid.Column="1" Margin="3,3,3,3" Text="{Binding SymbolAttributeSet.LabelAttributes.UniqueDesignation}" Visibility="{Binding MilitaryFieldsInspectorModel.UniqueDesignationFieldExists}"/>
 
                                         <Label Content="Reinforced" Grid.Row="7"  Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding ElementName=reinforcedComboBox, Path=Visibility}"/>
-                                        <ComboBox Name="reinforcedComboBox" Grid.Row="7" Grid.Column="1" Margin="3,3,3,3" ItemsSource="{Binding MilitaryFieldsInspectorModel.ReinforcedDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedReinforcedDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox Name="reinforcedComboBox" Grid.Row="7" Grid.Column="1" Margin="3,3,3,3" 
+                                                  ItemsSource="{Binding MilitaryFieldsInspectorModel.ReinforcedDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" 
+                                                  SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedReinforcedDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -819,7 +852,10 @@
                                         <TextBox Grid.Row="10" Grid.Column="1" Margin="3,3,3,3" Text="{Binding SymbolAttributeSet.LabelAttributes.HigherFormation}" Visibility="{Binding MilitaryFieldsInspectorModel.HigherFormationFieldExists}"/>
 
                                         <Label Content="Credibility" Grid.Row="11" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding ElementName=credibilityComboBox, Path=Visibility}"/>
-                                        <ComboBox Name="credibilityComboBox" Grid.Row="11" Grid.Column="1" Margin="3,3,3,3" ItemsSource="{Binding MilitaryFieldsInspectorModel.CredibilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedCredibilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox Name="credibilityComboBox" Grid.Row="11" Grid.Column="1" Margin="3,3,3,3" 
+                                                  ItemsSource="{Binding MilitaryFieldsInspectorModel.CredibilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" 
+                                                  SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedCredibilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -832,7 +868,10 @@
                                         </ComboBox>
 
                                         <Label Content="Reliability" Grid.Row="12" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding ElementName=reliabilityComboBox, Path=Visibility}"/>
-                                        <ComboBox Name="reliabilityComboBox" Grid.Row="12" Grid.Column="1" Margin="3,3,3,3" ItemsSource="{Binding MilitaryFieldsInspectorModel.ReliabilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedReliabilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox Name="reliabilityComboBox" Grid.Row="12" Grid.Column="1" Margin="3,3,3,3" 
+                                                  ItemsSource="{Binding MilitaryFieldsInspectorModel.ReliabilityDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" 
+                                                  SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedReliabilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -845,7 +884,9 @@
                                         </ComboBox>
 
                                         <Label Content="Country Code" Grid.Row="13" Grid.Column="0" Margin="3,3,3,3" Visibility="{Binding ElementName=countryComboBox, Path=Visibility}"/>
-                                        <ComboBox Name="countryComboBox" Grid.Row="13" Grid.Column="1" Margin="3,3,3,3" ItemsSource="{Binding MilitaryFieldsInspectorModel.CountryCodeDomainValues}" DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedCountryCodeDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox Name="countryComboBox" Grid.Row="13" Grid.Column="1" Margin="3,3,3,3" ItemsSource="{Binding MilitaryFieldsInspectorModel.CountryCodeDomainValues}" 
+                                                  DisplayMemberPath="Name" SelectedValuePath="Code" SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedCountryCodeDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}">
                                             <ComboBox.Style>
                                                 <Style TargetType="ComboBox">
                                                     <Style.Triggers>
@@ -872,7 +913,7 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5" ToolTip="{Binding SymbolAttributeSet.Name}">
+                                        <xctk:PropertyGrid Grid.Row="1" Foreground="Black" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5" ToolTip="{Binding SymbolAttributeSet.Name}">
                                             <xctk:PropertyGrid.PropertyDefinitions>
                                                 <xctk:PropertyDefinition TargetProperties="Name" DisplayName="Name" DisplayOrder="0"/>
                                                 <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
@@ -894,8 +935,8 @@
 
                                 <Button Grid.Column="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="3" HorizontalAlignment="Left" ToolTip="Back to Symbol"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
-                                <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Add to Map" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
-                                <Button Content="Save Edits" Grid.Column="2" Command="{Binding SaveEditsCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Save Edits" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>
+                                <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Foreground="Black" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Add to Map" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
+                                <Button Content="Save Edits" Grid.Column="2" Command="{Binding SaveEditsCommand}" HorizontalAlignment="Center" Height="24" Foreground="Black" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="82" ToolTip="Save Edits" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>
                                 <Button Grid.Column="3" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="5" ToolTip="Enter Coordinates" HorizontalAlignment="Right" Margin="0,0,-26,0" IsEnabled="{Binding IsCoordinateTabEnabled}">
                                     <Button.RenderTransform>
                                         <ScaleTransform ScaleX="-1" />
@@ -960,7 +1001,7 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5" ToolTip="{Binding SymbolAttributeSet.Name}">
+                                        <xctk:PropertyGrid Grid.Row="1" Foreground="Black" SelectedObject="{Binding SymbolAttributeSet}" IsReadOnly="True" AutoGenerateProperties="False" IsCategorized="False" ShowSearchBox="False" ShowSortOptions="False" ShowSummary="False" Height="150" Margin="5,5,5,5" ToolTip="{Binding SymbolAttributeSet.Name}">
                                             <xctk:PropertyGrid.PropertyDefinitions>
                                                 <xctk:PropertyDefinition TargetProperties="Name" DisplayName="Name" DisplayOrder="0"/>
                                                 <xctk:PropertyDefinition TargetProperties="DisplayAttributes" DisplayName="Display Attributes" DisplayOrder="1"/>
@@ -981,7 +1022,7 @@
 
                                 <Button Grid.Column="0" Style="{DynamicResource Esri_BackButton}" Command="{Binding GoToTabCommand}" CommandParameter="4" ToolTip="Back to Label" HorizontalAlignment="Left"/>
                                 <Button Content="Add Favorite" Grid.Column="1" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding SaveSymbolFileCommand}" HorizontalAlignment="Center" Width="90"/>
-                                <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="101" ToolTip="Add to Map" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
+                                <ToggleButton Content="Add to Map" Grid.Column="2" IsChecked="{Binding AddToMapToolEnabled}" Command="{Binding ActivateAddToMapToolCommand}" HorizontalAlignment="Center" Height="24" Foreground="Black" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="101" ToolTip="Add to Map" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}"/>
                                 <Button Content="Save Edits" Grid.Column="2" Command="{Binding SaveEditsCommand}" HorizontalAlignment="Center" Height="24" Background="White" BorderBrush="Black" BorderThickness="0.5" Width="101" ToolTip="Save Edits" Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}"/>                            
                             </Grid>
                         </Grid>
