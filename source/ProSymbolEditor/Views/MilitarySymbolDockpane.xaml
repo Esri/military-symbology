@@ -940,10 +940,10 @@
 
                                     </AdornerDecorator>
 
-                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                    <WrapPanel Grid.Row="2">
                                         <Button Content="Add Coordinate(s) to Map" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding AddCoordinateToMapCommand}" CommandParameter="True" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" HorizontalAlignment="Left"/>
-                                        <Button Content="Mark/Zoom to Coordinate" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding MarkCoordinateOnMapCommand}" CommandParameter="True" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" HorizontalAlignment="Left"/>
-                                    </StackPanel>
+                                        <Button Content="Mark/Pan to Coordinate" Style="{DynamicResource Esri_SimpleButton}" Command="{Binding MarkCoordinateOnMapCommand}" CommandParameter="True" Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" HorizontalAlignment="Left"/>
+                                    </WrapPanel>
                                 </Grid>
                                 <Grid>
                                     <Grid.RowDefinitions>
