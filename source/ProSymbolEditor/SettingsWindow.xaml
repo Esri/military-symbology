@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProSymbolEditor"
         mc:Ignorable="d"
-        Title="Application Settings" Height="300" Width="300" WindowStartupLocation="CenterOwner" WindowState="Normal">
+        Title="Application Settings" Height="300" Width="300" WindowStartupLocation="CenterOwner" WindowState="Normal" ResizeMode="NoResize">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -15,15 +15,15 @@
         
 
         <StackPanel Margin="5 5 5 5" VerticalAlignment="Top" Grid.Row="0">
-        <Label Content="Default _Symbology Standard:"/>
+        <Label Content="Default _Symbology Standard:" Foreground="Black"/>
         <WrapPanel>
-            <RadioButton GroupName="standardgroup" IsChecked="{Binding Path=Checked2525D,Mode=TwoWay}" Content="MIL-STD-2525D" Margin="3"/>
-            <RadioButton GroupName="standardgroup" IsChecked="{Binding Path=Checked2525C_B2,Mode=TwoWay}" Content="MIL-STD-2525B Change 2" Margin="3"/>
+            <RadioButton Foreground="Black" GroupName="standardgroup" IsChecked="{Binding Path=Checked2525D,Mode=TwoWay}" Content="MIL-STD-2525D" Margin="3"/>
+            <RadioButton Foreground="Black" GroupName="standardgroup" IsChecked="{Binding Path=Checked2525C_B2,Mode=TwoWay}" Content="MIL-STD-2525B Change 2" Margin="3"/>
         </WrapPanel>
     </StackPanel>
     <StackPanel Margin="5 5 5 5" Grid.Row="1" VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-        <Button Margin="10 0 0 0" x:Name="ok" Click="OkClick" Content="OK" IsDefault="True" Width="70" />
-        <Button Margin="10 0 0 0" Content="Cancel" IsCancel="True" Width="70" />
+        <Button Foreground="Black" Margin="10 0 0 0" x:Name="ok" Click="OkClick" Content="OK" IsDefault="True" Width="70" />
+        <Button Foreground="Black" Margin="10 0 0 0" Content="Cancel" IsCancel="True" Width="70" />
     </StackPanel>
     </Grid>
 </Window>
