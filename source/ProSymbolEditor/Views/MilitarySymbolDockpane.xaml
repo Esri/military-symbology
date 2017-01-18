@@ -311,7 +311,7 @@
                                             <RowDefinition Height="*"/>
                                         </Grid.RowDefinitions>
 
-                                        <Image Grid.Row="0" Source="{Binding EditSelectedFeatureSymbol.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Margin="20,1,20,1" VerticalAlignment="Top">
+                                        <Image x:Name="modifyTabImage" Grid.Row="0" Source="{Binding EditSelectedFeatureSymbol.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Margin="20,1,20,1" VerticalAlignment="Top">
                                             <Image.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
@@ -420,7 +420,11 @@
 
                                                 <ListBox.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Image Source="{Binding SymbolImage}" Width="100" Height="100" Stretch="UniformToFill"/>
+                                                        <Image Source="{Binding SymbolImage}" Width="100" Height="100" Stretch="UniformToFill" RenderTransformOrigin="0.5,0.5">
+                                                            <Image.RenderTransform>
+                                                                <ScaleTransform ScaleX="-1" ScaleY="-1"/>
+                                                            </Image.RenderTransform>
+                                                        </Image>
                                                     </DataTemplate>
                                                 </ListBox.ItemTemplate>
                                             </ListBox>
@@ -481,7 +485,7 @@
 
                                         <!--<Image Source="{Binding SelectedFavoriteSymbol.SymbolImage, UpdateSourceTrigger=PropertyChanged}" Width="200" Height="200" Grid.Column="0"/>-->
 
-                                        <Image Grid.Row="0" Source="{Binding SelectedFavoriteSymbol.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Margin="20,1,20,1" VerticalAlignment="Bottom">
+                                        <Image x:Name="favoritesTabImage" Grid.Row="0" Source="{Binding SelectedFavoriteSymbol.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Margin="20,1,20,1" VerticalAlignment="Bottom">
                                             <Image.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
@@ -729,7 +733,7 @@
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
-                                        <Image x:Name="image" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                        <Image x:Name="symbolTabImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
                                             <Image.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
@@ -992,7 +996,7 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                        <Image x:Name="mapTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                        <Image x:Name="coordTabSymbolImage" Source="{Binding SymbolAttributeSet.SymbolImage}" RenderOptions.BitmapScalingMode="HighQuality" Width="180" Height="180" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
                                             <Image.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="Save Image As..." Command="{Binding SaveImageToCommand}"/>
