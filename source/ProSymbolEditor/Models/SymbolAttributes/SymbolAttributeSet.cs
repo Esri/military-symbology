@@ -336,14 +336,26 @@ namespace ProSymbolEditor
                 {
                     attributeSet["extendedfunctioncode"] = DisplayAttributes.ExtendedFunctionCode;
                 }
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// TODO: put in the remaining missing 2525B attributes!!!
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                if (!string.IsNullOrEmpty(DisplayAttributes.LegacySymbolIdCode))
+
+                if (!string.IsNullOrEmpty(DisplayAttributes.Identity))
                 {
-                    attributeSet["legacysymbolidcode"] = DisplayAttributes.LegacySymbolIdCode;
+                    attributeSet["affiliation"] = DisplayAttributes.Identity;
                 }
 
+                if (!string.IsNullOrEmpty(DisplayAttributes.Status))
+                {
+                    attributeSet["status"] = DisplayAttributes.Status;
+                }
+
+                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator))
+                {
+                    attributeSet["hqtffd"] = DisplayAttributes.Indicator;
+                }
+
+                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon))
+                {
+                    attributeSet["echelonmobility"] = DisplayAttributes.Echelon;
+                }
             }
             else // 2525D
             {
