@@ -100,8 +100,8 @@ namespace ProSymbolEditor
                 hashcode = (hashcode * PRIME) ^ (_indicator != null ? _indicator.GetHashCode() : 0);
                 hashcode = (hashcode * PRIME) ^ (_mobility != null ? _mobility.GetHashCode() : 0);
                 hashcode = (hashcode * PRIME) ^ (_context != null ? _context.GetHashCode() : 0);
-                hashcode = (hashcode * PRIME) ^ (_modifier1 != null ? _context.GetHashCode() : 0);
-                hashcode = (hashcode * PRIME) ^ (_modifier2 != null ? _context.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_modifier1 != null ? _modifier1.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_modifier2 != null ? _modifier2.GetHashCode() : 0);
                 hashcode = (hashcode * PRIME) ^ (_extendedFunctionCode != null ? _extendedFunctionCode.GetHashCode() : 0);
             }
 
