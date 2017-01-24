@@ -23,13 +23,13 @@ namespace ProSymbolEditor
     {
         public string FeatureClassName { get; set; }
         public GeometryType GeometryType { get; set; }
-        public string SymbolSet { get; set; }
+        public string SymbolSetOrRegex { get; set; }
 
         public SymbolSetMapping(string featureClassName, GeometryType geometryType, string symbolSet)
         {
             FeatureClassName = featureClassName;
             GeometryType = geometryType;
-            SymbolSet = symbolSet;
+            SymbolSetOrRegex = symbolSet;
         }
 
 

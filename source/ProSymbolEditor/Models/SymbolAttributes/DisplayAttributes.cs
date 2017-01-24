@@ -27,6 +27,87 @@ namespace ProSymbolEditor
 {
     public class DisplayAttributes : PropertyChangedBase
     {
+        public override string ToString()
+        {
+            return "Display Attributes";
+        }
+
+        public string Name
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+
+                if (SelectedIdentityDomainPair != null)
+                    sb.Append(SelectedIdentityDomainPair.Name + ProSymbolUtilities.NameSeparator);
+
+                if (SelectedExtendedFunctionCodeDomainPair != null)
+                    sb.Append(SelectedExtendedFunctionCodeDomainPair.Name + ProSymbolUtilities.NameSeparator);
+
+                if (!string.IsNullOrEmpty(SymbolSet))
+                    sb.Append(SymbolSet + ProSymbolUtilities.NameSeparator);
+
+                if (!string.IsNullOrEmpty(SymbolEntity))
+                    sb.Append(SymbolEntity + ProSymbolUtilities.NameSeparator);
+
+                if (SelectedEchelonDomainPair != null)
+                    sb.Append(SelectedEchelonDomainPair.Name + ProSymbolUtilities.NameSeparator);
+
+                if (SelectedIndicatorDomainPair != null)
+                    sb.Append(SelectedIndicatorDomainPair.Name + ProSymbolUtilities.NameSeparator);
+
+                if (SelectedModifier1DomainPair != null)
+                    sb.Append(SelectedModifier1DomainPair.Name + ProSymbolUtilities.NameSeparator);
+
+                if (SelectedModifier2DomainPair != null)
+                    sb.Append(SelectedModifier2DomainPair.Name + ProSymbolUtilities.NameSeparator);
+
+                if (sb.Length == 0)
+                {
+                    // use an alternate (the SIDC) if Coded Domains not yet set
+                    if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                        sb.Append(LegacySymbolIdCode);
+                    else
+                        sb.Append(SymbolSet + ProSymbolUtilities.NameSeparator + SymbolEntity);
+                }
+
+                return sb.ToString();
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if ((obj == null) || (GetType() != obj.GetType()))
+                return false;
+
+            bool equals = GetHashCode() == obj.GetHashCode();
+
+            return equals;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashcode;
+            const int PRIME = 263;
+            unchecked
+            {
+                hashcode = PRIME * (_symbolSet != null ? _symbolSet.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_symbolEntity != null ? _symbolEntity.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_identity != null ? _identity.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_status != null ? _status.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_operationalCondition != null ? _operationalCondition.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_echelon != null ? _echelon.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_indicator != null ? _indicator.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_mobility != null ? _mobility.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_context != null ? _context.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_modifier1 != null ? _context.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_modifier2 != null ? _context.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_extendedFunctionCode != null ? _extendedFunctionCode.GetHashCode() : 0);
+            }
+
+            return hashcode;
+        }
+
         //Base attributes
         private string _symbolSet;
         private string _symbolEntity;
@@ -48,6 +129,84 @@ namespace ProSymbolEditor
         private DomainCodedValuePair _selectedModifier1DomainPair;
         private string _modifier2;
         private DomainCodedValuePair _selectedModifier2DomainPair;
+        private string _extendedFunctionCode;
+        private DomainCodedValuePair _selectedExtendedFunctionCodeDomainPair;
+
+        public string LegacySymbolIdCode
+        {
+            get
+            {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        
+                string extendedFunctionCode = ExtendedFunctionCode;
+                if ((ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                    && (!String.IsNullOrEmpty(extendedFunctionCode)) && (extendedFunctionCode.Length >= 10))
+                {
+                    sb.Append(extendedFunctionCode[0]);
+                    // TODO: Check for Alpha
+                    if (String.IsNullOrEmpty(Identity))
+                        sb.Append('U');
+                    else
+                        sb.Append(Identity);
+                    sb.Append(extendedFunctionCode[2]);
+
+                    // TODO: Check for Alpha
+                    if (String.IsNullOrEmpty(Status))
+                        sb.Append('P');
+                    else
+                        sb.Append(Status);
+                    sb.Append(extendedFunctionCode.Substring(4, 6));
+                    // TODO: Check for Alpha
+                    if (String.IsNullOrEmpty(Indicator))
+                        sb.Append('-');
+                    else
+                        sb.Append(Indicator);
+                    if (String.IsNullOrEmpty(Echelon))
+                        sb.Append('-');
+                    else
+                        sb.Append(Echelon);
+                    sb.Append("---");
+                }
+
+                return sb.ToString();
+            }
+                
+        }
+
+        public string ExtendedFunctionCode
+        {
+            get
+            {
+                return _extendedFunctionCode;
+            }
+            set
+            {
+                _extendedFunctionCode = value;
+                NotifyPropertyChanged(() => LegacySymbolIdCode);
+            }
+        }
+
+        [ScriptIgnore, Browsable(false)]
+        public DomainCodedValuePair SelectedExtendedFunctionCodeDomainPair
+        {
+            get
+            {
+                return _selectedExtendedFunctionCodeDomainPair;
+            }
+            set
+            {
+                _selectedExtendedFunctionCodeDomainPair = value;
+                if (_selectedExtendedFunctionCodeDomainPair != null)
+                {
+                    _extendedFunctionCode = _selectedExtendedFunctionCodeDomainPair.Code.ToString();
+                    NotifyPropertyChanged(() => SelectedExtendedFunctionCodeDomainPair);
+                }
+                else
+                {
+                    _extendedFunctionCode = "";
+                }
+            }
+        }
 
         public DisplayAttributes()  {    }
 
@@ -107,12 +266,12 @@ namespace ProSymbolEditor
                 if (_selectedIdentityDomainPair != null)
                 {
                     Identity = _selectedIdentityDomainPair.Code.ToString();
+                    NotifyPropertyChanged(() => SelectedIdentityDomainPair);
                 }
                 else
                 {
                     Identity = "";
                 }
-                NotifyPropertyChanged(() => SelectedIdentityDomainPair);
             }
         }
 
@@ -144,12 +303,12 @@ namespace ProSymbolEditor
                 if (_selectedEchelonDomainPair != null)
                 {
                     Echelon = _selectedEchelonDomainPair.Code.ToString();
+                    NotifyPropertyChanged(() => SelectedEchelonDomainPair);
                 }
                 else
                 {
                     Echelon = "";
                 }
-                NotifyPropertyChanged(() => SelectedEchelonDomainPair);
             }
         }
 
@@ -181,12 +340,12 @@ namespace ProSymbolEditor
                 if (_selectedOperationalConditionDomainPair != null)
                 {
                     OperationalCondition = _selectedOperationalConditionDomainPair.Code.ToString();
+                    NotifyPropertyChanged(() => SelectedOperationalConditionDomainPair);
                 }
                 else
                 {
                     OperationalCondition = "";
                 }
-                NotifyPropertyChanged(() => SelectedOperationalConditionDomainPair);
             }
         }
 
@@ -218,12 +377,12 @@ namespace ProSymbolEditor
                 if (_selectedStatusDomainPair != null)
                 {
                     Status = _selectedStatusDomainPair.Code.ToString();
+                    NotifyPropertyChanged(() => SelectedStatusDomainPair);
                 }
                 else
                 {
                     Status = "";
                 }
-                NotifyPropertyChanged(() => SelectedStatusDomainPair);
             }
         }
 
@@ -255,12 +414,12 @@ namespace ProSymbolEditor
                 if (_selectedIndicatorDomainPair != null)
                 {
                     Indicator = _selectedIndicatorDomainPair.Code.ToString();
+                    NotifyPropertyChanged(() => SelectedIndicatorDomainPair);
                 }
                 else
                 {
                     Indicator = "";
                 }
-                NotifyPropertyChanged(() => SelectedIndicatorDomainPair);
             }
         }
 
@@ -292,12 +451,12 @@ namespace ProSymbolEditor
                 if (_selectedMobilityDomainPair != null)
                 {
                     Mobility = _selectedMobilityDomainPair.Code.ToString();
+                    NotifyPropertyChanged(() => SelectedMobilityDomainPair);
                 }
                 else
                 {
                     Mobility = "";
                 }
-                NotifyPropertyChanged(() => SelectedMobilityDomainPair);
             }
         }
 

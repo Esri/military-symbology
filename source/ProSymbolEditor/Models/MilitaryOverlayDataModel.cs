@@ -14,14 +14,17 @@
  *   limitations under the License.
  ******************************************************************************/
 
-using ArcGIS.Core.Data;
-using ArcGIS.Desktop.Catalog;
-using ArcGIS.Desktop.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using ArcGIS.Core.Data;
+using ArcGIS.Desktop.Catalog;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Mapping;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 
 namespace ProSymbolEditor
 {
@@ -29,43 +32,88 @@ namespace ProSymbolEditor
     {
         private bool _schemaExists;
         private string _databaseName;
-        private List<string> _fieldsToCheck;
-        private Dictionary<string, bool> _featureClassExists;
+
+        private string _egdbConnectionString;
 
         public MilitaryOverlayDataModel()
         {
-            //Set up Feature Class Schema
-            _featureClassExists = new Dictionary<string, bool>();
-            _featureClassExists.Add("Activities", false);
-            _featureClassExists.Add("Air", false);
-            _featureClassExists.Add("AirMissile", false);
-            _featureClassExists.Add("Civilian", false);
-            _featureClassExists.Add("ControlMeasuresAreas", false);
-            _featureClassExists.Add("ControlMeasuresLines", false);
-            _featureClassExists.Add("ControlMeasuresPoints", false);
-            _featureClassExists.Add("Cyberspace", false);
-            _featureClassExists.Add("Installations", false);
-            _featureClassExists.Add("LandEquipment", false);
-            _featureClassExists.Add("METOCAreasAtmospheric", false);
-            _featureClassExists.Add("METOCAreasOceanographic", false);
-            _featureClassExists.Add("METOCLinesAtmospheric", false);
-            _featureClassExists.Add("METOCLinesOceanographic", false);
-            _featureClassExists.Add("METOCPointsAtmospheric", false);
-            _featureClassExists.Add("METOCPointsOceanographic", false);
-            _featureClassExists.Add("MineWarfare", false);
-            _featureClassExists.Add("SeaSubsurface", false);
-            _featureClassExists.Add("SeaSurface", false);
-            _featureClassExists.Add("SIGINT", false);
-            _featureClassExists.Add("Space", false);
-            _featureClassExists.Add("SpaceMissile", false);
-            _featureClassExists.Add("Units", false);
-
-            //Set up Fields to check
-            _fieldsToCheck = new List<string>();
-            _fieldsToCheck.Add("symbolset");
-            _fieldsToCheck.Add("symbolentity");
-
             _schemaExists = false;
+        }
+
+        Dictionary<string, bool> GetFeatureClassExistsMap(ProSymbolUtilities.SupportedStandardsType standard,
+            Geodatabase gdb = null)
+        {
+
+            string prefixName = string.Empty;
+            if (gdb != null)
+            {
+                GeodatabaseType gdbType = gdb.GetGeodatabaseType();
+                if (gdbType == GeodatabaseType.RemoteDatabase)
+                {
+                    // if an SDE/EGDB, then feature class name format will differ:
+                    // Database + User + Feature Class Name 
+                    ConnectionProperties cps = gdb.GetConnectionProperties();
+                    prefixName = cps.Database + "." + cps.User + ".";
+
+                    // Also save this connection string to identify this EGDB later 
+                    _egdbConnectionString = (gdb as Datastore).GetConnectionString();
+                }
+                else
+                {
+                    _egdbConnectionString = string.Empty;
+                }
+            }
+
+            Dictionary<string, bool> featureClassExists = new Dictionary<string, bool>();
+
+            if (standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            {
+                // 2525c_b2
+                featureClassExists.Add(prefixName + "Activities", false);
+                featureClassExists.Add(prefixName + "Air", false);
+                featureClassExists.Add(prefixName + "ControlMeasuresAreas", false);
+                featureClassExists.Add(prefixName + "ControlMeasuresLines", false);
+                featureClassExists.Add(prefixName + "ControlMeasuresPoints", false);
+                featureClassExists.Add(prefixName + "Installations", false);
+                featureClassExists.Add(prefixName + "LandEquipment", false);
+                featureClassExists.Add(prefixName + "METOCAreas", false);
+                featureClassExists.Add(prefixName + "METOCLines", false);
+                featureClassExists.Add(prefixName + "METOCPoints", false);
+                featureClassExists.Add(prefixName + "SeaSubsurface", false);
+                featureClassExists.Add(prefixName + "SeaSurface", false);
+                featureClassExists.Add(prefixName + "SIGINT", false);
+                featureClassExists.Add(prefixName + "Space", false);
+                featureClassExists.Add(prefixName + "Units", false);
+            }
+            else
+            {
+                // 2525d
+                featureClassExists.Add(prefixName + "Activities", false);
+                featureClassExists.Add(prefixName + "Air", false);
+                featureClassExists.Add(prefixName + "AirMissile", false);
+                featureClassExists.Add(prefixName + "Civilian", false);
+                featureClassExists.Add(prefixName + "ControlMeasuresAreas", false);
+                featureClassExists.Add(prefixName + "ControlMeasuresLines", false);
+                featureClassExists.Add(prefixName + "ControlMeasuresPoints", false);
+                featureClassExists.Add(prefixName + "Cyberspace", false);
+                featureClassExists.Add(prefixName + "Installations", false);
+                featureClassExists.Add(prefixName + "LandEquipment", false);
+                featureClassExists.Add(prefixName + "METOCAreasAtmospheric", false);
+                featureClassExists.Add(prefixName + "METOCAreasOceanographic", false);
+                featureClassExists.Add(prefixName + "METOCLinesAtmospheric", false);
+                featureClassExists.Add(prefixName + "METOCLinesOceanographic", false);
+                featureClassExists.Add(prefixName + "METOCPointsAtmospheric", false);
+                featureClassExists.Add(prefixName + "METOCPointsOceanographic", false);
+                featureClassExists.Add(prefixName + "MineWarfare", false);
+                featureClassExists.Add(prefixName + "SeaSubsurface", false);
+                featureClassExists.Add(prefixName + "SeaSurface", false);
+                featureClassExists.Add(prefixName + "SIGINT", false);
+                featureClassExists.Add(prefixName + "Space", false);
+                featureClassExists.Add(prefixName + "SpaceMissile", false);
+                featureClassExists.Add(prefixName + "Units", false);
+            }
+
+            return featureClassExists;
         }
 
         public bool SchemaExists
@@ -84,20 +132,75 @@ namespace ProSymbolEditor
             }
         }
 
-        public bool IsSchemaComplete()
+        private async Task<Geodatabase> GetGDBFromLayer(BasicFeatureLayer layer)
         {
-            foreach(KeyValuePair<string,bool> pair in _featureClassExists)
-            {
-                if (pair.Value == false)
-                {
-                    return false;
-                }
-            }
+            if (layer == null)
+                return null;
 
-            return true;
+            Geodatabase geodatabase = null;
+            await QueuedTask.Run(() => geodatabase = (layer.GetTable().GetDatastore() as Geodatabase));
+            return geodatabase;
+        }
+
+        public async Task<bool> IsGDBAndFeatureClassInActiveView(string featureClassName)
+        {
+            string activeGdbPath = DatabaseName;
+
+            IEnumerable<FeatureLayer> mapLayers = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>(); ;
+
+            bool isFeatureClassInActiveView = false;
+
+            await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(async () =>
+            {
+                foreach (var layer in mapLayers)
+                {
+                    string fcName = layer.GetFeatureClass().GetName();
+
+                    isFeatureClassInActiveView = false;
+
+                    // GDB and View feature class name match?
+                    if (fcName == featureClassName)
+                    {
+                        Geodatabase geodatabase = await GetGDBFromLayer(layer);
+                        if (geodatabase == null)
+                        {
+                            isFeatureClassInActiveView = false;
+                        }
+                        else
+                        {
+                            string gdbPath = geodatabase.GetPath();
+
+                            if (gdbPath == activeGdbPath)
+                            {
+                                isFeatureClassInActiveView = true;
+                                break;
+                            }
+
+                            // last check if it is EGDB
+                            if (string.IsNullOrEmpty(gdbPath) && !string.IsNullOrEmpty(_egdbConnectionString))
+                            {
+                                string cs = (geodatabase as Datastore).GetConnectionString();
+
+                                if (cs == _egdbConnectionString)
+                                    isFeatureClassInActiveView = true;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                return isFeatureClassInActiveView;
+            });
+
+            return isFeatureClassInActiveView;
         }
 
         public async Task<bool> ShouldAddInBeEnabledAsync()
+        {
+            return await ShouldAddInBeEnabledAsync(ProSymbolUtilities.Standard);
+        }
+
+        public async Task<bool> ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType standard)
         {
             _schemaExists = false;
 
@@ -116,6 +219,9 @@ namespace ProSymbolEditor
                 {
                     foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
                     {
+                        if (gdbProjectItem.Name == "Map") // ignore the project Map GDB
+                            continue;
+
                         using (Datastore datastore = gdbProjectItem.GetDatastore())
                         {
                             //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
@@ -123,30 +229,53 @@ namespace ProSymbolEditor
                                 continue;
                             Geodatabase geodatabase = datastore as Geodatabase;
 
-                            //Reset schema data model to false
-                            _featureClassExists = _featureClassExists.ToDictionary(kvp => kvp.Key, kvp => false);
+                            if (geodatabase == null)
+                                continue;
+
+                            //Set up Fields to check
+                            List<string> fieldsToCheck = new List<string>();
+
+                            if (standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                            {
+                                fieldsToCheck.Add("extendedfunctioncode");
+                            }
+                            else
+                            {   // 2525d
+                                fieldsToCheck.Add("symbolset");
+                                fieldsToCheck.Add("symbolentity");
+                            }
+
+                            // Reset schema data model exists to false for each feature class
+                            Dictionary<string, bool> featureClassExists = GetFeatureClassExistsMap(standard, geodatabase);
 
                             IReadOnlyList<FeatureClassDefinition> featureClassDefinitions = geodatabase.GetDefinitions<FeatureClassDefinition>();
 
+                            bool stopLooking = false;
                             foreach(FeatureClassDefinition featureClassDefinition in featureClassDefinitions)
                             {
+                                // stop looking after the first feature class not found
+                                if (stopLooking)
+                                    break;
+
                                 string featureClassName = featureClassDefinition.GetName();
 
-                                if (_featureClassExists.ContainsKey(featureClassName))
+                                if (featureClassExists.ContainsKey(featureClassName))
                                 {
                                     //Feature Class Exists!  Check for fields
                                     bool fieldsExist = true;
-                                    foreach(string fieldName in _fieldsToCheck)
+                                    foreach(string fieldName in fieldsToCheck)
                                     {
                                         IEnumerable<Field> foundFields = featureClassDefinition.GetFields().Where(x => x.Name == fieldName);
 
                                         if (foundFields.Count() < 1)
                                         {
                                             fieldsExist = false;
+                                            stopLooking = true;
+                                            break;
                                         }
                                     }
 
-                                    _featureClassExists[featureClassName] = fieldsExist;
+                                    featureClassExists[featureClassName] = fieldsExist;
                                 }
                                 else
                                 {
@@ -154,11 +283,22 @@ namespace ProSymbolEditor
                                 }
                             }
 
+                            bool isSchemaComplete = true;
+       
+                            foreach (KeyValuePair<string, bool> pair in featureClassExists)
+                            {
+                                if (pair.Value == false)
+                                {
+                                    isSchemaComplete =  false;
+                                    break;
+                                }
+                            }
+
                             //Check if schema is all there
-                            if (IsSchemaComplete())
+                            if (isSchemaComplete)
                             {
                                 //Save geodatabase path to use as the selected database
-                                _databaseName = geodatabase.GetPath();
+                                _databaseName = gdbProjectItem.Path;
                                 _schemaExists = true;
 
                                 break;

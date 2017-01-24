@@ -47,6 +47,70 @@ namespace ProSymbolEditor
 
         public LabelAttributes() {  }
 
+        public override string ToString()
+        {
+            return "Label Attributes";
+        }
+
+        public string Name
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+
+                if (!string.IsNullOrEmpty(UniqueDesignation))
+                    sb.Append(UniqueDesignation + ProSymbolUtilities.NameSeparator);
+
+                if (!string.IsNullOrEmpty(HigherFormation))
+                    sb.Append(HigherFormation + ProSymbolUtilities.NameSeparator);
+
+                if (!string.IsNullOrEmpty(AdditionalInformation))
+                    sb.Append(AdditionalInformation + ProSymbolUtilities.NameSeparator);
+
+                if (!string.IsNullOrEmpty(CountryCode))
+                    sb.Append(CountryCode);
+
+                if (sb.Length == 0)
+                {
+                    sb.Append("Label Attributes");
+                }
+
+                return sb.ToString();
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if ((obj == null) || (GetType() != obj.GetType()))
+                return false;
+
+            bool equals = GetHashCode() == obj.GetHashCode();
+
+            return equals;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashcode;
+            const int PRIME = 263;
+            unchecked
+            {
+                hashcode = PRIME * (_staffComments != null ? _staffComments.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_additionalInformation != null ? _additionalInformation.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_uniqueDesignation != null ? _uniqueDesignation.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_type != null ? _type.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_commonidentifier != null ? _commonidentifier.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_speed != null ? _speed.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_higherFormation != null ? _higherFormation.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_reinforced != null ? _reinforced.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_credibility != null ? _credibility.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_reliability != null ? _reliability.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_countryCode != null ? _countryCode.GetHashCode() : 0);
+            }
+
+            return hashcode;
+        }
+
         #region Getters/Setters
         public DateTime? DateTimeValid
         {

@@ -41,12 +41,29 @@ namespace ProSymbolEditor
         public AboutWindow()
         {
             InitializeComponent();
+
+            this.VersionBox.DataContext = this;
         }
 
         public void ShowDialog(Window owner)
         {
             this.Owner = owner;
             this.ShowDialog();
+        }
+
+        public string VersionString
+        {
+            get
+            {
+                // NOTE: We can't figure out a way to look this up from the DAML file
+                // but the 3 versions - DAML, Assembly, and this label/string - should match
+                // Only use Major.Minor.Build numbers (not Revision)
+                string versionString = 
+                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." +
+                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString() + "." +
+                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build.ToString();
+                return versionString;
+            }
         }
 
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
