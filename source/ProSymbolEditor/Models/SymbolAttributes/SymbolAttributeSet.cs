@@ -28,8 +28,6 @@ namespace ProSymbolEditor
     [DisplayName("Symbol Attributes")]
     public class SymbolAttributeSet : PropertyChangedBase
     {
-        private BitmapImage _symbolImage = null;
-
         public SymbolAttributeSet()
         {
             DisplayAttributes = new DisplayAttributes();
@@ -268,12 +266,34 @@ namespace ProSymbolEditor
             }
         }
 
+        private BitmapImage _symbolImage = null;
+
         [ScriptIgnore]
         public BitmapImage SymbolImage
         {
             get
             {
+                if (_symbolImage == null)
+                    return UnknownSymbolImage;
+
                 return _symbolImage;
+            }
+        }
+
+        private BitmapImage _unknownSymbolImage = null;
+
+        [ScriptIgnore]
+        public BitmapImage UnknownSymbolImage
+        {
+            get
+            {
+                if (_unknownSymbolImage == null)
+                {
+                    Uri oUri = new Uri(@"pack://application:,,,/MilitarySymbolEditor;component/Images/UnknownSymbol.png");
+                    _unknownSymbolImage = new BitmapImage(oUri);
+                }
+
+                return _unknownSymbolImage;
             }
         }
 
@@ -318,13 +338,8 @@ namespace ProSymbolEditor
 
             _symbolImage = await GetBitmapImageAsync(attributeSet) as BitmapImage;
 
-            // TODO: may need to notify on null image also to get image to refresh when attributes reset
-            if (_symbolImage != null)
-            {
-                NotifyPropertyChanged(() => SymbolImage);
-            }
+            NotifyPropertyChanged(() => SymbolImage);
         }
-
 
         public Dictionary<string, object> GenerateAttributeSetDictionary()
         {
@@ -740,6 +755,7 @@ namespace ProSymbolEditor
         public void ResetAttributes()
         {
             //Reset attributes
+            _symbolImage = null;
 
             DisplayAttributes.SymbolSet = "";
             DisplayAttributes.SymbolEntity = "";

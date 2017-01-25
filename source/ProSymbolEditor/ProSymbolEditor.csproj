@@ -13344,6 +13344,7 @@
     <Resource Include="Images\SelectionSelectTool16.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\UnknownSymbol.png" />
     <Content Include="LayerFiles\MilitaryOverlay-2525d.lpkx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
