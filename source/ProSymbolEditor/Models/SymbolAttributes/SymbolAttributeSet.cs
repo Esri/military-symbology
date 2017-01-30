@@ -16,11 +16,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Media.Imaging;
 using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Framework.Contracts;
-using MilitarySymbols;
 using System.Web.Script.Serialization;
 using System.ComponentModel;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
@@ -30,8 +28,6 @@ namespace ProSymbolEditor
     [DisplayName("Symbol Attributes")]
     public class SymbolAttributeSet : PropertyChangedBase
     {
-        private BitmapImage _symbolImage = null;
-
         public SymbolAttributeSet()
         {
             DisplayAttributes = new DisplayAttributes();
@@ -270,21 +266,69 @@ namespace ProSymbolEditor
             }
         }
 
+        private BitmapImage _symbolImage = null;
+
         [ScriptIgnore]
         public BitmapImage SymbolImage
         {
             get
             {
+                if (_symbolImage == null)
+                    return UnknownSymbolImage;
+
                 return _symbolImage;
+            }
+        }
+
+        private BitmapImage _unknownSymbolImage = null;
+
+        [ScriptIgnore]
+        public BitmapImage UnknownSymbolImage
+        {
+            get
+            {
+                if (_unknownSymbolImage == null)
+                {
+                    Uri oUri = new Uri(@"pack://application:,,,/MilitarySymbolEditor;component/Images/UnknownSymbol.png");
+                    _unknownSymbolImage = new BitmapImage(oUri);
+                }
+
+                return _unknownSymbolImage;
             }
         }
 
         #endregion
 
-        public void GeneratePreviewSymbol()
+        private System.Threading.Tasks.Task<System.Windows.Media.ImageSource> GetBitmapImageAsync(Dictionary<string, object> attributes)
+        {
+            return ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() => {
+                string standard = "mil" + ProSymbolUtilities.StandardString.ToLower();
+                ArcGIS.Core.CIM.CIMSymbol symbol = ArcGIS.Desktop.Mapping.SymbolFactory.GetDictionarySymbol(standard, attributes);
+
+                if (symbol == null)
+                    return null;
+
+                // IMPORTANT + WORKAROUND + TRICKY:
+                // Pro SDK does not directly provide a way to set a PATCH_SIZE > 64 pixels
+                // However you can do this if the value is negative (-1) but it transforms/flips the image
+                // Therefore we flip the image back in:
+                // Views\MilitarySymbolDockpane.xaml.cs - Image.RenderTransform
+                // If this ever gets changed/fixed in ProSDK, you must remove the flip there
+                const int PATCH_SIZE = -256;  // negative value is a workaround
+                var si = new ArcGIS.Desktop.Mapping.SymbolStyleItem()
+                {
+                    Symbol = symbol,
+                    PatchHeight = PATCH_SIZE,
+                    PatchWidth = PATCH_SIZE
+                };
+                return si.PreviewImage;
+             });
+        }
+
+        public async void GeneratePreviewSymbol()
         {
             // Step 1: Create a dictionary/map of well known attribute names to values
-            Dictionary<string, string> attributeSet = GenerateAttributeSetDictionary();
+            Dictionary<string, object> attributeSet = GenerateAttributeSetDictionary();
 
             if (attributeSet.Count == 0)
             {
@@ -292,43 +336,14 @@ namespace ProSymbolEditor
                 return;
             }
 
-            // Step 2: Set the SVG Home Folder
-            string militarySymbolsPath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "Images", "MIL_STD_2525D_Symbols");
-            bool pathExists = Utilities.SetImageFilesHome(militarySymbolsPath);
+            _symbolImage = await GetBitmapImageAsync(attributeSet) as BitmapImage;
 
-            if (!Utilities.CheckImageFilesHomeExists())
-            {
-                System.Diagnostics.Trace.WriteLine("Export Failed! No SVGs in Folder: " + militarySymbolsPath);
-                return;
-            }
-
-            // Step 3: Get the Layered Bitmap from the Library
-            const int width = 256, height = 256;
-            Size exportSize = new Size(width, height);
-
-            System.Drawing.Bitmap exportBitmap;
-
-            bool success = Utilities.ExportSymbolFromAttributes(attributeSet, out exportBitmap, exportSize);
-
-            if (success && exportBitmap != null)
-            {
-                _symbolImage = ProSymbolUtilities.BitMapToBitmapImage(exportBitmap);
-                NotifyPropertyChanged(() => SymbolImage);
-            }
-
-            if (!success || (exportBitmap == null))
-            {
-                Console.WriteLine("Export failed!");
-                _symbolImage = null;
-                NotifyPropertyChanged(() => SymbolImage);
-                return;
-            }
+            NotifyPropertyChanged(() => SymbolImage);
         }
 
-
-        public Dictionary<string, string> GenerateAttributeSetDictionary()
+        public Dictionary<string, object> GenerateAttributeSetDictionary()
         {
-            Dictionary<string, string> attributeSet = new Dictionary<string, string>();
+            Dictionary<string, object> attributeSet = new Dictionary<string, object>();
 
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
@@ -337,11 +352,25 @@ namespace ProSymbolEditor
                     attributeSet["extendedfunctioncode"] = DisplayAttributes.ExtendedFunctionCode;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.LegacySymbolIdCode))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Identity))
                 {
-                    attributeSet["legacysymbolidcode"] = DisplayAttributes.LegacySymbolIdCode;
+                    attributeSet["affiliation"] = DisplayAttributes.Identity;
                 }
 
+                if (!string.IsNullOrEmpty(DisplayAttributes.Status))
+                {
+                    attributeSet["status"] = DisplayAttributes.Status;
+                }
+
+                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator))
+                {
+                    attributeSet["hqtffd"] = DisplayAttributes.Indicator;
+                }
+
+                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon))
+                {
+                    attributeSet["echelonmobility"] = DisplayAttributes.Echelon;
+                }
             }
             else // 2525D
             {
@@ -726,6 +755,7 @@ namespace ProSymbolEditor
         public void ResetAttributes()
         {
             //Reset attributes
+            _symbolImage = null;
 
             DisplayAttributes.SymbolSet = "";
             DisplayAttributes.SymbolEntity = "";
