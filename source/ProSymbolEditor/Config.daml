@@ -1,11 +1,11 @@
 ﻿<ArcGIS defaultAssembly="MilitarySymbolEditor.dll" defaultNamespace="ProSymbolEditor" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
-  <AddInInfo id="{4ff462b0-2910-47f3-b6fd-d1d17e5f7dfc}" version="1.4.0" desktopVersion="1.4.0">
+  <AddInInfo id="{4ff462b0-2910-47f3-b6fd-d1d17e5f7dfc}" version="2.0" desktopVersion="1.4">
     <Name>MilitarySymbolEditor</Name>
     <Description>A user-focused add-in for searching, creating, and editing military symbols in ArcGIS Pro.</Description>
     <Image>Images\AddinDesktop32.png</Image>
-    <Author>Esri, Inc.</Author>
-    <Company>Esri, Inc.</Company>
-    <Date>01/17/2017</Date>
+    <Author>Esri</Author>
+    <Company>Esri</Company>
+    <Date>01/20/2017</Date>
     <Subject>Editing, Map Authoring</Subject>
     <!-- Note subject can be one or more of these topics:
                     Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
