@@ -217,5 +217,16 @@ namespace ProSymbolEditor
 
             return CoordinateType.Unknown;
         }
+
+        public static string GeometryTypeToGeometryTagString(GeometryType gt)
+        {
+            if (gt == GeometryType.Polygon)
+                return "AREA";
+            else if ((gt == GeometryType.Polyline) || (gt == GeometryType.Multipoint))
+                return "LINE";
+            else
+                return "POINT";
+        }
+
     }
 }
