@@ -119,14 +119,11 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 5. Optionally, click **Add Favorite** to add the symbol to your favorites list.
 	You can also modify the symbol before you add it to your Favorites.
 	
-### Modify a new symbol
+### Changing a symbol
 1. After you've selected a symbol in the Military Symbol Editor, click the **Symbol** tab.
 2. Click the dropdown lists to set the **Identity/Affiliation**, **Status**, **TF, FD, HQ**, **Echelon**, **Context**, **Modifier 1**, and **Modifier 2** modifier attributes.
 3. Optionally, click **Add to Map** to add the symbol to the map without further refinement.
 4. Optionally, click **Add Favorite** to add the symbol to your favorites list.
-    
-	**Note:**  The Military Symbol Editor is for designing symbols before you add them to the map. It is not for editing existing features on the map.
-		If you want to change a feature that you've already added to the map, select the feature, click the **Edit** tab in ArcGIS Pro, click **Attributes**, and edit the feature's attributes in the **Attributes pane**.
 
 ### Add text modifiers to a new symbol
 1. After you've selected a symbol in the Military Symbol Editor, click the **Label** tab.
@@ -158,13 +155,16 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
     Click a symbol in your favorites to add it to the map.
 
 ### Sharing Favorites
-1. The Favorites file: `SymbolFavorites.json` is stored with the add-in at (Note: you may copy/paste this path into File Explorer):
-    a. Military Symbol Editor Add-in: `%LOCALAPPDATA%\ESRI\ArcGISPro\AssemblyCache\{4ff462b0-2910-47f3-b6fd-d1d17e5f7dfc}`
-    b. Military Tools for ArcGIS Add-in: `%LOCALAPPDATA%\ESRI\ArcGISPro\AssemblyCache\{bea7f059-c69e-4e17-84bd-072236629c0c}`
-2. You may copy, replace, or share this favorites file(`SymbolFavorites.json`) by copying to the same location on machines **with the same version of the Military Symbol Editor installed**
-3. Manually editing or creating this file outside of the add-in is not generally supported
-    a. This file must match the JSON format/model of the current add-in.
-    b. This model is JSON-serialized from [this class](./source/ProSymbolEditor/Models/SymbolAttributes/SymbolAttributeSet.cs).
+1. To share or save a set of favorites use the "Save As..." and "Import..." buttons on the Favorites tab
+2. Additional information about favorites: 
+    1. You may copy, import/export, or share favorites files (ex. `SymbolFavorites.json`) between machines **with the same version of the Military Symbol Editor installed**
+    2. Manually editing or creating favorites files outside of the add-in is not generally supported
+        1. This file must match the JSON format/model of the current add-in.
+        2. This format/model is JSON-serialized from [this class](./source/ProSymbolEditor/Models/SymbolAttributes/SymbolAttributeSet.cs).
+    3. The default favorites file used by the application is: `SymbolFavorites.json`
+        1. This file is stored with the add-in at the add-in install location (Note: you may copy/paste this path into File Explorer) at:
+        2. Military Symbol Editor Add-in: `%LOCALAPPDATA%\ESRI\ArcGISPro\AssemblyCache\{4ff462b0-2910-47f3-b6fd-d1d17e5f7dfc}`
+        3. Military Tools for ArcGIS Add-in: `%LOCALAPPDATA%\ESRI\ArcGISPro\AssemblyCache\{bea7f059-c69e-4e17-84bd-072236629c0c}`
 
 ### Edit the symbol for a military feature that is already on the map
 1. Click the **Modify** tab in the Military Symbol Editor.
