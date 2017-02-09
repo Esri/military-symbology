@@ -25,12 +25,12 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 ### Developers
 
 * Visual Studio 2015
-* ArcGIS Pro 1.2+
-* ArcGIS Pro 1.2+ SDK
+* ArcGIS Pro 1.4+
+* ArcGIS Pro 1.4+ SDK
 
 ### Users
 
-* ArcGIS Pro 1.2+
+* ArcGIS Pro 1.4+
 
 ## Instructions
 
@@ -44,9 +44,6 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 
 * Building
 	* To Build Using Visual Studio 2015
-		* Open and build solution file
-	* To Build Using Visual Studio 2013
-		* Install the .NET 4.5.2 Dev Pack
 		* Open and build solution file
 	* To use MSBuild to build the solution
 		* Open a Visual Studio Command Prompt: Start Menu | Visual Studio 2015 | Visual Studio Tools | Developer Command Prompt for VS2015
@@ -67,13 +64,14 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 
 * Running
 	* To run from a stand-alone deployment in ArcGIS Pro:
-	* Download and obtain the add-in. The add-in may be obtained from
-		* As part of the Military Overlay Template (version 1.1.0+) - http://esriurl.com/AFDMilitaryOverlay
-		* Included in the repository releases: https://github.com/Esri/military-symbol-editor-addin-wpf/releases
-        * Install the add-in by double clicking on the downloaded .addin file
+	* Download and install the add-in. The add-in may be obtained from
+		* Included with [Military Tools for ArcGIS](https://esri.github.io/military-tools-desktop-addins)
+		* As part of the [Military Overlay Template](http://esriurl.com/AFDMilitaryOverlay) (version 1.1.0+) - 
+		* [ArcGIS for Defense Downloads](http://appsforms.esri.com/products/download/#ArcGIS_for_Defense)
+        * Install the add-in by double clicking on the downloaded .esriAddinX file in the download
     * Run the add-in
 		* Run ArcGIS Pro
-		* The ADD-IN appears under the "ADD-IN" tab in Pro	
+		* The ADD-IN appears under the "ADD-IN" tab in Pro
 		* Click the "Military Symbol Editor" button and the tool will appear
 		* Note: If you do not already have the Military Overlay Information Model/GDB included in your project you will be prompted to add when you use the addin.
 			* Click "Yes" at the prompt: "Would you like to add the Military Overlay Layer Package to add the schema to your project?"
@@ -101,7 +99,6 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
 		* The Enter Coordinates tab is the sixth tab:
 			* Coordinates can be entered in DD, DMS, DD, MGRS, or [other coordinate systems] (https://github.com/Esri/coordinate-conversion-addin-dotnet#features).
 			* Once valid coordinates are entered, a button can be clicked to add a feature to those coordinates.
-			* Invalid coordinates will show with a red box around it.
 		* At any time/tab in this process, the "Add to Map" button, included on every tab, can be clicked to graphically add the feature to the map by clicking.
 
 ## Workflows
@@ -152,29 +149,41 @@ A user-focused addin for searching, creating, and editing military symbols in Ar
     If the symbol is for a line or area feature, press the **Enter** key and continue adding coordinates.
 3. Click **Add Coordinates to Map**.
     The symbol is added to the map at the coordinates you specified.
-	
+
 ### Add a symbol to your Favorites
 1. After you've selected a symbol in the Military Symbol Editor, click the **Add Favorite** button.
 2. Click the **Favorites** tab.
     You should see the symbol in the favorites box.
 3. Optionally, define other symbols that you will need. Add each one to your Favorites.
     Click a symbol in your favorites to add it to the map.
-	
+
+### Sharing Favorites
+1. The Favorites file: `SymbolFavorites.json` is stored with the add-in at (Note: you may copy/paste this path into File Explorer):
+    a. Military Symbol Editor Add-in: `%LOCALAPPDATA%\ESRI\ArcGISPro\AssemblyCache\{4ff462b0-2910-47f3-b6fd-d1d17e5f7dfc}`
+    b. Military Tools for ArcGIS Add-in: `%LOCALAPPDATA%\ESRI\ArcGISPro\AssemblyCache\{bea7f059-c69e-4e17-84bd-072236629c0c}`
+2. You may copy, replace, or share this favorites file(`SymbolFavorites.json`) by copying to the same location on machines **with the same version of the Military Symbol Editor installed**
+3. Manually editing or creating this file outside of the add-in is not generally supported
+    a. This file must match the JSON format/model of the current add-in.
+    b. This model is JSON-serialized from [this class](./source/ProSymbolEditor/Models/SymbolAttributes/SymbolAttributeSet.cs).
+
 ### Edit the symbol for a military feature that is already on the map
-1. In an ArcGIS Pro map or table, select the military feature that you want to change with the select tool.
-2. Click the **Modify** tab in the Military Symbol Editor.
-3. Click the appropriate feature in the list on this tab.
-4. The feature's attribute data will load into the **Symbol** and **Label** tabs for editing.
-5. Click the Save Edits button to write the edits back to the feature.
+1. Click the **Modify** tab in the Military Symbol Editor.
+2. Activate the select tool on the Modify pane.
+3. On the map, select the military feature that you want to change with the select tool.
+4. Click the appropriate feature in the list on this tab.
+5. The feature's attribute data will load into the **Symbol** and **Label** tabs for editing.
+6. Click the Save Edits button to write the edits back to the feature.
 
 ## Resources
 
-* [ArcGIS Pro Help](http://pro.arcgis.com/en/pro-app/)
-* [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
-* ![Twitter](https://g.twimg.com/twitter-bird-16x16.png)[@EsriDefense](http://twitter.com/EsriDefense)
+* [Military Tools for ArcGIS](http://solutions.arcgis.com/defense/help/military-tools/)
+* [ArcGIS for Defense Downloads](http://appsforms.esri.com/products/download/#ArcGIS_for_Defense)
 * [ArcGIS Solutions Website](http://solutions.arcgis.com/military/)
 * [Military Overlay Template](http://esriurl.com/AFDMilitaryOverlay)
 * [Military Overlay Information Model Template](http://esriurl.com/MilitaryOverlayInformationModel)
+* [ArcGIS Pro Help](http://pro.arcgis.com/en/pro-app/)
+* [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
+* ![Twitter](https://g.twimg.com/twitter-bird-16x16.png)[@EsriDefense](http://twitter.com/EsriDefense)
 
 ## Issues
 
@@ -188,16 +197,14 @@ Anyone and everyone is welcome to contribute. Please see our [guidelines for con
 
 ### Repository Points of Contact
 
-#### Repository Owners
-
-##### Primary - [Travis](https://github.com/tlauver)
+##### Primary - [Chris](https://github.com/csmoore)
 
 * Merge Pull Requests
 * Creates Releases and Tags
 * Manages Milestones
 * Manages and Assigns Issues
 
-##### Secondary: [Chris](https://github.com/csmoore)
+##### Secondary: [Kevin](https://github.com/kgonzago)
 
 * Backup when the Owner is away
 
@@ -210,16 +217,14 @@ This software is governed by [the Apache V2 License](http://www.apache.org/licen
 * Military Features Data - .stylx file and symbol data - https://github.com/Esri/military-features-data
 * MIL_STD_2525D_Symbols - SVG Symbols - https://github.com/Esri/joint-military-symbology-xml/tree/master/svg or [MIL_STD_2525D_Symbols license](./source/ProSymbolEditor/Images/MIL_STD_2525D_Symbols/license.txt)
 * Coordinate Conversion Addin - Coordinate Conversion library - https://github.com/Esri/coordinate-conversion-addin-dotnet
-* Military Symbols.NET - 2525 SVG drawing library - https://github.com/csmoore/military-symbols-dotnet
 
 This software is governed by [the Microsoft Public License (Ms-PL)](http://wpftoolkit.codeplex.com/license):
 
 * Extended WPF Toolkit Community Edition - http://wpftoolkit.codeplex.com
-* SVG Rendering Engine - https://github.com/vvvv/SVG http://svg.codeplex.com/
 
 ## Licensing
 
-Copyright 2016 Esri
+Copyright 2016-2017 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
