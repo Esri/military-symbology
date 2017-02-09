@@ -1,5 +1,6 @@
 # military-symbol-editor-addin-wpf
-A user-focused addin for searching, creating, and editing military symbols in ArcGIS Pro.
+
+A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating military symbols and overlays using MIL-STD-2525D and MILSTD-2525B Change 2.
 
 ![Image of Military Symbol Editor Addin](screenshot.png)
 
@@ -215,7 +216,6 @@ This addin uses the following third-party software.
 This software is governed by [the Apache V2 License](http://www.apache.org/licenses/LICENSE-2.0):
 
 * Military Features Data - .stylx file and symbol data - https://github.com/Esri/military-features-data
-* MIL_STD_2525D_Symbols - SVG Symbols - https://github.com/Esri/joint-military-symbology-xml/tree/master/svg or [MIL_STD_2525D_Symbols license](./source/ProSymbolEditor/Images/MIL_STD_2525D_Symbols/license.txt)
 * Coordinate Conversion Addin - Coordinate Conversion library - https://github.com/Esri/coordinate-conversion-addin-dotnet
 
 This software is governed by [the Microsoft Public License (Ms-PL)](http://wpftoolkit.codeplex.com/license):
