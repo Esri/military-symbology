@@ -25,6 +25,10 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace ProSymbolEditor
 {
+    /// <summary>
+    /// This is the model for the entire set of information known about a military symbol
+    /// It is also how a symbol is serialized as a "favorite"
+    /// </summary>
     [DisplayName("Symbol Attributes")]
     public class SymbolAttributeSet : PropertyChangedBase
     {
@@ -248,6 +252,21 @@ namespace ProSymbolEditor
             }
         }
 
+        /// <summary>
+        /// These are the symbol tags retrieved from a military feature style file or favorite
+        /// See the style file documentation: https://github.com/Esri/military-features-data
+        /// IMPORTANT/TRICKY: 
+        /// Because all information known about a symbol comes from these style/favorite tags, key
+        /// tags have a particular position in the tag list so they can be found, this order is:
+        /// GEOMETRY_TYPE=tags[-3] (3rd to last list item)
+        /// SYMBOL_NAME=tags[-2] (2nd to last list item)
+        /// SYMBOL_ID=tags[-1] (last list item)
+        /// General tag format: {other tags};GEOMETRY_TYPE;SYMBOL_NAME;SYMBOL_ID
+        /// Example tags: Infantry; Land Unit; POINT; Land Unit : Infantry : 10110110
+        /// If you are modifying or overwriting these tags, the tag order for these last 3 tags must 
+        /// be maintained because several places in the code depend on this information: 
+        /// ex when loading a new style item or new favorite.
+        /// </summary>
         public string SymbolTags { get; set; }
 
         public bool IsValid
