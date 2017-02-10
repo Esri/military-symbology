@@ -34,15 +34,17 @@ namespace ProSymbolEditor
     {
         public SymbolAttributeSet()
         {
-            DisplayAttributes = new DisplayAttributes();
-            DisplayAttributes.PropertyChanged += Attributes_PropertyChanged;
-
-            LabelAttributes = new LabelAttributes();
-
-            StandardVersion = ProSymbolUtilities.StandardString;
+            Initialize();
         }
 
         public SymbolAttributeSet(Dictionary<string, string> fieldValues)
+        {
+            Initialize();
+
+            SetPropertiesFromFieldAttributes(fieldValues);
+        }
+
+        private void Initialize()
         {
             //Used to make a SymbolAttributeSet from field data in a feature
             DisplayAttributes = new DisplayAttributes();
@@ -51,8 +53,6 @@ namespace ProSymbolEditor
             LabelAttributes = new LabelAttributes();
 
             StandardVersion = ProSymbolUtilities.StandardString;
-
-            SetPropertiesFromFieldAttributes(fieldValues);
         }
 
         public override bool Equals(object obj)
@@ -625,7 +625,10 @@ namespace ProSymbolEditor
         }
 
         private void SetPropertiesFromFieldAttributes(Dictionary<string, string> fieldValues)
-        { 
+        {
+            if (fieldValues == null)
+                return;
+
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
                 if (fieldValues.ContainsKey("extendedfunctioncode"))
