@@ -2065,6 +2065,7 @@ namespace ProSymbolEditor
             try
             {
                 Dictionary<string, string> fieldValues = new Dictionary<string, string>();
+                GeometryType geoType = GeometryType.Point;
                 await QueuedTask.Run(() =>
                 {
                     string oidFieldName = _selectedSelectedFeature.FeatureLayer.GetTable().GetDefinition().GetObjectIDField();
@@ -2083,7 +2084,6 @@ namespace ProSymbolEditor
                         return;
                     }
 
-                    //Dictionary<string, string> fieldValuesThread = new Dictionary<string, string>();
                     IReadOnlyList<Field> fields = row.GetFields();
                     lock (_lock)
                     {
@@ -2091,6 +2091,9 @@ namespace ProSymbolEditor
                         {
                             if (field.FieldType == FieldType.Geometry)
                             {
+                                ArcGIS.Core.Geometry.Geometry geo = row[field.Name] as ArcGIS.Core.Geometry.Geometry;
+                                if (geo != null)
+                                    geoType = geo.GeometryType;
                                 continue;
                             }
 
@@ -2103,12 +2106,13 @@ namespace ProSymbolEditor
                         }
                     }
 
-                    //return fieldValues
                 });
 
                 //Transfer field values into SymbolAttributes
                 SymbolAttributeSet set = new SymbolAttributeSet(fieldValues);
                 set.SymbolTags = _selectedSelectedFeature.ToString().Replace(ProSymbolUtilities.NameSeparator,";");
+                set.SymbolTags += ";" + ProSymbolUtilities.GeometryTypeToGeometryTagString(geoType) + ";MAP_SELECTION;" + set.Name;
+                GeometryType = geoType;
                 EditSelectedFeatureSymbol = set;
                 LoadSymbolIntoWorkflow(true);
             }

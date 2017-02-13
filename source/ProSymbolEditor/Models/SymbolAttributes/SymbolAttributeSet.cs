@@ -25,20 +25,26 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace ProSymbolEditor
 {
+    /// <summary>
+    /// This is the model for the entire set of information known about a military symbol
+    /// It is also how a symbol is serialized as a "favorite"
+    /// </summary>
     [DisplayName("Symbol Attributes")]
     public class SymbolAttributeSet : PropertyChangedBase
     {
         public SymbolAttributeSet()
         {
-            DisplayAttributes = new DisplayAttributes();
-            DisplayAttributes.PropertyChanged += Attributes_PropertyChanged;
-
-            LabelAttributes = new LabelAttributes();
-
-            StandardVersion = ProSymbolUtilities.StandardString;
+            Initialize();
         }
 
         public SymbolAttributeSet(Dictionary<string, string> fieldValues)
+        {
+            Initialize();
+
+            SetPropertiesFromFieldAttributes(fieldValues);
+        }
+
+        private void Initialize()
         {
             //Used to make a SymbolAttributeSet from field data in a feature
             DisplayAttributes = new DisplayAttributes();
@@ -47,155 +53,6 @@ namespace ProSymbolEditor
             LabelAttributes = new LabelAttributes();
 
             StandardVersion = ProSymbolUtilities.StandardString;
-
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-            {
-                if (fieldValues.ContainsKey("extendedfunctioncode"))
-                {
-                    DisplayAttributes.ExtendedFunctionCode = fieldValues["extendedfunctioncode"];
-                }
-                if (fieldValues.ContainsKey("affiliation"))
-                {
-                    DisplayAttributes.Identity = fieldValues["affiliation"];
-                }
-                if (fieldValues.ContainsKey("hqtffd"))
-                {
-                    DisplayAttributes.Indicator = fieldValues["hqtffd"];
-                }
-                if (fieldValues.ContainsKey("echelonmobility"))
-                {
-                    DisplayAttributes.Echelon = fieldValues["echelonmobility"];
-                }
-            }
-            else
-            {
-                if (fieldValues.ContainsKey("identity"))
-                {
-                    DisplayAttributes.Identity = fieldValues["identity"];
-                }
-                if (fieldValues.ContainsKey("symbolset"))
-                {
-                    // Tricky symbolset string expected to be len 2 - fixes bug with "01" "02" "05" symbol sets
-                    string symbolSetValue = fieldValues["symbolset"];
-                    if (!string.IsNullOrEmpty(symbolSetValue))
-                    {
-                        string paddedSymbolSet = symbolSetValue.PadLeft(2, '0');
-                        DisplayAttributes.SymbolSet = paddedSymbolSet;
-                    }
-                }
-
-                if (fieldValues.ContainsKey("symbolentity"))
-                {
-                    DisplayAttributes.SymbolEntity = fieldValues["symbolentity"];
-                }
-
-                if (fieldValues.ContainsKey("indicator"))
-                {
-                    DisplayAttributes.Indicator = fieldValues["indicator"];
-                }
-
-                if (fieldValues.ContainsKey("echelon"))
-                {
-                    DisplayAttributes.Echelon = fieldValues["echelon"];
-                }
-
-                if (fieldValues.ContainsKey("mobility"))
-                {
-                    DisplayAttributes.Mobility = fieldValues["mobility"];
-                }
-
-                if (fieldValues.ContainsKey("operationalcondition"))
-                {
-                    DisplayAttributes.OperationalCondition = fieldValues["operationalcondition"];
-                }
-                if (fieldValues.ContainsKey("context"))
-                {
-                    DisplayAttributes.Context = fieldValues["context"];
-                }
-
-                if (fieldValues.ContainsKey("modifier1"))
-                {
-                    DisplayAttributes.Modifier1 = fieldValues["modifier1"];
-                }
-
-                if (fieldValues.ContainsKey("modifier2"))
-                {
-                    DisplayAttributes.Modifier2 = fieldValues["modifier2"];
-                }
-            }
-
-            if (fieldValues.ContainsKey("status"))
-            {
-                DisplayAttributes.Status = fieldValues["status"];
-            }
-
-            //LABELS
-            if (fieldValues.ContainsKey("datetimevalid"))
-            {
-                // TODO: add tryparse
-                LabelAttributes.DateTimeValid = DateTime.Parse(fieldValues["datetimevalid"]);
-            }
-
-            if (fieldValues.ContainsKey("datetimeexpired"))
-            {
-                // TODO: add tryparse
-                LabelAttributes.DateTimeExpired = DateTime.Parse(fieldValues["datetimeexpired"]);
-            }
-
-            if (fieldValues.ContainsKey("uniquedesignation"))
-            {
-                LabelAttributes.UniqueDesignation = fieldValues["uniquedesignation"];
-            }
-
-            if (fieldValues.ContainsKey("staffcomment"))
-            {
-                LabelAttributes.StaffComments = fieldValues["staffcomment"];
-            }
-
-            if (fieldValues.ContainsKey("additionalinformation"))
-            {
-                LabelAttributes.AdditionalInformation = fieldValues["additionalinformation"];
-            }
-
-            if (fieldValues.ContainsKey("type"))
-            {
-                LabelAttributes.Type = fieldValues["type"];
-            }
-
-            if (fieldValues.ContainsKey("commonidentifier"))
-            {
-                LabelAttributes.CommonIdentifier = fieldValues["commonidentifier"];
-            }
-
-            if (fieldValues.ContainsKey("speed"))
-            {
-                LabelAttributes.Speed = short.Parse(fieldValues["speed"]);
-            }
-
-            if (fieldValues.ContainsKey("higherFormation"))
-            {
-                LabelAttributes.HigherFormation = fieldValues["higherFormation"];
-            }
-
-            if (fieldValues.ContainsKey("reinforced"))
-            {
-                LabelAttributes.Reinforced = fieldValues["reinforced"];
-            }
-
-            if (fieldValues.ContainsKey("credibility"))
-            {
-                LabelAttributes.Credibility = fieldValues["credibility"];
-            }
-
-            if (fieldValues.ContainsKey("reliability"))
-            {
-                LabelAttributes.Reliability = fieldValues["reliability"];
-            }
-
-            if (fieldValues.ContainsKey("countrycode"))
-            {
-                LabelAttributes.CountryCode = fieldValues["countrycode"];
-            }
         }
 
         public override bool Equals(object obj)
@@ -248,6 +105,21 @@ namespace ProSymbolEditor
             }
         }
 
+        /// <summary>
+        /// These are the symbol tags retrieved from a military feature style file or favorite
+        /// See the style file documentation: https://github.com/Esri/military-features-data
+        /// IMPORTANT/TRICKY: 
+        /// Because all information known about a symbol comes from these style/favorite tags, key
+        /// tags have a particular position in the tag list so they can be found, this order is:
+        /// GEOMETRY_TYPE=tags[-3] (3rd to last list item)
+        /// SYMBOL_NAME=tags[-2] (2nd to last list item)
+        /// SYMBOL_ID=tags[-1] (last list item)
+        /// General tag format: {other tags};GEOMETRY_TYPE;SYMBOL_NAME;SYMBOL_ID
+        /// Example tags: Infantry; Land Unit; POINT; Land Unit : Infantry : 10110110
+        /// If you are modifying or overwriting these tags, the tag order for these last 3 tags must 
+        /// be maintained because several places in the code depend on this information: 
+        /// ex when loading a new style item or new favorite.
+        /// </summary>
         public string SymbolTags { get; set; }
 
         public bool IsValid
@@ -749,6 +621,161 @@ namespace ProSymbolEditor
             if (!string.IsNullOrEmpty(LabelAttributes.CountryCode))
             {
                 feature["countrycode"] = LabelAttributes.CountryCode;
+            }
+        }
+
+        private void SetPropertiesFromFieldAttributes(Dictionary<string, string> fieldValues)
+        {
+            if (fieldValues == null)
+                return;
+
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            {
+                if (fieldValues.ContainsKey("extendedfunctioncode"))
+                {
+                    DisplayAttributes.ExtendedFunctionCode = fieldValues["extendedfunctioncode"];
+                }
+                if (fieldValues.ContainsKey("affiliation"))
+                {
+                    DisplayAttributes.Identity = fieldValues["affiliation"];
+                }
+                if (fieldValues.ContainsKey("hqtffd"))
+                {
+                    DisplayAttributes.Indicator = fieldValues["hqtffd"];
+                }
+                if (fieldValues.ContainsKey("echelonmobility"))
+                {
+                    DisplayAttributes.Echelon = fieldValues["echelonmobility"];
+                }
+            }
+            else
+            {
+                if (fieldValues.ContainsKey("identity"))
+                {
+                    DisplayAttributes.Identity = fieldValues["identity"];
+                }
+                if (fieldValues.ContainsKey("symbolset"))
+                {
+                    // Tricky symbolset string expected to be len 2 - fixes bug with "01" "02" "05" symbol sets
+                    string symbolSetValue = fieldValues["symbolset"];
+                    if (!string.IsNullOrEmpty(symbolSetValue))
+                    {
+                        string paddedSymbolSet = symbolSetValue.PadLeft(2, '0');
+                        DisplayAttributes.SymbolSet = paddedSymbolSet;
+                    }
+                }
+
+                if (fieldValues.ContainsKey("symbolentity"))
+                {
+                    DisplayAttributes.SymbolEntity = fieldValues["symbolentity"];
+                }
+
+                if (fieldValues.ContainsKey("indicator"))
+                {
+                    DisplayAttributes.Indicator = fieldValues["indicator"];
+                }
+
+                if (fieldValues.ContainsKey("echelon"))
+                {
+                    DisplayAttributes.Echelon = fieldValues["echelon"];
+                }
+
+                if (fieldValues.ContainsKey("mobility"))
+                {
+                    DisplayAttributes.Mobility = fieldValues["mobility"];
+                }
+
+                if (fieldValues.ContainsKey("operationalcondition"))
+                {
+                    DisplayAttributes.OperationalCondition = fieldValues["operationalcondition"];
+                }
+                if (fieldValues.ContainsKey("context"))
+                {
+                    DisplayAttributes.Context = fieldValues["context"];
+                }
+
+                if (fieldValues.ContainsKey("modifier1"))
+                {
+                    DisplayAttributes.Modifier1 = fieldValues["modifier1"];
+                }
+
+                if (fieldValues.ContainsKey("modifier2"))
+                {
+                    DisplayAttributes.Modifier2 = fieldValues["modifier2"];
+                }
+            }
+
+            if (fieldValues.ContainsKey("status"))
+            {
+                DisplayAttributes.Status = fieldValues["status"];
+            }
+
+            //LABELS
+            if (fieldValues.ContainsKey("datetimevalid"))
+            {
+                // TODO: add tryparse
+                LabelAttributes.DateTimeValid = DateTime.Parse(fieldValues["datetimevalid"]);
+            }
+
+            if (fieldValues.ContainsKey("datetimeexpired"))
+            {
+                // TODO: add tryparse
+                LabelAttributes.DateTimeExpired = DateTime.Parse(fieldValues["datetimeexpired"]);
+            }
+
+            if (fieldValues.ContainsKey("uniquedesignation"))
+            {
+                LabelAttributes.UniqueDesignation = fieldValues["uniquedesignation"];
+            }
+
+            if (fieldValues.ContainsKey("staffcomment"))
+            {
+                LabelAttributes.StaffComments = fieldValues["staffcomment"];
+            }
+
+            if (fieldValues.ContainsKey("additionalinformation"))
+            {
+                LabelAttributes.AdditionalInformation = fieldValues["additionalinformation"];
+            }
+
+            if (fieldValues.ContainsKey("type"))
+            {
+                LabelAttributes.Type = fieldValues["type"];
+            }
+
+            if (fieldValues.ContainsKey("commonidentifier"))
+            {
+                LabelAttributes.CommonIdentifier = fieldValues["commonidentifier"];
+            }
+
+            if (fieldValues.ContainsKey("speed"))
+            {
+                LabelAttributes.Speed = short.Parse(fieldValues["speed"]);
+            }
+
+            if (fieldValues.ContainsKey("higherFormation"))
+            {
+                LabelAttributes.HigherFormation = fieldValues["higherFormation"];
+            }
+
+            if (fieldValues.ContainsKey("reinforced"))
+            {
+                LabelAttributes.Reinforced = fieldValues["reinforced"];
+            }
+
+            if (fieldValues.ContainsKey("credibility"))
+            {
+                LabelAttributes.Credibility = fieldValues["credibility"];
+            }
+
+            if (fieldValues.ContainsKey("reliability"))
+            {
+                LabelAttributes.Reliability = fieldValues["reliability"];
+            }
+
+            if (fieldValues.ContainsKey("countrycode"))
+            {
+                LabelAttributes.CountryCode = fieldValues["countrycode"];
             }
         }
 
