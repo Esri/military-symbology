@@ -228,5 +228,20 @@ namespace ProSymbolEditor
                 return "POINT";
         }
 
+        public static string GetPathFromGeodatabase(ArcGIS.Core.Data.Geodatabase gdb)
+        {
+            string gdbPath = string.Empty;
+
+            ArcGIS.Core.Data.FileGeodatabaseConnectionPath fgdbcp = gdb.GetConnector() as
+                ArcGIS.Core.Data.FileGeodatabaseConnectionPath;
+
+            if (fgdbcp != null)
+            {
+                gdbPath = fgdbcp.Path.LocalPath;
+            }
+
+            return gdbPath;
+        }
+
     }
 }

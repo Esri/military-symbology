@@ -45,6 +45,8 @@ namespace ProSymbolEditor
         {
 
             string prefixName = string.Empty;
+            _egdbConnectionString = string.Empty;
+
             if (gdb != null)
             {
                 GeodatabaseType gdbType = gdb.GetGeodatabaseType();
@@ -52,15 +54,15 @@ namespace ProSymbolEditor
                 {
                     // if an SDE/EGDB, then feature class name format will differ:
                     // Database + User + Feature Class Name 
-                    ConnectionProperties cps = gdb.GetConnectionProperties();
-                    prefixName = cps.Database + "." + cps.User + ".";
+                    DatabaseConnectionProperties dbcps = gdb.GetConnector() as DatabaseConnectionProperties;
 
-                    // Also save this connection string to identify this EGDB later 
-                    _egdbConnectionString = (gdb as Datastore).GetConnectionString();
-                }
-                else
-                {
-                    _egdbConnectionString = string.Empty;
+                    if (dbcps != null)
+                    {
+                        prefixName = dbcps.Database + "." + dbcps.User + ".";
+
+                        // Also save this connection string to identify this EGDB later 
+                        _egdbConnectionString = (gdb as Datastore).GetConnectionString();
+                    }
                 }
             }
 
@@ -168,7 +170,7 @@ namespace ProSymbolEditor
                         }
                         else
                         {
-                            string gdbPath = geodatabase.GetPath();
+                            string gdbPath = ProSymbolUtilities.GetPathFromGeodatabase(geodatabase);
 
                             if (gdbPath == activeGdbPath)
                             {
