@@ -933,7 +933,7 @@ namespace ProSymbolEditor
             {
                 RemoveCoordinateMarker();
 
-                var coordinateMarker = ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Desktop.Mapping.ColorFactory.Red, 12,
+                var coordinateMarker = ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Desktop.Mapping.ColorFactory.RedRGB, 12,
                     ArcGIS.Desktop.Mapping.SimpleMarkerStyle.Circle);
 
                 ArcGIS.Core.CIM.CIMPointSymbol _pointCoordSymbol =
@@ -1918,9 +1918,13 @@ namespace ProSymbolEditor
                                 if (gdbType == GeodatabaseType.RemoteDatabase)
                                 {
                                     // if an SDE/EGDB, then feature class name format will differ:
-                                    // Database + User + Feature Class Name 
-                                    ConnectionProperties cps = geodatabase.GetConnectionProperties();
-                                    _currentFeatureClassName = cps.Database + "." + cps.User + "." + _currentFeatureClassName;
+                                    // Database. + User. + Feature Class Name 
+                                    DatabaseConnectionProperties dbcps = geodatabase.GetConnector() as DatabaseConnectionProperties;
+
+                                    if (dbcps != null)
+                                    {
+                                        _currentFeatureClassName = dbcps.Database + "." + dbcps.User + "." + _currentFeatureClassName;
+                                    }
                                 }
 
                                 //Correct GDB, open the current selected feature class

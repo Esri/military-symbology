@@ -70,6 +70,12 @@ namespace SymbolEditorUnitTests
             bool enabled = await isEnabledMethod;
 
             Assert.IsTrue(enabled);
+
+            // Note: This is a known issue:
+            // See: https://geonet.esri.com/groups/arcgis-pro-sdk/blog/2016/04/28/new-arcgis-pro-sdk-learning-resources-available
+            // Question: "Can the Pro SDK be used to run console apps outside of Pro?"
+            // Only objects from ArcGIS.Core (https://github.com/Esri/arcgis-pro-sdk/wiki/proconcepts-CoreHost)
+            // can be created outside of Pro
         }
 
         [TestMethod]
