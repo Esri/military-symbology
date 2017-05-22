@@ -1686,10 +1686,7 @@ namespace ProSymbolEditor
                 return;
             }
 
-            // TODO:  Further filter features so it only contains ones that are in layers that are in the military schema
-            // Just warn the user for now 
             SelectedFeaturesCollection.Clear();
-            bool warnedOnce = false;
 
             foreach (KeyValuePair<BasicFeatureLayer, List<long>> kvp in selectedFeatures)
             {
@@ -1706,13 +1703,10 @@ namespace ProSymbolEditor
                 await QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == symbolSetFieldName);
-                    if (symbolSetField == null) // then does not have required field
+                    if (symbolSetField == null) 
                     {
-                        if (!warnedOnce) // only issue this warning once 
-                        {
-                            ShowMilitaryFeatureNotFoundMessageBox();
-                            warnedOnce = true;
-                        }
+                        // then feature does not have required field, skip
+                        // Note: we used to issue a warning, but it was requested to remove
                         return;
                     }
 
