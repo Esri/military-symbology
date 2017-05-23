@@ -50,10 +50,7 @@ namespace ProSymbolEditor
         {
             // Clear any previous selection using the built-in Pro button/command
             // TRICKY: Must be called here before the QueuedTask so runs on Main UI Thread
-            IPlugInWrapper wrapper = FrameworkApplication.GetPlugInWrapper("esri_mapping_clearSelectionButton");
-            var command = wrapper as ICommand;
-            if ((command != null) && command.CanExecute(null))
-                command.Execute(null);
+            ProSymbolUtilities.ClearMapSelection();
 
             return await QueuedTask.Run(() =>
             {
