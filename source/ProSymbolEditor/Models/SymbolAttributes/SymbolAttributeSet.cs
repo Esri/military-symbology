@@ -471,157 +471,127 @@ namespace ProSymbolEditor
 
         public void PopulateFeatureWithAttributes(ref Feature feature)
         {
+            // Implementation Note: feature fields with domains attached can not be set to null
+            // so these fields with domains must also be checked for IsNullOrEmpty
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             { 
-                if (!string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode))
-                {
+                if (!string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode) && 
+                    (feature.FindField("extendedfunctioncode") >= 0))
                     feature["extendedfunctioncode"] = DisplayAttributes.ExtendedFunctionCode;
-                }
-                if (!string.IsNullOrEmpty(DisplayAttributes.Identity))
-                {
-                // probably needs a: feature.FindField() not all have these next 3:
+
+                if (!string.IsNullOrEmpty(DisplayAttributes.Identity) && 
+                    (feature.FindField("affiliation") >= 0))
                     feature["affiliation"] = DisplayAttributes.Identity;
-                }
-                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator))
-                {
+
+                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator) && 
+                    (feature.FindField("hqtffd") >= 0))
                     feature["hqtffd"] = DisplayAttributes.Indicator;
-                }
-                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon))
-                {
+
+                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon) && 
+                    (feature.FindField("echelonmobility") >= 0))
                     feature["echelonmobility"] = DisplayAttributes.Echelon;
-                }
             }
-            else // 2525D
+            else // 2525D/Delta attributes
             {
-                if (!string.IsNullOrEmpty(DisplayAttributes.Identity))
-                {
+                if (!string.IsNullOrEmpty(DisplayAttributes.Identity) && 
+                    (feature.FindField("identity") >= 0))
                     feature["identity"] = DisplayAttributes.Identity;
-                }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolSet))
-                {
+                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolSet) && 
+                    (feature.FindField("symbolset") >= 0))
                     feature["symbolset"] = Convert.ToInt32(DisplayAttributes.SymbolSet);
-                }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolEntity))
-                {
+                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolEntity) && 
+                    (feature.FindField("symbolentity") >= 0))
                     feature["symbolentity"] = Convert.ToInt32(DisplayAttributes.SymbolEntity);
-                }
 
-                //Indicator / HQTFFD /
-
-                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator))
-                {
+                //Indicator / HQTFFD
+                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator) && 
+                    (feature.FindField("indicator") >= 0))
                     feature["indicator"] = DisplayAttributes.Indicator;
-                }
 
                 //Echelon or Mobility
-
-                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon))
-                {
+                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon) && 
+                    (feature.FindField("echelon") >= 0))
                     feature["echelon"] = DisplayAttributes.Echelon;
-                }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Mobility))
-                {
+                if (!string.IsNullOrEmpty(DisplayAttributes.Mobility) && 
+                    (feature.FindField("mobility") >= 0))
                     feature["mobility"] = DisplayAttributes.Mobility;
-                }
 
                 //Statuses or Operation
-
-                if (!string.IsNullOrEmpty(DisplayAttributes.OperationalCondition))
-                {
+                if (!string.IsNullOrEmpty(DisplayAttributes.OperationalCondition) && 
+                    (feature.FindField("operationalcondition") >= 0))
                     feature["operationalcondition"] = DisplayAttributes.OperationalCondition;
-                }
 
-                //Delta attributes
-                if (!string.IsNullOrEmpty(DisplayAttributes.Context))
-                {
+                if (!string.IsNullOrEmpty(DisplayAttributes.Context) && 
+                    (feature.FindField("context") >= 0))
                     feature["context"] = DisplayAttributes.Context;
-                }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier1))
-                {
+                //Modifiers
+                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier1) && 
+                    (feature.FindField("modifier1") >= 0))
                     feature["modifier1"] = DisplayAttributes.Modifier1;
-                }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier2))
-                {
+                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier2) && 
+                    (feature.FindField("modifier2") >= 0))
                     feature["modifier2"] = DisplayAttributes.Modifier2;
-                }
             }
 
-            if (!string.IsNullOrEmpty(DisplayAttributes.Status))
-            {
+            // Apply to all versions of the standard
+            if (!string.IsNullOrEmpty(DisplayAttributes.Status) && 
+               (feature.FindField("status") >= 0))
                 feature["status"] = DisplayAttributes.Status;
-            }
 
             //LABELS
-            if (LabelAttributes.DateTimeValid != null)
+            if ((LabelAttributes.DateTimeValid != null) && 
+                (feature.FindField("datetimevalid") >= 0))
             {
                 feature["datetimevalid"] = LabelAttributes.DateTimeValid.ToString();
             }
 
-            if (LabelAttributes.DateTimeExpired != null)
+            if ((LabelAttributes.DateTimeExpired != null) && 
+                (feature.FindField("datetimeexpired") >= 0))
             {
                 feature["datetimeexpired"] = LabelAttributes.DateTimeExpired.ToString();
             }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.UniqueDesignation))
-            {
+            if (feature.FindField("uniquedesignation") >= 0)
                 feature["uniquedesignation"] = LabelAttributes.UniqueDesignation;
-            }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.StaffComments))
-            {
+            if (feature.FindField("staffcomment") >= 0)
                 feature["staffcomment"] = LabelAttributes.StaffComments;
-            }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.AdditionalInformation))
-            {
+            if (feature.FindField("additionalinformation") >= 0)
                 feature["additionalinformation"] = LabelAttributes.AdditionalInformation;
-            }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.Type))
-            {
+            if (feature.FindField("type") >= 0)
                 feature["type"] = LabelAttributes.Type;
-            }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.CommonIdentifier))
-            {
+            if (feature.FindField("commonidentifier") >= 0)
                 feature["commonidentifier"] = LabelAttributes.CommonIdentifier;
-            }
 
-            if (LabelAttributes.Speed != null)
-            {
-                //Short
+            if (feature.FindField("speed") >= 0)
                 feature["speed"] = LabelAttributes.Speed;
-            }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.HigherFormation))
-            {
+            if (feature.FindField("higherFormation") >= 0)
                 feature["higherFormation"] = LabelAttributes.HigherFormation;
-            }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.Reinforced))
-            {
+            if (!string.IsNullOrEmpty(LabelAttributes.Reinforced) && 
+                (feature.FindField("reinforced") >= 0))
                 feature["reinforced"] = LabelAttributes.Reinforced;
-            }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.Credibility))
-            {
+            if (!string.IsNullOrEmpty(LabelAttributes.Credibility) && 
+                (feature.FindField("credibility") >= 0))
                 feature["credibility"] = LabelAttributes.Credibility;
-            }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.Reliability))
-            {
+            if (!string.IsNullOrEmpty(LabelAttributes.Reliability) &&
+                (feature.FindField("reliability") >= 0))
                 feature["reliability"] = LabelAttributes.Reliability;
-            }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.CountryCode))
-            {
+            if (!string.IsNullOrEmpty(LabelAttributes.CountryCode) && 
+                (feature.FindField("countrycode") >= 0))
                 feature["countrycode"] = LabelAttributes.CountryCode;
-            }
         }
 
         private void SetPropertiesFromFieldAttributes(Dictionary<string, string> fieldValues)
