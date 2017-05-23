@@ -471,6 +471,13 @@ namespace ProSymbolEditor
 
         public void PopulateFeatureWithAttributes(ref Feature feature)
         {
+            if (feature == null)
+            {
+                // not normally possible with ref parameter, but check just in case
+                System.Diagnostics.Debug.WriteLine("Null Feature passed to PopulateFeatureWithAttributes");
+                return;
+            }
+
             // Implementation Note: feature fields with domains attached can not be set to null
             // so these fields with domains must also be checked for IsNullOrEmpty
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
