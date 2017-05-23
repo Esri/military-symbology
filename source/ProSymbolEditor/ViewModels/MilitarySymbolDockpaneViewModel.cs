@@ -955,12 +955,8 @@ namespace ProSymbolEditor
         {
             if (FrameworkApplication.CurrentTool == "ProSymbolEditor_SelectionMapTool")
             {
-                // Clear the selection using the built-in Pro button/command
-                // TRICKY: must be called on main thread, so can't be done in QueuedTask below
-                IPlugInWrapper wrapper = FrameworkApplication.GetPlugInWrapper("esri_mapping_clearSelectionButton");
-                var command = wrapper as ICommand; 
-                if ((command != null) && command.CanExecute(null))
-                    command.Execute(null);
+                // Clear the map selection
+                ProSymbolUtilities.ClearMapSelection();
 
                 ClearFeatureSelection();
 
@@ -1050,6 +1046,7 @@ namespace ProSymbolEditor
         {
             string message = String.Empty;
             bool modificationResult = false;
+            ArcGIS.Core.Geometry.Geometry savedGeometry = null;
 
             IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
             await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
@@ -1085,16 +1082,18 @@ namespace ProSymbolEditor
                                         {
                                             Feature feature = (Feature)cursor.Current;
 
-                                        // In order to update the Map and/or the attribute table.
-                                        // Has to be called before any changes are made to the row
-                                        context.Invalidate(feature);
+                                            // In order to update the Map and/or the attribute table.
+                                            // Has to be called before any changes are made to the row
+                                            context.Invalidate(feature);
 
                                             _symbolAttributeSet.PopulateFeatureWithAttributes(ref feature);
 
                                             feature.Store();
 
-                                        // Has to be called after the store too
-                                        context.Invalidate(feature);
+                                            savedGeometry = feature.GetShape();
+
+                                            // Has to be called after the store too
+                                            context.Invalidate(feature);
 
                                         }
                                     }
@@ -1106,22 +1105,33 @@ namespace ProSymbolEditor
                                     message = editOperation.ErrorMessage;
                             }
                         }
-
                     }
                 }
                 catch (Exception exception)
                 {
-                    System.Diagnostics.Debug.WriteLine(exception.ToString());
+                    message = exception.ToString();
+                    System.Diagnostics.Debug.WriteLine(message);
                 }
             });
 
-            if (!modificationResult)
+            if (modificationResult)
             {
+                // Reselect the saved feature (so UI is updated and feature flashed)
+                if (savedGeometry != null)
+                {
+                    await QueuedTask.Run(() =>
+                    {
+                        MapView.Active.SelectFeatures(savedGeometry, SelectionCombinationMethod.New);
+                    });
+                }
+            }
+            else
+            {   
+                // Something went wrong, alert user           
                 MessageBox.Show(message);
             }
         }
             
-
         private async void SearchStylesAsync(object parameter)
         {
             //Make sure that military style is in project

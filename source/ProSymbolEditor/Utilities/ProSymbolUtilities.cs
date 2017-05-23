@@ -243,5 +243,25 @@ namespace ProSymbolEditor
             return gdbPath;
         }
 
+        public static bool ClearMapSelection()
+        {
+            bool success = false;
+
+            // Note: Must be called on UI Thread
+            ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(() =>
+            {
+                // Clear the feature selection using the built-in Pro button/command
+                ArcGIS.Desktop.Framework.IPlugInWrapper wrapper = 
+                    ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper("esri_mapping_clearSelectionButton");
+                var command = wrapper as System.Windows.Input.ICommand;
+                if ((command != null) && command.CanExecute(null))
+                {
+                    command.Execute(null);
+                    success = true;
+                }
+            });
+
+            return success;
+        }
     }
 }
