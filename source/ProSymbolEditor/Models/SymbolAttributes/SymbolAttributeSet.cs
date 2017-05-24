@@ -173,27 +173,37 @@ namespace ProSymbolEditor
 
         private System.Threading.Tasks.Task<System.Windows.Media.ImageSource> GetBitmapImageAsync(Dictionary<string, object> attributes)
         {
+            if (attributes == null)
+                return null;
+
             return ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() => {
-                string standard = "mil" + ProSymbolUtilities.StandardString.ToLower();
-                ArcGIS.Core.CIM.CIMSymbol symbol = ArcGIS.Desktop.Mapping.SymbolFactory.GetDictionarySymbol(standard, attributes);
-
-                if (symbol == null)
-                    return null;
-
-                // IMPORTANT + WORKAROUND + TRICKY:
-                // Pro SDK does not directly provide a way to set a PATCH_SIZE > 64 pixels
-                // However you can do this if the value is negative (-1) but it transforms/flips the image
-                // Therefore we flip the image back in:
-                // Views\MilitarySymbolDockpane.xaml.cs - Image.RenderTransform
-                // If this ever gets changed/fixed in ProSDK, you must remove the flip there
-                const int PATCH_SIZE = -256;  // negative value is a workaround
-                var si = new ArcGIS.Desktop.Mapping.SymbolStyleItem()
+                try
                 {
-                    Symbol = symbol,
-                    PatchHeight = PATCH_SIZE,
-                    PatchWidth = PATCH_SIZE
-                };
-                return si.PreviewImage;
+                    string standard = "mil" + ProSymbolUtilities.StandardString.ToLower();
+                    ArcGIS.Core.CIM.CIMSymbol symbol = ArcGIS.Desktop.Mapping.SymbolFactory.GetDictionarySymbol(standard, attributes);
+
+                    if (symbol == null)
+                        return null;
+
+                    // IMPORTANT + WORKAROUND + TRICKY:
+                    // Pro SDK does not directly provide a way to set a PATCH_SIZE > 64 pixels
+                    // However you can do this if the value is negative (-1) but it transforms/flips the image
+                    // Therefore we flip the image back in:
+                    // Views\MilitarySymbolDockpane.xaml.cs - Image.RenderTransform
+                    // If this ever gets changed/fixed in ProSDK, you must remove the flip there
+                    const int PATCH_SIZE = -256;  // negative value is a workaround
+                    var si = new ArcGIS.Desktop.Mapping.SymbolStyleItem()
+                    {
+                        Symbol = symbol,
+                        PatchHeight = PATCH_SIZE,
+                        PatchWidth = PATCH_SIZE
+                    };
+                    return si.PreviewImage;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
              });
         }
 
@@ -202,7 +212,7 @@ namespace ProSymbolEditor
             // Step 1: Create a dictionary/map of well known attribute names to values
             Dictionary<string, object> attributeSet = GenerateAttributeSetDictionary();
 
-            if (attributeSet.Count == 0)
+            if ((attributeSet == null) || (attributeSet.Count == 0))
             {
                 _symbolImage = null;
                 return;
