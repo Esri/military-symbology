@@ -1,8 +1,10 @@
-﻿<Window
+﻿<controls:ProWindow 
     x:Class="ProSymbolEditor.AboutWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
+    xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"    
     xmlns:local="clr-namespace:ProSymbolEditor"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="About"
@@ -12,6 +14,13 @@
     WindowStartupLocation="CenterOwner"
     WindowState="Normal"
     mc:Ignorable="d">
+    <controls:ProWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </controls:ProWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -25,6 +34,7 @@
 
         <TextBlock
             Grid.Row="0"
+            Style="{DynamicResource RegularText}" 
             Margin="5,0,0,0"
             FontSize="14">
             Military Symbol Editor
@@ -37,6 +47,7 @@
             Visibility="Hidden" />
         <TextBlock
             Grid.Row="2"
+            Style="{DynamicResource RegularText}" 
             Margin="10,5,5,5"
             TextWrapping="Wrap">
             The Military Symbol Editor is a tool for quickly creating military overlays in ArcGIS Pro using the Military Overlay template.
@@ -71,8 +82,9 @@
             Grid.Row="6"
             Width="70"
             Content="OK"
-            Foreground="Black"
+            Style="{DynamicResource Esri_SimpleButton}" 
             IsCancel="True"
-            IsDefault="True" />
+            IsDefault="True" 
+            VerticalAlignment="Bottom" />
     </Grid>
-</Window>
+</controls:ProWindow>
