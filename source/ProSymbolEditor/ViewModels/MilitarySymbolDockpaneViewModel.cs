@@ -1316,28 +1316,14 @@ namespace ProSymbolEditor
             return true;
         }
 
-        private void SaveImageAs(object parameter)
+        private BitmapSource GetClipboardImage(BitmapSource sourceImage)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = "symbol";
-            saveFileDialog.Filter = "Png Image|*.png";
-            Nullable<bool> result = saveFileDialog.ShowDialog();
-            if (result == true)
-            {
-                var encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(SymbolAttributeSet.SymbolImage));
-                using (var stream = saveFileDialog.OpenFile())
-                {
-                    encoder.Save(stream);
-                }
-            }
-        }
+            if (sourceImage == null)
+                return null;
 
-        private void CopyImageToClipboard(object parameter)
-        {
             //There's an issue copying the image directly to the clipboard, where transparency isn't retained, and will have a black background.
             //The code below will switch that to be a pseudo-transparency with a white background.
-            Size size = new Size(SymbolAttributeSet.SymbolImage.Width, SymbolAttributeSet.SymbolImage.Height);
+            Size size = new Size(sourceImage.Width, sourceImage.Height);
 
             // Create a white background render bitmap
             int dWidth = (int)size.Width;
@@ -1361,9 +1347,13 @@ namespace ProSymbolEditor
 
             // Adding those two render bitmap to the same drawing visual
             DrawingVisual dv = new DrawingVisual();
+
+            // Important/Workaround: The image is rotated 180, see: SymbolAttributeSet.GetBitmapImageAsync
+            dv.Transform = new System.Windows.Media.RotateTransform(180.0, size.Width / 2, size.Height / 2);
+
             DrawingContext dc = dv.RenderOpen();
             dc.DrawImage(bg, new Rect(size));
-            dc.DrawImage(SymbolAttributeSet.SymbolImage, new Rect(size));
+            dc.DrawImage(sourceImage, new Rect(size));
             dc.Close();
 
             // Render the result
@@ -1377,10 +1367,40 @@ namespace ProSymbolEditor
             );
             resultBitmap.Render(dv);
 
-            // Copy it to clipboard
+            return resultBitmap;
+        }
+
+        private void SaveImageAs(object parameter)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = "symbol";
+            saveFileDialog.Filter = "Png Image|*.png";
+            Nullable<bool> result = saveFileDialog.ShowDialog();
+            if (result == true)
+            {
+                BitmapSource bitmap = GetClipboardImage(SymbolAttributeSet.SymbolImage);
+
+                if (bitmap == null)
+                    return;
+
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bitmap));
+                using (var stream = saveFileDialog.OpenFile())
+                {
+                    encoder.Save(stream);
+                }
+            }
+        }
+
+        private void CopyImageToClipboard(object parameter)
+        {
             try
             {
-                Clipboard.SetImage(resultBitmap);
+                BitmapSource bitmap = GetClipboardImage(SymbolAttributeSet.SymbolImage);
+
+                // Copy to clipboard
+                if (bitmap != null)
+                    Clipboard.SetImage(bitmap);
             }
             catch(Exception exception)
             {

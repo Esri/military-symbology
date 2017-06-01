@@ -190,6 +190,7 @@ namespace ProSymbolEditor
                     // However you can do this if the value is negative (-1) but it transforms/flips the image
                     // Therefore we flip the image back in:
                     // Views\MilitarySymbolDockpane.xaml.cs - Image.RenderTransform
+                    // ViewModels\MilitarySymbolDockpaneViewModel.cs - GetClipboardImage
                     // If this ever gets changed/fixed in ProSDK, you must remove the flip there
                     const int PATCH_SIZE = -256;  // negative value is a workaround
                     var si = new ArcGIS.Desktop.Mapping.SymbolStyleItem()
