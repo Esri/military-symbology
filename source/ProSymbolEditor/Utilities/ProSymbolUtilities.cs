@@ -217,5 +217,51 @@ namespace ProSymbolEditor
 
             return CoordinateType.Unknown;
         }
+
+        public static string GeometryTypeToGeometryTagString(GeometryType gt)
+        {
+            if (gt == GeometryType.Polygon)
+                return "AREA";
+            else if ((gt == GeometryType.Polyline) || (gt == GeometryType.Multipoint))
+                return "LINE";
+            else
+                return "POINT";
+        }
+
+        public static string GetPathFromGeodatabase(ArcGIS.Core.Data.Geodatabase gdb)
+        {
+            string gdbPath = string.Empty;
+
+            ArcGIS.Core.Data.FileGeodatabaseConnectionPath fgdbcp = gdb.GetConnector() as
+                ArcGIS.Core.Data.FileGeodatabaseConnectionPath;
+
+            if (fgdbcp != null)
+            {
+                gdbPath = fgdbcp.Path.LocalPath;
+            }
+
+            return gdbPath;
+        }
+
+        public static bool ClearMapSelection()
+        {
+            bool success = false;
+
+            // Note: Must be called on UI Thread
+            ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(() =>
+            {
+                // Clear the feature selection using the built-in Pro button/command
+                ArcGIS.Desktop.Framework.IPlugInWrapper wrapper = 
+                    ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper("esri_mapping_clearSelectionButton");
+                var command = wrapper as System.Windows.Input.ICommand;
+                if ((command != null) && command.CanExecute(null))
+                {
+                    command.Execute(null);
+                    success = true;
+                }
+            });
+
+            return success;
+        }
     }
 }

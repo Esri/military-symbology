@@ -933,7 +933,7 @@ namespace ProSymbolEditor
             {
                 RemoveCoordinateMarker();
 
-                var coordinateMarker = ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Desktop.Mapping.ColorFactory.Red, 12,
+                var coordinateMarker = ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Desktop.Mapping.ColorFactory.RedRGB, 12,
                     ArcGIS.Desktop.Mapping.SimpleMarkerStyle.Circle);
 
                 ArcGIS.Core.CIM.CIMPointSymbol _pointCoordSymbol =
@@ -955,12 +955,8 @@ namespace ProSymbolEditor
         {
             if (FrameworkApplication.CurrentTool == "ProSymbolEditor_SelectionMapTool")
             {
-                // Clear the selection using the built-in Pro button/command
-                // TRICKY: must be called on main thread, so can't be done in QueuedTask below
-                IPlugInWrapper wrapper = FrameworkApplication.GetPlugInWrapper("esri_mapping_clearSelectionButton");
-                var command = wrapper as ICommand; 
-                if ((command != null) && command.CanExecute(null))
-                    command.Execute(null);
+                // Clear the map selection
+                ProSymbolUtilities.ClearMapSelection();
 
                 ClearFeatureSelection();
 
@@ -1050,6 +1046,7 @@ namespace ProSymbolEditor
         {
             string message = String.Empty;
             bool modificationResult = false;
+            ArcGIS.Core.Geometry.Geometry savedGeometry = null;
 
             IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
             await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
@@ -1085,16 +1082,18 @@ namespace ProSymbolEditor
                                         {
                                             Feature feature = (Feature)cursor.Current;
 
-                                        // In order to update the Map and/or the attribute table.
-                                        // Has to be called before any changes are made to the row
-                                        context.Invalidate(feature);
+                                            // In order to update the Map and/or the attribute table.
+                                            // Has to be called before any changes are made to the row
+                                            context.Invalidate(feature);
 
                                             _symbolAttributeSet.PopulateFeatureWithAttributes(ref feature);
 
                                             feature.Store();
 
-                                        // Has to be called after the store too
-                                        context.Invalidate(feature);
+                                            savedGeometry = feature.GetShape();
+
+                                            // Has to be called after the store too
+                                            context.Invalidate(feature);
 
                                         }
                                     }
@@ -1106,22 +1105,33 @@ namespace ProSymbolEditor
                                     message = editOperation.ErrorMessage;
                             }
                         }
-
                     }
                 }
                 catch (Exception exception)
                 {
-                    System.Diagnostics.Debug.WriteLine(exception.ToString());
+                    message = exception.ToString();
+                    System.Diagnostics.Debug.WriteLine(message);
                 }
             });
 
-            if (!modificationResult)
+            if (modificationResult)
             {
+                // Reselect the saved feature (so UI is updated and feature flashed)
+                if (savedGeometry != null)
+                {
+                    await QueuedTask.Run(() =>
+                    {
+                        MapView.Active.SelectFeatures(savedGeometry, SelectionCombinationMethod.New);
+                    });
+                }
+            }
+            else
+            {   
+                // Something went wrong, alert user           
                 MessageBox.Show(message);
             }
         }
             
-
         private async void SearchStylesAsync(object parameter)
         {
             //Make sure that military style is in project
@@ -1686,10 +1696,7 @@ namespace ProSymbolEditor
                 return;
             }
 
-            // TODO:  Further filter features so it only contains ones that are in layers that are in the military schema
-            // Just warn the user for now 
             SelectedFeaturesCollection.Clear();
-            bool warnedOnce = false;
 
             foreach (KeyValuePair<BasicFeatureLayer, List<long>> kvp in selectedFeatures)
             {
@@ -1706,13 +1713,10 @@ namespace ProSymbolEditor
                 await QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == symbolSetFieldName);
-                    if (symbolSetField == null) // then does not have required field
+                    if (symbolSetField == null) 
                     {
-                        if (!warnedOnce) // only issue this warning once 
-                        {
-                            ShowMilitaryFeatureNotFoundMessageBox();
-                            warnedOnce = true;
-                        }
+                        // then feature does not have required field, skip
+                        // Note: we used to issue a warning, but it was requested to remove
                         return;
                     }
 
@@ -1918,9 +1922,13 @@ namespace ProSymbolEditor
                                 if (gdbType == GeodatabaseType.RemoteDatabase)
                                 {
                                     // if an SDE/EGDB, then feature class name format will differ:
-                                    // Database + User + Feature Class Name 
-                                    ConnectionProperties cps = geodatabase.GetConnectionProperties();
-                                    _currentFeatureClassName = cps.Database + "." + cps.User + "." + _currentFeatureClassName;
+                                    // Database. + User. + Feature Class Name 
+                                    DatabaseConnectionProperties dbcps = geodatabase.GetConnector() as DatabaseConnectionProperties;
+
+                                    if (dbcps != null)
+                                    {
+                                        _currentFeatureClassName = dbcps.Database + "." + dbcps.User + "." + _currentFeatureClassName;
+                                    }
                                 }
 
                                 //Correct GDB, open the current selected feature class
@@ -2065,6 +2073,7 @@ namespace ProSymbolEditor
             try
             {
                 Dictionary<string, string> fieldValues = new Dictionary<string, string>();
+                GeometryType geoType = GeometryType.Point;
                 await QueuedTask.Run(() =>
                 {
                     string oidFieldName = _selectedSelectedFeature.FeatureLayer.GetTable().GetDefinition().GetObjectIDField();
@@ -2083,7 +2092,6 @@ namespace ProSymbolEditor
                         return;
                     }
 
-                    //Dictionary<string, string> fieldValuesThread = new Dictionary<string, string>();
                     IReadOnlyList<Field> fields = row.GetFields();
                     lock (_lock)
                     {
@@ -2091,6 +2099,9 @@ namespace ProSymbolEditor
                         {
                             if (field.FieldType == FieldType.Geometry)
                             {
+                                ArcGIS.Core.Geometry.Geometry geo = row[field.Name] as ArcGIS.Core.Geometry.Geometry;
+                                if (geo != null)
+                                    geoType = geo.GeometryType;
                                 continue;
                             }
 
@@ -2103,12 +2114,13 @@ namespace ProSymbolEditor
                         }
                     }
 
-                    //return fieldValues
                 });
 
                 //Transfer field values into SymbolAttributes
                 SymbolAttributeSet set = new SymbolAttributeSet(fieldValues);
                 set.SymbolTags = _selectedSelectedFeature.ToString().Replace(ProSymbolUtilities.NameSeparator,";");
+                set.SymbolTags += ";" + ProSymbolUtilities.GeometryTypeToGeometryTagString(geoType) + ";MAP_SELECTION;" + set.Name;
+                GeometryType = geoType;
                 EditSelectedFeatureSymbol = set;
                 LoadSymbolIntoWorkflow(true);
             }
