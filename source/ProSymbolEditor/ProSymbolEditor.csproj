@@ -150,6 +150,8 @@
     <AddInContent Include="Images\GenericButtonPurple32.png" />
   </ItemGroup>
   <ItemGroup>
+    <AddInContent Include="DarkImages\MIL-16x16.png" />
+    <AddInContent Include="DarkImages\MIL-32x32.png" />
     <Content Include="Dependencies\Coordinate Library\CoordinateToolLibrary.dll" />
     <Content Include="Dependencies\Extended WPF Toolkit Binaries\Xceed.Wpf.Toolkit.dll" />
     <Content Include="Dependencies\MilitarySymbols\MilitarySymbols.dll" />
