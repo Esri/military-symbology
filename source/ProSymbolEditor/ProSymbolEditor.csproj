@@ -93,6 +93,8 @@
     <AddInContent Include="Config.daml" />
     <AddInContent Include="Images\AddInDesktop16.png" />
     <AddInContent Include="Images\AddInDesktop32.png" />
+    <AddInContent Include="DarkImages\AddInDesktop16.png" />
+    <AddInContent Include="DarkImages\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutWindow.xaml.cs">
