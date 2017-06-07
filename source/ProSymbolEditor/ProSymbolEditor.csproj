@@ -93,6 +93,8 @@
     <AddInContent Include="Config.daml" />
     <AddInContent Include="Images\AddInDesktop16.png" />
     <AddInContent Include="Images\AddInDesktop32.png" />
+    <AddInContent Include="DarkImages\AddInDesktop16.png" />
+    <AddInContent Include="DarkImages\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutWindow.xaml.cs">
@@ -150,6 +152,8 @@
     <AddInContent Include="Images\GenericButtonPurple32.png" />
   </ItemGroup>
   <ItemGroup>
+    <AddInContent Include="DarkImages\MIL-16x16.png" />
+    <AddInContent Include="DarkImages\MIL-32x32.png" />
     <Content Include="Dependencies\Coordinate Library\CoordinateToolLibrary.dll" />
     <Content Include="Dependencies\Extended WPF Toolkit Binaries\Xceed.Wpf.Toolkit.dll" />
     <Content Include="Dependencies\MilitarySymbols\MilitarySymbols.dll" />
