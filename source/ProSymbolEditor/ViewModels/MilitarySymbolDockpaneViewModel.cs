@@ -933,11 +933,11 @@ namespace ProSymbolEditor
             {
                 RemoveCoordinateMarker();
 
-                var coordinateMarker = ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Desktop.Mapping.ColorFactory.RedRGB, 12,
+                var coordinateMarker = ArcGIS.Desktop.Mapping.SymbolFactory.Instance.ConstructMarker(ArcGIS.Desktop.Mapping.ColorFactory.Instance.RedRGB, 12,
                     ArcGIS.Desktop.Mapping.SimpleMarkerStyle.Circle);
 
                 ArcGIS.Core.CIM.CIMPointSymbol _pointCoordSymbol =
-                    ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(coordinateMarker);
+                    ArcGIS.Desktop.Mapping.SymbolFactory.Instance.ConstructPointSymbol(coordinateMarker);
 
                 _overlayObject = MapView.Active.AddOverlay(markerPoint, _pointCoordSymbol.MakeSymbolReference());
 
@@ -1244,7 +1244,7 @@ namespace ProSymbolEditor
                                     {
                                         RowBuffer rowBuffer = featureClass.CreateRowBuffer();
                                         _symbolAttributeSet.PopulateRowBufferWithAttributes(ref rowBuffer);
-                                        rowBuffer["Shape"] = GeometryEngine.Project(MapGeometry, facilitySiteDefinition.GetSpatialReference());
+                                        rowBuffer["Shape"] = GeometryEngine.Instance.Project(MapGeometry, facilitySiteDefinition.GetSpatialReference());
 
                                         Feature feature = featureClass.CreateRow(rowBuffer);
                                         feature.Store();
@@ -1825,24 +1825,38 @@ namespace ProSymbolEditor
 
         private async Task<StyleProjectItem> GetMilitaryStyleAsync()
         {
+            StyleProjectItem style = null;
+
             if (!File.Exists(Mil2525StyleFullFilePath))
             {
                 ShowMilitaryStyleNotFoundMessageBox();
-                return null;
             }
-
-            if (Project.Current != null)
+            else
             {
-                await Project.Current.AddStyleAsync(Mil2525StyleFullFilePath);
+                if (Project.Current != null)
+                {
+                    await QueuedTask.Run(() =>
+                    {
+                        //Get all styles in the project
+                        var styles = Project.Current.GetItems<StyleProjectItem>();
 
-                //Get all styles in the project
-                var styles = Project.Current.GetItems<StyleProjectItem>();
+                        //Get the named military style in the project
+                        style = styles.FirstOrDefault(x => x.Name == MilitaryStyleName);
 
-                //Get a specific style in the project
-                return styles.FirstOrDefault(x => x.Name == MilitaryStyleName); 
+                        if (style == null)
+                        {
+                            // add it, if it wasn't found
+                            Project.Current.AddStyle(Mil2525StyleFullFilePath);
+
+                            // then check again for style (just in case)
+                            styles = Project.Current.GetItems<StyleProjectItem>();
+                            style = styles.FirstOrDefault(x => x.Name == MilitaryStyleName);
+                        }
+                    });
+                }
             }
 
-            return null;
+            return style;
         }
 
         private bool IsStyleInProject()
@@ -2213,42 +2227,39 @@ namespace ProSymbolEditor
             });
         }
 
-        private Task SearchSymbols()
+        private async Task SearchSymbols()
         {
-            return QueuedTask.Run(async () =>
+            // TODO: research how to speed this up - takes about 1 sec / 200 style items returned
+            await QueuedTask.Run(() =>
             {
                 var list = new List<StyleItemType>() { StyleItemType.PointSymbol, StyleItemType.LineSymbol, StyleItemType.PolygonSymbol };
 
-                IEnumerable<Task<IList<SymbolStyleItem>>> symbolQuery = from type in list select _militaryStyleItem.SearchSymbolsAsync(type, _searchString);
+                IEnumerable<IList<SymbolStyleItem>> symbolQuery = from type in list select _militaryStyleItem.SearchSymbols(type, _searchString);
 
                 var combinedSymbols = new List<SymbolStyleItem>();
                 int outParse;
 
-                // start the query
-                var searchTasks = symbolQuery.ToList();
+                if (symbolQuery == null)
+                    return;
 
-                while (searchTasks.Count > 0)
+                foreach (var symbolType in symbolQuery)
                 {
-                    var nextTask = await Task.WhenAny(searchTasks);
-                    var results = await nextTask;
-                    searchTasks.Remove(nextTask);
-
                     // Change style query based on current standard
                     if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-                    {  
-                    // TODO: also include 2525C keys in search                                         
-                                        combinedSymbols.AddRange(results.Where(x =>
-                                          (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
-                                           ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
-                                        // TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
-                                        && (!x.Tags.Contains("NEW_AT_2525D"))
-                                        ));
+                    {
+                        // TODO: also include 2525C keys in search                                         
+                        combinedSymbols.AddRange(symbolType.Where(x =>
+                          (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
+                           ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
+                        // TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
+                        && (!x.Tags.Contains("NEW_AT_2525D"))
+                        ));
                     }
                     else // 2525D
                     {
-                                        combinedSymbols.AddRange(results.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
-                                            (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))  
-                                            ));
+                        combinedSymbols.AddRange(symbolType.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
+                            (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))
+                            ));
                     }
                 }
 
@@ -2364,7 +2375,7 @@ namespace ProSymbolEditor
                 {
                     // "MilitaryOverlay-{standard}.lpkx"
                     string layerFileName = "MilitaryOverlay-" + ProSymbolUtilities.StandardString.ToLower() + ".lpkx";
-                    LayerFactory.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
+                    LayerFactory.Instance.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
                     Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
                     bool enabled = await isEnabledMethod;
 
