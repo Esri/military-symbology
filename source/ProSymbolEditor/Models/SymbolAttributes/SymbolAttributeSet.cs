@@ -87,7 +87,10 @@ namespace ProSymbolEditor
 
         public string Name 
         {
-            get { return DisplayAttributes.Name; }
+            get
+            {
+                return ProSymbolUtilities.TagsToSymbolName(SymbolTags);
+            }
         }
 
         public string FavoriteId { get; set; }

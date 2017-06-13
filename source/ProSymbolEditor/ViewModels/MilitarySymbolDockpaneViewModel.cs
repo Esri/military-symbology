@@ -40,6 +40,7 @@ using CoordinateConversionLibrary.Models;
 using Microsoft.Win32;
 using System.Web.Script.Serialization;
 using System.Windows.Threading;
+using ArcGIS.Core.CIM;
 
 namespace ProSymbolEditor
 {
@@ -263,6 +264,7 @@ namespace ProSymbolEditor
             SaveImageToCommand = new RelayCommand(SaveImageAs, param => true);
             SaveSymbolFileCommand = new RelayCommand(SaveSymbolAsFavorite, param => true);
             DeleteFavoriteSymbolCommand = new RelayCommand(DeleteFavoriteSymbol, param => true);
+            CreateTemplateFromFavoriteCommand = new RelayCommand(CreateTemplateFromFavorite, param => true);
             SaveFavoritesFileAsCommand = new RelayCommand(SaveFavoritesAsToFile, param => true);
             ImportFavoritesFileCommand = new RelayCommand(ImportFavoritesFile, param => true);
             SelectToolCommand = new RelayCommand(ActivateSelectTool, param => true);
@@ -339,6 +341,8 @@ namespace ProSymbolEditor
         public ICommand SaveSymbolFileCommand { get; set; }
 
         public ICommand DeleteFavoriteSymbolCommand { get; set; }
+
+        public ICommand CreateTemplateFromFavoriteCommand { get; set; }
 
         public ICommand ImportFavoritesFileCommand { get; set; }
 
@@ -1589,6 +1593,89 @@ namespace ProSymbolEditor
                 var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
                 File.WriteAllText(_favoritesFilePath, favoritesJson);
             }
+        }
+
+        private async void CreateTemplateFromFavorite(object parameter)
+        {
+            bool success = true;
+
+            if (SelectedFavoriteSymbol == null)
+            {
+                success = false; // error
+            }
+
+            GeometryType geometryType = ProSymbolUtilities.TagsToGeometryType(SelectedFavoriteSymbol.SymbolTags);
+
+            //Get required layer name
+            string requiredFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(
+                SelectedFavoriteSymbol.DisplayAttributes, geometryType);
+
+            if (string.IsNullOrEmpty(requiredFeatureClassName))
+            {
+                success = false; // error
+            }
+
+            await QueuedTask.Run(() =>
+            {
+                ////////////////////////////////
+                // Move to Utility
+                IEnumerable<FeatureLayer> mapLayers = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>(); ;
+
+                FeatureLayer targetLayer = null;
+                foreach (var layer in mapLayers)
+                {
+                    string fcName = layer.GetFeatureClass().GetName();
+
+                    if (fcName == requiredFeatureClassName)
+                    {
+                        targetLayer = layer;
+                        break;
+                    }
+                }
+                ////////////////////////////////
+
+                if (targetLayer == null)
+                {
+                    success = false; // error
+                    return;
+                }
+
+                // Now add the new template:
+
+                string templateName = SelectedFavoriteSymbol.Name;
+
+                // Check if a template with this name already exists (if so modify?)
+                var checkTemplate = targetLayer.GetTemplate(templateName);
+
+                // Get CIM layer definition
+                var layerDef = targetLayer.GetDefinition() as CIMFeatureLayer;
+                // Get all templates on this layer
+                var layerTemplates = layerDef.FeatureTemplates.ToList();
+               
+                // Create a new template
+                var newTemplate = new CIMFeatureTemplate();
+
+                //Set template values
+                newTemplate.Name = templateName;
+                newTemplate.Description = templateName;
+                newTemplate.WriteTags(SelectedFavoriteSymbol.SymbolTags.Split(';').ToList());
+                newTemplate.DefaultValues = SelectedFavoriteSymbol.GenerateAttributeSetDictionary();
+
+                // Add the new template to the layer template list
+                layerTemplates.Add(newTemplate);
+
+                // Set the layer definition templates from the list
+                layerDef.FeatureTemplates = layerTemplates.ToArray();
+                // Finally set the layer definition
+                targetLayer.SetDefinition(layerDef);
+            });
+
+            if (!success)
+            {
+                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Could Not Create Template", 
+                    "Could Not Create Template", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+
         }
 
         private void SaveFavoritesAsToFile(object parameter)
