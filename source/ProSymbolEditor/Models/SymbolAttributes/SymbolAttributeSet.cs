@@ -180,7 +180,7 @@ namespace ProSymbolEditor
                 try
                 {
                     string standard = "mil" + ProSymbolUtilities.StandardString.ToLower();
-                    ArcGIS.Core.CIM.CIMSymbol symbol = ArcGIS.Desktop.Mapping.SymbolFactory.GetDictionarySymbol(standard, attributes);
+                    ArcGIS.Core.CIM.CIMSymbol symbol = ArcGIS.Desktop.Mapping.SymbolFactory.Instance.GetDictionarySymbol(standard, attributes);
 
                     if (symbol == null)
                         return null;
