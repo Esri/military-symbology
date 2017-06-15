@@ -8,6 +8,7 @@
     xmlns:local="clr-namespace:ProSymbolEditor"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"    
     d:DesignHeight="430"
     d:DesignWidth="550"
     mc:Ignorable="d">
@@ -116,37 +117,35 @@
                                             Height="23"
                                             Margin="5,5,5,5"
                                             HorizontalAlignment="Stretch"
-                                            Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=2000}">
-                                            <TextBox.Style>
-                                                <Style xmlns:sys="clr-namespace:System;assembly=mscorlib" TargetType="TextBox">
-                                                    <Style.Resources>
-                                                        <VisualBrush
+                                            Text="{Binding SearchString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=2000}" >
+                                        <TextBox.Style>
+                                                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                                                <Style.Resources>
+                                                    <VisualBrush
                                                             x:Key="CueBannerBrush"
                                                             AlignmentX="Left"
                                                             AlignmentY="Center"
                                                             Stretch="None">
-                                                            <VisualBrush.Visual>
-                                                                <Label
+                                                        <VisualBrush.Visual>
+                                                                <Label 
                                                                     Width="10000"
-                                                                    Background="White"
-                                                                    Content="Search..."
-                                                                    Foreground="Black" />
-                                                            </VisualBrush.Visual>
-                                                        </VisualBrush>
-                                                    </Style.Resources>
-                                                    <Style.Triggers>
-                                                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                                        </Trigger>
-                                                        <Trigger Property="Text" Value="{x:Null}">
-                                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                                        </Trigger>
-                                                        <Trigger Property="IsKeyboardFocused" Value="True">
-                                                            <Setter Property="Background" Value="White" />
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBox.Style>
+                                                                    Content="Search..." />
+                                                        </VisualBrush.Visual>
+                                                    </VisualBrush>
+                                                </Style.Resources>
+                                                <Style.Triggers>
+                                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                    </Trigger>
+                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource Esri_BackgroundPressedBrush}" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBox.Style>
                                         </TextBox>
                                         <Button
                                             Grid.Row="0"
@@ -533,7 +532,6 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
 
-
                                         <TextBox
                                             Grid.Row="0"
                                             Height="23"
@@ -541,7 +539,7 @@
                                             HorizontalAlignment="Stretch"
                                             Text="{Binding FavoritesSearchFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                             <TextBox.Style>
-                                                <Style xmlns:sys="clr-namespace:System;assembly=mscorlib" TargetType="TextBox">
+                                                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
                                                     <Style.Resources>
                                                         <VisualBrush
                                                             x:Key="CueBannerBrush"
@@ -549,7 +547,7 @@
                                                             AlignmentY="Center"
                                                             Stretch="None">
                                                             <VisualBrush.Visual>
-                                                                <Label Content="Filter By..." Foreground="DarkGray" />
+                                                                <Label Content="Filter By..." Foreground="{DynamicResource Esri_TextStyleDefaultBrush}" />
                                                             </VisualBrush.Visual>
                                                         </VisualBrush>
                                                     </Style.Resources>
@@ -866,7 +864,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedIdentityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -895,7 +893,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedStatusDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -922,7 +920,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedOperationalConditionDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -951,7 +949,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedIndicatorDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -980,7 +978,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedEchelonDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -1007,7 +1005,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedMobilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -1036,7 +1034,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedContextDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -1065,7 +1063,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedModifier1DomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -1094,7 +1092,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedModifier2DomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -1123,7 +1121,7 @@
                                             SelectedValuePath="Code"
                                             ToolTip="{Binding Path=SelectedItem.Name, RelativeSource={RelativeSource Self}}">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -1132,7 +1130,6 @@
                                                 </Style>
                                             </ComboBox.Style>
                                         </ComboBox>
-
                                     </Grid>
 
                                     <Grid>
@@ -1265,7 +1262,6 @@
                         </Grid>
                     </TabItem>
                     <TabItem Header="Label" IsEnabled="{Binding IsStyleItemSelected}">
-
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -1372,7 +1368,6 @@
                                             Margin="3,3,3,3"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"
                                             Value="{Binding SymbolAttributeSet.LabelAttributes.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
                                         <Label
                                             Grid.Row="6"
                                             Grid.Column="0"
@@ -1403,7 +1398,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedReinforcedDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -1469,7 +1464,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedCredibilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -1496,7 +1491,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedReliabilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -1523,7 +1518,7 @@
                                             SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedCountryCodeDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
                                             <ComboBox.Style>
-                                                <Style TargetType="ComboBox">
+                                                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                                     <Style.Triggers>
                                                         <Trigger Property="HasItems" Value="False">
                                                             <Setter Property="Visibility" Value="Collapsed" />
