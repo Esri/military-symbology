@@ -87,7 +87,10 @@ namespace ProSymbolEditor
 
         public string Name 
         {
-            get { return DisplayAttributes.Name; }
+            get
+            {
+                return ProSymbolUtilities.TagsToSymbolName(SymbolTags);
+            }
         }
 
         public string FavoriteId { get; set; }
@@ -180,7 +183,7 @@ namespace ProSymbolEditor
                 try
                 {
                     string standard = "mil" + ProSymbolUtilities.StandardString.ToLower();
-                    ArcGIS.Core.CIM.CIMSymbol symbol = ArcGIS.Desktop.Mapping.SymbolFactory.GetDictionarySymbol(standard, attributes);
+                    ArcGIS.Core.CIM.CIMSymbol symbol = ArcGIS.Desktop.Mapping.SymbolFactory.Instance.GetDictionarySymbol(standard, attributes);
 
                     if (symbol == null)
                         return null;
@@ -190,6 +193,7 @@ namespace ProSymbolEditor
                     // However you can do this if the value is negative (-1) but it transforms/flips the image
                     // Therefore we flip the image back in:
                     // Views\MilitarySymbolDockpane.xaml.cs - Image.RenderTransform
+                    // ViewModels\MilitarySymbolDockpaneViewModel.cs - GetClipboardImage
                     // If this ever gets changed/fixed in ProSDK, you must remove the flip there
                     const int PATCH_SIZE = -256;  // negative value is a workaround
                     var si = new ArcGIS.Desktop.Mapping.SymbolStyleItem()

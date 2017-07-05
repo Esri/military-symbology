@@ -25,6 +25,8 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using CoordinateConversionLibrary.Models;
 using ArcGIS.Desktop.Mapping;
 using System.Threading.Tasks;
+using System.Collections.Generic; 
+using System.Linq;
 
 namespace ProSymbolEditor
 {
@@ -214,7 +216,6 @@ namespace ProSymbolEditor
                 catch { }
             }
 
-
             return CoordinateType.Unknown;
         }
 
@@ -263,5 +264,55 @@ namespace ProSymbolEditor
 
             return success;
         }
+
+        public static string TagsToSymbolName(string tags)
+        {
+            string symbolName = "Unknown Symbol";
+
+            if (string.IsNullOrEmpty(tags))
+                return symbolName; // Unknown 
+
+            // Get the geometry type off a tag on the symbol 
+            // TRICKY: geometry will be tags[-3] in the tags list 
+            List<string> reverseTags = tags.Split(';').ToList();
+            reverseTags.Reverse();
+
+            if (reverseTags.Count > 1)
+                symbolName = reverseTags[1];
+
+            return symbolName;
+        }
+
+        public static GeometryType TagsToGeometryType(string tags)
+        {
+            // Default to point 
+            GeometryType geometryType = GeometryType.Point;
+
+            // Get the geometry type off a tag on the symbol 
+            // TRICKY: geometry will be tags[-3] in the tags list 
+            List<string> reverseTags = tags.Split(';').ToList();
+            reverseTags.Reverse();
+
+            if (reverseTags.Count < 3)
+                return geometryType; // Point 
+
+            string geometryTypeTag = reverseTags[2].ToUpper();
+
+            if (geometryTypeTag == "LINE")
+            {
+                geometryType = GeometryType.Polyline;
+            }
+            else if (geometryTypeTag == "AREA")
+            {
+                geometryType = GeometryType.Polygon;
+            }
+            else
+            {
+                // point, set by default above 
+            }
+
+            return geometryType;
+        }
+
     }
 }

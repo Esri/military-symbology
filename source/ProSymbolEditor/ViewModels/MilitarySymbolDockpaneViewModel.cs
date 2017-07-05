@@ -40,6 +40,7 @@ using CoordinateConversionLibrary.Models;
 using Microsoft.Win32;
 using System.Web.Script.Serialization;
 using System.Windows.Threading;
+using ArcGIS.Core.CIM;
 
 namespace ProSymbolEditor
 {
@@ -263,6 +264,7 @@ namespace ProSymbolEditor
             SaveImageToCommand = new RelayCommand(SaveImageAs, param => true);
             SaveSymbolFileCommand = new RelayCommand(SaveSymbolAsFavorite, param => true);
             DeleteFavoriteSymbolCommand = new RelayCommand(DeleteFavoriteSymbol, param => true);
+            CreateTemplateFromFavoriteCommand = new RelayCommand(CreateTemplateFromFavorite, param => true);
             SaveFavoritesFileAsCommand = new RelayCommand(SaveFavoritesAsToFile, param => true);
             ImportFavoritesFileCommand = new RelayCommand(ImportFavoritesFile, param => true);
             SelectToolCommand = new RelayCommand(ActivateSelectTool, param => true);
@@ -339,6 +341,8 @@ namespace ProSymbolEditor
         public ICommand SaveSymbolFileCommand { get; set; }
 
         public ICommand DeleteFavoriteSymbolCommand { get; set; }
+
+        public ICommand CreateTemplateFromFavoriteCommand { get; set; }
 
         public ICommand ImportFavoritesFileCommand { get; set; }
 
@@ -933,11 +937,11 @@ namespace ProSymbolEditor
             {
                 RemoveCoordinateMarker();
 
-                var coordinateMarker = ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Desktop.Mapping.ColorFactory.RedRGB, 12,
+                var coordinateMarker = ArcGIS.Desktop.Mapping.SymbolFactory.Instance.ConstructMarker(ArcGIS.Desktop.Mapping.ColorFactory.Instance.RedRGB, 12,
                     ArcGIS.Desktop.Mapping.SimpleMarkerStyle.Circle);
 
                 ArcGIS.Core.CIM.CIMPointSymbol _pointCoordSymbol =
-                    ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(coordinateMarker);
+                    ArcGIS.Desktop.Mapping.SymbolFactory.Instance.ConstructPointSymbol(coordinateMarker);
 
                 _overlayObject = MapView.Active.AddOverlay(markerPoint, _pointCoordSymbol.MakeSymbolReference());
 
@@ -1244,7 +1248,7 @@ namespace ProSymbolEditor
                                     {
                                         RowBuffer rowBuffer = featureClass.CreateRowBuffer();
                                         _symbolAttributeSet.PopulateRowBufferWithAttributes(ref rowBuffer);
-                                        rowBuffer["Shape"] = GeometryEngine.Project(MapGeometry, facilitySiteDefinition.GetSpatialReference());
+                                        rowBuffer["Shape"] = GeometryEngine.Instance.Project(MapGeometry, facilitySiteDefinition.GetSpatialReference());
 
                                         Feature feature = featureClass.CreateRow(rowBuffer);
                                         feature.Store();
@@ -1316,28 +1320,14 @@ namespace ProSymbolEditor
             return true;
         }
 
-        private void SaveImageAs(object parameter)
+        private BitmapSource GetClipboardImage(BitmapSource sourceImage)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = "symbol";
-            saveFileDialog.Filter = "Png Image|*.png";
-            Nullable<bool> result = saveFileDialog.ShowDialog();
-            if (result == true)
-            {
-                var encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(SymbolAttributeSet.SymbolImage));
-                using (var stream = saveFileDialog.OpenFile())
-                {
-                    encoder.Save(stream);
-                }
-            }
-        }
+            if (sourceImage == null)
+                return null;
 
-        private void CopyImageToClipboard(object parameter)
-        {
             //There's an issue copying the image directly to the clipboard, where transparency isn't retained, and will have a black background.
             //The code below will switch that to be a pseudo-transparency with a white background.
-            Size size = new Size(SymbolAttributeSet.SymbolImage.Width, SymbolAttributeSet.SymbolImage.Height);
+            Size size = new Size(sourceImage.Width, sourceImage.Height);
 
             // Create a white background render bitmap
             int dWidth = (int)size.Width;
@@ -1361,9 +1351,13 @@ namespace ProSymbolEditor
 
             // Adding those two render bitmap to the same drawing visual
             DrawingVisual dv = new DrawingVisual();
+
+            // Important/Workaround: The image is rotated 180, see: SymbolAttributeSet.GetBitmapImageAsync
+            dv.Transform = new System.Windows.Media.RotateTransform(180.0, size.Width / 2, size.Height / 2);
+
             DrawingContext dc = dv.RenderOpen();
             dc.DrawImage(bg, new Rect(size));
-            dc.DrawImage(SymbolAttributeSet.SymbolImage, new Rect(size));
+            dc.DrawImage(sourceImage, new Rect(size));
             dc.Close();
 
             // Render the result
@@ -1377,10 +1371,40 @@ namespace ProSymbolEditor
             );
             resultBitmap.Render(dv);
 
-            // Copy it to clipboard
+            return resultBitmap;
+        }
+
+        private void SaveImageAs(object parameter)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = "symbol";
+            saveFileDialog.Filter = "Png Image|*.png";
+            Nullable<bool> result = saveFileDialog.ShowDialog();
+            if (result == true)
+            {
+                BitmapSource bitmap = GetClipboardImage(SymbolAttributeSet.SymbolImage);
+
+                if (bitmap == null)
+                    return;
+
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bitmap));
+                using (var stream = saveFileDialog.OpenFile())
+                {
+                    encoder.Save(stream);
+                }
+            }
+        }
+
+        private void CopyImageToClipboard(object parameter)
+        {
             try
             {
-                Clipboard.SetImage(resultBitmap);
+                BitmapSource bitmap = GetClipboardImage(SymbolAttributeSet.SymbolImage);
+
+                // Copy to clipboard
+                if (bitmap != null)
+                    Clipboard.SetImage(bitmap);
             }
             catch(Exception exception)
             {
@@ -1569,6 +1593,89 @@ namespace ProSymbolEditor
                 var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
                 File.WriteAllText(_favoritesFilePath, favoritesJson);
             }
+        }
+
+        private async void CreateTemplateFromFavorite(object parameter)
+        {
+            bool success = true;
+
+            if (SelectedFavoriteSymbol == null)
+            {
+                success = false; // error
+            }
+
+            GeometryType geometryType = ProSymbolUtilities.TagsToGeometryType(SelectedFavoriteSymbol.SymbolTags);
+
+            //Get required layer name
+            string requiredFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(
+                SelectedFavoriteSymbol.DisplayAttributes, geometryType);
+
+            if (string.IsNullOrEmpty(requiredFeatureClassName))
+            {
+                success = false; // error
+            }
+
+            await QueuedTask.Run(() =>
+            {
+                ////////////////////////////////
+                // Move to Utility
+                IEnumerable<FeatureLayer> mapLayers = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>(); ;
+
+                FeatureLayer targetLayer = null;
+                foreach (var layer in mapLayers)
+                {
+                    string fcName = layer.GetFeatureClass().GetName();
+
+                    if (fcName == requiredFeatureClassName)
+                    {
+                        targetLayer = layer;
+                        break;
+                    }
+                }
+                ////////////////////////////////
+
+                if (targetLayer == null)
+                {
+                    success = false; // error
+                    return;
+                }
+
+                // Now add the new template:
+
+                string templateName = SelectedFavoriteSymbol.Name;
+
+                // Check if a template with this name already exists (if so modify?)
+                var checkTemplate = targetLayer.GetTemplate(templateName);
+
+                // Get CIM layer definition
+                var layerDef = targetLayer.GetDefinition() as CIMFeatureLayer;
+                // Get all templates on this layer
+                var layerTemplates = layerDef.FeatureTemplates.ToList();
+               
+                // Create a new template
+                var newTemplate = new CIMFeatureTemplate();
+
+                //Set template values
+                newTemplate.Name = templateName;
+                newTemplate.Description = templateName;
+                newTemplate.WriteTags(SelectedFavoriteSymbol.SymbolTags.Split(';').ToList());
+                newTemplate.DefaultValues = SelectedFavoriteSymbol.GenerateAttributeSetDictionary();
+
+                // Add the new template to the layer template list
+                layerTemplates.Add(newTemplate);
+
+                // Set the layer definition templates from the list
+                layerDef.FeatureTemplates = layerTemplates.ToArray();
+                // Finally set the layer definition
+                targetLayer.SetDefinition(layerDef);
+            });
+
+            if (!success)
+            {
+                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Could Not Create Template", 
+                    "Could Not Create Template", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+
         }
 
         private void SaveFavoritesAsToFile(object parameter)
@@ -1805,24 +1912,38 @@ namespace ProSymbolEditor
 
         private async Task<StyleProjectItem> GetMilitaryStyleAsync()
         {
+            StyleProjectItem style = null;
+
             if (!File.Exists(Mil2525StyleFullFilePath))
             {
                 ShowMilitaryStyleNotFoundMessageBox();
-                return null;
             }
-
-            if (Project.Current != null)
+            else
             {
-                await Project.Current.AddStyleAsync(Mil2525StyleFullFilePath);
+                if (Project.Current != null)
+                {
+                    await QueuedTask.Run(() =>
+                    {
+                        //Get all styles in the project
+                        var styles = Project.Current.GetItems<StyleProjectItem>();
 
-                //Get all styles in the project
-                var styles = Project.Current.GetItems<StyleProjectItem>();
+                        //Get the named military style in the project
+                        style = styles.FirstOrDefault(x => x.Name == MilitaryStyleName);
 
-                //Get a specific style in the project
-                return styles.FirstOrDefault(x => x.Name == MilitaryStyleName); 
+                        if (style == null)
+                        {
+                            // add it, if it wasn't found
+                            Project.Current.AddStyle(Mil2525StyleFullFilePath);
+
+                            // then check again for style (just in case)
+                            styles = Project.Current.GetItems<StyleProjectItem>();
+                            style = styles.FirstOrDefault(x => x.Name == MilitaryStyleName);
+                        }
+                    });
+                }
             }
 
-            return null;
+            return style;
         }
 
         private bool IsStyleInProject()
@@ -2193,42 +2314,39 @@ namespace ProSymbolEditor
             });
         }
 
-        private Task SearchSymbols()
+        private async Task SearchSymbols()
         {
-            return QueuedTask.Run(async () =>
+            // TODO: research how to speed this up - takes about 1 sec / 200 style items returned
+            await QueuedTask.Run(() =>
             {
                 var list = new List<StyleItemType>() { StyleItemType.PointSymbol, StyleItemType.LineSymbol, StyleItemType.PolygonSymbol };
 
-                IEnumerable<Task<IList<SymbolStyleItem>>> symbolQuery = from type in list select _militaryStyleItem.SearchSymbolsAsync(type, _searchString);
+                IEnumerable<IList<SymbolStyleItem>> symbolQuery = from type in list select _militaryStyleItem.SearchSymbols(type, _searchString);
 
                 var combinedSymbols = new List<SymbolStyleItem>();
                 int outParse;
 
-                // start the query
-                var searchTasks = symbolQuery.ToList();
+                if (symbolQuery == null)
+                    return;
 
-                while (searchTasks.Count > 0)
+                foreach (var symbolType in symbolQuery)
                 {
-                    var nextTask = await Task.WhenAny(searchTasks);
-                    var results = await nextTask;
-                    searchTasks.Remove(nextTask);
-
                     // Change style query based on current standard
                     if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-                    {  
-                    // TODO: also include 2525C keys in search                                         
-                                        combinedSymbols.AddRange(results.Where(x =>
-                                          (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
-                                           ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
-                                        // TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
-                                        && (!x.Tags.Contains("NEW_AT_2525D"))
-                                        ));
+                    {
+                        // TODO: also include 2525C keys in search                                         
+                        combinedSymbols.AddRange(symbolType.Where(x =>
+                          (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
+                           ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
+                        // TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
+                        && (!x.Tags.Contains("NEW_AT_2525D"))
+                        ));
                     }
                     else // 2525D
                     {
-                                        combinedSymbols.AddRange(results.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
-                                            (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))  
-                                            ));
+                        combinedSymbols.AddRange(symbolType.Where(x => (x.Key.Length == 8 && int.TryParse(x.Key, out outParse)) ||
+                            (x.Key.Length == 10 && x.Key[8] == '_' && int.TryParse(x.Key[9].ToString(), out outParse))
+                            ));
                     }
                 }
 
@@ -2344,7 +2462,7 @@ namespace ProSymbolEditor
                 {
                     // "MilitaryOverlay-{standard}.lpkx"
                     string layerFileName = "MilitaryOverlay-" + ProSymbolUtilities.StandardString.ToLower() + ".lpkx";
-                    LayerFactory.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
+                    LayerFactory.Instance.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
                     Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
                     bool enabled = await isEnabledMethod;
 

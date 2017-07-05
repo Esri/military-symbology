@@ -61,7 +61,7 @@ namespace ProSymbolEditor
                 try
                 {
                     // for now we will always project to WGS84
-                    Geometry projectedGeometry = GeometryEngine.Project(geometry, SpatialReferences.WGS84);
+                    Geometry projectedGeometry = GeometryEngine.Instance.Project(geometry, SpatialReferences.WGS84);
                     symbolDockPaneViewModel.MapGeometry = projectedGeometry;
                     symbolDockPaneViewModel.CreateNewFeatureAsync(null);
                 }
