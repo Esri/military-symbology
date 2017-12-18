@@ -304,16 +304,17 @@
                                     Width="90"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="{Binding IsStyleItemSelected}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                    </ToggleButton.Style>
+                                </ToggleButton>                                    
                                 <Button
                                     x:Name="modifyButton"
                                     Grid.Column="2"
@@ -792,15 +793,16 @@
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                                <ToggleButton.Style>
+                                    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                </ToggleButton.Style>
+                                </ToggleButton>
                                 <Button
                                     Grid.Row="0"
                                     Grid.Column="3"
@@ -1221,15 +1223,16 @@
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                    </ToggleButton.Style>
+                                </ToggleButton>                                    
                                 <Button
                                     Grid.Row="0"
                                     Grid.Column="2"
@@ -1614,15 +1617,16 @@
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                    </ToggleButton.Style>
+                                </ToggleButton>                                    
                                 <Button
                                     Grid.Column="2"
                                     Width="82"
@@ -1804,15 +1808,16 @@
                                     Width="101"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" >
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                    </ToggleButton.Style>
+                                </ToggleButton>                                    
                                 <Button
                                     Grid.Column="2"
                                     Width="101"
