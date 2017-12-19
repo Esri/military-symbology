@@ -1305,7 +1305,10 @@
                                         <xctk:DateTimePicker
                                             Grid.Row="0"
                                             Grid.Column="1"
-                                            Margin="3,3,3,3"
+                                            Margin="3,3,3,3" 
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
+                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                                            BorderBrush="{DynamicResource Esri_BorderBrush}"
                                             DisplayDefaultValueOnEmptyText="False"
                                             Format="Custom"
                                             FormatString="MMM-dd-yy hh:mm tt"
@@ -1322,15 +1325,14 @@
                                             Grid.Row="1"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
+                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                                            BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
                                             DisplayDefaultValueOnEmptyText="False"
                                             Format="Custom"
                                             FormatString="MMM-dd-yy hh:mm tt"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}"
                                             Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeExpired}" />
-
-                                        <!--<Label Content="Location" Grid.Row="2" Grid.Column="0"/>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Width="170"/>-->
-
                                         <Label
                                             Grid.Row="3"
                                             Grid.Column="0"
@@ -1369,6 +1371,9 @@
                                             Grid.Row="5"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
+                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                                            BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
                                             Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"
                                             Value="{Binding SymbolAttributeSet.LabelAttributes.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <Label
