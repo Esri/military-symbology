@@ -51,6 +51,7 @@ namespace ProSymbolEditor
             DisplayAttributes.PropertyChanged += Attributes_PropertyChanged;
 
             LabelAttributes = new LabelAttributes();
+            LabelAttributes.PropertyChanged += LabelAttributes_PropertyChanged;
 
             StandardVersion = ProSymbolUtilities.StandardString;
         }
@@ -75,6 +76,64 @@ namespace ProSymbolEditor
                 return 0;
             else
                 return DisplayAttributes.GetHashCode() ^ LabelAttributes.GetHashCode();
+        }
+
+        [ScriptIgnore]
+        public Dictionary<string, string> AttributesDictionary
+        {
+            get
+            {
+
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+
+                dict.Add("SymbolType", this.Name);
+
+                foreach (var prop in DisplayAttributes.GetType().GetProperties())
+                {
+                    string key = prop.Name;
+                    object value = prop.GetValue(DisplayAttributes, null);
+                    if (value == null)
+                        continue;
+
+                    string valueAsString = value.ToString();
+
+                    // Skip non-value types
+                    if (valueAsString.StartsWith("ProSymbolEditor"))
+                        continue;
+
+                    // If debug needed:
+                    // System.Diagnostics.Trace.WriteLine(string.Format("{0}={1}", key, valueAsString));
+
+                    if (string.IsNullOrEmpty(valueAsString) || dict.ContainsKey(key))
+                        continue;
+
+                    dict.Add(key, valueAsString);
+                }
+
+                foreach (var prop in LabelAttributes.GetType().GetProperties())
+                {
+                    string key = prop.Name;
+                    object value = prop.GetValue(LabelAttributes, null);
+                    if (value == null)
+                        continue;
+
+                    string valueAsString = value.ToString();
+
+                    // Skip non-value types
+                    if (valueAsString.StartsWith("ProSymbolEditor"))
+                        continue;
+
+                    // If debug needed:
+                    // System.Diagnostics.Trace.WriteLine(string.Format("{0}={1}", key, valueAsString));
+
+                    if (string.IsNullOrEmpty(valueAsString) || dict.ContainsKey(key))
+                        continue;
+
+                    dict.Add(key, valueAsString);
+                }
+
+                return dict;
+            }
         }
 
         #region Getters/Setters
@@ -814,6 +873,14 @@ namespace ProSymbolEditor
 
             // Tell the XCTK grid to get the updated label for this 
             NotifyPropertyChanged(() => Name);
+            NotifyPropertyChanged(() => AttributesDictionary);
+        }
+
+        private void LabelAttributes_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // Tell the XCTK grid to get the updated label for this 
+            NotifyPropertyChanged(() => Name);
+            NotifyPropertyChanged(() => AttributesDictionary);
         }
     }
 }

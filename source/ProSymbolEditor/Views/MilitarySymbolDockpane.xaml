@@ -1559,7 +1559,22 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid
+                                        <DataGrid 
+                                            Grid.Row="1"
+                                            Height="150"
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding SymbolAttributeSet.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}" 
+                                            ToolTip="{Binding SymbolAttributeSet.Name}" 
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" >
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        
+                                        <!--<xctk:PropertyGrid
                                             Grid.Row="1"
                                             Height="150"
                                             Margin="5,5,5,5"
@@ -1571,7 +1586,7 @@
                                             ShowSearchBox="False"
                                             ShowSortOptions="False"
                                             ShowSummary="False"
-                                            ToolTip="{Binding SymbolAttributeSet.Name}">
+                                            >
                                             <xctk:PropertyGrid.PropertyDefinitions>
                                                 <xctk:PropertyDefinition
                                                     DisplayName="Name"
@@ -1590,7 +1605,7 @@
                                                     DisplayOrder="3"
                                                     TargetProperties="StandardVersion" />
                                             </xctk:PropertyGrid.PropertyDefinitions>
-                                        </xctk:PropertyGrid>
+                                        </xctk:PropertyGrid>-->
                                     </Grid>
                                 </StackPanel>
                             </ScrollViewer>
