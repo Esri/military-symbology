@@ -304,16 +304,17 @@
                                     Width="90"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="{Binding IsStyleItemSelected}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                    </ToggleButton.Style>
+                                </ToggleButton>                                    
                                 <Button
                                     x:Name="modifyButton"
                                     Grid.Column="2"
@@ -792,15 +793,16 @@
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                                <ToggleButton.Style>
+                                    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                </ToggleButton.Style>
+                                </ToggleButton>
                                 <Button
                                     Grid.Row="0"
                                     Grid.Column="3"
@@ -1221,15 +1223,16 @@
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                    </ToggleButton.Style>
+                                </ToggleButton>                                    
                                 <Button
                                     Grid.Row="0"
                                     Grid.Column="2"
@@ -1302,7 +1305,10 @@
                                         <xctk:DateTimePicker
                                             Grid.Row="0"
                                             Grid.Column="1"
-                                            Margin="3,3,3,3"
+                                            Margin="3,3,3,3" 
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
+                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                                            BorderBrush="{DynamicResource Esri_BorderBrush}"
                                             DisplayDefaultValueOnEmptyText="False"
                                             Format="Custom"
                                             FormatString="MMM-dd-yy hh:mm tt"
@@ -1319,15 +1325,14 @@
                                             Grid.Row="1"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
+                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                                            BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
                                             DisplayDefaultValueOnEmptyText="False"
                                             Format="Custom"
                                             FormatString="MMM-dd-yy hh:mm tt"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}"
                                             Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeExpired}" />
-
-                                        <!--<Label Content="Location" Grid.Row="2" Grid.Column="0"/>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Width="170"/>-->
-
                                         <Label
                                             Grid.Row="3"
                                             Grid.Column="0"
@@ -1366,6 +1371,9 @@
                                             Grid.Row="5"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
+                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                                            BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
                                             Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"
                                             Value="{Binding SymbolAttributeSet.LabelAttributes.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <Label
@@ -1614,15 +1622,16 @@
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                    </ToggleButton.Style>
+                                </ToggleButton>                                    
                                 <Button
                                     Grid.Column="2"
                                     Width="82"
@@ -1804,15 +1813,16 @@
                                     Width="101"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" >
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                    </ToggleButton.Style>
+                                </ToggleButton>                                    
                                 <Button
                                     Grid.Column="2"
                                     Width="101"
