@@ -154,6 +154,7 @@
                                             HorizontalAlignment="Right"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
                                             Background="{Binding Backgound, ElementName=searchSymbolsTextBox}"
                                             Command="{Binding ClearSearchTextCommand}"
                                             Content="X" />
@@ -1200,12 +1201,9 @@
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
-                                    BorderThickness="0.5"
                                     Command="{Binding SaveEditsCommand}"
                                     Content="Save Edits"
-                                    Foreground="Black"
+                                    Style="{DynamicResource Esri_SimpleButton}"
                                     ToolTip="Save Edits"
                                     Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
                                 <Button
@@ -1584,12 +1582,9 @@
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
-                                    BorderThickness="0.5"
                                     Command="{Binding SaveEditsCommand}"
                                     Content="Save Edits"
-                                    Foreground="Black"
+                                    Style="{DynamicResource Esri_SimpleButton}"
                                     ToolTip="Save Edits"
                                     Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
                                 <Button
@@ -1762,11 +1757,9 @@
                                     Width="101"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
-                                    BorderThickness="0.5"
                                     Command="{Binding SaveEditsCommand}"
                                     Content="Save Edits"
+                                    Style="{DynamicResource Esri_SimpleButton}"
                                     ToolTip="Save Edits"
                                     Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
                             </Grid>
