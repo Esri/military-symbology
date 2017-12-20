@@ -458,37 +458,25 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid
+                                        <DataGrid 
                                             Grid.Row="1"
                                             Height="150"
-                                            Margin="5,5,5,5"
-                                            AutoGenerateProperties="False"
-                                            Foreground="Black"
-                                            IsCategorized="False"
-                                            IsReadOnly="True"
-                                            SelectedObject="{Binding EditSelectedFeatureSymbol}"
-                                            ShowSearchBox="False"
-                                            ShowSortOptions="False"
-                                            ShowSummary="False">
-                                            <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Name"
-                                                    DisplayOrder="0"
-                                                    TargetProperties="Name" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Display Attributes"
-                                                    DisplayOrder="1"
-                                                    TargetProperties="DisplayAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Label Attributes"
-                                                    DisplayOrder="2"
-                                                    TargetProperties="LabelAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Standard"
-                                                    DisplayOrder="3"
-                                                    TargetProperties="StandardVersion" />
-                                            </xctk:PropertyGrid.PropertyDefinitions>
-                                        </xctk:PropertyGrid>
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding EditSelectedFeatureSymbol.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}" 
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" 
+                                            Visibility="{Binding EditSelectedFeatureSymbol.IsValid, Converter={StaticResource BoolToVis}, FallbackValue=Collapsed}">
+                                            <DataGrid.ToolTip>
+                                                <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                                    <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                                                </ToolTip>
+                                            </DataGrid.ToolTip>                                            
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
 
                                     </Grid>
                                 </StackPanel>
@@ -725,38 +713,25 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid
+                                        <DataGrid 
                                             Grid.Row="1"
                                             Height="150"
-                                            Margin="5,5,5,5"
-                                            AutoGenerateProperties="False"
-                                            Foreground="Black"
-                                            IsCategorized="False"
-                                            IsReadOnly="True"
-                                            SelectedObject="{Binding SelectedFavoriteSymbol}"
-                                            ShowSearchBox="False"
-                                            ShowSortOptions="False"
-                                            ShowSummary="False">
-                                            <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Name"
-                                                    DisplayOrder="0"
-                                                    TargetProperties="Name" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Display Attributes"
-                                                    DisplayOrder="1"
-                                                    TargetProperties="DisplayAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Label Attributes"
-                                                    DisplayOrder="2"
-                                                    TargetProperties="LabelAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Standard"
-                                                    DisplayOrder="3"
-                                                    TargetProperties="StandardVersion" />
-                                            </xctk:PropertyGrid.PropertyDefinitions>
-                                        </xctk:PropertyGrid>
-
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding SelectedFavoriteSymbol.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}" 
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" >
+                                            <DataGrid.ToolTip>
+                                                <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                                    <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                                                </ToolTip>
+                                            </DataGrid.ToolTip>
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        
                                     </Grid>
                                 </StackPanel>
                             </ScrollViewer>
@@ -1157,38 +1132,24 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid
+                                        <DataGrid 
                                             Grid.Row="1"
                                             Height="150"
-                                            Margin="5,5,5,5"
-                                            AutoGenerateProperties="False"
-                                            Foreground="Black"
-                                            IsCategorized="False"
-                                            IsReadOnly="True"
-                                            SelectedObject="{Binding SymbolAttributeSet}"
-                                            ShowSearchBox="False"
-                                            ShowSortOptions="False"
-                                            ShowSummary="False"
-                                            ToolTip="{Binding SymbolAttributeSet.Name}">
-                                            <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Name"
-                                                    DisplayOrder="0"
-                                                    TargetProperties="Name" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Display Attributes"
-                                                    DisplayOrder="1"
-                                                    TargetProperties="DisplayAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Label Attributes"
-                                                    DisplayOrder="2"
-                                                    TargetProperties="LabelAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Standard"
-                                                    DisplayOrder="3"
-                                                    TargetProperties="StandardVersion" />
-                                            </xctk:PropertyGrid.PropertyDefinitions>
-                                        </xctk:PropertyGrid>
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding SymbolAttributeSet.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}"
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" >
+                                            <DataGrid.ToolTip>
+                                                <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                                    <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                                                </ToolTip>
+                                            </DataGrid.ToolTip>                                            
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>                                        
 
                                     </Grid>
                                 </StackPanel>
@@ -1565,47 +1526,18 @@
                                             Margin="5,5,5,5"                                       
                                             ItemsSource="{Binding SymbolAttributeSet.AttributesDictionary}" 
                                             Style="{DynamicResource Esri_DataGridStyle}" 
-                                            ToolTip="{Binding SymbolAttributeSet.Name}" 
                                             HeadersVisibility="Column" 
                                             RowHeaderWidth="0" >
+                                            <DataGrid.ToolTip>
+                                                <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                                    <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                                                </ToolTip>
+                                            </DataGrid.ToolTip>                                            
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
                                                 <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
                                             </DataGrid.Columns>
                                         </DataGrid>
-                                        
-                                        <!--<xctk:PropertyGrid
-                                            Grid.Row="1"
-                                            Height="150"
-                                            Margin="5,5,5,5"
-                                            AutoGenerateProperties="False"
-                                            Foreground="Black"
-                                            IsCategorized="False"
-                                            IsReadOnly="True"
-                                            SelectedObject="{Binding SymbolAttributeSet}"
-                                            ShowSearchBox="False"
-                                            ShowSortOptions="False"
-                                            ShowSummary="False"
-                                            >
-                                            <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Name"
-                                                    DisplayOrder="0"
-                                                    TargetProperties="Name" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Display Attributes"
-                                                    DisplayOrder="1"
-                                                    TargetProperties="DisplayAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Label Attributes"
-                                                    DisplayOrder="2"
-                                                    TargetProperties="LabelAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Standard"
-                                                    DisplayOrder="3"
-                                                    TargetProperties="StandardVersion" />
-                                            </xctk:PropertyGrid.PropertyDefinitions>
-                                        </xctk:PropertyGrid>-->
                                     </Grid>
                                 </StackPanel>
                             </ScrollViewer>
@@ -1766,38 +1698,25 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid
+                                        <DataGrid 
                                             Grid.Row="1"
                                             Height="150"
-                                            Margin="5,5,5,5"
-                                            AutoGenerateProperties="False"
-                                            Foreground="Black"
-                                            IsCategorized="False"
-                                            IsReadOnly="True"
-                                            SelectedObject="{Binding SymbolAttributeSet}"
-                                            ShowSearchBox="False"
-                                            ShowSortOptions="False"
-                                            ShowSummary="False"
-                                            ToolTip="{Binding SymbolAttributeSet.Name}">
-                                            <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Name"
-                                                    DisplayOrder="0"
-                                                    TargetProperties="Name" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Display Attributes"
-                                                    DisplayOrder="1"
-                                                    TargetProperties="DisplayAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Label Attributes"
-                                                    DisplayOrder="2"
-                                                    TargetProperties="LabelAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Standard"
-                                                    DisplayOrder="3"
-                                                    TargetProperties="StandardVersion" />
-                                            </xctk:PropertyGrid.PropertyDefinitions>
-                                        </xctk:PropertyGrid>
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding SymbolAttributeSet.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}" 
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" >
+                                            <DataGrid.ToolTip>
+                                                <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                                    <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                                                </ToolTip>
+                                            </DataGrid.ToolTip>                                            
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+
                                     </Grid>
                                 </StackPanel>
                             </ScrollViewer>

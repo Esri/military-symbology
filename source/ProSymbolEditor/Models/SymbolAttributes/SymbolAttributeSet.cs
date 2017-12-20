@@ -132,6 +132,9 @@ namespace ProSymbolEditor
                     dict.Add(key, valueAsString);
                 }
 
+                if (!string.IsNullOrEmpty(StandardVersion))
+                    dict.Add("Standard", StandardVersion);
+
                 return dict;
             }
         }
@@ -865,20 +868,22 @@ namespace ProSymbolEditor
             SymbolTags = "";
 
             StandardVersion = ProSymbolUtilities.StandardString;
+
+            NotifyPropertyChanged(() => IsValid);
         }
 
         private void Attributes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             GeneratePreviewSymbol();
 
-            // Tell the XCTK grid to get the updated label for this 
+            // Tell the proprties datagrids to get the updated info
             NotifyPropertyChanged(() => Name);
             NotifyPropertyChanged(() => AttributesDictionary);
         }
 
         private void LabelAttributes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            // Tell the XCTK grid to get the updated label for this 
+            // Tell the proprties datagrids to get the updated info
             NotifyPropertyChanged(() => Name);
             NotifyPropertyChanged(() => AttributesDictionary);
         }
