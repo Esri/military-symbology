@@ -1130,9 +1130,9 @@ namespace ProSymbolEditor
                 }
             }
             else
-            {   
+            {
                 // Something went wrong, alert user           
-                MessageBox.Show(message);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message);
             }
         }
             
@@ -1220,7 +1220,7 @@ namespace ProSymbolEditor
             }
 
             IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
-            await QueuedTask.Run(() =>
+            await QueuedTask.Run(async () =>
             {
                 foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
                 {
@@ -1262,12 +1262,8 @@ namespace ProSymbolEditor
                                     }
                                 }, featureClass);
 
-                                var task = editOperation.ExecuteAsync();
+                                creationResult = await editOperation.ExecuteAsync();
 
-                                // TODO/Potential Bug: 
-                                // if the operation fails (ex. for "spatial index invalid")
-                                // this method does not return:
-                                creationResult = task.Result;
                                 if (!creationResult)
                                 {
                                     message = editOperation.ErrorMessage;
@@ -1282,7 +1278,7 @@ namespace ProSymbolEditor
 
             if (!creationResult)
             {
-                MessageBox.Show(message);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message);
             }
         }
 
