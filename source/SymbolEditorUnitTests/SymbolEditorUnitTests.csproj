@@ -79,9 +79,6 @@
     <Reference Include="ArcGIS.Desktop.Mapping">
       <HintPath>C:\Program Files\ArcGIS\Pro\bin\Extensions\Mapping\ArcGIS.Desktop.Mapping.dll</HintPath>
     </Reference>
-    <Reference Include="CoordinateConversionLibrary">
-      <HintPath>..\ProSymbolEditor\Dependencies\Coordinate Library\CoordinateConversionLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -101,6 +98,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\coordinate-conversion-addin-dotnet\source\CoordinateConversion\CoordinateConversionLibrary\CoordinateConversionLibrary.csproj">
+      <Project>{67ffdfae-f8ec-45aa-a3f9-6109bcf5bbf4}</Project>
+      <Name>CoordinateConversionLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ProSymbolEditor\ProSymbolEditor.csproj">
       <Project>{4ff462b0-2910-47f3-b6fd-d1d17e5f7dfc}</Project>
       <Name>ProSymbolEditor</Name>

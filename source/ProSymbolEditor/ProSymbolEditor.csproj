@@ -39,9 +39,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoordinateConversionLibrary">
-      <HintPath>Dependencies\Coordinate Library\CoordinateConversionLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -154,7 +151,6 @@
   <ItemGroup>
     <AddInContent Include="DarkImages\MIL-16x16.png" />
     <AddInContent Include="DarkImages\MIL-32x32.png" />
-    <Content Include="Dependencies\Coordinate Library\CoordinateToolLibrary.dll" />
     <Content Include="Dependencies\Extended WPF Toolkit Binaries\Xceed.Wpf.Toolkit.dll" />
     <Content Include="Dependencies\MilitarySymbols\MilitarySymbols.dll" />
     <Content Include="Dependencies\MilitarySymbols\Svg.dll" />
@@ -185,6 +181,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\coordinate-conversion-addin-dotnet\source\CoordinateConversion\CoordinateConversionLibrary\CoordinateConversionLibrary.csproj">
+      <Project>{67ffdfae-f8ec-45aa-a3f9-6109bcf5bbf4}</Project>
+      <Name>CoordinateConversionLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.PackageAddIn" />
