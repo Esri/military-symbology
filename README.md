@@ -53,6 +53,7 @@ A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating m
 ```
 {Github Clone Location}
 +---coordinate-conversion-addin-dotnet
++---military-symbol-editor-addin-wpf
 ```
 
 **IMPORTANT NOTE: Because of file name length limitations in Visual Studio, the length of the folder name of {Github Clone Location} should not exceed 80 characters**
