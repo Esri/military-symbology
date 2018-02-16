@@ -1513,7 +1513,8 @@ namespace ProSymbolEditor
 
                 SymbolAttributeSet.DisplayAttributes.ExtendedFunctionCode = loadSet.DisplayAttributes.ExtendedFunctionCode;
 
-                _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(
+                _currentFeatureClassName = 
+                    _symbolSetMappings.GetFeatureClassFromMapping(
                     _symbolAttributeSet.DisplayAttributes, GeometryType);
 
                 if (!string.IsNullOrEmpty(_currentFeatureClassName))
@@ -1801,18 +1802,17 @@ namespace ProSymbolEditor
 
             SelectedFeaturesCollection.Clear();
 
+            string symbolSetFieldName = "symbolset";
+            string symbolEntityFieldName = "symbolentity";
+
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            {
+                symbolSetFieldName = "extendedfunctioncode";
+                symbolEntityFieldName = ""; // not used
+            }
+
             foreach (KeyValuePair<BasicFeatureLayer, List<long>> kvp in selectedFeatures)
             {
-
-                string symbolSetFieldName = "symbolset";
-                string symbolEntityFieldName = "symbolentity";
-
-                if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-                {
-                    symbolSetFieldName = "extendedfunctioncode";
-                    symbolEntityFieldName = ""; // not used
-                }
-
                 await QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == symbolSetFieldName);
@@ -1862,17 +1862,23 @@ namespace ProSymbolEditor
                         {
                             SelectedFeature newSelectedFeature = new SelectedFeature(kvp.Key, id);
 
-                            string symbolSetString = row[symbolSetFieldName].ToString();
-                            foreach (KeyValuePair<object, string> symbolSetKeyValuePair in symbolSetDomainSortedList)
+                            if ((row.FindField(symbolSetFieldName) >=0) &&
+                                ( row[symbolSetFieldName] != null))
                             {
-                                if (symbolSetKeyValuePair.Key.ToString() == symbolSetString)
+                                string symbolSetString = row[symbolSetFieldName].ToString();
+                                foreach (KeyValuePair<object, string> symbolSetKeyValuePair in symbolSetDomainSortedList)
                                 {
-                                    newSelectedFeature.SymbolSetName = symbolSetKeyValuePair.Value;
-                                    break;
+                                    if (symbolSetKeyValuePair.Key.ToString() == symbolSetString)
+                                    {
+                                        newSelectedFeature.SymbolSetName = symbolSetKeyValuePair.Value;
+                                        break;
+                                    }
                                 }
                             }
 
                             if (!string.IsNullOrEmpty(symbolEntityFieldName) && 
+                                (row.FindField(symbolEntityFieldName) >= 0) &&
+                                (row[symbolEntityFieldName] != null) &&                                  
                                 (symbolEntityDomainSortedList !=null))
                             {
                                 string symbolEntityString = row[symbolEntityFieldName].ToString();
