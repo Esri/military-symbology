@@ -238,7 +238,7 @@ namespace ProSymbolEditor
 
         private System.Threading.Tasks.Task<System.Windows.Media.ImageSource> GetBitmapImageAsync(Dictionary<string, object> attributes)
         {
-            if (attributes == null)
+            if ((attributes == null) || (attributes.Count == 0))
                 return null;
 
             return ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() => {

@@ -61,7 +61,7 @@ namespace ProSymbolEditor
                         prefixName = dbcps.Database + "." + dbcps.User + ".";
 
                         // Also save this connection string to identify this EGDB later 
-                        _egdbConnectionString = (gdb as Datastore).GetConnectionString();
+                        _egdbConnectionString = ((Datastore)gdb).GetConnectionString();
                     }
                 }
             }

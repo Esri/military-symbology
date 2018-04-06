@@ -77,24 +77,6 @@ namespace ProSymbolEditor
             get { return " : "; }
         }
 
-        public static BitmapImage BitMapToBitmapImage(System.Drawing.Bitmap source)
-        {
-            BitmapImage bitmapImage = new BitmapImage();
-
-            using (MemoryStream memory = new MemoryStream())
-            {
-                source.Save(memory, ImageFormat.Png);
-                memory.Position = 0;
-               
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = memory;
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-            }
-
-            return bitmapImage;
-        }
-
         public static string AddinAssemblyLocation()
         {
             var asm = System.Reflection.Assembly.GetExecutingAssembly();
