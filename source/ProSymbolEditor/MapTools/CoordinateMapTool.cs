@@ -66,7 +66,7 @@ namespace ProSymbolEditor
                 }
                 catch(Exception exception)
                 {
-                    System.Console.WriteLine(exception.Message);
+                    System.Diagnostics.Trace.WriteLine(exception.Message);
                 }
             });
         }

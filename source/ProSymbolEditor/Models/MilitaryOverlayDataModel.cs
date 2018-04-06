@@ -179,9 +179,10 @@ namespace ProSymbolEditor
                             }
 
                             // last check if it is EGDB
-                            if (string.IsNullOrEmpty(gdbPath) && !string.IsNullOrEmpty(_egdbConnectionString))
+                            if (string.IsNullOrEmpty(gdbPath) && !string.IsNullOrEmpty(_egdbConnectionString)
+                                && (geodatabase != null))
                             {
-                                string cs = (geodatabase as Datastore).GetConnectionString();
+                                string cs = ((Datastore)geodatabase).GetConnectionString();
 
                                 if (cs == _egdbConnectionString)
                                     isFeatureClassInActiveView = true;
@@ -229,8 +230,8 @@ namespace ProSymbolEditor
                             //Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
                             if (datastore is UnknownDatastore)
                                 continue;
-                            Geodatabase geodatabase = datastore as Geodatabase;
 
+                            Geodatabase geodatabase = datastore as Geodatabase;
                             if (geodatabase == null)
                                 continue;
 
@@ -311,7 +312,7 @@ namespace ProSymbolEditor
             }
             catch (Exception exception)
             {
-                System.Console.WriteLine(exception.Message);
+                System.Diagnostics.Trace.WriteLine(exception.Message);
             }
 
             return SchemaExists;

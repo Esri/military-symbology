@@ -63,7 +63,7 @@ namespace ProSymbolEditor
 
             SymbolAttributeSet compareObj = obj as SymbolAttributeSet;
 
-            if ((DisplayAttributes == null) || (LabelAttributes == null))
+            if ((compareObj == null) || (DisplayAttributes == null) || (LabelAttributes == null))
                 return false;
 
             return DisplayAttributes.Equals(compareObj.DisplayAttributes)
@@ -268,6 +268,7 @@ namespace ProSymbolEditor
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Trace.WriteLine("Exception in GetBitmapImageAsync: " + ex.Message);
                     return null;
                 }
              });
@@ -388,6 +389,13 @@ namespace ProSymbolEditor
 
         public void PopulateRowBufferWithAttributes(ref RowBuffer rowBuffer)
         {
+            if (rowBuffer == null)
+            {
+                // not normally possible with ref parameter, but check just in case
+                System.Diagnostics.Debug.WriteLine("Null RowBuffer passed to PopulateRowBufferWithAttributes");
+                return;
+            }
+
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
 

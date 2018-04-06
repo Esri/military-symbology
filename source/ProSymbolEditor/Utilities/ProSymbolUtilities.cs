@@ -233,6 +233,9 @@ namespace ProSymbolEditor
         {
             string gdbPath = string.Empty;
 
+            if (gdb == null)
+                return gdbPath; // Empty
+
             ArcGIS.Core.Data.FileGeodatabaseConnectionPath fgdbcp = gdb.GetConnector() as
                 ArcGIS.Core.Data.FileGeodatabaseConnectionPath;
 
@@ -287,6 +290,9 @@ namespace ProSymbolEditor
         {
             // Default to point 
             GeometryType geometryType = GeometryType.Point;
+
+            if (string.IsNullOrEmpty(tags))
+                return geometryType; // default
 
             // Get the geometry type off a tag on the symbol 
             // TRICKY: geometry will be tags[-3] in the tags list 

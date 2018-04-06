@@ -37,7 +37,10 @@ namespace ProSymbolEditor
         public SelectedFeature(BasicFeatureLayer featureLayer, long objectId)
         {
             FeatureLayer = featureLayer;
-            FeatureLayerName = featureLayer.Name;
+
+            if (featureLayer != null)
+                FeatureLayerName = featureLayer.Name;
+
             ObjectId = objectId;
         }
 

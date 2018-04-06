@@ -110,6 +110,9 @@ namespace ProSymbolEditor
 
         public string GetFeatureClassFromMapping(DisplayAttributes displayAttributes, GeometryType geometryType)
         {
+            if (displayAttributes == null)
+                return string.Empty;
+
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
                 return GetFeatureClassFromExtendedFunctionCode(displayAttributes.ExtendedFunctionCode, geometryType);

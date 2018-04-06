@@ -291,7 +291,9 @@ namespace ProSymbolEditor
 
             // If the Addin has been opened while there is already a Military Overlay loaded, set the state/standard
             if (MapView.Active != null)
-                Initialize();
+                QueuedTask.Run(async () => {
+                    await Initialize();
+                });           
         }
 
         #region General Add-In Getters/Setters
@@ -671,11 +673,13 @@ namespace ProSymbolEditor
                         // 1: Multiple Maps are open
                         // 2: Trying to flash a feature that is selected on another map, that is not the active map
                         MapView.Active.FlashFeature(_selectedSelectedFeature.FeatureLayer, _selectedSelectedFeature.ObjectId);
-                        CreateSymbolSetFromFieldValuesAsync();
+                        QueuedTask.Run(async () => {
+                            await CreateSymbolSetFromFieldValuesAsync();
+                        });
                     }
                     catch (Exception exception)
                     {
-                        System.Diagnostics.Debug.WriteLine(exception.ToString());
+                        System.Diagnostics.Trace.WriteLine("Exception in SelectedSelectedFeature: " + exception.Message);
                     }
                 }
                 else
