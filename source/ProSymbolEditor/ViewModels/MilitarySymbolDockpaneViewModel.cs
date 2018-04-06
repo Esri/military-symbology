@@ -675,7 +675,7 @@ namespace ProSymbolEditor
                         // 1: Multiple Maps are open
                         // 2: Trying to flash a feature that is selected on another map, that is not the active map
                         MapView.Active.FlashFeature(_selectedSelectedFeature.FeatureLayer, _selectedSelectedFeature.ObjectId);
-                        QueuedTask.Run(async () => {
+                        ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(async () => {
                             await CreateSymbolSetFromFieldValuesAsync();
                         });
                     }
