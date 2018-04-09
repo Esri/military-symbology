@@ -78,8 +78,10 @@ namespace ProSymbolEditor
         {
             get
             {
-                return @"Resources\Dictionaries\"
-             + MilitaryStyleName + Path.DirectorySeparatorChar + MilitaryStyleName + ".stylx";
+                return "Resources" + Path.DirectorySeparatorChar +
+                    "Dictionaries" + Path.DirectorySeparatorChar +
+                    MilitaryStyleName + Path.DirectorySeparatorChar + 
+                    MilitaryStyleName + ".stylx";
             }
         }
 
@@ -291,7 +293,9 @@ namespace ProSymbolEditor
 
             // If the Addin has been opened while there is already a Military Overlay loaded, set the state/standard
             if (MapView.Active != null)
-                Initialize();
+                QueuedTask.Run(async () => {
+                    await Initialize();
+                });           
         }
 
         #region General Add-In Getters/Setters
@@ -671,11 +675,13 @@ namespace ProSymbolEditor
                         // 1: Multiple Maps are open
                         // 2: Trying to flash a feature that is selected on another map, that is not the active map
                         MapView.Active.FlashFeature(_selectedSelectedFeature.FeatureLayer, _selectedSelectedFeature.ObjectId);
-                        CreateSymbolSetFromFieldValuesAsync();
+                        ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(async () => {
+                            await CreateSymbolSetFromFieldValuesAsync();
+                        });
                     }
                     catch (Exception exception)
                     {
-                        System.Diagnostics.Debug.WriteLine(exception.ToString());
+                        System.Diagnostics.Trace.WriteLine("Exception in SelectedSelectedFeature: " + exception.Message);
                     }
                 }
                 else
@@ -1231,6 +1237,10 @@ namespace ProSymbolEditor
                             continue;
                         Geodatabase geodatabase = datastore as Geodatabase;
 
+                        // Should not happen, since only looping though gdb project items, but just in case
+                        if (geodatabase == null)
+                            continue;
+
                         //Find the correct gdb for the one with the complete schema
                         string geodatabasePath = gdbProjectItem.Path;
                         if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
@@ -1645,6 +1655,13 @@ namespace ProSymbolEditor
 
                 // Get CIM layer definition
                 var layerDef = targetLayer.GetDefinition() as CIMFeatureLayer;
+
+                if (layerDef == null)
+                {
+                    success = false; // error
+                    return;
+                }
+
                 // Get all templates on this layer
                 var layerTemplates = layerDef.FeatureTemplates.ToList();
                
@@ -2032,6 +2049,10 @@ namespace ProSymbolEditor
                                     continue;
                             Geodatabase geodatabase = datastore as Geodatabase;
 
+                            // Should not happen, since only looping though gdb project items, but just in case
+                            if (geodatabase == null)
+                                continue;
+
                             string geodatabasePath = gdbProjectItem.Path;
                             if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
                             {
@@ -2041,7 +2062,6 @@ namespace ProSymbolEditor
                                     // if an SDE/EGDB, then feature class name format will differ:
                                     // Database. + User. + Feature Class Name 
                                     DatabaseConnectionProperties dbcps = geodatabase.GetConnector() as DatabaseConnectionProperties;
-
                                     if (dbcps != null)
                                     {
                                         _currentFeatureClassName = dbcps.Database + "." + dbcps.User + "." + _currentFeatureClassName;
@@ -2149,6 +2169,10 @@ namespace ProSymbolEditor
                             if (datastore is UnknownDatastore)
                                 continue;
                             Geodatabase geodatabase = datastore as Geodatabase;
+
+                            // Should not happen, since only looping though gdb project items, but just in case
+                            if (geodatabase == null)
+                                continue;
 
                             string geodatabasePath = gdbProjectItem.Path;
                             if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
@@ -2377,7 +2401,8 @@ namespace ProSymbolEditor
             SymbolAttributeSet set = item as SymbolAttributeSet;
 
             // filter out those who standard version doesn't match
-            if (set.StandardVersion != ProSymbolUtilities.StandardString)
+            if ((set == null) || 
+                (set.StandardVersion != ProSymbolUtilities.StandardString))
             {
                 return false;
             }

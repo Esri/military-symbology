@@ -77,24 +77,6 @@ namespace ProSymbolEditor
             get { return " : "; }
         }
 
-        public static BitmapImage BitMapToBitmapImage(System.Drawing.Bitmap source)
-        {
-            BitmapImage bitmapImage = new BitmapImage();
-
-            using (MemoryStream memory = new MemoryStream())
-            {
-                source.Save(memory, ImageFormat.Png);
-                memory.Position = 0;
-               
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = memory;
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-            }
-
-            return bitmapImage;
-        }
-
         public static string AddinAssemblyLocation()
         {
             var asm = System.Reflection.Assembly.GetExecutingAssembly();
@@ -233,6 +215,9 @@ namespace ProSymbolEditor
         {
             string gdbPath = string.Empty;
 
+            if (gdb == null)
+                return gdbPath; // Empty
+
             ArcGIS.Core.Data.FileGeodatabaseConnectionPath fgdbcp = gdb.GetConnector() as
                 ArcGIS.Core.Data.FileGeodatabaseConnectionPath;
 
@@ -287,6 +272,9 @@ namespace ProSymbolEditor
         {
             // Default to point 
             GeometryType geometryType = GeometryType.Point;
+
+            if (string.IsNullOrEmpty(tags))
+                return geometryType; // default
 
             // Get the geometry type off a tag on the symbol 
             // TRICKY: geometry will be tags[-3] in the tags list 
