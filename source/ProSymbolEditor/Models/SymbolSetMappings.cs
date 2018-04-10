@@ -84,6 +84,9 @@ namespace ProSymbolEditor
 
         public string GetFeatureClassFromSymbolSet(string symbolSet, GeometryType geometryType)
         {
+            if (string.IsNullOrEmpty(symbolSet))
+                return "Units";
+
             foreach (SymbolSetMapping mapping in _symbolSetMappings2525D)
             {
                 if ((mapping.SymbolSetOrRegex == symbolSet) && (mapping.GeometryType == geometryType))
@@ -96,6 +99,9 @@ namespace ProSymbolEditor
 
         public string GetFeatureClassFromExtendedFunctionCode(string extendedFunctionCode, GeometryType geometryType)
         {
+            if (string.IsNullOrEmpty(extendedFunctionCode))
+                return "Units";
+
             foreach (SymbolSetMapping mapping in _symbolSetMappings2525C)
             {
                 if (System.Text.RegularExpressions.Regex.IsMatch(extendedFunctionCode, mapping.SymbolSetOrRegex) &&
