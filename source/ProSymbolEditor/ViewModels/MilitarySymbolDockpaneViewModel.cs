@@ -2460,6 +2460,8 @@ namespace ProSymbolEditor
                         await AddLayerPackageToMapAsync();
                         // Reselect this style item onced the layer package is added
                         SelectedStyleItem = _savedStyleItem;
+                        // Save the project with the layer package added
+                        ProSymbolUtilities.SaveProject();
                     }
                     else
                     {
@@ -2485,21 +2487,23 @@ namespace ProSymbolEditor
             {
                 _progressDialog.Show();
 
+                bool enabled = false;
+
                 await QueuedTask.Run(async () =>
                 {
                     // "MilitaryOverlay-{standard}.lpkx"
                     string layerFileName = "MilitaryOverlay-" + ProSymbolUtilities.StandardString.ToLower() + ".lpkx";
                     LayerFactory.Instance.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
                     Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
-                    bool enabled = await isEnabledMethod;
+                    enabled = await isEnabledMethod;
 
                     if (enabled)
                         StatusMessage = "Military Layers Added";
                     else
                         StatusMessage = "Addin Not Enabled";
-
-                    _progressDialog.Hide();
                 });
+
+                _progressDialog.Hide();
             }
             catch (Exception exception)
             {

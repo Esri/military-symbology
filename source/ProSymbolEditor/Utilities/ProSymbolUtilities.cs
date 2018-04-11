@@ -229,25 +229,41 @@ namespace ProSymbolEditor
             return gdbPath;
         }
 
-        public static bool ClearMapSelection()
+        public static bool ExecuteBuiltinCommand(string commandId)
         {
             bool success = false;
 
-            // Note: Must be called on UI Thread
+            // Important/Note: Must be called on UI Thread (i.e. from a button or tool)
             ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(() =>
             {
-                // Clear the feature selection using the built-in Pro button/command
-                ArcGIS.Desktop.Framework.IPlugInWrapper wrapper = 
-                    ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper("esri_mapping_clearSelectionButton");
+                // Use the built-in Pro button/command
+                ArcGIS.Desktop.Framework.IPlugInWrapper wrapper =
+                    ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper(commandId);
                 var command = wrapper as System.Windows.Input.ICommand;
                 if ((command != null) && command.CanExecute(null))
                 {
                     command.Execute(null);
                     success = true;
                 }
+                else
+                {
+                    System.Diagnostics.Trace.WriteLine("Warning - unable to execute command: " + commandId);
+                }
             });
 
             return success;
+        }
+
+        public static bool SaveProject()
+        {
+            // Save the project using the built-in Pro button/command
+            return ExecuteBuiltinCommand("esri_core_saveProjectButton");
+        }
+
+        public static bool ClearMapSelection()
+        {
+            // Clear the feature selection using the built-in Pro button/command
+            return ExecuteBuiltinCommand("esri_mapping_clearSelectionButton");
         }
 
         public static string TagsToSymbolName(string tags)
