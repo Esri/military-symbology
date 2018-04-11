@@ -293,7 +293,7 @@ namespace ProSymbolEditor
 
             // If the Addin has been opened while there is already a Military Overlay loaded, set the state/standard
             if (MapView.Active != null)
-                QueuedTask.Run(async () => {
+                ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(async () => {
                     await Initialize();
                 });           
         }
