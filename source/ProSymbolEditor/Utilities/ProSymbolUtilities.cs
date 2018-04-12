@@ -254,10 +254,13 @@ namespace ProSymbolEditor
             return success;
         }
 
-        public static bool SaveProject()
+        public static void SaveProject()
         {
-            // Save the project using the built-in Pro button/command
-            return ExecuteBuiltinCommand("esri_core_saveProjectButton");
+            // Note: Must be called on Main/UI Thread
+            ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(async() =>
+            {
+                bool success = await ArcGIS.Desktop.Core.Project.Current.SaveAsync();
+            });
         }
 
         public static bool ClearMapSelection()

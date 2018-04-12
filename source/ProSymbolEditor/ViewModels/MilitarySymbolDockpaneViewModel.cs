@@ -2458,10 +2458,10 @@ namespace ProSymbolEditor
                     if (MapView.Active != null)
                     {
                         await AddLayerPackageToMapAsync();
-                        // Reselect this style item onced the layer package is added
-                        SelectedStyleItem = _savedStyleItem;
                         // Save the project with the layer package added
                         ProSymbolUtilities.SaveProject();
+                        // Reselect this style item onced the layer package is added
+                        SelectedStyleItem = _savedStyleItem;
                     }
                     else
                     {
