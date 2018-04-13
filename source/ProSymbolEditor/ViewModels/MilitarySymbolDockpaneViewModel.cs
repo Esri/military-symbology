@@ -1783,6 +1783,10 @@ namespace ProSymbolEditor
                 //Toggle all down
                 AddToMapToolEnabled = true;
                 SelectToolEnabled = false;
+
+                // Just in case this tool has been activated from the favorites tab
+                // in a new project, check for the required data model
+                ShowAddInNotEnabledMessageBox();
             }
             else if (args.CurrentID == "ProSymbolEditor_SelectionMapTool")
             {
