@@ -153,7 +153,8 @@ namespace ProSymbolEditor
         private bool _selectToolEnabled = false;
         private Visibility _pointCoordinateVisibility;
         private Visibility _polyCoordinateVisibility;
-        private ProgressDialog _progressDialog;
+        private ProgressDialog _progressDialogLoad;
+        private ProgressDialog _progressDialogSearch;
         private ICollectionView _favoritesView;
         private string _favoritesSearchFilter = "";
         private bool _isEditing = false;
@@ -285,7 +286,8 @@ namespace ProSymbolEditor
             SelectedFeaturesCollection = new ObservableCollection<SelectedFeature>();
             BindingOperations.EnableCollectionSynchronization(SelectedFeaturesCollection, _lock);
 
-            _progressDialog = new ProgressDialog("Loading...");
+            _progressDialogLoad = new ProgressDialog("Loading...");
+            _progressDialogSearch = new ProgressDialog("Searching...");
 
             //Load saved favorites
             _favoritesFilePath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "SymbolFavorites.json");
@@ -1166,7 +1168,7 @@ namespace ProSymbolEditor
 
             ResultCount = "---";
 
-            _progressDialog.Show();
+            _progressDialogSearch.Show();
             await SearchSymbols();
 
             //Check for Schema again
@@ -1193,12 +1195,14 @@ namespace ProSymbolEditor
             string message = String.Empty;
             bool creationResult = false;
 
-            // WARNING HERE IF: the feature class is in the Project BUT *NOT* in Active Map/View
+            // TODO: may need to enable this 
+            // Check again for schema just in case user said "No" at Add Schema Form
+            // ShowAddInNotEnabledMessageBox();
 
-            Task<bool> isLayerInActiveViewMethod =
+            // WARNING HERE IF: the feature class is in the Project BUT *NOT* in Active Map/View
+            bool isLayerInActiveView = await 
                 ProSymbolEditorModule.Current.MilitaryOverlaySchema.IsGDBAndFeatureClassInActiveView(
                     _currentFeatureClassName);
-            bool isLayerInActiveView = await isLayerInActiveViewMethod;
 
             if (!isLayerInActiveView)
             {
@@ -2382,7 +2386,7 @@ namespace ProSymbolEditor
 
                 _styleItems = combinedSymbols;
 
-                _progressDialog.Hide();
+                _progressDialogSearch.Hide();
                 ResultCount = combinedSymbols.Count.ToString();
             });
         }
@@ -2445,11 +2449,17 @@ namespace ProSymbolEditor
             MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
-        private void ShowAddInNotEnabledMessageBox()
+        private async void ShowAddInNotEnabledMessageBox()
         {
+            // First check if is already enabled
+            bool isEnabled = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+            if (isEnabled)
+                return;
+
+            // If not enabled see if schema should be added
             SelectedStyleItem = null;
 
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
+            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
             {
                 string message = "The " + ProSymbolUtilities.StandardLabel +
                     " Military Overlay schema is not detected in any database in your project," +
@@ -2489,7 +2499,7 @@ namespace ProSymbolEditor
         {
             try
             {
-                _progressDialog.Show();
+                _progressDialogLoad.Show();
 
                 bool enabled = false;
 
@@ -2507,7 +2517,7 @@ namespace ProSymbolEditor
                         StatusMessage = "Addin Not Enabled";
                 });
 
-                _progressDialog.Hide();
+                _progressDialogLoad.Hide();
             }
             catch (Exception exception)
             {
