@@ -126,6 +126,7 @@ namespace ProSymbolEditor
         private SymbolStyleItem _savedStyleItem = null;
         private SelectedFeature _selectedSelectedFeature = null;
         private SymbolAttributeSet _selectedFavoriteSymbol = null;
+        private SymbolAttributeSet _savedSelectedFavoriteSymbol = null;
         private SymbolAttributeSet _editSelectedFeatureSymbol = null;
         private SymbolSetMappings _symbolSetMappings = new SymbolSetMappings();
 
@@ -725,6 +726,8 @@ namespace ProSymbolEditor
                     }
 
                     IsFavoriteItemSelected = true;
+
+                    _savedSelectedFavoriteSymbol = _selectedFavoriteSymbol;
 
                     ClearSearchSelection();
                 }
@@ -2456,9 +2459,14 @@ namespace ProSymbolEditor
             if (isEnabled)
                 return;
 
-            // If not enabled see if schema should be added
-            SelectedStyleItem = null;
+            // Clear the selected entries so they can be reselected after the schema adds
+            // (they will not fully initialize without a valid schema)
+            if (SelectedTabIndex == 0)
+                SelectedStyleItem = null;
+            else if (SelectedTabIndex == 2)
+                SelectedFavoriteSymbol = null;
 
+            // If not enabled see if schema should be added
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
             {
                 string message = "The " + ProSymbolUtilities.StandardLabel +
@@ -2475,7 +2483,10 @@ namespace ProSymbolEditor
                         // Save the project with the layer package added
                         ProSymbolUtilities.SaveProject();
                         // Reselect this style item onced the layer package is added
-                        SelectedStyleItem = _savedStyleItem;
+                        if (SelectedTabIndex == 0)
+                            SelectedStyleItem = _savedStyleItem;
+                        else if (SelectedTabIndex == 2)
+                            SelectedFavoriteSymbol = _savedSelectedFavoriteSymbol;
                     }
                     else
                     {
