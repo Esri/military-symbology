@@ -78,8 +78,10 @@ namespace ProSymbolEditor
         {
             get
             {
-                return @"Resources\Dictionaries\"
-             + MilitaryStyleName + Path.DirectorySeparatorChar + MilitaryStyleName + ".stylx";
+                return "Resources" + Path.DirectorySeparatorChar +
+                    "Dictionaries" + Path.DirectorySeparatorChar +
+                    MilitaryStyleName + Path.DirectorySeparatorChar + 
+                    MilitaryStyleName + ".stylx";
             }
         }
 
@@ -124,6 +126,7 @@ namespace ProSymbolEditor
         private SymbolStyleItem _savedStyleItem = null;
         private SelectedFeature _selectedSelectedFeature = null;
         private SymbolAttributeSet _selectedFavoriteSymbol = null;
+        private SymbolAttributeSet _savedSelectedFavoriteSymbol = null;
         private SymbolAttributeSet _editSelectedFeatureSymbol = null;
         private SymbolSetMappings _symbolSetMappings = new SymbolSetMappings();
 
@@ -151,7 +154,8 @@ namespace ProSymbolEditor
         private bool _selectToolEnabled = false;
         private Visibility _pointCoordinateVisibility;
         private Visibility _polyCoordinateVisibility;
-        private ProgressDialog _progressDialog;
+        private ProgressDialog _progressDialogLoad;
+        private ProgressDialog _progressDialogSearch;
         private ICollectionView _favoritesView;
         private string _favoritesSearchFilter = "";
         private bool _isEditing = false;
@@ -283,7 +287,8 @@ namespace ProSymbolEditor
             SelectedFeaturesCollection = new ObservableCollection<SelectedFeature>();
             BindingOperations.EnableCollectionSynchronization(SelectedFeaturesCollection, _lock);
 
-            _progressDialog = new ProgressDialog("Loading...");
+            _progressDialogLoad = new ProgressDialog("Loading...");
+            _progressDialogSearch = new ProgressDialog("Searching...");
 
             //Load saved favorites
             _favoritesFilePath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "SymbolFavorites.json");
@@ -291,7 +296,9 @@ namespace ProSymbolEditor
 
             // If the Addin has been opened while there is already a Military Overlay loaded, set the state/standard
             if (MapView.Active != null)
-                Initialize();
+                ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(async () => {
+                    await Initialize();
+                });           
         }
 
         #region General Add-In Getters/Setters
@@ -671,11 +678,13 @@ namespace ProSymbolEditor
                         // 1: Multiple Maps are open
                         // 2: Trying to flash a feature that is selected on another map, that is not the active map
                         MapView.Active.FlashFeature(_selectedSelectedFeature.FeatureLayer, _selectedSelectedFeature.ObjectId);
-                        CreateSymbolSetFromFieldValuesAsync();
+                        ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(async () => {
+                            await CreateSymbolSetFromFieldValuesAsync();
+                        });
                     }
                     catch (Exception exception)
                     {
-                        System.Diagnostics.Debug.WriteLine(exception.ToString());
+                        System.Diagnostics.Trace.WriteLine("Exception in SelectedSelectedFeature: " + exception.Message);
                     }
                 }
                 else
@@ -717,6 +726,8 @@ namespace ProSymbolEditor
                     }
 
                     IsFavoriteItemSelected = true;
+
+                    _savedSelectedFavoriteSymbol = _selectedFavoriteSymbol;
 
                     ClearSearchSelection();
                 }
@@ -1130,9 +1141,9 @@ namespace ProSymbolEditor
                 }
             }
             else
-            {   
+            {
                 // Something went wrong, alert user           
-                MessageBox.Show(message);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message);
             }
         }
             
@@ -1160,7 +1171,7 @@ namespace ProSymbolEditor
 
             ResultCount = "---";
 
-            _progressDialog.Show();
+            _progressDialogSearch.Show();
             await SearchSymbols();
 
             //Check for Schema again
@@ -1187,12 +1198,14 @@ namespace ProSymbolEditor
             string message = String.Empty;
             bool creationResult = false;
 
-            // WARNING HERE IF: the feature class is in the Project BUT *NOT* in Active Map/View
+            // TODO: may need to enable this 
+            // Check again for schema just in case user said "No" at Add Schema Form
+            // ShowAddInNotEnabledMessageBox();
 
-            Task<bool> isLayerInActiveViewMethod =
+            // WARNING HERE IF: the feature class is in the Project BUT *NOT* in Active Map/View
+            bool isLayerInActiveView = await 
                 ProSymbolEditorModule.Current.MilitaryOverlaySchema.IsGDBAndFeatureClassInActiveView(
                     _currentFeatureClassName);
-            bool isLayerInActiveView = await isLayerInActiveViewMethod;
 
             if (!isLayerInActiveView)
             {
@@ -1220,7 +1233,7 @@ namespace ProSymbolEditor
             }
 
             IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
-            await QueuedTask.Run(() =>
+            await QueuedTask.Run(async () =>
             {
                 foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
                 {
@@ -1230,6 +1243,10 @@ namespace ProSymbolEditor
                         if (datastore is UnknownDatastore)
                             continue;
                         Geodatabase geodatabase = datastore as Geodatabase;
+
+                        // Should not happen, since only looping though gdb project items, but just in case
+                        if (geodatabase == null)
+                            continue;
 
                         //Find the correct gdb for the one with the complete schema
                         string geodatabasePath = gdbProjectItem.Path;
@@ -1262,12 +1279,8 @@ namespace ProSymbolEditor
                                     }
                                 }, featureClass);
 
-                                var task = editOperation.ExecuteAsync();
+                                creationResult = await editOperation.ExecuteAsync();
 
-                                // TODO/Potential Bug: 
-                                // if the operation fails (ex. for "spatial index invalid")
-                                // this method does not return:
-                                creationResult = task.Result;
                                 if (!creationResult)
                                 {
                                     message = editOperation.ErrorMessage;
@@ -1282,7 +1295,7 @@ namespace ProSymbolEditor
 
             if (!creationResult)
             {
-                MessageBox.Show(message);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message);
             }
         }
 
@@ -1517,7 +1530,8 @@ namespace ProSymbolEditor
 
                 SymbolAttributeSet.DisplayAttributes.ExtendedFunctionCode = loadSet.DisplayAttributes.ExtendedFunctionCode;
 
-                _currentFeatureClassName = _symbolSetMappings.GetFeatureClassFromMapping(
+                _currentFeatureClassName = 
+                    _symbolSetMappings.GetFeatureClassFromMapping(
                     _symbolAttributeSet.DisplayAttributes, GeometryType);
 
                 if (!string.IsNullOrEmpty(_currentFeatureClassName))
@@ -1649,6 +1663,13 @@ namespace ProSymbolEditor
 
                 // Get CIM layer definition
                 var layerDef = targetLayer.GetDefinition() as CIMFeatureLayer;
+
+                if (layerDef == null)
+                {
+                    success = false; // error
+                    return;
+                }
+
                 // Get all templates on this layer
                 var layerTemplates = layerDef.FeatureTemplates.ToList();
                
@@ -1769,6 +1790,10 @@ namespace ProSymbolEditor
                 //Toggle all down
                 AddToMapToolEnabled = true;
                 SelectToolEnabled = false;
+
+                // Just in case this tool has been activated from the favorites tab
+                // in a new project, check for the required data model
+                ShowAddInNotEnabledMessageBox();
             }
             else if (args.CurrentID == "ProSymbolEditor_SelectionMapTool")
             {
@@ -1805,18 +1830,17 @@ namespace ProSymbolEditor
 
             SelectedFeaturesCollection.Clear();
 
+            string symbolSetFieldName = "symbolset";
+            string symbolEntityFieldName = "symbolentity";
+
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            {
+                symbolSetFieldName = "extendedfunctioncode";
+                symbolEntityFieldName = ""; // not used
+            }
+
             foreach (KeyValuePair<BasicFeatureLayer, List<long>> kvp in selectedFeatures)
             {
-
-                string symbolSetFieldName = "symbolset";
-                string symbolEntityFieldName = "symbolentity";
-
-                if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-                {
-                    symbolSetFieldName = "extendedfunctioncode";
-                    symbolEntityFieldName = ""; // not used
-                }
-
                 await QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == symbolSetFieldName);
@@ -1866,17 +1890,23 @@ namespace ProSymbolEditor
                         {
                             SelectedFeature newSelectedFeature = new SelectedFeature(kvp.Key, id);
 
-                            string symbolSetString = row[symbolSetFieldName].ToString();
-                            foreach (KeyValuePair<object, string> symbolSetKeyValuePair in symbolSetDomainSortedList)
+                            if ((row.FindField(symbolSetFieldName) >=0) &&
+                                ( row[symbolSetFieldName] != null))
                             {
-                                if (symbolSetKeyValuePair.Key.ToString() == symbolSetString)
+                                string symbolSetString = row[symbolSetFieldName].ToString();
+                                foreach (KeyValuePair<object, string> symbolSetKeyValuePair in symbolSetDomainSortedList)
                                 {
-                                    newSelectedFeature.SymbolSetName = symbolSetKeyValuePair.Value;
-                                    break;
+                                    if (symbolSetKeyValuePair.Key.ToString() == symbolSetString)
+                                    {
+                                        newSelectedFeature.SymbolSetName = symbolSetKeyValuePair.Value;
+                                        break;
+                                    }
                                 }
                             }
 
                             if (!string.IsNullOrEmpty(symbolEntityFieldName) && 
+                                (row.FindField(symbolEntityFieldName) >= 0) &&
+                                (row[symbolEntityFieldName] != null) &&                                  
                                 (symbolEntityDomainSortedList !=null))
                             {
                                 string symbolEntityString = row[symbolEntityFieldName].ToString();
@@ -2036,6 +2066,10 @@ namespace ProSymbolEditor
                                     continue;
                             Geodatabase geodatabase = datastore as Geodatabase;
 
+                            // Should not happen, since only looping though gdb project items, but just in case
+                            if (geodatabase == null)
+                                continue;
+
                             string geodatabasePath = gdbProjectItem.Path;
                             if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
                             {
@@ -2045,7 +2079,6 @@ namespace ProSymbolEditor
                                     // if an SDE/EGDB, then feature class name format will differ:
                                     // Database. + User. + Feature Class Name 
                                     DatabaseConnectionProperties dbcps = geodatabase.GetConnector() as DatabaseConnectionProperties;
-
                                     if (dbcps != null)
                                     {
                                         _currentFeatureClassName = dbcps.Database + "." + dbcps.User + "." + _currentFeatureClassName;
@@ -2153,6 +2186,10 @@ namespace ProSymbolEditor
                             if (datastore is UnknownDatastore)
                                 continue;
                             Geodatabase geodatabase = datastore as Geodatabase;
+
+                            // Should not happen, since only looping though gdb project items, but just in case
+                            if (geodatabase == null)
+                                continue;
 
                             string geodatabasePath = gdbProjectItem.Path;
                             if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
@@ -2352,7 +2389,7 @@ namespace ProSymbolEditor
 
                 _styleItems = combinedSymbols;
 
-                _progressDialog.Hide();
+                _progressDialogSearch.Hide();
                 ResultCount = combinedSymbols.Count.ToString();
             });
         }
@@ -2381,7 +2418,8 @@ namespace ProSymbolEditor
             SymbolAttributeSet set = item as SymbolAttributeSet;
 
             // filter out those who standard version doesn't match
-            if (set.StandardVersion != ProSymbolUtilities.StandardString)
+            if ((set == null) || 
+                (set.StandardVersion != ProSymbolUtilities.StandardString))
             {
                 return false;
             }
@@ -2414,11 +2452,22 @@ namespace ProSymbolEditor
             MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
-        private void ShowAddInNotEnabledMessageBox()
+        private async void ShowAddInNotEnabledMessageBox()
         {
-            SelectedStyleItem = null;
+            // First check if is already enabled
+            bool isEnabled = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+            if (isEnabled)
+                return;
 
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
+            // Clear the selected entries so they can be reselected after the schema adds
+            // (they will not fully initialize without a valid schema)
+            if (SelectedTabIndex == 0)
+                SelectedStyleItem = null;
+            else if (SelectedTabIndex == 2)
+                SelectedFavoriteSymbol = null;
+
+            // If not enabled see if schema should be added
+            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
             {
                 string message = "The " + ProSymbolUtilities.StandardLabel +
                     " Military Overlay schema is not detected in any database in your project," +
@@ -2431,8 +2480,13 @@ namespace ProSymbolEditor
                     if (MapView.Active != null)
                     {
                         await AddLayerPackageToMapAsync();
+                        // Save the project with the layer package added
+                        ProSymbolUtilities.SaveProject();
                         // Reselect this style item onced the layer package is added
-                        SelectedStyleItem = _savedStyleItem;
+                        if (SelectedTabIndex == 0)
+                            SelectedStyleItem = _savedStyleItem;
+                        else if (SelectedTabIndex == 2)
+                            SelectedFavoriteSymbol = _savedSelectedFavoriteSymbol;
                     }
                     else
                     {
@@ -2456,7 +2510,9 @@ namespace ProSymbolEditor
         {
             try
             {
-                _progressDialog.Show();
+                _progressDialogLoad.Show();
+
+                bool enabled = false;
 
                 await QueuedTask.Run(async () =>
                 {
@@ -2464,15 +2520,15 @@ namespace ProSymbolEditor
                     string layerFileName = "MilitaryOverlay-" + ProSymbolUtilities.StandardString.ToLower() + ".lpkx";
                     LayerFactory.Instance.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
                     Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
-                    bool enabled = await isEnabledMethod;
+                    enabled = await isEnabledMethod;
 
                     if (enabled)
                         StatusMessage = "Military Layers Added";
                     else
                         StatusMessage = "Addin Not Enabled";
-
-                    _progressDialog.Hide();
                 });
+
+                _progressDialogLoad.Hide();
             }
             catch (Exception exception)
             {

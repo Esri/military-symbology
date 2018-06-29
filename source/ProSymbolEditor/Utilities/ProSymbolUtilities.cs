@@ -77,24 +77,6 @@ namespace ProSymbolEditor
             get { return " : "; }
         }
 
-        public static BitmapImage BitMapToBitmapImage(System.Drawing.Bitmap source)
-        {
-            BitmapImage bitmapImage = new BitmapImage();
-
-            using (MemoryStream memory = new MemoryStream())
-            {
-                source.Save(memory, ImageFormat.Png);
-                memory.Position = 0;
-               
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = memory;
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-            }
-
-            return bitmapImage;
-        }
-
         public static string AddinAssemblyLocation()
         {
             var asm = System.Reflection.Assembly.GetExecutingAssembly();
@@ -233,6 +215,9 @@ namespace ProSymbolEditor
         {
             string gdbPath = string.Empty;
 
+            if (gdb == null)
+                return gdbPath; // Empty
+
             ArcGIS.Core.Data.FileGeodatabaseConnectionPath fgdbcp = gdb.GetConnector() as
                 ArcGIS.Core.Data.FileGeodatabaseConnectionPath;
 
@@ -244,25 +229,44 @@ namespace ProSymbolEditor
             return gdbPath;
         }
 
-        public static bool ClearMapSelection()
+        public static bool ExecuteBuiltinCommand(string commandId)
         {
             bool success = false;
 
-            // Note: Must be called on UI Thread
+            // Important/Note: Must be called on UI Thread (i.e. from a button or tool)
             ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(() =>
             {
-                // Clear the feature selection using the built-in Pro button/command
-                ArcGIS.Desktop.Framework.IPlugInWrapper wrapper = 
-                    ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper("esri_mapping_clearSelectionButton");
+                // Use the built-in Pro button/command
+                ArcGIS.Desktop.Framework.IPlugInWrapper wrapper =
+                    ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper(commandId);
                 var command = wrapper as System.Windows.Input.ICommand;
                 if ((command != null) && command.CanExecute(null))
                 {
                     command.Execute(null);
                     success = true;
                 }
+                else
+                {
+                    System.Diagnostics.Trace.WriteLine("Warning - unable to execute command: " + commandId);
+                }
             });
 
             return success;
+        }
+
+        public static void SaveProject()
+        {
+            // Note: Must be called on Main/UI Thread
+            ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(async() =>
+            {
+                bool success = await ArcGIS.Desktop.Core.Project.Current.SaveAsync();
+            });
+        }
+
+        public static bool ClearMapSelection()
+        {
+            // Clear the feature selection using the built-in Pro button/command
+            return ExecuteBuiltinCommand("esri_mapping_clearSelectionButton");
         }
 
         public static string TagsToSymbolName(string tags)
@@ -287,6 +291,9 @@ namespace ProSymbolEditor
         {
             // Default to point 
             GeometryType geometryType = GeometryType.Point;
+
+            if (string.IsNullOrEmpty(tags))
+                return geometryType; // default
 
             // Get the geometry type off a tag on the symbol 
             // TRICKY: geometry will be tags[-3] in the tags list 

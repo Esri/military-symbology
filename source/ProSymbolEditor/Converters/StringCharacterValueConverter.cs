@@ -26,7 +26,7 @@ namespace ProSymbolEditor
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value == null)
+            if ((value == null) || (parameter == null))
             {
                 return value;
             }

@@ -37,6 +37,7 @@ develop-eggs
 [Bb]in/
 [Oo]bj/
 *.vshost.*
+.vs
 
 #################
 ## Eclipse

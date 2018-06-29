@@ -51,6 +51,7 @@ namespace ProSymbolEditor
             DisplayAttributes.PropertyChanged += Attributes_PropertyChanged;
 
             LabelAttributes = new LabelAttributes();
+            LabelAttributes.PropertyChanged += LabelAttributes_PropertyChanged;
 
             StandardVersion = ProSymbolUtilities.StandardString;
         }
@@ -62,7 +63,7 @@ namespace ProSymbolEditor
 
             SymbolAttributeSet compareObj = obj as SymbolAttributeSet;
 
-            if ((DisplayAttributes == null) || (LabelAttributes == null))
+            if ((compareObj == null) || (DisplayAttributes == null) || (LabelAttributes == null))
                 return false;
 
             return DisplayAttributes.Equals(compareObj.DisplayAttributes)
@@ -75,6 +76,67 @@ namespace ProSymbolEditor
                 return 0;
             else
                 return DisplayAttributes.GetHashCode() ^ LabelAttributes.GetHashCode();
+        }
+
+        [ScriptIgnore]
+        public Dictionary<string, string> AttributesDictionary
+        {
+            get
+            {
+
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+
+                dict.Add("SymbolType", this.Name);
+
+                foreach (var prop in DisplayAttributes.GetType().GetProperties())
+                {
+                    string key = prop.Name;
+                    object value = prop.GetValue(DisplayAttributes, null);
+                    if (value == null)
+                        continue;
+
+                    string valueAsString = value.ToString();
+
+                    // Skip non-value types
+                    if (valueAsString.StartsWith("ProSymbolEditor"))
+                        continue;
+
+                    // If debug needed:
+                    // System.Diagnostics.Trace.WriteLine(string.Format("{0}={1}", key, valueAsString));
+
+                    if (string.IsNullOrEmpty(valueAsString) || dict.ContainsKey(key))
+                        continue;
+
+                    dict.Add(key, valueAsString);
+                }
+
+                foreach (var prop in LabelAttributes.GetType().GetProperties())
+                {
+                    string key = prop.Name;
+                    object value = prop.GetValue(LabelAttributes, null);
+                    if (value == null)
+                        continue;
+
+                    string valueAsString = value.ToString();
+
+                    // Skip non-value types
+                    if (valueAsString.StartsWith("ProSymbolEditor"))
+                        continue;
+
+                    // If debug needed:
+                    // System.Diagnostics.Trace.WriteLine(string.Format("{0}={1}", key, valueAsString));
+
+                    if (string.IsNullOrEmpty(valueAsString) || dict.ContainsKey(key))
+                        continue;
+
+                    dict.Add(key, valueAsString);
+                }
+
+                if (!string.IsNullOrEmpty(StandardVersion))
+                    dict.Add("Standard", StandardVersion);
+
+                return dict;
+            }
         }
 
         #region Getters/Setters
@@ -176,7 +238,7 @@ namespace ProSymbolEditor
 
         private System.Threading.Tasks.Task<System.Windows.Media.ImageSource> GetBitmapImageAsync(Dictionary<string, object> attributes)
         {
-            if (attributes == null)
+            if ((attributes == null) || (attributes.Count == 0))
                 return null;
 
             return ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() => {
@@ -206,6 +268,7 @@ namespace ProSymbolEditor
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Trace.WriteLine("Exception in GetBitmapImageAsync: " + ex.Message);
                     return null;
                 }
              });
@@ -326,6 +389,13 @@ namespace ProSymbolEditor
 
         public void PopulateRowBufferWithAttributes(ref RowBuffer rowBuffer)
         {
+            if (rowBuffer == null)
+            {
+                // not normally possible with ref parameter, but check just in case
+                System.Diagnostics.Debug.WriteLine("Null RowBuffer passed to PopulateRowBufferWithAttributes");
+                return;
+            }
+
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
 
@@ -806,14 +876,24 @@ namespace ProSymbolEditor
             SymbolTags = "";
 
             StandardVersion = ProSymbolUtilities.StandardString;
+
+            NotifyPropertyChanged(() => IsValid);
         }
 
         private void Attributes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             GeneratePreviewSymbol();
 
-            // Tell the XCTK grid to get the updated label for this 
+            // Tell the proprties datagrids to get the updated info
             NotifyPropertyChanged(() => Name);
+            NotifyPropertyChanged(() => AttributesDictionary);
+        }
+
+        private void LabelAttributes_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // Tell the proprties datagrids to get the updated info
+            NotifyPropertyChanged(() => Name);
+            NotifyPropertyChanged(() => AttributesDictionary);
         }
     }
 }

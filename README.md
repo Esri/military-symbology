@@ -43,6 +43,21 @@ A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating m
 
 ## Developers
 
+##### Obtain the Dependent Repositories
+
+* Clone this repository
+* Clone each of the following component repositories *to the same folder location* 
+	* [coordinate-conversion-addin-dotnet](https://github.com/Esri/coordinate-conversion-addin-dotnet)
+* Your local folder structure should now look like:
+
+```
+{Github Clone Location}
++---coordinate-conversion-addin-dotnet
++---military-symbol-editor-addin-wpf
+```
+
+**IMPORTANT NOTE: Because of file name length limitations in Visual Studio, the length of the folder name of {Github Clone Location} should not exceed 80 characters**
+
 * Building
 	* To Build Using Visual Studio 2015
 		* Open and build solution file

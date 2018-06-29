@@ -154,6 +154,7 @@
                                             HorizontalAlignment="Right"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
                                             Background="{Binding Backgound, ElementName=searchSymbolsTextBox}"
                                             Command="{Binding ClearSearchTextCommand}"
                                             Content="X" />
@@ -304,16 +305,17 @@
                                     Width="90"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="{Binding IsStyleItemSelected}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                    </ToggleButton.Style>
+                                </ToggleButton>                                    
                                 <Button
                                     x:Name="modifyButton"
                                     Grid.Column="2"
@@ -379,6 +381,16 @@
                                             VerticalAlignment="Stretch"
                                             ItemsSource="{Binding SelectedFeaturesCollection, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedItem="{Binding SelectedSelectedFeature, Mode=TwoWay}">
+                                            <ListBox.Style>
+                                                <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding SelectedFeaturesCollection.Count}" Value="0">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ListBox.Style>
 
                                             <ListBox.ItemsPanel>
                                                 <ItemsPanelTemplate>
@@ -457,37 +469,25 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid
+                                        <DataGrid 
                                             Grid.Row="1"
                                             Height="150"
-                                            Margin="5,5,5,5"
-                                            AutoGenerateProperties="False"
-                                            Foreground="Black"
-                                            IsCategorized="False"
-                                            IsReadOnly="True"
-                                            SelectedObject="{Binding EditSelectedFeatureSymbol}"
-                                            ShowSearchBox="False"
-                                            ShowSortOptions="False"
-                                            ShowSummary="False">
-                                            <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Name"
-                                                    DisplayOrder="0"
-                                                    TargetProperties="Name" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Display Attributes"
-                                                    DisplayOrder="1"
-                                                    TargetProperties="DisplayAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Label Attributes"
-                                                    DisplayOrder="2"
-                                                    TargetProperties="LabelAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Standard"
-                                                    DisplayOrder="3"
-                                                    TargetProperties="StandardVersion" />
-                                            </xctk:PropertyGrid.PropertyDefinitions>
-                                        </xctk:PropertyGrid>
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding EditSelectedFeatureSymbol.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}" 
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" 
+                                            Visibility="{Binding EditSelectedFeatureSymbol.IsValid, Converter={StaticResource BoolToVis}, FallbackValue=Collapsed}">
+                                            <DataGrid.ToolTip>
+                                                <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                                    <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                                                </ToolTip>
+                                            </DataGrid.ToolTip>                                            
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
 
                                     </Grid>
                                 </StackPanel>
@@ -724,38 +724,25 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid
+                                        <DataGrid 
                                             Grid.Row="1"
                                             Height="150"
-                                            Margin="5,5,5,5"
-                                            AutoGenerateProperties="False"
-                                            Foreground="Black"
-                                            IsCategorized="False"
-                                            IsReadOnly="True"
-                                            SelectedObject="{Binding SelectedFavoriteSymbol}"
-                                            ShowSearchBox="False"
-                                            ShowSortOptions="False"
-                                            ShowSummary="False">
-                                            <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Name"
-                                                    DisplayOrder="0"
-                                                    TargetProperties="Name" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Display Attributes"
-                                                    DisplayOrder="1"
-                                                    TargetProperties="DisplayAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Label Attributes"
-                                                    DisplayOrder="2"
-                                                    TargetProperties="LabelAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Standard"
-                                                    DisplayOrder="3"
-                                                    TargetProperties="StandardVersion" />
-                                            </xctk:PropertyGrid.PropertyDefinitions>
-                                        </xctk:PropertyGrid>
-
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding SelectedFavoriteSymbol.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}" 
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" >
+                                            <DataGrid.ToolTip>
+                                                <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                                    <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                                                </ToolTip>
+                                            </DataGrid.ToolTip>
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        
                                     </Grid>
                                 </StackPanel>
                             </ScrollViewer>
@@ -792,15 +779,16 @@
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                                <ToggleButton.Style>
+                                    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                </ToggleButton.Style>
+                                </ToggleButton>
                                 <Button
                                     Grid.Row="0"
                                     Grid.Column="3"
@@ -1155,38 +1143,24 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid
+                                        <DataGrid 
                                             Grid.Row="1"
                                             Height="150"
-                                            Margin="5,5,5,5"
-                                            AutoGenerateProperties="False"
-                                            Foreground="Black"
-                                            IsCategorized="False"
-                                            IsReadOnly="True"
-                                            SelectedObject="{Binding SymbolAttributeSet}"
-                                            ShowSearchBox="False"
-                                            ShowSortOptions="False"
-                                            ShowSummary="False"
-                                            ToolTip="{Binding SymbolAttributeSet.Name}">
-                                            <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Name"
-                                                    DisplayOrder="0"
-                                                    TargetProperties="Name" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Display Attributes"
-                                                    DisplayOrder="1"
-                                                    TargetProperties="DisplayAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Label Attributes"
-                                                    DisplayOrder="2"
-                                                    TargetProperties="LabelAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Standard"
-                                                    DisplayOrder="3"
-                                                    TargetProperties="StandardVersion" />
-                                            </xctk:PropertyGrid.PropertyDefinitions>
-                                        </xctk:PropertyGrid>
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding SymbolAttributeSet.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}"
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" >
+                                            <DataGrid.ToolTip>
+                                                <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                                    <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                                                </ToolTip>
+                                            </DataGrid.ToolTip>                                            
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>                                        
 
                                     </Grid>
                                 </StackPanel>
@@ -1221,27 +1195,25 @@
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                    </ToggleButton.Style>
+                                </ToggleButton>                                    
                                 <Button
                                     Grid.Row="0"
                                     Grid.Column="2"
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
-                                    BorderThickness="0.5"
                                     Command="{Binding SaveEditsCommand}"
                                     Content="Save Edits"
-                                    Foreground="Black"
+                                    Style="{DynamicResource Esri_SimpleButton}"
                                     ToolTip="Save Edits"
                                     Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
                                 <Button
@@ -1302,7 +1274,10 @@
                                         <xctk:DateTimePicker
                                             Grid.Row="0"
                                             Grid.Column="1"
-                                            Margin="3,3,3,3"
+                                            Margin="3,3,3,3" 
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
+                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                                            BorderBrush="{DynamicResource Esri_BorderBrush}"
                                             DisplayDefaultValueOnEmptyText="False"
                                             Format="Custom"
                                             FormatString="MMM-dd-yy hh:mm tt"
@@ -1319,15 +1294,14 @@
                                             Grid.Row="1"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
+                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                                            BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
                                             DisplayDefaultValueOnEmptyText="False"
                                             Format="Custom"
                                             FormatString="MMM-dd-yy hh:mm tt"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}"
                                             Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeExpired}" />
-
-                                        <!--<Label Content="Location" Grid.Row="2" Grid.Column="0"/>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Width="170"/>-->
-
                                         <Label
                                             Grid.Row="3"
                                             Grid.Column="0"
@@ -1366,6 +1340,9 @@
                                             Grid.Row="5"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
+                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                                            BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
                                             Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"
                                             Value="{Binding SymbolAttributeSet.LabelAttributes.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <Label
@@ -1551,38 +1528,24 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid
+                                        <DataGrid 
                                             Grid.Row="1"
                                             Height="150"
-                                            Margin="5,5,5,5"
-                                            AutoGenerateProperties="False"
-                                            Foreground="Black"
-                                            IsCategorized="False"
-                                            IsReadOnly="True"
-                                            SelectedObject="{Binding SymbolAttributeSet}"
-                                            ShowSearchBox="False"
-                                            ShowSortOptions="False"
-                                            ShowSummary="False"
-                                            ToolTip="{Binding SymbolAttributeSet.Name}">
-                                            <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Name"
-                                                    DisplayOrder="0"
-                                                    TargetProperties="Name" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Display Attributes"
-                                                    DisplayOrder="1"
-                                                    TargetProperties="DisplayAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Label Attributes"
-                                                    DisplayOrder="2"
-                                                    TargetProperties="LabelAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Standard"
-                                                    DisplayOrder="3"
-                                                    TargetProperties="StandardVersion" />
-                                            </xctk:PropertyGrid.PropertyDefinitions>
-                                        </xctk:PropertyGrid>
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding SymbolAttributeSet.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}" 
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" >
+                                            <DataGrid.ToolTip>
+                                                <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                                    <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                                                </ToolTip>
+                                            </DataGrid.ToolTip>                                            
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
                                     </Grid>
                                 </StackPanel>
                             </ScrollViewer>
@@ -1614,26 +1577,24 @@
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                    </ToggleButton.Style>
+                                </ToggleButton>                                    
                                 <Button
                                     Grid.Column="2"
                                     Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
-                                    BorderThickness="0.5"
                                     Command="{Binding SaveEditsCommand}"
                                     Content="Save Edits"
-                                    Foreground="Black"
+                                    Style="{DynamicResource Esri_SimpleButton}"
                                     ToolTip="Save Edits"
                                     Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
                                 <Button
@@ -1742,38 +1703,25 @@
                                             </Image.ContextMenu>
                                         </Image>
 
-                                        <xctk:PropertyGrid
+                                        <DataGrid 
                                             Grid.Row="1"
                                             Height="150"
-                                            Margin="5,5,5,5"
-                                            AutoGenerateProperties="False"
-                                            Foreground="Black"
-                                            IsCategorized="False"
-                                            IsReadOnly="True"
-                                            SelectedObject="{Binding SymbolAttributeSet}"
-                                            ShowSearchBox="False"
-                                            ShowSortOptions="False"
-                                            ShowSummary="False"
-                                            ToolTip="{Binding SymbolAttributeSet.Name}">
-                                            <xctk:PropertyGrid.PropertyDefinitions>
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Name"
-                                                    DisplayOrder="0"
-                                                    TargetProperties="Name" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Display Attributes"
-                                                    DisplayOrder="1"
-                                                    TargetProperties="DisplayAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Label Attributes"
-                                                    DisplayOrder="2"
-                                                    TargetProperties="LabelAttributes" />
-                                                <xctk:PropertyDefinition
-                                                    DisplayName="Standard"
-                                                    DisplayOrder="3"
-                                                    TargetProperties="StandardVersion" />
-                                            </xctk:PropertyGrid.PropertyDefinitions>
-                                        </xctk:PropertyGrid>
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding SymbolAttributeSet.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}" 
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" >
+                                            <DataGrid.ToolTip>
+                                                <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                                    <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                                                </ToolTip>
+                                            </DataGrid.ToolTip>                                            
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+
                                     </Grid>
                                 </StackPanel>
                             </ScrollViewer>
@@ -1804,25 +1752,24 @@
                                     Width="101"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
-                                    Foreground="Black"
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
-                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" >
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                                    </ToggleButton.Style>
+                                </ToggleButton>                                    
                                 <Button
                                     Grid.Column="2"
                                     Width="101"
                                     Height="24"
                                     HorizontalAlignment="Center"
-                                    Background="White"
-                                    BorderBrush="Black"
-                                    BorderThickness="0.5"
                                     Command="{Binding SaveEditsCommand}"
                                     Content="Save Edits"
+                                    Style="{DynamicResource Esri_SimpleButton}"
                                     ToolTip="Save Edits"
                                     Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
                             </Grid>

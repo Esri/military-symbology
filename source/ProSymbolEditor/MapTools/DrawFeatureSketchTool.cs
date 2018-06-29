@@ -14,7 +14,9 @@
  *   limitations under the License.
  ******************************************************************************/
 
+using System;
 using System.Threading.Tasks;
+
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Desktop.Framework;
@@ -34,6 +36,12 @@ namespace ProSymbolEditor
         {
             //Get view, determine what type of geometry we're editing (polygon or line)
             var symbolDockPaneViewModel = FrameworkApplication.DockPaneManager.Find("ProSymbolEditor_MilitarySymbolDockpane") as MilitarySymbolDockpaneViewModel;
+            if (symbolDockPaneViewModel == null)
+            {
+                base.OnToolMouseDown(e);
+                return;
+            }
+
             if (symbolDockPaneViewModel.GeometryType == GeometryType.Point)
             {
                 SketchType = SketchGeometryType.Point;
@@ -55,6 +63,9 @@ namespace ProSymbolEditor
             //Get the instance of the ViewModel
             var symbolDockPaneViewModel = FrameworkApplication.DockPaneManager.Find("ProSymbolEditor_MilitarySymbolDockpane") as MilitarySymbolDockpaneViewModel;
 
+            if (symbolDockPaneViewModel == null)
+                return Task.FromResult(false);
+
             //Get the map coordinates from the click point and set the property on the ViewModel.
             return QueuedTask.Run(() =>
             {
@@ -65,9 +76,9 @@ namespace ProSymbolEditor
                     symbolDockPaneViewModel.MapGeometry = projectedGeometry;
                     symbolDockPaneViewModel.CreateNewFeatureAsync(null);
                 }
-                catch
+                catch (Exception exception)
                 {
-                    //TODO: Add exception handler
+                    System.Diagnostics.Trace.WriteLine(exception.Message);
                 }
 
                 return true;
