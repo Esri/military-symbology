@@ -1793,10 +1793,10 @@
                         </Button.Template>
                         <Button.Style>
                             <Style TargetType="Button">
-                                <Setter Property="Foreground" Value="Blue" />
+                                <Setter Property="Foreground" Value="{DynamicResource Esri_TextControlBrush}" />
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="true">
-                                        <Setter Property="Foreground" Value="Red" />
+                                        <Setter Property="Foreground" Value="{DynamicResource Esri_TextSelectionHighlightBrush}" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
@@ -1816,10 +1816,10 @@
                         </Button.Template>
                         <Button.Style>
                             <Style TargetType="Button">
-                                <Setter Property="Foreground" Value="Blue" />
+                                <Setter Property="Foreground" Value="{DynamicResource Esri_TextControlBrush}" />
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="true">
-                                        <Setter Property="Foreground" Value="Red" />
+                                        <Setter Property="Foreground" Value="{DynamicResource Esri_TextSelectionHighlightBrush}" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
