@@ -238,6 +238,8 @@ namespace ProSymbolEditor
 
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
             ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEvent.Subscribe(OnMapSelectionChanged);
+            ArcGIS.Desktop.Mapping.Events.LayersRemovedEvent.Subscribe(OnLayersRemoved);
+            ArcGIS.Desktop.Mapping.Events.LayersRemovingEvent.Subscribe(OnLayersRemoving);
 
             //Create locks for variables that are updated in worker threads
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.IdentityDomainValues, _lock);
@@ -1808,10 +1810,63 @@ namespace ProSymbolEditor
             }
         }
 
+        private Task<ArcGIS.Desktop.Mapping.Events.LayersRemovingEventArgs> 
+            OnLayersRemoving(ArcGIS.Desktop.Mapping.Events.LayersRemovingEventArgs args)
+        {
+            foreach (var layer in args.Layers)
+            {
+                if (layer == null) continue;
+
+                if (!string.IsNullOrEmpty(layer.Name) && layer.Name.StartsWith("Military Overlay"))
+                {
+                    string warningMessage = "Removing the required Military Overlay layers will reset the Military Symbol Editor.\n" + 
+                        "Continue?";
+                    Debug.WriteLine(warningMessage);
+                    MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, 
+                        "Remove Military Overlay?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+
+                    if (result.ToString() == "Yes")
+                    {
+                        // Workaround: this event is being called on layer remove
+                        ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEvent.Unsubscribe(OnMapSelectionChanged);
+
+                        resetViewModelState();
+                    }
+                    else
+                    {
+                        args.Cancel = true;
+                        return Task.FromResult<ArcGIS.Desktop.Mapping.Events.LayersRemovingEventArgs>(args);
+                    }
+                }
+            }
+
+            args.Cancel = false;
+            return Task.FromResult<ArcGIS.Desktop.Mapping.Events.LayersRemovingEventArgs>(args);
+        }
+
+        private void OnLayersRemoved(ArcGIS.Desktop.Mapping.Events.LayerEventsArgs args)
+        {
+            foreach (var layer in args.Layers)
+            {
+                if (layer == null) continue;
+
+                if (!string.IsNullOrEmpty(layer.Name) && layer.Name.StartsWith("Military Overlay"))
+                {
+                    string warningMessage = "The required Military Overlay layers have been removed from the active map.\n" +
+                    "The Military Symbol Editor has been reset.";
+                    Debug.WriteLine(warningMessage);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, "Military Overlay Removed", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+                    // Workaround: re-subscribe to this event
+                    ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEvent.Subscribe(OnMapSelectionChanged);
+                }
+            }
+        }
+
         private async void OnMapSelectionChanged(ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEventArgs args)
         {
             // Only allow selection event if addin enabled
-            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.IsMapActiveAndAddInEnabledAsync();
             bool enabled = await isEnabledMethod;
 
             if (!enabled)
