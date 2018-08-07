@@ -1883,7 +1883,7 @@ namespace ProSymbolEditor
         private async void OnMapSelectionChanged(ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEventArgs args)
         {
             // Only allow selection event if addin enabled
-            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.IsMapActiveAndAddInEnabledAsync();
+            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
             bool enabled = await isEnabledMethod;
 
             if (!enabled)
