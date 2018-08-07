@@ -198,6 +198,36 @@ namespace ProSymbolEditor
             return isFeatureClassInActiveView;
         }
 
+        public async Task<bool> AddFeatureClassToActiveView(string featureClassName)
+        {
+            if (string.IsNullOrEmpty(featureClassName) || string.IsNullOrEmpty(DatabaseName))
+                return await Task.FromResult<bool>(false);
+
+            bool layerAdded = false;
+
+            await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+            {
+                string uri = $@"{DatabaseName}\{ProSymbolUtilities.GetDatasetName()}\{featureClassName}";
+                Item currentItem = ItemFactory.Instance.Create(uri);
+                if (LayerFactory.Instance.CanCreateLayerFrom(currentItem))
+                {
+                    FeatureLayer fl = LayerFactory.Instance.CreateLayer(currentItem, 
+                        MapView.Active.Map) as FeatureLayer;
+
+                    if (fl != null)
+                    {
+                        ArcGIS.Core.CIM.CIMDictionaryRenderer dictionaryRenderer =
+                            ProSymbolUtilities.CreateDictionaryRenderer();
+                        fl.SetRenderer(dictionaryRenderer);
+
+                        layerAdded = true;
+                    }
+                }
+            });
+
+            return await Task.FromResult<bool>(layerAdded);
+        }
+
         public bool IsMilitaryOverlayInActiveMap()
         {
             // See if Active Map

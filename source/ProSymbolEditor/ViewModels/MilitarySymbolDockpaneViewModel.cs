@@ -70,7 +70,7 @@ namespace ProSymbolEditor
         {
             get
             {
-                return "mil" + ProSymbolUtilities.StandardString.ToLower();
+                return ProSymbolUtilities.GetDictionaryString();
             }
         }
 
@@ -1215,17 +1215,34 @@ namespace ProSymbolEditor
                 if (string.IsNullOrEmpty(requiredLayerName))
                     requiredLayerName = "{Layer Not Found}";
 
-                string warningMessage = "The required layer is not in the Active Map. " +
-                    " - Required Layer: " + requiredLayerName +
-                    " in Project GDB: " + ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName;
+                // Warning then return
+                // Could not find layer in ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName;
+                string warningMessage = "The required layer is not in the Active Map. \n" +
+                    "Required layer: " + requiredLayerName + ".\n" +
+                    "Add this military overlay layer to the map?";
                 Debug.WriteLine(warningMessage);
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, "Could Not Create New Map Feature", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, 
+                    "Add Layer to Map?", MessageBoxButton.YesNoCancel, 
+                    MessageBoxImage.Exclamation);
 
-                // Warning then return;
-                return;
+                bool continueWithAdd = false;
+                if (result.ToString() == "Yes")
+                {
+                    continueWithAdd = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.AddFeatureClassToActiveView(_currentFeatureClassName);
+                }
+
+                if (!continueWithAdd)
+                {
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                        "Could not create map feature in layer: " + requiredLayerName,
+                        "Could Not Create Map Feature", MessageBoxButton.OK,
+                        MessageBoxImage.Exclamation);
+
+                    return;
+                }
             }
 
-            //Generate geometry if polygon or polyline, if adding new feature is from using coordinates and not the map tool
+            // Generate geometry if polygon or polyline, if adding new feature is from using coordinates and not the map tool
             if (Convert.ToBoolean(parameter) == true)
             {
                 if (GeometryType == GeometryType.Polyline || GeometryType == GeometryType.Polygon)
