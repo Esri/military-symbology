@@ -1215,8 +1215,7 @@ namespace ProSymbolEditor
                 if (string.IsNullOrEmpty(requiredLayerName))
                     requiredLayerName = "{Layer Not Found}";
 
-                // Warning then return
-                // Could not find layer in ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName;
+                // Could not find layer in map - ask to re-add it
                 string warningMessage = "The required layer is not in the Active Map. \n" +
                     "Required layer: " + requiredLayerName + ".\n" +
                     "Add this military overlay layer to the map?";
@@ -1231,6 +1230,7 @@ namespace ProSymbolEditor
                     continueWithAdd = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.AddFeatureClassToActiveView(_currentFeatureClassName);
                 }
 
+                // If user cancelled, or unable to add layer provide warning 
                 if (!continueWithAdd)
                 {
                     ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
