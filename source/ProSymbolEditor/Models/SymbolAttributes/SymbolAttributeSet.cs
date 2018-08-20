@@ -244,7 +244,7 @@ namespace ProSymbolEditor
             return ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() => {
                 try
                 {
-                    string standard = "mil" + ProSymbolUtilities.StandardString.ToLower();
+                    string standard = ProSymbolUtilities.GetDictionaryString();
                     ArcGIS.Core.CIM.CIMSymbol symbol = ArcGIS.Desktop.Mapping.SymbolFactory.Instance.GetDictionarySymbol(standard, attributes);
 
                     if (symbol == null)

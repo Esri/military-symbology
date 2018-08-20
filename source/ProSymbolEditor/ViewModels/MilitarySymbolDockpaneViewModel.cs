@@ -70,7 +70,7 @@ namespace ProSymbolEditor
         {
             get
             {
-                return "mil" + ProSymbolUtilities.StandardString.ToLower();
+                return ProSymbolUtilities.GetDictionaryString();
             }
         }
 
@@ -238,6 +238,8 @@ namespace ProSymbolEditor
 
             ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(OnActiveToolChanged);
             ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEvent.Subscribe(OnMapSelectionChanged);
+            ArcGIS.Desktop.Mapping.Events.LayersRemovedEvent.Subscribe(OnLayersRemoved);
+            ArcGIS.Desktop.Mapping.Events.LayersRemovingEvent.Subscribe(OnLayersRemoving);
 
             //Create locks for variables that are updated in worker threads
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.IdentityDomainValues, _lock);
@@ -1213,17 +1215,34 @@ namespace ProSymbolEditor
                 if (string.IsNullOrEmpty(requiredLayerName))
                     requiredLayerName = "{Layer Not Found}";
 
-                string warningMessage = "The required layer is not in the Active Map. " +
-                    " - Required Layer: " + requiredLayerName +
-                    " in Project GDB: " + ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName;
+                // Could not find layer in map - ask to re-add it
+                string warningMessage = "The required layer is not in the Active Map. \n" +
+                    "Required layer: " + requiredLayerName + ".\n" +
+                    "Add this military overlay layer to the map?";
                 Debug.WriteLine(warningMessage);
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, "Could Not Create New Map Feature", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, 
+                    "Add Layer to Map?", MessageBoxButton.YesNoCancel, 
+                    MessageBoxImage.Exclamation);
 
-                // Warning then return;
-                return;
+                bool continueWithAdd = false;
+                if (result.ToString() == "Yes")
+                {
+                    continueWithAdd = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.AddFeatureClassToActiveView(_currentFeatureClassName);
+                }
+
+                // If user cancelled, or unable to add layer provide warning 
+                if (!continueWithAdd)
+                {
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                        "Could not create map feature in layer: " + requiredLayerName,
+                        "Could Not Create Map Feature", MessageBoxButton.OK,
+                        MessageBoxImage.Exclamation);
+
+                    return;
+                }
             }
 
-            //Generate geometry if polygon or polyline, if adding new feature is from using coordinates and not the map tool
+            // Generate geometry if polygon or polyline, if adding new feature is from using coordinates and not the map tool
             if (Convert.ToBoolean(parameter) == true)
             {
                 if (GeometryType == GeometryType.Polyline || GeometryType == GeometryType.Polygon)
@@ -1805,6 +1824,59 @@ namespace ProSymbolEditor
                 //Disable all toggles
                 AddToMapToolEnabled = false;
                 SelectToolEnabled = false;
+            }
+        }
+
+        private Task<ArcGIS.Desktop.Mapping.Events.LayersRemovingEventArgs> 
+            OnLayersRemoving(ArcGIS.Desktop.Mapping.Events.LayersRemovingEventArgs args)
+        {
+            foreach (var layer in args.Layers)
+            {
+                if (layer == null) continue;
+
+                if (!string.IsNullOrEmpty(layer.Name) && layer.Name.StartsWith("Military Overlay"))
+                {
+                    string warningMessage = "Removing the required Military Overlay layers will reset the Military Symbol Editor.\n" + 
+                        "Continue?";
+                    Debug.WriteLine(warningMessage);
+                    MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, 
+                        "Remove Military Overlay?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+
+                    if (result.ToString() == "Yes")
+                    {
+                        // Workaround: this event is being called on layer remove
+                        ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEvent.Unsubscribe(OnMapSelectionChanged);
+
+                        resetViewModelState();
+                    }
+                    else
+                    {
+                        args.Cancel = true;
+                        return Task.FromResult<ArcGIS.Desktop.Mapping.Events.LayersRemovingEventArgs>(args);
+                    }
+                }
+            }
+
+            args.Cancel = false;
+            return Task.FromResult<ArcGIS.Desktop.Mapping.Events.LayersRemovingEventArgs>(args);
+        }
+
+        private void OnLayersRemoved(ArcGIS.Desktop.Mapping.Events.LayerEventsArgs args)
+        {
+            foreach (var layer in args.Layers)
+            {
+                if (layer == null) continue;
+
+                if (!string.IsNullOrEmpty(layer.Name) && layer.Name.StartsWith("Military Overlay"))
+                {
+                    string warningMessage = "The required Military Overlay layers have been removed from the active map.\n" +
+                    "The Military Symbol Editor has been reset.";
+                    Debug.WriteLine(warningMessage);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, "Military Overlay Removed", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+                    // Workaround: re-subscribe to this event
+                    ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEvent.Subscribe(OnMapSelectionChanged);
+                }
             }
         }
 

@@ -72,6 +72,19 @@ namespace ProSymbolEditor
                 return "2525D";
         }
 
+        public static string GetDictionaryString()
+        {
+            return "mil" + StandardString.ToLower();
+        }
+
+        public static string GetDatasetName()
+        {
+            if (Standard == SupportedStandardsType.mil2525c_b2)
+                return "militaryoverlay2525b2";
+            else
+                return "militaryoverlay2525d";
+        }
+
         public static string NameSeparator
         {
             get { return " : "; }
@@ -319,6 +332,66 @@ namespace ProSymbolEditor
             }
 
             return geometryType;
+        }
+
+        private static Dictionary<string, string> fieldMap2525D =
+            new Dictionary<string, string>()
+        {
+                {"identity", "identity"},
+                {"symbolset", "symbolset"},
+                {"symbolentity", "symbolentity"},
+                {"modifier1", "modifier1"},
+                {"modifier2", "modifier2"},
+                {"echelon", "echelon"},
+                {"indicator", "indicator"},
+                {"context", "context"},
+                {"mobility", "mobility"},
+                {"operationalcondition", "operationalcondition"},
+                {"uniquedesignation", "uniquedesignation"},
+                {"higherformation", "higherformation"},
+                {"additionalinformation", "additionalinformation"}
+        };
+
+        private static Dictionary<string, string> fieldMap2525C_B2 =
+            new Dictionary<string, string>()
+        {
+                {"affiliation", "affiliation"},
+                {"extendedfunctioncode", "extendedfunctioncode"},
+                {"echelonmobility", "echelonmobility"},
+                {"status", "status"},
+                {"hqtffd", "hqtffd"},
+                {"uniquedesignation", "uniquedesignation"},
+                {"higherformation", "higherformation"},
+                {"additionalinformation", "additionalinformation"}
+        };
+
+        public static ArcGIS.Core.CIM.CIMDictionaryRenderer CreateDictionaryRenderer()
+        {
+            Dictionary<string, string> fieldMapDictionary;
+
+            if (Standard == SupportedStandardsType.mil2525c_b2)
+                fieldMapDictionary = fieldMap2525C_B2;
+            else
+                fieldMapDictionary = fieldMap2525D;
+
+            ArcGIS.Core.CIM.CIMStringMap[] stringMap = new ArcGIS.Core.CIM.CIMStringMap[fieldMapDictionary.Count()];
+
+            int count = 0;
+            foreach (KeyValuePair<string, string> pair in fieldMapDictionary)
+            {
+                stringMap[count] = new ArcGIS.Core.CIM.CIMStringMap();
+                stringMap[count].Key   = pair.Key;
+                stringMap[count].Value = pair.Value;
+                count++;
+            }
+
+            ArcGIS.Core.CIM.CIMDictionaryRenderer dictionaryRenderer =
+                new ArcGIS.Core.CIM.CIMDictionaryRenderer();
+
+            dictionaryRenderer.DictionaryName = GetDictionaryString();
+            dictionaryRenderer.FieldMap = stringMap;
+
+            return dictionaryRenderer;
         }
 
     }
