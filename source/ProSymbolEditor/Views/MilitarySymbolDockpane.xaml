@@ -363,11 +363,35 @@
                                                 Grid.Column="1"
                                                 Margin="2,0,0,0"
                                                 Command="{Binding SelectToolCommand}"
-                                                IsChecked="{Binding SelectToolEnabled}">
+                                                IsChecked="{Binding SelectToolEnabled}"
+                                                Focusable="False">
                                                 <Image
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     Source="pack://application:,,,/MilitarySymbolEditor;component/Images/SelectionSelectTool16.png" />
+                                                <ToggleButton.Style>
+                                                    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                                        <Setter Property="Width" Value="20"/>
+                                                        <Setter Property="Height" Value="20"/>
+                                                        <Setter Property="Padding" Value="1"/>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsEnabled" Value="false">
+                                                                <Setter Property="Opacity" Value="0.5"/>
+                                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                                <Setter Property="Background" Value="Transparent"/>
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                                            <ContentPresenter Margin="2" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}" RecognizesAccessKey="True" Content="{TemplateBinding ContentControl.Content}" />
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ToggleButton.Style>
                                             </ToggleButton>
                                         </Grid>
 
