@@ -196,10 +196,9 @@ A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating m
 * [ArcGIS for Defense Downloads](http://appsforms.esri.com/products/download/#ArcGIS_for_Defense)
 * [ArcGIS Solutions Website](http://solutions.arcgis.com/military/)
 * [Military Overlay Template](http://esriurl.com/AFDMilitaryOverlay)
-* [Military Overlay Information Model Template](http://esriurl.com/MilitaryOverlayInformationModel)
 * [ArcGIS Pro Help](http://pro.arcgis.com/en/pro-app/)
 * [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
-* ![Twitter](https://g.twimg.com/twitter-bird-16x16.png)[@EsriDefense](http://twitter.com/EsriDefense)
+
 
 ## Issues
 
@@ -213,16 +212,8 @@ Anyone and everyone is welcome to contribute. Please see our [guidelines for con
 
 ### Repository Points of Contact
 
-##### Primary - [Chris](https://github.com/csmoore)
+##### [Esri Defense Solutions team](defensesolutions@esri.com)
 
-* Merge Pull Requests
-* Creates Releases and Tags
-* Manages Milestones
-* Manages and Assigns Issues
-
-##### Secondary: [Kevin](https://github.com/kgonzago)
-
-* Backup when the Owner is away
 
 ## Credits
 
