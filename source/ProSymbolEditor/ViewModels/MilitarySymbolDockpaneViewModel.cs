@@ -200,6 +200,8 @@ namespace ProSymbolEditor
 
         private async Task Initialize()
         {
+            ProSymbolEditorModule.Current.MilitaryOverlaySchema.Reset();
+
             // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
             bool isEnabled2525C_B2 = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
 
