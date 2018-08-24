@@ -25,6 +25,7 @@ using ArcGIS.Desktop.Catalog;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Core.Geometry;
 
 namespace ProSymbolEditor
 {
@@ -40,6 +41,8 @@ namespace ProSymbolEditor
             _databaseName = string.Empty;
             _egdbConnectionString = string.Empty;
             EGDBPrefixName = string.Empty;
+
+            initializeSymbolSetToFeatureClassMapping();
         }
 
         public string EGDBPrefixName
@@ -74,51 +77,18 @@ namespace ProSymbolEditor
 
             Dictionary<string, bool> featureClassExists = new Dictionary<string, bool>();
 
+            List<SymbolSetMapping> symbolSetMapping = null;
             if (standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-            {
-                // 2525c_b2
-                featureClassExists.Add(EGDBPrefixName + "Activities", false);
-                featureClassExists.Add(EGDBPrefixName + "Air", false);
-                featureClassExists.Add(EGDBPrefixName + "ControlMeasuresAreas", false);
-                featureClassExists.Add(EGDBPrefixName + "ControlMeasuresLines", false);
-                featureClassExists.Add(EGDBPrefixName + "ControlMeasuresPoints", false);
-                featureClassExists.Add(EGDBPrefixName + "Installations", false);
-                featureClassExists.Add(EGDBPrefixName + "LandEquipment", false);
-                featureClassExists.Add(EGDBPrefixName + "METOCAreas", false);
-                featureClassExists.Add(EGDBPrefixName + "METOCLines", false);
-                featureClassExists.Add(EGDBPrefixName + "METOCPoints", false);
-                featureClassExists.Add(EGDBPrefixName + "SeaSubsurface", false);
-                featureClassExists.Add(EGDBPrefixName + "SeaSurface", false);
-                featureClassExists.Add(EGDBPrefixName + "SIGINT", false);
-                featureClassExists.Add(EGDBPrefixName + "Space", false);
-                featureClassExists.Add(EGDBPrefixName + "Units", false);
-            }
+                symbolSetMapping = _symbolSetMapping2525C;
             else
+                symbolSetMapping = _symbolSetMapping2525D;
+
+            foreach (SymbolSetMapping mapping in symbolSetMapping)
             {
-                // 2525d
-                featureClassExists.Add(EGDBPrefixName + "Activities", false);
-                featureClassExists.Add(EGDBPrefixName + "Air", false);
-                featureClassExists.Add(EGDBPrefixName + "AirMissile", false);
-                featureClassExists.Add(EGDBPrefixName + "Civilian", false);
-                featureClassExists.Add(EGDBPrefixName + "ControlMeasuresAreas", false);
-                featureClassExists.Add(EGDBPrefixName + "ControlMeasuresLines", false);
-                featureClassExists.Add(EGDBPrefixName + "ControlMeasuresPoints", false);
-                featureClassExists.Add(EGDBPrefixName + "Cyberspace", false);
-                featureClassExists.Add(EGDBPrefixName + "Installations", false);
-                featureClassExists.Add(EGDBPrefixName + "LandEquipment", false);
-                featureClassExists.Add(EGDBPrefixName + "METOCAreasAtmospheric", false);
-                featureClassExists.Add(EGDBPrefixName + "METOCAreasOceanographic", false);
-                featureClassExists.Add(EGDBPrefixName + "METOCLinesAtmospheric", false);
-                featureClassExists.Add(EGDBPrefixName + "METOCLinesOceanographic", false);
-                featureClassExists.Add(EGDBPrefixName + "METOCPointsAtmospheric", false);
-                featureClassExists.Add(EGDBPrefixName + "METOCPointsOceanographic", false);
-                featureClassExists.Add(EGDBPrefixName + "MineWarfare", false);
-                featureClassExists.Add(EGDBPrefixName + "SeaSubsurface", false);
-                featureClassExists.Add(EGDBPrefixName + "SeaSurface", false);
-                featureClassExists.Add(EGDBPrefixName + "SIGINT", false);
-                featureClassExists.Add(EGDBPrefixName + "Space", false);
-                featureClassExists.Add(EGDBPrefixName + "SpaceMissile", false);
-                featureClassExists.Add(EGDBPrefixName + "Units", false);
+                string featureClassName = EGDBPrefixName + mapping.FeatureClassName;
+
+                if (!featureClassExists.ContainsKey(featureClassName))
+                    featureClassExists.Add(featureClassName, false);
             }
 
             return featureClassExists;
@@ -506,6 +476,86 @@ namespace ProSymbolEditor
             }
 
             return SchemaExists;
+        }
+
+        public static List<SymbolSetMapping> SymbolSetToFeatureClassMapping2525D
+        {
+            get
+            {
+                if (_symbolSetMapping2525D == null)
+                    initializeSymbolSetToFeatureClassMapping();
+
+                return _symbolSetMapping2525D;
+            }
+        }
+        private static List<SymbolSetMapping> _symbolSetMapping2525D = null;
+
+        public static List<SymbolSetMapping> SymbolSetToFeatureClassMapping2525C
+        {
+            get
+            {
+                if (_symbolSetMapping2525C == null)
+                    initializeSymbolSetToFeatureClassMapping();
+
+                return _symbolSetMapping2525C;
+            }
+        }
+        private static List<SymbolSetMapping> _symbolSetMapping2525C = null;
+
+        private static void initializeSymbolSetToFeatureClassMapping()
+        {
+            // IMPORTANT: this is the single list of 
+            // 1. What feature classes are part of the required schema
+            // 2. What symbols map to those feature classes based on feature geometry and 
+            //    other identifying attribute (symbol set for 2525D, SIDC for 2525C)
+
+            // 2525D 
+            _symbolSetMapping2525D = new List<SymbolSetMapping>();
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("Air", GeometryType.Point, "01"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("AirMissile", GeometryType.Point, "02"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("Space", GeometryType.Point, "05"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("SpaceMissile", GeometryType.Point, "06"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("Units", GeometryType.Point, "10"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("Civilian", GeometryType.Point, "11"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("LandEquipment", GeometryType.Point, "15"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("Installations", GeometryType.Point, "20"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("ControlMeasuresPoints", GeometryType.Point, "25"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("ControlMeasuresLines", GeometryType.Polyline, "25"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("ControlMeasuresAreas", GeometryType.Polygon, "25"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("SeaSurface", GeometryType.Point, "30"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("SeaSubsurface", GeometryType.Point, "35"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("MineWarfare", GeometryType.Point, "36"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("Activities", GeometryType.Point, "40"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("METOCPointsAtmospheric", GeometryType.Point, "45"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("METOCLinesAtmospheric", GeometryType.Polyline, "45"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("METOCAreasAtmospheric", GeometryType.Polygon, "45"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("METOCPointsOceanographic", GeometryType.Point, "46"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("METOCLinesOceanographic", GeometryType.Polyline, "46"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("METOCAreasOceanographic", GeometryType.Polygon, "46"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("SIGINT", GeometryType.Point, "50"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("SIGINT", GeometryType.Point, "51"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("SIGINT", GeometryType.Point, "52"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("SIGINT", GeometryType.Point, "53"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("SIGINT", GeometryType.Point, "54"));
+            _symbolSetMapping2525D.Add(new SymbolSetMapping("Cyberspace", GeometryType.Point, "60"));
+
+            // 2525C
+            _symbolSetMapping2525C = new List<SymbolSetMapping>();
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("Air", GeometryType.Point, "^[S].[A].{7,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("Space", GeometryType.Point, "^[S].[P].{7,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("LandEquipment", GeometryType.Point, "^[S].[G].[E].{5,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("Installations", GeometryType.Point, "^[S].[G].[I].{5,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("Units", GeometryType.Point, "^[S].[GF].{7,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("ControlMeasuresPoints", GeometryType.Point, "^[G].{9,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("ControlMeasuresLines", GeometryType.Polyline, "^[G].{9,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("ControlMeasuresAreas", GeometryType.Polygon, "^[G].{9,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("SeaSurface", GeometryType.Point, "^[S].[S].{7,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("SeaSubsurface", GeometryType.Point, "^[S].[U].{7,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("Activities", GeometryType.Point, "^[OE].{9,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("METOCPoints", GeometryType.Point, "^[W].{9,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("METOCLines", GeometryType.Polyline, "^[W].{9,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("METOCAreas", GeometryType.Polygon, "^[W].{9,}"));
+            _symbolSetMapping2525C.Add(new SymbolSetMapping("SIGINT", GeometryType.Point, "^[I].{9,}"));
         }
     }
 }
