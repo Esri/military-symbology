@@ -13,9 +13,10 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  ******************************************************************************/
- 
+
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,8 +34,32 @@ namespace ProSymbolEditor
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml
     /// </summary>
-    public partial class SettingsWindow : ArcGIS.Desktop.Framework.Controls.ProWindow
+    public partial class SettingsWindow : ArcGIS.Desktop.Framework.Controls.ProWindow, INotifyPropertyChanged
     {
+
+        public ProSymbolUtilities.SupportedStandardsType Standard
+        {
+            get
+            {
+                ProSymbolUtilities.SupportedStandardsType standard;
+
+                if (Checked2525C_B2 == true)
+                    standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+                else
+                    standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+
+                return standard;
+            }
+            set
+            {
+                ProSymbolUtilities.SupportedStandardsType standard = value;
+
+                if (standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                    Checked2525C_B2 = true;
+                else
+                    Checked2525D = true;
+            }
+        }
 
         // Radio Button binding special binding case:
         public bool Checked2525D
@@ -59,11 +84,30 @@ namespace ProSymbolEditor
         }
         bool _checked2525C_B2;
 
+        public bool IsSelectDBEnabled
+        {
+            get; set;
+        }
+
+        public string DefaultDatabase
+        {
+            get; set;
+        }
+
+        public bool DefaultDatabaseChanged
+        {
+            get;
+            set;
+        }
+
         public SettingsWindow()
         {
             InitializeComponent();
 
             this.DataContext = this;
+
+            this.DefaultDatabaseChanged = false;
+            this.IsSelectDBEnabled = false;
         }
 
         public void ShowDialog(Window owner)
@@ -76,5 +120,30 @@ namespace ProSymbolEditor
         {
             this.DialogResult = true;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            // or give user the option of selecting workspace:
+            string selectedGDB = ProSymbolUtilities.BrowseItem(ArcGIS.Desktop.Catalog.ItemFilters.geodatabases);
+
+            if (DefaultDatabase != selectedGDB)
+            {
+                DefaultDatabaseChanged = true;
+                DefaultDatabase = selectedGDB;
+
+                RaisePropertyChanged("DefaultDatabase");
+            }
+
+        }
+
+        private void RaisePropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

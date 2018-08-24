@@ -9,27 +9,28 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Application Settings"
     Width="300"
-    Height="300"
+    Height="200"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner"
     WindowState="Normal"
     mc:Ignorable="d">
-  <controls:ProWindow.Resources>
-  <ResourceDictionary>
-    <ResourceDictionary.MergedDictionaries>
-     <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
+    <controls:ProWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-      </ResourceDictionary>
- </controls:ProWindow.Resources>
+        </ResourceDictionary>
+    </controls:ProWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="50*" />
+            <RowDefinition Height="50*" />
+            <RowDefinition Height="40*" />
         </Grid.RowDefinitions>
 
         <StackPanel
             Grid.Row="0"
-            Margin="5,5,5,5"
+            Margin="5,5,5,0"
             VerticalAlignment="Top">
             <Label Content="Default _Symbology Standard:"  />
             <WrapPanel>
@@ -45,24 +46,43 @@
                     IsChecked="{Binding Path=Checked2525C_B2, Mode=TwoWay}" />
             </WrapPanel>
         </StackPanel>
+        <StackPanel Grid.Row="1" Margin="5,5,5,0">
+            <Label Content="Military Overlay _Database:"  />
+            <WrapPanel>
+                <TextBox x:Name="tbDefaultDatabase" Width="233" Text="{Binding Path=DefaultDatabase, Mode=TwoWay}" 
+                         IsEnabled="True" IsReadOnly="True" />
+                <Button x:Name="buttonChangeDB" Width="50"
+                        IsEnabled="{Binding Path=IsSelectDBEnabled, Mode=TwoWay}" 
+                Height="{Binding Height, ElementName=tbDefaultDatabase}"
+                        Margin="{Binding Margin, ElementName=tbDefaultDatabase}"
+                        HorizontalAlignment="Right"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Foreground="{DynamicResource Esri_TextControlBrush}" 
+                        Background="{Binding Backgound, ElementName=tbDefaultDatabase}"
+                        Command="{Binding ClearSearchTextCommand}"
+                        Content="Select" Click="Button_Click" />
+            </WrapPanel>
+        </StackPanel>
+
         <StackPanel
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="5,5,5,5"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
-            Orientation="Horizontal">
+            Orientation="Horizontal" Height="24" Width="160">
             <Button
                 x:Name="ok"
                 Width="70"
                 Margin="10,0,0,0"
                 Click="OkClick"
-                Content="OK"
+                Content="_OK"
                 Style="{DynamicResource Esri_SimpleButton}"
                 IsDefault="True" />
             <Button
                 Width="70"
                 Margin="10,0,0,0"
-                Content="Cancel"
+                Content="_Cancel"
                 Style="{DynamicResource Esri_SimpleButton}"
                 IsCancel="True" />
         </StackPanel>

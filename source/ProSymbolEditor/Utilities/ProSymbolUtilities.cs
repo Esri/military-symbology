@@ -77,14 +77,6 @@ namespace ProSymbolEditor
             return "mil" + StandardString.ToLower();
         }
 
-        public static string GetDatasetName()
-        {
-            if (Standard == SupportedStandardsType.mil2525c_b2)
-                return "militaryoverlay2525b2";
-            else
-                return "militaryoverlay2525d";
-        }
-
         public static string NameSeparator
         {
             get { return " : "; }
@@ -392,6 +384,32 @@ namespace ProSymbolEditor
             dictionaryRenderer.FieldMap = stringMap;
 
             return dictionaryRenderer;
+        }
+
+        public static string BrowseItem(string itemFilter, string initialPath = "")
+        {
+            string itemPath = "";
+
+            if (string.IsNullOrEmpty(initialPath))
+                initialPath = ArcGIS.Desktop.Core.Project.Current.HomeFolderPath;
+
+            ArcGIS.Desktop.Catalog.OpenItemDialog pathDialog =
+                new ArcGIS.Desktop.Catalog.OpenItemDialog()
+                {
+                    Title = "Select Folder",
+                    InitialLocation = initialPath,
+                    MultiSelect = false,
+                    Filter = itemFilter,
+                };
+
+            bool? ok = pathDialog.ShowDialog();
+            if ((ok == true) && (pathDialog.Items.Count() > 0))
+            {
+                IEnumerable<ArcGIS.Desktop.Core.Item> selectedItems = pathDialog.Items;
+                itemPath = selectedItems.First().Path;
+            }
+
+            return itemPath;
         }
 
     }
