@@ -214,9 +214,9 @@ namespace ProSymbolEditor
                 // 2. Select an existing GDB 
 
                 var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                    "The Military Overlay datamodel was not found in the project. \n" +
-                    "Would you like to add a layer package with the datamodel to your project?", 
-                    "Add Military Overlay Datamodel?",
+                    "The required Military Overlay datamodel was not found in the project. \n" +
+                    "Would you like to add the Military Overlay Layer Package to your project?",
+                    "Add Military Overlay Layer Package?",
                     System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
                 if (Convert.ToString(result) == "Yes")
                 {
@@ -226,7 +226,8 @@ namespace ProSymbolEditor
                 {
                     // See if user wants to select database to use
                     var result2 = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        "Would you like to select a database containing the datamodel to add to the project?", 
+                        "Would you like to select a database containing the military overlay datamodel and " +
+                        "add this database the project?", 
                         "Add Database with Military Overlay Datamodel?",
                         System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
                     if (Convert.ToString(result2) == "Yes")
@@ -2641,9 +2642,9 @@ namespace ProSymbolEditor
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
             {
                 string message = "The " + ProSymbolUtilities.StandardLabel +
-                    " Military Overlay schema is not detected in any database in your project," +
-                    " so the Pro Symbol Editor cannot continue." +
-                    " Would you like to add the Military Overlay Layer Package to add the schema to your project?";
+                    " Military Overlay schema is not detected in any database in your project. \n" +
+                    " so the Military Symbol Editor cannot continue." +
+                    " Would you like to add the Military Overlay Layer Package to your project?";
 
                 MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result.ToString() == "Yes")
