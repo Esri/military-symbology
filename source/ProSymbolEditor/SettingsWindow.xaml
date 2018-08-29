@@ -27,26 +27,7 @@
             <RowDefinition Height="50*" />
             <RowDefinition Height="40*" />
         </Grid.RowDefinitions>
-
-        <StackPanel
-            Grid.Row="0"
-            Margin="5,5,5,0"
-            VerticalAlignment="Top">
-            <Label Content="Default _Symbology Standard:"  />
-            <WrapPanel>
-                <RadioButton
-                    Margin="3"
-                    Content="MIL-STD-2525D"
-                    GroupName="standardgroup"
-                    IsChecked="{Binding Path=Checked2525D, Mode=TwoWay}" />
-                <RadioButton
-                    Margin="3"
-                    Content="MIL-STD-2525B Change 2"
-                    GroupName="standardgroup"
-                    IsChecked="{Binding Path=Checked2525C_B2, Mode=TwoWay}" />
-            </WrapPanel>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Margin="5,5,5,0">
+        <StackPanel Grid.Row="0" Margin="5,5,5,0">
             <Label Content="Military Overlay _Database:"  />
             <WrapPanel>
                 <TextBox x:Name="tbDefaultDatabase" Width="233" Text="{Binding Path=DefaultDatabase, Mode=TwoWay}" 
@@ -61,10 +42,25 @@
                         Foreground="{DynamicResource Esri_TextControlBrush}" 
                         Background="{Binding Backgound, ElementName=tbDefaultDatabase}"
                         Command="{Binding ClearSearchTextCommand}"
-                        Content="Select" Click="Button_Click" />
+                        Content="Browse" Click="Button_Click" />
             </WrapPanel>
         </StackPanel>
-
+        <StackPanel
+            Grid.Row="1"
+            Margin="5,5,5,0"
+            VerticalAlignment="Top">
+            <Label Content="Military Symbology _Standard:"  />
+            <ComboBox 
+                IsReadOnly="True" IsEditable="False" IsEnabled="{Binding Path=IsSettingsNotReadOnly}" 
+                ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                ItemsSource="{Binding SymbologyStandards, UpdateSourceTrigger=PropertyChanged}"
+                SelectedItem="{Binding SelectedSymbologyStandard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                >
+                <ComboBox.Style>
+                    <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}"/>
+                </ComboBox.Style>
+            </ComboBox>    
+        </StackPanel>
         <StackPanel
             Grid.Row="2"
             Margin="5,5,5,5"

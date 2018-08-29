@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -36,53 +37,37 @@ namespace ProSymbolEditor
     /// </summary>
     public partial class SettingsWindow : ArcGIS.Desktop.Framework.Controls.ProWindow, INotifyPropertyChanged
     {
+        public bool IsSettingsReadOnly
+        {
+            get; set;
+        }
+
+        public bool IsSettingsNotReadOnly
+        {
+            get { return !IsSettingsReadOnly; }
+        }
 
         public ProSymbolUtilities.SupportedStandardsType Standard
         {
+            get; set;
+        }
+
+        public ObservableCollection<string> SymbologyStandards { get; set; }
+
+        public string SelectedSymbologyStandard
+        {
             get
             {
-                ProSymbolUtilities.SupportedStandardsType standard;
-
-                if (Checked2525C_B2 == true)
-                    standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
-                else
-                    standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
-
-                return standard;
+                return ProSymbolUtilities.GetStandardLabel(Standard);
             }
             set
             {
-                ProSymbolUtilities.SupportedStandardsType standard = value;
+                string standardString = value;
 
-                if (standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-                    Checked2525C_B2 = true;
-                else
-                    Checked2525D = true;
+                Standard = ProSymbolUtilities.GetStandardFromLabel(standardString);
             }
         }
 
-        // Radio Button binding special binding case:
-        public bool Checked2525D
-        {
-            get { return _checked2525D; }
-            set
-            {
-                _checked2525D = value;
-                _checked2525C_B2 = !_checked2525D;
-            }
-        }
-        bool _checked2525D;
-
-        public bool Checked2525C_B2
-        {
-            get { return _checked2525C_B2; }
-            set
-            {
-                _checked2525C_B2 = value;
-                _checked2525D = !_checked2525C_B2;
-            }
-        }
-        bool _checked2525C_B2;
 
         public bool IsSelectDBEnabled
         {
@@ -91,8 +76,19 @@ namespace ProSymbolEditor
 
         public string DefaultDatabase
         {
-            get; set;
+            get
+            {
+                if (string.IsNullOrEmpty(_defaultDatabase))
+                    return "{default}";
+                else
+                    return _defaultDatabase;
+            }
+            set
+            {
+                _defaultDatabase = value;
+            }
         }
+        private string _defaultDatabase;
 
         public bool DefaultDatabaseChanged
         {
@@ -106,8 +102,13 @@ namespace ProSymbolEditor
 
             this.DataContext = this;
 
-            this.DefaultDatabaseChanged = false;
-            this.IsSelectDBEnabled = false;
+            IsSettingsReadOnly = false;
+            DefaultDatabaseChanged = false;
+            IsSelectDBEnabled = false;
+
+            SymbologyStandards = new ObservableCollection<string>();
+            SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2));
+            SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.mil2525d));
         }
 
         public void ShowDialog(Window owner)
@@ -133,7 +134,6 @@ namespace ProSymbolEditor
 
                 RaisePropertyChanged("DefaultDatabase");
             }
-
         }
 
         private void RaisePropertyChanged(string propertyName)

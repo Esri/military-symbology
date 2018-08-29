@@ -169,7 +169,7 @@ namespace ProSymbolEditor
             this.IsFavoriteItemSelected = false;
             this.SelectedTabIndex = 0;
             this.SearchString = "";
-            this.StatusMessage = "";
+//          this.StatusMessage = "";
             _symbolAttributeSet.ResetAttributes();
             SelectedStyleTags.Clear();
             SelectedFeaturesCollection.Clear();
@@ -204,37 +204,26 @@ namespace ProSymbolEditor
 
             // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
             bool isEnabled2525C_B2 = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
-
             bool isEnabled2525D = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
 
             if (!isEnabled2525D && !isEnabled2525C_B2)
             {
-                // If neither standard found in the project, prompt the user to either:
-                // 1. Add the Layer package for the desired standard
-                // 2. Select an existing GDB 
+                // If neither standard found in the project, prompt the user to:
+                // Add the Layer package for the desired standard and/or select an existing GDB 
 
                 var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                    "The required Military Overlay datamodel was not found in the project. \n" +
-                    "Would you like to add the Military Overlay Layer Package to your project?",
-                    "Add Military Overlay Layer Package?",
+                    "The Military Symbol Editor requires the Military Overlay data model.\n" +
+                    "Would you like to add the data model \n" +
+                    "(database schema and layers to the TOC) to the project?. \n",
+                    "Add-in Disabled",
                     System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
                 if (Convert.ToString(result) == "Yes")
                 {
-                    bool success = await AddLayerPackageToMapAsync();
+                    await ShowSettingsWindowAsync(true);
                 }
-                else // "No"
+                else
                 {
-                    // See if user wants to select database to use
-                    var result2 = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        "Would you like to select a database containing the military overlay datamodel and " +
-                        "add this database the project?", 
-                        "Add Database with Military Overlay Datamodel?",
-                        System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
-                    if (Convert.ToString(result2) == "Yes")
-                    {
-                        ICommand executeSettings = ShowSettingsWindowCommand;
-                        executeSettings.Execute(true);
-                    }
+                    StatusMessage = "Addin Not Enabled";
                 }
             }
             else
@@ -243,7 +232,6 @@ namespace ProSymbolEditor
                 {
                     // However, if both standards are found in GDBs in the project, 
                     // let the user pick the one to use
-
                     var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
                             "Multiple databases containing the Military Overlay datamodel were found in this project. \n" +
                             "Would you like to select the default database to use for edits?", "Multiple Military Overlay Databases",
@@ -251,8 +239,7 @@ namespace ProSymbolEditor
 
                     if (Convert.ToString(result) == "Yes")
                     {
-                        ICommand executeSettings = ShowSettingsWindowCommand;
-                        executeSettings.Execute(null);
+                        await ShowSettingsWindowAsync(null);
                     }
                     else
                     {
@@ -1043,112 +1030,152 @@ namespace ProSymbolEditor
             aboutWindow.ShowDialog(FrameworkApplication.Current.MainWindow);
         }
 
+        private async Task<bool> ShowSettingsWindowAsync(object parameter)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ShowSettingsWindow(parameter);
+            });
+
+            return await Task.FromResult(true);
+        }
+
         private async void ShowSettingsWindow(object parameter)
         {
+            // If this is shown on start, when the addin is first enabled
+            // enable some extra features (setting the database, adding the layer package, etc.)
+            bool initialConfiguration = false;
+            if (parameter != null)
+                initialConfiguration = (bool)parameter;
+
             string previousDefaultDatabase = ProSymbolEditorModule.Current.
-                MilitaryOverlaySchema.DatabaseName;
+            MilitaryOverlaySchema.DatabaseName;
             bool enabledWithPreviousStandard = false;
-            if (!string.IsNullOrEmpty(previousDefaultDatabase))
+            if (initialConfiguration || !string.IsNullOrEmpty(previousDefaultDatabase))
                 enabledWithPreviousStandard = await ProSymbolEditorModule.Current.
                     MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
 
             ProSymbolUtilities.SupportedStandardsType previousSettingStandard =
                 ProSymbolUtilities.Standard;
 
+            bool isSettingsReadOnly = false;
+            if (enabledWithPreviousStandard)
+            {
+                string message = "This project already contains a database with schema for standard: " + "\n" +
+                    ProSymbolUtilities.GetStandardLabel(previousSettingStandard) +
+                    ". Please create a new project to change these settings.";
+                MessageBoxResult result = 
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, 
+                    "Application Settings Read-Only", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                isSettingsReadOnly = true;
+            }
+
+            if (!isSettingsReadOnly)
+            {
+                // set this status in case user cancels any of this setup at start
+                StatusMessage = "Addin Not Enabled";
+            }
+
             SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.IsSettingsReadOnly = isSettingsReadOnly;
             settingsWindow.Standard = previousSettingStandard;
             settingsWindow.DefaultDatabase = previousDefaultDatabase;
-
-            if (parameter != null)
-                settingsWindow.IsSelectDBEnabled = (bool)parameter;
-
-            // If Database has not yet been set, enable this selection
-            if (string.IsNullOrEmpty(previousDefaultDatabase))
-                settingsWindow.IsSelectDBEnabled = true;
+            settingsWindow.IsSelectDBEnabled = !isSettingsReadOnly;
 
             settingsWindow.ShowDialog(FrameworkApplication.Current.MainWindow);
 
             bool enabledWithNewStandard = false;
 
-            // If Settings Dialog cancelled - return
-            if (settingsWindow.DialogResult != true)
+            // If Settings Dialog cancelled - or read-only - return
+            if ((settingsWindow.DialogResult != true) || (isSettingsReadOnly))
                 return; 
 
             ProSymbolUtilities.SupportedStandardsType newSettingStandard =
                 settingsWindow.Standard;
 
+            string newDatabase = settingsWindow.DefaultDatabase;
+
             if (settingsWindow.DefaultDatabaseChanged)
             {
-                // if the database was changed, check it matches the standard
-                string newDatabase = settingsWindow.DefaultDatabase;
+                // Ensure database is added to the project if not present
+                var currentItem = ItemFactory.Instance.Create(newDatabase);
 
-                enabledWithNewStandard = await
-                    ProSymbolEditorModule.Current.MilitaryOverlaySchema.
-                        ShouldAddInBeEnabledAsync(newDatabase, newSettingStandard);
+                GDBProjectItem gdbProjectItem =
+                    Project.Current.GetItems<GDBProjectItem>().FirstOrDefault(
+                    item => item.Path.Equals(newDatabase, StringComparison.CurrentCultureIgnoreCase));
 
-                if (!enabledWithNewStandard)
+                if (gdbProjectItem == null)
                 {
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        "Could not enable standard: " + 
-                        ProSymbolUtilities.GetStandardLabel(newSettingStandard) + "\n"
-                        + "with Database: " + newDatabase
-                        , "Could Not Enable Database+Standard",
-                        MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    // If not currently in the project - add it
+                    await QueuedTask.Run(() => Project.Current.AddItem(currentItem as IProjectItem));
+
+                    // Then save the project with the new GDB package added
+                    ProSymbolUtilities.SaveProject();
+                }
+
+                enabledWithNewStandard =
+                    await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(newDatabase, newSettingStandard);
+
+                if (enabledWithNewStandard)
+                {
+                    var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                        "Database: " + newDatabase + "\n" +
+                        "already contains a schema for standard: " +
+                        ProSymbolUtilities.GetStandardLabel(newSettingStandard) + "\n" +
+                        "Do you want to use this existing database and schema?"
+                        , "Use Existing Schema and Feature Classes?",
+                        MessageBoxButton.OKCancel, MessageBoxImage.Question);
+
+                    if (Convert.ToString(result) == "Cancel")
+                    {
+                        ProSymbolEditorModule.Current.MilitaryOverlaySchema.Reset();
+                        return;
+                    }
+
+                    StatusMessage = "Database Added";
                 }
                 else
                 {
-                    var currentItem = ItemFactory.Instance.Create(newDatabase);
-
-                    GDBProjectItem gdbProjectItem = 
-                        Project.Current.GetItems<GDBProjectItem>().FirstOrDefault(
-                        item => item.Path.Equals(newDatabase, StringComparison.CurrentCultureIgnoreCase));
-
-                    if (gdbProjectItem == null)
-                    {
-                        // If not currently in the project - add it
-                        await QueuedTask.Run(() => Project.Current.AddItem(currentItem as IProjectItem));
-
-                        // Then save the project with the new GDB package added
-                        ProSymbolUtilities.SaveProject();
-                    }
+                    // We need to make this the project default database so layer package unpacks here:
+                    await QueuedTask.Run(() => Project.Current.SetDefaultGeoDatabasePath(newDatabase) );
                 }
-
             } // if DefaultDatabaseChanged
             else
             {
-                // If standard has been changed
-                if (previousSettingStandard != newSettingStandard)
+                enabledWithNewStandard = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(newSettingStandard);
+            }
+
+            ProSymbolUtilities.Standard = newSettingStandard;
+
+            if (!enabledWithNewStandard)
+            {
+                var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                    "A military overlay schema matching standard: " + "\n" +
+                    ProSymbolUtilities.GetStandardLabel(newSettingStandard) + "\n" +
+                    "will be added to database: " +"\n" + 
+                    newDatabase + "\n" +
+                    "Note: this may take several minutes."
+                    , "Adding Schema to Database",
+                    MessageBoxButton.OKCancel, MessageBoxImage.Information);
+
+                if (Convert.ToString(result) == "Cancel")
                 {
-                    //Check for Schema again
-                    enabledWithNewStandard = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(newSettingStandard);
-
-                    if (enabledWithPreviousStandard && !enabledWithNewStandard)
-                    {
-                        // TRICKY: If Enabled with previous standard but not current, don't allow the switch
-                        // Adding new lpkx will not work
-                        string message = "Could not switch standard version. " +
-                            "The project already contains a GDB with Standard " +
-                            ProSymbolUtilities.GetStandardLabel(previousSettingStandard) +
-                            ". Please create a new project to use " +
-                            ProSymbolUtilities.GetStandardLabel(newSettingStandard) + ".";
-                        MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Could Not Switch Standard Version", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-
-                        return;
-                    }
+                    return;
                 }
 
-            } // else DefaultDatabaseChanged 
+                // Unpack layer package to the default GDB and add layers
+                await AddLayerPackageToMapAsync();
+                // Save the project with the layer package added
+                ProSymbolUtilities.SaveProject();
+                enabledWithNewStandard = true;
+
+                StatusMessage = "Military Layers Added";
+            }
 
             if (!enabledWithNewStandard)
             {
                 StatusMessage = "Addin Not Enabled";
             }
-            else
-            {
-                StatusMessage = "Standard Changed";
-            }
-
-            ProSymbolUtilities.Standard = newSettingStandard;
 
             // Reset everything when standard changed
             resetViewModelState();

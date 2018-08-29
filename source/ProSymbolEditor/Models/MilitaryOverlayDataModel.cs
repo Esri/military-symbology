@@ -306,14 +306,19 @@ namespace ProSymbolEditor
                         {
                             // Feature Class Exists. Check for fields
                             bool fieldsExist = true;
-                            foreach (string fieldName in fieldsToCheck)
-                            {
-                                IEnumerable<Field> foundFields = featureClassDefinition.GetFields().Where(x => x.Name == fieldName);
 
-                                if (foundFields.Count() < 1)
+                            // Don't do this for remote databases (too slow)
+                            if (geodatabase.GetGeodatabaseType() != GeodatabaseType.RemoteDatabase)
+                            {
+                                foreach (string fieldName in fieldsToCheck)
                                 {
-                                    fieldsExist = false;
-                                    return false;
+                                    IEnumerable<Field> foundFields = featureClassDefinition.GetFields().Where(x => x.Name == fieldName);
+
+                                    if (foundFields.Count() < 1)
+                                    {
+                                        fieldsExist = false;
+                                        return false;
+                                    }
                                 }
                             }
 

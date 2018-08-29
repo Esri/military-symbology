@@ -52,11 +52,28 @@ namespace ProSymbolEditor
         {
             get
             {
-                return GetStandardLabel(Standard);
+                return GetShortStandardLabel(Standard);
             }
         }
 
         public static string GetStandardLabel(SupportedStandardsType standardIn)
+        {
+            if (standardIn == SupportedStandardsType.mil2525d)
+                return "MIL-STD-2525D";
+            else
+                return "MIL-STD-2525B w/ Change 2";
+        }
+
+        public static SupportedStandardsType GetStandardFromLabel(string standardString)
+        {
+            if (standardString == GetStandardLabel(SupportedStandardsType.mil2525c_b2))
+                return SupportedStandardsType.mil2525c_b2;
+            else
+                return SupportedStandardsType.mil2525d;
+        }
+
+
+        public static string GetShortStandardLabel(SupportedStandardsType standardIn)
         {           
             if (standardIn == SupportedStandardsType.mil2525d)
                 return "2525D";
