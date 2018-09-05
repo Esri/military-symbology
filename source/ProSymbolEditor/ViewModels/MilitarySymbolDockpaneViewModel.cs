@@ -46,6 +46,18 @@ namespace ProSymbolEditor
 {
     internal class MilitarySymbolDockpaneViewModel : DockPane, IDataErrorInfo
     {
+        public ProSymbolEditor.Views.SearchView SearchViewTab { get; set; }
+
+        public ProSymbolEditor.Views.ModifyView ModifyViewTab { get; set; }
+
+        public ProSymbolEditor.Views.FavoritesView FavoritesViewTab { get; set; }
+
+        public ProSymbolEditor.Views.SymbolView SymbolViewTab { get; set; }
+
+        public ProSymbolEditor.Views.LabelView LabelViewTab { get; set; }
+
+        public ProSymbolEditor.Views.CoordinateView CoordinateViewTab { get; set; }
+        
         //Member Variables
         private const string _dockPaneID = "ProSymbolEditor_MilitarySymbolDockpane";
         private const string _menuID = "ProSymbolEditor_MilitarySymbolDockpane_Menu";
@@ -231,6 +243,24 @@ namespace ProSymbolEditor
 
         protected MilitarySymbolDockpaneViewModel()
         {
+            SearchViewTab = new Views.SearchView();
+            SearchViewTab.DataContext = this;
+
+            ModifyViewTab = new Views.ModifyView();
+            ModifyViewTab.DataContext = this;
+
+            FavoritesViewTab = new Views.FavoritesView();
+            FavoritesViewTab.DataContext = this;
+
+            SymbolViewTab = new Views.SymbolView();
+            SymbolViewTab.DataContext = this;
+
+            LabelViewTab = new Views.LabelView();
+            LabelViewTab.DataContext = this;
+
+            CoordinateViewTab = new Views.CoordinateView();
+            CoordinateViewTab.DataContext = this;
+
             ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(async (args) =>
             {
                 await Initialize();

@@ -1,0 +1,406 @@
+﻿<UserControl x:Class="ProSymbolEditor.Views.LabelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"         
+            xmlns:controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions"
+            xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
+            xmlns:local="clr-namespace:ProSymbolEditor"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Label
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Date/Time Valid"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}" />
+                    <xctk:DateTimePicker
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3" 
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
+                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                                            BorderBrush="{DynamicResource Esri_BorderBrush}"
+                                            DisplayDefaultValueOnEmptyText="False"
+                                            Format="Custom"
+                                            FormatString="MMM-dd-yy hh:mm tt"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}"
+                                            Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeValid}" />
+
+                    <Label
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Date/Time Expired"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}" />
+                    <xctk:DateTimePicker
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
+                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                                            BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
+                                            DisplayDefaultValueOnEmptyText="False"
+                                            Format="Custom"
+                                            FormatString="MMM-dd-yy hh:mm tt"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}"
+                                            Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeExpired}" />
+                    <Label
+                                            Grid.Row="3"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Type"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.TypeFieldExists}" />
+                    <TextBox
+                                            Grid.Row="3"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.TypeFieldExists}" />
+
+                    <Label
+                                            Grid.Row="4"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Common Identifier"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.CommonIdentifierFieldExists}" />
+                    <TextBox
+                                            Grid.Row="4"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.CommonIdentifier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.CommonIdentifierFieldExists}" />
+
+                    <Label
+                                            Grid.Row="5"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Speed"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}" />
+                    <!--<TextBox Grid.Row="11" Width="170" Text="{Binding SymbolAttributeSet.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"/>-->
+                    <xctk:ShortUpDown
+                                            Name="speedUpDown"
+                                            Grid.Row="5"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
+                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                                            BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"
+                                            Value="{Binding SymbolAttributeSet.LabelAttributes.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Label
+                                            Grid.Row="6"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Unique Designation"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.UniqueDesignationFieldExists}" />
+                    <TextBox
+                                            Grid.Row="6"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.UniqueDesignation}"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.UniqueDesignationFieldExists}" />
+
+                    <Label
+                                            Grid.Row="7"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Reinforced"
+                                            Visibility="{Binding ElementName=reinforcedComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            Name="reinforcedComboBox"
+                                            Grid.Row="7"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.ReinforcedDomainValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedReinforcedDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <Label
+                                            Grid.Row="8"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Staff Comments"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.StaffCommentsFieldExists}" />
+                    <TextBox
+                                            Grid.Row="8"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.StaffComments}"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.StaffCommentsFieldExists}" />
+
+                    <Label
+                                            Grid.Row="9"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Additional Information"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.AdditionalInformationFieldExists}" />
+                    <TextBox
+                                            Grid.Row="9"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.AdditionalInformation}"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.AdditionalInformationFieldExists}" />
+
+                    <Label
+                                            Grid.Row="10"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Higher Formation"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.HigherFormationFieldExists}" />
+                    <TextBox
+                                            Grid.Row="10"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.HigherFormation}"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.HigherFormationFieldExists}" />
+
+                    <Label
+                                            Grid.Row="11"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Credibility"
+                                            Visibility="{Binding ElementName=credibilityComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            Name="credibilityComboBox"
+                                            Grid.Row="11"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.CredibilityDomainValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedCredibilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <Label
+                                            Grid.Row="12"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Reliability"
+                                            Visibility="{Binding ElementName=reliabilityComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            Name="reliabilityComboBox"
+                                            Grid.Row="12"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.ReliabilityDomainValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedReliabilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <Label
+                                            Grid.Row="13"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Country Code"
+                                            Visibility="{Binding ElementName=countryComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            Name="countryComboBox"
+                                            Grid.Row="13"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.CountryCodeDomainValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedCountryCodeDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Image
+                                            x:Name="textTabSymbolImage"
+                                            Grid.Row="0"
+                                            Width="180"
+                                            Height="180"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Top"
+                                            RenderOptions.BitmapScalingMode="HighQuality"
+                                            Source="{Binding SymbolAttributeSet.SymbolImage}">
+                        <Image.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding SaveImageToCommand}" Header="Save Image As..." />
+                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="Copy Image to Clipboard" />
+                            </ContextMenu>
+                        </Image.ContextMenu>
+                    </Image>
+
+                    <DataGrid 
+                                            Grid.Row="1"
+                                            Height="150"
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding SymbolAttributeSet.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}" 
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" >
+                        <DataGrid.ToolTip>
+                            <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                            </ToolTip>
+                        </DataGrid.ToolTip>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,0,-10,10"                                    
+                                    Command="{Binding GoToTabCommand}"
+                                    CommandParameter="3"
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
+                                    ToolTip="Back to Symbol">
+                <Button.RenderTransform>
+                    <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                </Button.RenderTransform>
+            </Button>
+            <Button
+                                    Grid.Column="1"
+                                    Width="90"
+                                    HorizontalAlignment="Center"
+                                    Command="{Binding SaveSymbolFileCommand}"
+                                    Content="Add Favorite"
+                                    Style="{DynamicResource Esri_SimpleButton}" />
+            <ToggleButton
+                                    Grid.Column="2"
+                                    Width="82"
+                                    Height="24"
+                                    HorizontalAlignment="Center"
+                                    BorderThickness="0.5"
+                                    Command="{Binding ActivateAddToMapToolCommand}"
+                                    Content="Add to Map"
+                                    IsChecked="{Binding AddToMapToolEnabled}"
+                                    ToolTip="Add to Map"
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                <ToggleButton.Style>
+                    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                </ToggleButton.Style>
+            </ToggleButton>
+            <Button
+                                    Grid.Column="2"
+                                    Width="82"
+                                    Height="24"
+                                    HorizontalAlignment="Center"
+                                    Command="{Binding SaveEditsCommand}"
+                                    Content="Save Edits"
+                                    Style="{DynamicResource Esri_SimpleButton}"
+                                    ToolTip="Save Edits"
+                                    Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
+            <Button
+                                    Grid.Column="3"
+                                    Margin="0,0,-10,10"                                    
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding GoToTabCommand}"
+                                    CommandParameter="5"
+                                    IsEnabled="{Binding IsCoordinateTabEnabled}"
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
+                                    ToolTip="Enter Coordinates">
+                <Button.RenderTransform>
+                    <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
+                </Button.RenderTransform>
+            </Button>
+        </Grid>
+    </Grid>
+
+</UserControl>
