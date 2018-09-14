@@ -95,7 +95,7 @@
                     Grid.Row="0"
                     Margin="3,3,3,3"
                     SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TabItem Header="Search">
+                    <TabItem Header="Search" IsEnabled="{Binding IsAddinEnabled}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -112,6 +112,7 @@
                                         </Grid.RowDefinitions>
 
                                         <TextBox
+                                            IsEnabled="{Binding IsAddinEnabled}"
                                             x:Name="searchSymbolsTextBox"
                                             Grid.Row="0"
                                             Height="23"
@@ -298,6 +299,7 @@
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveSymbolFileCommand}"
                                     Content="Add Favorite"
+                                    IsEnabled="{Binding IsStyleItemSelected}"
                                     Style="{DynamicResource Esri_SimpleButton}" />
                                 <ToggleButton
                                     Name="searchAddToMapButton"
@@ -333,7 +335,7 @@
                             </Grid>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="Modify">
+                    <TabItem Header="Modify" IsEnabled="{Binding IsAddinEnabled}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -540,7 +542,7 @@
                             </Grid>
                         </Grid>
                     </TabItem>
-                    <TabItem HorizontalAlignment="Stretch" Header="Favorites">
+                    <TabItem HorizontalAlignment="Stretch" Header="Favorites" IsEnabled="{Binding IsAddinEnabled}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />

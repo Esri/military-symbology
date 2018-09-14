@@ -127,6 +127,9 @@ namespace ProSymbolEditor
             // or give user the option of selecting workspace:
             string selectedGDB = ProSymbolUtilities.BrowseItem(ArcGIS.Desktop.Catalog.ItemFilters.geodatabases);
 
+            if (string.IsNullOrEmpty(selectedGDB))
+                return;
+
             if (DefaultDatabase != selectedGDB)
             {
                 DefaultDatabaseChanged = true;

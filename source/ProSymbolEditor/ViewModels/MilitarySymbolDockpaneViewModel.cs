@@ -50,6 +50,28 @@ namespace ProSymbolEditor
         private const string _dockPaneID = "ProSymbolEditor_MilitarySymbolDockpane";
         private const string _menuID = "ProSymbolEditor_MilitarySymbolDockpane_Menu";
 
+        public bool IsAddinEnabled
+        {
+            get
+            {
+                return isAddinEnabled;
+            }
+            set
+            {
+                isAddinEnabled = value;
+
+                if (!isAddinEnabled)
+                {
+                    IsCoordinateTabEnabled = false;
+                    IsStyleItemSelected = false;
+                    SelectedTabIndex = 0;
+                }
+
+                NotifyPropertyChanged(() => IsAddinEnabled);
+            }
+        }
+        private bool isAddinEnabled = false;
+
         public string StatusMessage
         {
             get
@@ -199,6 +221,9 @@ namespace ProSymbolEditor
 
         private async Task Initialize()
         {
+            // Not enabled until Schema found/set
+            IsAddinEnabled = false;
+
             ProSymbolEditorModule.Current.MilitaryOverlaySchema.Reset();
 
             StatusMessage = "Addin Not Enabled";
@@ -220,7 +245,10 @@ namespace ProSymbolEditor
                     System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
                 if (Convert.ToString(result) == "Yes")
                 {
-                    await ShowSettingsWindowAsync(true);
+                    bool success = await ShowSettingsWindowAsync(true);
+
+                    if (!success)
+                        return;
                 }
             }
             else
@@ -238,14 +266,15 @@ namespace ProSymbolEditor
 
                     if (Convert.ToString(result) == "Yes")
                     {
-                        await ShowSettingsWindowAsync(true);
+                        bool success = await ShowSettingsWindowAsync(true);
+
+                        if (!success)
+                            return;
                     }
                     else
                     {
-                        setStandardFromSettings();
+                        return;
                     }
-
-                    StatusMessage = "Multiple DataModels";
                 }
                 else
                 {
@@ -257,6 +286,8 @@ namespace ProSymbolEditor
                     StatusMessage = "Initialized";
                 }
             }
+
+            IsAddinEnabled = true;
 
             //Add military style to project
             Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
@@ -1033,16 +1064,23 @@ namespace ProSymbolEditor
             aboutWindow.ShowDialog(FrameworkApplication.Current.MainWindow);
         }
 
-        private async Task<bool> ShowSettingsWindowAsync(object parameter)
+        // Async version called when schema is not found 
+        private async Task<bool> ShowSettingsWindowAsync(bool initialConfiguration)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            bool success = false;
+
+            // ensure called on UI thread 
+            await Application.Current.Dispatcher.Invoke(async() =>
             {
-                ShowSettingsWindow(parameter);
+                success = await ShowSettingsWindow(initialConfiguration);
             });
 
-            return await Task.FromResult(true);
+            IsAddinEnabled = success;
+
+            return success;
         }
 
+        // Relay Command version called on button click
         private async void ShowSettingsWindow(object parameter)
         {
             // If this is shown on start, when the addin is first enabled
@@ -1051,6 +1089,18 @@ namespace ProSymbolEditor
             if (parameter != null)
                 initialConfiguration = (bool)parameter;
 
+            bool success = false;
+
+            await Application.Current.Dispatcher.Invoke(async () =>
+            {
+                success = await ShowSettingsWindow(initialConfiguration);
+            });
+
+            IsAddinEnabled = success;
+        }
+
+        private async Task<bool> ShowSettingsWindow(bool initialConfiguration)
+        { 
             string previousDefaultDatabase = ProSymbolEditorModule.Current.
             MilitaryOverlaySchema.DatabaseName;
             bool enabledWithPreviousStandard = false;
@@ -1091,7 +1141,7 @@ namespace ProSymbolEditor
 
             // If Settings Dialog cancelled - or read-only - return
             if ((settingsWindow.DialogResult != true) || (isSettingsReadOnly))
-                return; 
+                return false; 
 
             ProSymbolUtilities.SupportedStandardsType newSettingStandard =
                 settingsWindow.Standard;
@@ -1109,7 +1159,7 @@ namespace ProSymbolEditor
                         "Could not open Database: " + newDatabase,
                         "Could Not Open Database",
                         MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                    return;
+                    return false;
                 }
 
                 // Ensure database is added to the project if not present
@@ -1142,7 +1192,7 @@ namespace ProSymbolEditor
                     if (Convert.ToString(result) == "Cancel")
                     {
                         ProSymbolEditorModule.Current.MilitaryOverlaySchema.Reset();
-                        return;
+                        return false;
                     }
 
                     StatusMessage = "Database Added";
@@ -1169,7 +1219,7 @@ namespace ProSymbolEditor
                         // Then save the project with the new GDB package added
                         ProSymbolUtilities.SaveProject();
 
-                        return;
+                        return false;
                     }
 
                     // We need to make this the project default database so layer package unpacks here:
@@ -1196,7 +1246,7 @@ namespace ProSymbolEditor
 
                 if (Convert.ToString(result) == "Cancel")
                 {
-                    return;
+                    return false;
                 }
 
                 // Unpack layer package to the default GDB and add layers
@@ -1208,7 +1258,7 @@ namespace ProSymbolEditor
                         "Please try again from Addin Settings when map available.",
                         "Unable to Add Layer Package to Map", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
-                    return;
+                    return false;
                 }
 
                 // Save the project with the layer package added
@@ -1221,6 +1271,7 @@ namespace ProSymbolEditor
             if (!enabledWithNewStandard)
             {
                 StatusMessage = "Addin Not Enabled";
+                return false;
             }
 
             // Reset everything when standard changed
@@ -1230,6 +1281,8 @@ namespace ProSymbolEditor
             Properties.Settings.Default.DefaultStandard =
                 ProSymbolUtilities.GetStandardString(ProSymbolUtilities.Standard);
             Properties.Settings.Default.Save();
+
+            return true;
         }
 
         private async void SaveEdits(object parameter)
@@ -2056,10 +2109,12 @@ namespace ProSymbolEditor
         private async void OnMapSelectionChanged(ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEventArgs args)
         {
             // Only allow selection event if addin enabled
-            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
-            bool enabled = await isEnabledMethod;
+            if (!IsAddinEnabled)
+                return;
 
-            if (!enabled)
+            // And data model present
+            bool isSchemaPresent = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+            if (!isSchemaPresent)
                 return;
 
             //Get the selected features from the map and filter out the standalone table selection.
@@ -2702,7 +2757,7 @@ namespace ProSymbolEditor
             // First check if is already enabled
             bool isEnabled = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
             if (isEnabled)
-                return;
+                return; 
 
             // Clear the selected entries so they can be reselected after the schema adds
             // (they will not fully initialize without a valid schema)
@@ -2712,6 +2767,7 @@ namespace ProSymbolEditor
                 SelectedFavoriteSymbol = null;
 
             // If not enabled see if schema should be added
+            // Run on UI Thread
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
             {
                 string message = "The " + ProSymbolUtilities.StandardLabel +
@@ -2724,7 +2780,8 @@ namespace ProSymbolEditor
                 {
                     if (MapView.Active != null)
                     {
-                        await AddLayerPackageToMapAsync();
+                        await ShowSettingsWindowAsync(true);
+
                         // Save the project with the layer package added
                         ProSymbolUtilities.SaveProject();
                         // Reselect this style item onced the layer package is added
@@ -2748,6 +2805,7 @@ namespace ProSymbolEditor
                     // WORKAROUND:
                     SearchString = "ADDIN NOT ENABLED";
                 }
+
             }));
         }
 
