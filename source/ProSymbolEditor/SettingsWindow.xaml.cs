@@ -122,7 +122,7 @@ namespace ProSymbolEditor
             this.DialogResult = true;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             // or give user the option of selecting workspace:
             string selectedGDB = ProSymbolUtilities.BrowseItem(ArcGIS.Desktop.Catalog.ItemFilters.geodatabases);
@@ -134,6 +134,51 @@ namespace ProSymbolEditor
             {
                 DefaultDatabaseChanged = true;
                 DefaultDatabase = selectedGDB;
+
+                // See if the selected database already contains a standard, 
+                // if so set the standard, and disable the control
+
+                var selectedGDBasItem = ArcGIS.Desktop.Core.ItemFactory.
+                    Instance.Create(selectedGDB);
+
+                bool hasStandard = false;
+                ProSymbolUtilities.SupportedStandardsType standardFound = 
+                    ProSymbolUtilities.SupportedStandardsType.mil2525d;
+
+                foreach (ProSymbolUtilities.SupportedStandardsType standard in
+                    Enum.GetValues(typeof(ProSymbolUtilities.SupportedStandardsType)))
+                {
+                    bool containsStandard = 
+                        await ProSymbolEditorModule.Current.MilitaryOverlaySchema.
+                            GDBContainsMilitaryOverlay(
+                            selectedGDBasItem as ArcGIS.Desktop.Catalog.GDBProjectItem, 
+                            standard);
+
+                    if (containsStandard)
+                    {
+                        hasStandard = true;
+                        standardFound = standard;
+                        break;
+                    }
+                }
+
+                if (hasStandard)
+                {
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                        "Database: " + selectedGDB + "\n" +
+                        "contains a schema for standard: " +
+                        ProSymbolUtilities.GetStandardLabel(standardFound) + "\n" +
+                        "Standard setting set to this standard."
+                        , "Database Contains Schema",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    Standard = standardFound;
+                    RaisePropertyChanged("SelectedSymbologyStandard");
+                }
+
+                // Disable/enable the standard button if GDB had schema 
+                IsSettingsReadOnly = hasStandard;
+                RaisePropertyChanged("IsSettingsNotReadOnly");
 
                 RaisePropertyChanged("DefaultDatabase");
             }

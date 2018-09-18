@@ -81,6 +81,14 @@ namespace ProSymbolEditor
                 return "2525B";
         }
 
+        public static string GetDatasetName(SupportedStandardsType standardIn)
+        {
+            if (standardIn == SupportedStandardsType.mil2525d)
+                return "militaryoverlay2525d";
+            else
+                return "militaryoverlay2525b2";
+        }
+
         public static string GetStandardString(SupportedStandardsType standardIn)
         {
             if (standardIn == SupportedStandardsType.mil2525c_b2)

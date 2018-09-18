@@ -50,7 +50,7 @@
             Margin="5,5,5,0"
             VerticalAlignment="Top">
             <Label Content="Military Symbology _Standard:"  />
-            <ComboBox 
+            <ComboBox x:Name="cbStandard"
                 IsReadOnly="True" IsEditable="False" IsEnabled="{Binding Path=IsSettingsNotReadOnly}" 
                 ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
                 ItemsSource="{Binding SymbologyStandards, UpdateSourceTrigger=PropertyChanged}"

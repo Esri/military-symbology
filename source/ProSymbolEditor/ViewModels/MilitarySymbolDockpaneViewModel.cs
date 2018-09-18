@@ -1140,7 +1140,9 @@ namespace ProSymbolEditor
             bool enabledWithNewStandard = false;
 
             // If Settings Dialog cancelled - or read-only - return
-            if ((settingsWindow.DialogResult != true) || (isSettingsReadOnly))
+            if (isSettingsReadOnly)
+                return true;
+            if (settingsWindow.DialogResult != true)
                 return false; 
 
             ProSymbolUtilities.SupportedStandardsType newSettingStandard =
@@ -1181,20 +1183,6 @@ namespace ProSymbolEditor
 
                 if (enabledWithNewStandard)
                 {
-                    var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        "Database: " + newDatabase + "\n" +
-                        "already contains a schema for standard: " +
-                        ProSymbolUtilities.GetStandardLabel(newSettingStandard) + "\n" +
-                        "Do you want to use this existing database and schema?"
-                        , "Use Existing Schema and Feature Classes?",
-                        MessageBoxButton.OKCancel, MessageBoxImage.Question);
-
-                    if (Convert.ToString(result) == "Cancel")
-                    {
-                        ProSymbolEditorModule.Current.MilitaryOverlaySchema.Reset();
-                        return false;
-                    }
-
                     StatusMessage = "Database Added";
                 }
                 else

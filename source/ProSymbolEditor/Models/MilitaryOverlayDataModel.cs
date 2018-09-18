@@ -254,10 +254,43 @@ namespace ProSymbolEditor
             return await ShouldAddInBeEnabledAsync(ProSymbolUtilities.Standard);
         }
 
+        public async Task<bool> GDBContainsMilitaryOverlay(GDBProjectItem gdbProjectItem, 
+            ProSymbolUtilities.SupportedStandardsType standard)
+        {
+            if (gdbProjectItem == null)
+                return false;
+
+            string militaryOverlayFeatureDatasetName = 
+                ProSymbolUtilities.GetDatasetName(standard);
+
+            bool gdbContainsMilitaryOverlay = await
+                ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run<bool>(() =>
+                {
+                    using (Datastore datastore = gdbProjectItem.GetDatastore())
+                    {
+                        // Unsupported datastores (non File GDB and non Enterprise GDB) will be of type UnknownDatastore
+                        if (datastore is UnknownDatastore)
+                            return false;
+
+                        Geodatabase geodatabase = datastore as Geodatabase;
+                        if (geodatabase == null)
+                            return false;
+
+                        var defs = geodatabase.GetDefinitions<FeatureDatasetDefinition>().Where(fd => fd.GetName().Contains(militaryOverlayFeatureDatasetName)).ToList(); ;
+
+                        return (defs.Count > 0);
+                    }
+                });
+
+            return gdbContainsMilitaryOverlay;
+        }
+
         public async Task<bool> GDBContainsMilitaryOverlay(GDBProjectItem gdbProjectItem)
         {
             if (gdbProjectItem == null)
                 return false;
+
+            string militaryOverlayFeatureDatasetName = "militaryoverlay";
 
             bool gdbContainsMilitaryOverlay = await
                 ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run<bool>(() => 
@@ -272,7 +305,7 @@ namespace ProSymbolEditor
                     if (geodatabase == null)
                         return false;
 
-                    var defs = geodatabase.GetDefinitions<FeatureDatasetDefinition>().Select(fd => fd.GetName().StartsWith("militaryoverlay")).ToList(); ;
+                    var defs = geodatabase.GetDefinitions<FeatureDatasetDefinition>().Where(fd => fd.GetName().Contains(militaryOverlayFeatureDatasetName)).ToList(); ;
 
                     return (defs.Count > 0);
                 }
