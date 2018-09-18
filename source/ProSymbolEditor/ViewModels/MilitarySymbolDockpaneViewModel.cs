@@ -243,12 +243,15 @@ namespace ProSymbolEditor
                     "(database schema and layers to the TOC) to the project?. \n",
                     "Add-in Disabled",
                     System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
+
+                bool success = false;
                 if (Convert.ToString(result) == "Yes")
                 {
-                    bool success = await ShowSettingsWindowAsync(true);
-
-                    if (!success)
-                        return;
+                    success = await ShowSettingsWindowAsync(true);
+                }
+                if (!success)
+                {
+                    return;
                 }
             }
             else
