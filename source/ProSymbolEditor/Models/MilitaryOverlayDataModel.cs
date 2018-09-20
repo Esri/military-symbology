@@ -148,7 +148,7 @@ namespace ProSymbolEditor
         {
             string activeGdbPath = DatabaseName;
 
-            IEnumerable<FeatureLayer> mapLayers = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>(); ;
+            IEnumerable<FeatureLayer> mapLayers = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>();
 
             bool isFeatureClassInActiveView = false;
 
@@ -198,6 +198,61 @@ namespace ProSymbolEditor
             return isFeatureClassInActiveView;
         }
 
+        public async Task<bool> AddFeatureClassToActiveView(string featureClassName)
+        {
+            if (string.IsNullOrEmpty(featureClassName) || string.IsNullOrEmpty(DatabaseName))
+                return await Task.FromResult<bool>(false);
+
+            bool layerAdded = false;
+
+            await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+            {
+                string uri = $@"{DatabaseName}\{ProSymbolUtilities.GetDatasetName()}\{featureClassName}";
+                Item currentItem = ItemFactory.Instance.Create(uri);
+                if (LayerFactory.Instance.CanCreateLayerFrom(currentItem))
+                {
+                    FeatureLayer fl = LayerFactory.Instance.CreateLayer(currentItem, 
+                        MapView.Active.Map) as FeatureLayer;
+
+                    if (fl != null)
+                    {
+                        ArcGIS.Core.CIM.CIMDictionaryRenderer dictionaryRenderer =
+                            ProSymbolUtilities.CreateDictionaryRenderer();
+                        fl.SetRenderer(dictionaryRenderer);
+
+                        layerAdded = true;
+                    }
+                }
+            });
+
+            return await Task.FromResult<bool>(layerAdded);
+        }
+
+        public bool IsMilitaryOverlayInActiveMap()
+        {
+            // See if Active Map
+            if (MapView.Active == null)
+                return false; //No active map
+
+            // See if Military Overlay in Active Map
+            const string militaryOverlayName = "Military Overlay";
+            IEnumerable<GroupLayer> mapLayers = MapView.Active.Map.GetLayersAsFlattenedList().OfType<GroupLayer>().Where(l => l.Name.StartsWith(militaryOverlayName));
+            if ((mapLayers == null) || (mapLayers.Count() == 0))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> IsMapActiveAndAddInEnabledAsync()
+        {
+            if (!IsMilitaryOverlayInActiveMap())
+                return await Task.FromResult<bool>(false);
+
+            return await ShouldAddInBeEnabledAsync(ProSymbolUtilities.Standard);
+        }
+
         public async Task<bool> ShouldAddInBeEnabledAsync()
         {
             return await ShouldAddInBeEnabledAsync(ProSymbolUtilities.Standard);
@@ -222,7 +277,7 @@ namespace ProSymbolEditor
                 {
                     foreach (GDBProjectItem gdbProjectItem in gdbProjectItems)
                     {
-                        if (gdbProjectItem.Name == "Map") // ignore the project Map GDB
+                        if (gdbProjectItem.Name == "map.gdb") // ignore the project Map GDB
                             continue;
 
                         using (Datastore datastore = gdbProjectItem.GetDatastore())

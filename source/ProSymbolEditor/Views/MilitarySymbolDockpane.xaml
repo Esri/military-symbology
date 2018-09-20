@@ -2,13 +2,13 @@
     x:Class="ProSymbolEditor.MilitarySymbolDockpaneView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions"
-    xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"         
+    xmlns:controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions"
+    xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
     xmlns:local="clr-namespace:ProSymbolEditor"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"    
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     d:DesignHeight="430"
     d:DesignWidth="550"
     mc:Ignorable="d">
@@ -319,15 +319,15 @@
                                 <Button
                                     x:Name="modifyButton"
                                     Grid.Column="2"
-                                    Margin="0,0,-26,0"
+                                    Margin="0,0,-10,10"                                    
                                     HorizontalAlignment="Right"
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="3"
                                     IsEnabled="{Binding IsStyleItemSelected}"
-                                    Style="{DynamicResource Esri_BackButton}"
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Go to Symbol Tab">
                                     <Button.RenderTransform>
-                                        <ScaleTransform ScaleX="-1" />
+                                        <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
                                     </Button.RenderTransform>
                                 </Button>
                             </Grid>
@@ -363,11 +363,35 @@
                                                 Grid.Column="1"
                                                 Margin="2,0,0,0"
                                                 Command="{Binding SelectToolCommand}"
-                                                IsChecked="{Binding SelectToolEnabled}">
+                                                IsChecked="{Binding SelectToolEnabled}"
+                                                Focusable="False">
                                                 <Image
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     Source="pack://application:,,,/MilitarySymbolEditor;component/Images/SelectionSelectTool16.png" />
+                                                <ToggleButton.Style>
+                                                    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                                        <Setter Property="Width" Value="20"/>
+                                                        <Setter Property="Height" Value="20"/>
+                                                        <Setter Property="Padding" Value="1"/>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsEnabled" Value="false">
+                                                                <Setter Property="Opacity" Value="0.5"/>
+                                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                                <Setter Property="Background" Value="Transparent"/>
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                                            <ContentPresenter Margin="2" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}" RecognizesAccessKey="True" Content="{TemplateBinding ContentControl.Content}" />
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ToggleButton.Style>
                                             </ToggleButton>
                                         </Grid>
 
@@ -502,15 +526,15 @@
 
                                 <Button
                                     Grid.Column="2"
-                                    Margin="0,0,-26,0"
+                                    Margin="0,0,-10,10"
                                     HorizontalAlignment="Right"
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="3"
                                     IsEnabled="{Binding IsStyleItemSelected}"
-                                    Style="{DynamicResource Esri_BackButton}"
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Go to Symbol Tab">
                                     <Button.RenderTransform>
-                                        <ScaleTransform ScaleX="-1" />
+                                        <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
                                     </Button.RenderTransform>
                                 </Button>
                             </Grid>
@@ -758,11 +782,16 @@
                                 <Button
                                     Grid.Row="0"
                                     Grid.Column="0"
+                                    Margin="0,0,-10,10"
                                     HorizontalAlignment="Left"
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="0"
-                                    Style="{DynamicResource Esri_BackButton}"
-                                    ToolTip="Back to Search" />
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
+                                    ToolTip="Back to Search" >
+                                    <Button.RenderTransform>
+                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                    </Button.RenderTransform>
+                                </Button>
                                 <Button
                                     Grid.Row="0"
                                     Grid.Column="1"
@@ -792,14 +821,14 @@
                                 <Button
                                     Grid.Row="0"
                                     Grid.Column="3"
-                                    Margin="0,0,-26,0"
+                                    Margin="0,0,-10,10"                                    
                                     HorizontalAlignment="Right"
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="3"
-                                    Style="{DynamicResource Esri_BackButton}"
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Go to Symbol Tab">
                                     <Button.RenderTransform>
-                                        <ScaleTransform ScaleX="-1" />
+                                        <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
                                     </Button.RenderTransform>
                                 </Button>
                             </Grid>
@@ -1176,11 +1205,16 @@
                                 <Button
                                     Grid.Row="0"
                                     Grid.Column="0"
+                                    Margin="0,0,-10,10"
                                     HorizontalAlignment="Left"
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="0"
-                                    Style="{DynamicResource Esri_BackButton}"
-                                    ToolTip="Back to Search" />
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
+                                    ToolTip="Back to Search">
+                                    <Button.RenderTransform>
+                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                    </Button.RenderTransform>
+                                </Button>                                    
                                 <Button
                                     Grid.Row="0"
                                     Grid.Column="1"
@@ -1219,14 +1253,14 @@
                                 <Button
                                     Grid.Row="0"
                                     Grid.Column="3"
-                                    Margin="0,0,-26,0"
+                                    Margin="0,0,-10,10"                                    
                                     HorizontalAlignment="Right"
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="4"
-                                    Style="{DynamicResource Esri_BackButton}"
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Go to Label Tab">
                                     <Button.RenderTransform>
-                                        <ScaleTransform ScaleX="-1" />
+                                        <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
                                     </Button.RenderTransform>
                                 </Button>
 
@@ -1561,10 +1595,15 @@
                                 <Button
                                     Grid.Column="0"
                                     HorizontalAlignment="Left"
+                                    Margin="0,0,-10,10"                                    
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="3"
-                                    Style="{DynamicResource Esri_BackButton}"
-                                    ToolTip="Back to Symbol" />
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
+                                    ToolTip="Back to Symbol">
+                                    <Button.RenderTransform>
+                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                    </Button.RenderTransform>
+                                </Button>                                    
                                 <Button
                                     Grid.Column="1"
                                     Width="90"
@@ -1599,15 +1638,15 @@
                                     Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
                                 <Button
                                     Grid.Column="3"
-                                    Margin="0,0,-26,0"
+                                    Margin="0,0,-10,10"                                    
                                     HorizontalAlignment="Right"
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="5"
                                     IsEnabled="{Binding IsCoordinateTabEnabled}"
-                                    Style="{DynamicResource Esri_BackButton}"
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Enter Coordinates">
                                     <Button.RenderTransform>
-                                        <ScaleTransform ScaleX="-1" />
+                                        <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
                                     </Button.RenderTransform>
                                 </Button>
                             </Grid>
@@ -1735,11 +1774,16 @@
 
                                 <Button
                                     Grid.Column="0"
+                                    Margin="0,0,-10,10"                                    
                                     HorizontalAlignment="Left"
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="4"
-                                    Style="{DynamicResource Esri_BackButton}"
-                                    ToolTip="Back to Label" />
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
+                                    ToolTip="Back to Label" >
+                                    <Button.RenderTransform>
+                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                    </Button.RenderTransform>
+                                </Button>
                                 <Button
                                     Grid.Column="1"
                                     Width="90"
@@ -1793,10 +1837,10 @@
                         </Button.Template>
                         <Button.Style>
                             <Style TargetType="Button">
-                                <Setter Property="Foreground" Value="Blue" />
+                                <Setter Property="Foreground" Value="{DynamicResource Esri_TextControlBrush}" />
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="true">
-                                        <Setter Property="Foreground" Value="Red" />
+                                        <Setter Property="Foreground" Value="{DynamicResource Esri_TextSelectionHighlightBrush}" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
@@ -1816,10 +1860,10 @@
                         </Button.Template>
                         <Button.Style>
                             <Style TargetType="Button">
-                                <Setter Property="Foreground" Value="Blue" />
+                                <Setter Property="Foreground" Value="{DynamicResource Esri_TextControlBrush}" />
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="true">
-                                        <Setter Property="Foreground" Value="Red" />
+                                        <Setter Property="Foreground" Value="{DynamicResource Esri_TextSelectionHighlightBrush}" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
