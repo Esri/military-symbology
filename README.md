@@ -1,6 +1,6 @@
 # Military Symbology
 
-## military-symbol-editor-addin-wpf
+## Military Symbol Editor add-in
 
 A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating military symbols and overlays using MIL-STD-2525D and MILSTD-2525B Change 2.
 
