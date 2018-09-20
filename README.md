@@ -219,10 +219,6 @@ Find a bug or want to request a new feature?  Please let us know by submitting a
 
 Anyone and everyone is welcome to contribute. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
-### Repository Points of Contact
-
-##### [Esri Defense Solutions team](defensesolutions@esri.com)
-
 
 ## Credits
 
