@@ -1,4 +1,6 @@
-# military-symbol-editor-addin-wpf
+# Military Symbology
+
+## military-symbol-editor-addin-wpf
 
 A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating military symbols and overlays using MIL-STD-2525D and MILSTD-2525B Change 2.
 
@@ -23,15 +25,22 @@ A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating m
 
 ## Requirements
 
-### Developers
+### Build Requirements 
 
 * Visual Studio 2015
-* ArcGIS Pro 2.0+
-* ArcGIS Pro 2.0+ SDK
+    * Important Note: Visual Studio 2013 is required if building on ArcGIS 10.3.1
+* ArcGIS for Desktop 
+	* ArcMap 10.3.1+
+	* ArcGIS Pro 2.1+
+* ArcGIS Desktop SDK for .NET 10.3.1+
+	* [ArcGIS Desktop for .NET Requirements](https://desktop.arcgis.com/en/desktop/latest/get-started/system-requirements/arcobjects-sdk-system-requirements.htm)
+* [ArcGIS Pro SDK](http://pro.arcgis.com/en/pro-app/sdk/) 2.1+
 
-### Users
+### Run Requirements
 
-* ArcGIS Pro 2.0+
+* ArcGIS for Desktop 
+	* ArcMap 10.3.1+
+	* ArcGIS Pro 2.1+
 
 ## Instructions
 
@@ -194,7 +203,7 @@ A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating m
 
 * [Military Tools for ArcGIS](http://solutions.arcgis.com/defense/help/military-tools/)
 * [ArcGIS for Defense Downloads](http://appsforms.esri.com/products/download/#ArcGIS_for_Defense)
-* [ArcGIS Solutions Website](http://solutions.arcgis.com/military/)
+* [ArcGIS Solutions Website](http://solutions.arcgis.com)
 * [Military Overlay Template](http://esriurl.com/AFDMilitaryOverlay)
 * [ArcGIS Pro Help](http://pro.arcgis.com/en/pro-app/)
 * [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
@@ -228,15 +237,17 @@ This software is governed by [the Microsoft Public License (Ms-PL)](http://wpfto
 
 * Extended WPF Toolkit Community Edition - http://wpftoolkit.codeplex.com
 
-## Licensing
+## Repository Points of Contact 
+Contact the [Military Tools team](mailto:defensesolutions@esri.com)
 
-Copyright 2016-2017 Esri
+## Licensing
+Copyright 2018 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+You may obtain a copy of the License at:
 
-   http://www.apache.org/licenses/LICENSE-2.0
+   http://www.apache.org/licenses/LICENSE-2.0.
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -244,7 +255,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-A copy of the license is available in the repository's [license.txt](license.txt) file.
-
-[](Esri Tags: Military Analyst Defense ArcGIS ArcObjects .NET WPF ArcGISSolutions ArcMap ArcPro Add-In Symbol Editor Military-Tools-for-ArcGIS)
-[](Esri Language: C-Sharp) 
+A copy of the license is available in the repository's [license.txt](./License.txt) file.
