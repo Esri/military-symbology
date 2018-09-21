@@ -46,17 +46,17 @@ namespace ProSymbolEditor
 {
     internal class MilitarySymbolDockpaneViewModel : DockPane, IDataErrorInfo
     {
-        public ProSymbolEditor.Views.SearchView SearchViewTab { get; set; }
+        public Views.SearchView SearchViewTab { get; set; }
 
-        public ProSymbolEditor.Views.ModifyView ModifyViewTab { get; set; }
+        public Views.ModifyView ModifyViewTab { get; set; }
 
-        public ProSymbolEditor.Views.FavoritesView FavoritesViewTab { get; set; }
+        public Views.FavoritesView FavoritesViewTab { get; set; }
 
-        public ProSymbolEditor.Views.SymbolView SymbolViewTab { get; set; }
+        public Views.SymbolView SymbolViewTab { get; set; }
 
-        public ProSymbolEditor.Views.LabelView LabelViewTab { get; set; }
+        public Views.LabelView LabelViewTab { get; set; }
 
-        public ProSymbolEditor.Views.CoordinateView CoordinateViewTab { get; set; }
+        public Views.CoordinateView CoordinateViewTab { get; set; }
         
         //Member Variables
         private const string _dockPaneID = "ProSymbolEditor_MilitarySymbolDockpane";
