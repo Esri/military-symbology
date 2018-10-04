@@ -52,16 +52,41 @@ namespace ProSymbolEditor
         {
             get
             {
-                return GetStandardLabel(Standard);
+                return GetShortStandardLabel(Standard);
             }
         }
 
         public static string GetStandardLabel(SupportedStandardsType standardIn)
+        {
+            if (standardIn == SupportedStandardsType.mil2525d)
+                return "MIL-STD-2525D";
+            else
+                return "MIL-STD-2525B w/ Change 2";
+        }
+
+        public static SupportedStandardsType GetStandardFromLabel(string standardString)
+        {
+            if (standardString == GetStandardLabel(SupportedStandardsType.mil2525c_b2))
+                return SupportedStandardsType.mil2525c_b2;
+            else
+                return SupportedStandardsType.mil2525d;
+        }
+
+
+        public static string GetShortStandardLabel(SupportedStandardsType standardIn)
         {           
             if (standardIn == SupportedStandardsType.mil2525d)
                 return "2525D";
             else
                 return "2525B";
+        }
+
+        public static string GetDatasetName(SupportedStandardsType standardIn)
+        {
+            if (standardIn == SupportedStandardsType.mil2525d)
+                return "militaryoverlay2525d";
+            else
+                return "militaryoverlay2525b2";
         }
 
         public static string GetStandardString(SupportedStandardsType standardIn)
@@ -75,14 +100,6 @@ namespace ProSymbolEditor
         public static string GetDictionaryString()
         {
             return "mil" + StandardString.ToLower();
-        }
-
-        public static string GetDatasetName()
-        {
-            if (Standard == SupportedStandardsType.mil2525c_b2)
-                return "militaryoverlay2525b2";
-            else
-                return "militaryoverlay2525d";
         }
 
         public static string NameSeparator
@@ -392,6 +409,32 @@ namespace ProSymbolEditor
             dictionaryRenderer.FieldMap = stringMap;
 
             return dictionaryRenderer;
+        }
+
+        public static string BrowseItem(string itemFilter, string initialPath = "")
+        {
+            string itemPath = "";
+
+            if (string.IsNullOrEmpty(initialPath))
+                initialPath = ArcGIS.Desktop.Core.Project.Current.HomeFolderPath;
+
+            ArcGIS.Desktop.Catalog.OpenItemDialog pathDialog =
+                new ArcGIS.Desktop.Catalog.OpenItemDialog()
+                {
+                    Title = "Select Folder",
+                    InitialLocation = initialPath,
+                    MultiSelect = false,
+                    Filter = itemFilter,
+                };
+
+            bool? ok = pathDialog.ShowDialog();
+            if ((ok == true) && (pathDialog.Items.Count() > 0))
+            {
+                IEnumerable<ArcGIS.Desktop.Core.Item> selectedItems = pathDialog.Items;
+                itemPath = selectedItems.First().Path;
+            }
+
+            return itemPath;
         }
 
     }

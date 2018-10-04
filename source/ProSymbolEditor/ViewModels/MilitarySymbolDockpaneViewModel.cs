@@ -50,6 +50,28 @@ namespace ProSymbolEditor
         private const string _dockPaneID = "ProSymbolEditor_MilitarySymbolDockpane";
         private const string _menuID = "ProSymbolEditor_MilitarySymbolDockpane_Menu";
 
+        public bool IsAddinEnabled
+        {
+            get
+            {
+                return isAddinEnabled;
+            }
+            set
+            {
+                isAddinEnabled = value;
+
+                if (!isAddinEnabled)
+                {
+                    IsCoordinateTabEnabled = false;
+                    IsStyleItemSelected = false;
+                    SelectedTabIndex = 0;
+                }
+
+                NotifyPropertyChanged(() => IsAddinEnabled);
+            }
+        }
+        private bool isAddinEnabled = false;
+
         public string StatusMessage
         {
             get
@@ -169,7 +191,6 @@ namespace ProSymbolEditor
             this.IsFavoriteItemSelected = false;
             this.SelectedTabIndex = 0;
             this.SearchString = "";
-            this.StatusMessage = "";
             _symbolAttributeSet.ResetAttributes();
             SelectedStyleTags.Clear();
             SelectedFeaturesCollection.Clear();
@@ -200,26 +221,76 @@ namespace ProSymbolEditor
 
         private async Task Initialize()
         {
+            // Not enabled until Schema found/set
+            IsAddinEnabled = false;
+
+            ProSymbolEditorModule.Current.MilitaryOverlaySchema.Reset();
+
+            StatusMessage = "Addin Not Enabled";
+
             // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
-            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
-            bool enabled2525D = await isEnabledMethod;
+            bool isEnabled2525C_B2 = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
+            bool isEnabled2525D = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
 
-            Task<bool> isEnabledMethod2 = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
-            bool enabled2525C_B2 = await isEnabledMethod2;
-
-            // However, if both standards in project (or neither) - use the default setting
-            if ((enabled2525D && enabled2525C_B2) ||
-                (!enabled2525D && !enabled2525C_B2))
+            if (!isEnabled2525D && !isEnabled2525C_B2)
             {
-                setStandardFromSettings();
+                // If neither standard found in the project, prompt the user to:
+                // Add the Layer package for the desired standard and/or select an existing GDB 
+
+                var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                    "The Military Symbol Editor requires the Military Overlay data model.\n" +
+                    "Would you like to add the data model \n" +
+                    "(database schema and layers to the TOC) to the project?. \n",
+                    "Add-in Disabled",
+                    System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
+
+                bool success = false;
+                if (Convert.ToString(result) == "Yes")
+                {
+                    success = await ShowSettingsWindowAsync(true);
+                }
+                if (!success)
+                {
+                    return;
+                }
             }
             else
             {
-                if (enabled2525D)
-                    ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                // Note: this special case where both standards/databases exist only 
+                // occurs in the Military Overlay Template
+                if (isEnabled2525D && isEnabled2525C_B2)
+                {
+                    // However, if both standards are found in GDBs in the project, 
+                    // let the user pick the one to use
+                    var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                            "Multiple databases containing the Military Overlay datamodel were found in this project. \n" +
+                            "Would you like to select the default database to use for edits?", "Multiple Military Overlay Databases",
+                            System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
+
+                    if (Convert.ToString(result) == "Yes")
+                    {
+                        bool success = await ShowSettingsWindowAsync(true);
+
+                        if (!success)
+                            return;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
                 else
-                    ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+                {
+                    if (isEnabled2525D)
+                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                    else
+                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+
+                    StatusMessage = "Initialized";
+                }
             }
+
+            IsAddinEnabled = true;
 
             //Add military style to project
             Task<StyleProjectItem> getMilitaryStyle = GetMilitaryStyleAsync();
@@ -289,7 +360,7 @@ namespace ProSymbolEditor
             SelectedFeaturesCollection = new ObservableCollection<SelectedFeature>();
             BindingOperations.EnableCollectionSynchronization(SelectedFeaturesCollection, _lock);
 
-            _progressDialogLoad = new ProgressDialog("Loading...");
+            _progressDialogLoad = new ProgressDialog("Loading Layer Package...");
             _progressDialogSearch = new ProgressDialog("Searching...");
 
             //Load saved favorites
@@ -996,67 +1067,213 @@ namespace ProSymbolEditor
             aboutWindow.ShowDialog(FrameworkApplication.Current.MainWindow);
         }
 
+        // Async version called when schema is not found 
+        private async Task<bool> ShowSettingsWindowAsync(bool initialConfiguration)
+        {
+            bool success = false;
+
+            // ensure called on UI thread 
+            await Application.Current.Dispatcher.Invoke(async() =>
+            {
+                success = await ShowSettingsWindow(initialConfiguration);
+            });
+
+            IsAddinEnabled = success;
+
+            return success;
+        }
+
+        // Relay Command version called on button click
         private async void ShowSettingsWindow(object parameter)
         {
-            SettingsWindow settingsWindow = new SettingsWindow();
-            settingsWindow.Checked2525D =
-                (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525d);
+            // If this is shown on start, when the addin is first enabled
+            // enable some extra features (setting the database, adding the layer package, etc.)
+            bool initialConfiguration = false;
+            if (parameter != null)
+                initialConfiguration = (bool)parameter;
 
-            ProSymbolUtilities.SupportedStandardsType previousSettingStandard = ProSymbolUtilities.Standard;
+            bool success = false;
+
+            await Application.Current.Dispatcher.Invoke(async () =>
+            {
+                success = await ShowSettingsWindow(initialConfiguration);
+            });
+
+            IsAddinEnabled = success;
+        }
+
+        private async Task<bool> ShowSettingsWindow(bool initialConfiguration)
+        { 
+            string previousDefaultDatabase = ProSymbolEditorModule.Current.
+            MilitaryOverlaySchema.DatabaseName;
+            bool enabledWithPreviousStandard = false;
+            if (initialConfiguration || !string.IsNullOrEmpty(previousDefaultDatabase))
+                enabledWithPreviousStandard = await ProSymbolEditorModule.Current.
+                    MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+
+            ProSymbolUtilities.SupportedStandardsType previousSettingStandard =
+                ProSymbolUtilities.Standard;
+
+            bool isSettingsReadOnly = false;
+            if (enabledWithPreviousStandard && !initialConfiguration)
+            {
+                string message = "This project already contains a database with schema for standard: " + 
+                    ProSymbolUtilities.GetStandardLabel(previousSettingStandard) + ".\n" +
+                    "Please create a new project to change these settings.";
+                MessageBoxResult result = 
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, 
+                    "Application Settings Read-Only", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                isSettingsReadOnly = true;
+            }
+
+            if (!isSettingsReadOnly)
+            {
+                // set this status in case user cancels any of this setup at start
+                StatusMessage = "Addin Not Enabled";
+            }
+
+            SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.IsSettingsReadOnly = isSettingsReadOnly;
+            settingsWindow.Standard = previousSettingStandard;
+            settingsWindow.DefaultDatabase = previousDefaultDatabase;
+            settingsWindow.IsSelectDBEnabled = !isSettingsReadOnly;
 
             settingsWindow.ShowDialog(FrameworkApplication.Current.MainWindow);
-            if (settingsWindow.DialogResult == true)
+
+            bool enabledWithNewStandard = false;
+
+            // If Settings Dialog cancelled - or read-only - return
+            if (isSettingsReadOnly)
+                return true;
+            if (settingsWindow.DialogResult != true)
+                return false; 
+
+            ProSymbolUtilities.SupportedStandardsType newSettingStandard =
+                settingsWindow.Standard;
+
+            string newDatabase = settingsWindow.DefaultDatabase;
+
+            if (settingsWindow.DefaultDatabaseChanged)
             {
-                ProSymbolUtilities.SupportedStandardsType newSettingStandard;
+                var currentItem = ItemFactory.Instance.Create(newDatabase);
 
-                if (settingsWindow.Checked2525D == true)
-                    newSettingStandard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
-                else
-                    newSettingStandard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
-
-                // If standard has been changed
-                if (previousSettingStandard != newSettingStandard)
+                // Check item is GDB
+                if (!(currentItem is GDBProjectItem))
                 {
-                    Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
-                    bool enabledWithPreviousStandard = await isEnabledMethod;
-
-                    //Check for Schema again
-                    Task<bool> isEnabledMethodAfterChange = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(newSettingStandard);
-                    bool enabledWithNewStandard = await isEnabledMethodAfterChange;
-
-                    if (enabledWithPreviousStandard && !enabledWithNewStandard)
-                    {
-                        // TRICKY: If Enabled with previous standard but not current, don't allow the switch
-                        // Adding new lpkx will not work
-                        string message = "Could not switch standard version. " +
-                            "The project already contains a GDB with Standard " +
-                            ProSymbolUtilities.GetStandardLabel(previousSettingStandard) +
-                            ". Please create a new project to use " + 
-                            ProSymbolUtilities.GetStandardLabel(newSettingStandard) + ".";
-                        MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Could Not Switch Standard Version", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-
-                        return;
-                    }
-                    else if (!enabledWithNewStandard)
-                    {
-                        StatusMessage = "Addin Not Enabled";
-                    }
-                    else
-                    {
-                        StatusMessage = "Standard Changed";
-                    }
-
-                    ProSymbolUtilities.Standard = newSettingStandard;
-
-                    // Reset everything when standard changed
-                    resetViewModelState();
-
-                    // Save settings (or TODO: or do this in close/unload):
-                    Properties.Settings.Default.DefaultStandard =
-                        ProSymbolUtilities.GetStandardString(ProSymbolUtilities.Standard);
-                    Properties.Settings.Default.Save();
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                        "Could not open Database: " + newDatabase,
+                        "Could Not Open Database",
+                        MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    return false;
                 }
+
+                // Ensure database is added to the project if not present
+                GDBProjectItem existingGdbProjectItem =
+                    Project.Current.GetItems<GDBProjectItem>().FirstOrDefault(
+                    item => item.Path.Equals(newDatabase, StringComparison.CurrentCultureIgnoreCase));
+
+                if (existingGdbProjectItem == null)
+                {
+                    // If not currently in the project - add it
+                    await QueuedTask.Run(() => Project.Current.AddItem(currentItem as IProjectItem));
+
+                    // Then save the project with the new GDB package added
+                    ProSymbolUtilities.SaveProject();
+                }
+
+                enabledWithNewStandard =
+                    await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(newDatabase, newSettingStandard);
+
+                if (enabledWithNewStandard)
+                {
+                    StatusMessage = "Database Added";
+                }
+                else
+                {
+                    // Need to do an additional check if this database already contains a 
+                    // military overlay 
+                    bool dbAlreadyContainsMilitaryOverlay =
+                        await ProSymbolEditorModule.Current.MilitaryOverlaySchema.
+                            GDBContainsMilitaryOverlay(currentItem as GDBProjectItem);
+
+                    if (dbAlreadyContainsMilitaryOverlay)
+                    {
+                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                            "Database: " + newDatabase + "\n" +
+                            "already contains a schema for Military Overlay." + "\n" +
+                            "Please select a different database from Addin Settings.",
+                            "Unable to Select Database", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+                        // Remove the item added above
+                        await QueuedTask.Run(() => Project.Current.RemoveItem(currentItem as IProjectItem));
+
+                        // Then save the project with the new GDB package added
+                        ProSymbolUtilities.SaveProject();
+
+                        return false;
+                    }
+
+                    // We need to make this the project default database so layer package unpacks here:
+                    await QueuedTask.Run(() => Project.Current.SetDefaultGeoDatabasePath(newDatabase) );
+                }
+            } // if DefaultDatabaseChanged
+            else
+            {
+                enabledWithNewStandard = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(newSettingStandard);
             }
+
+            ProSymbolUtilities.Standard = newSettingStandard;
+
+            if (!enabledWithNewStandard)
+            {
+                var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                    "A military overlay schema matching standard: " + "\n" +
+                    ProSymbolUtilities.GetStandardLabel(newSettingStandard) + "\n" +
+                    "will be added to database: " + 
+                    newDatabase + "\n" +
+                    "Note: this may take several minutes."
+                    , "Adding Schema to Database",
+                    MessageBoxButton.OKCancel, MessageBoxImage.Information);
+
+                if (Convert.ToString(result) == "Cancel")
+                {
+                    return false;
+                }
+
+                // Unpack layer package to the default GDB and add layers
+                bool success = await AddLayerPackageToMapAsync();
+                if (!success)
+                {
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                        "Unable to add layer package to map.\n" +
+                        "Please try again from Addin Settings when map available.",
+                        "Unable to Add Layer Package to Map", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+                    return false;
+                }
+
+                // Save the project with the layer package added
+                ProSymbolUtilities.SaveProject();
+                enabledWithNewStandard = true;
+
+                StatusMessage = "Military Layers Added";
+            }
+
+            if (!enabledWithNewStandard)
+            {
+                StatusMessage = "Addin Not Enabled";
+                return false;
+            }
+
+            // Reset everything when standard changed
+            resetViewModelState();
+
+            // Save settings (or TODO: or do this in close/unload):
+            Properties.Settings.Default.DefaultStandard =
+                ProSymbolUtilities.GetStandardString(ProSymbolUtilities.Standard);
+            Properties.Settings.Default.Save();
+
+            return true;
         }
 
         private async void SaveEdits(object parameter)
@@ -1883,10 +2100,12 @@ namespace ProSymbolEditor
         private async void OnMapSelectionChanged(ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEventArgs args)
         {
             // Only allow selection event if addin enabled
-            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
-            bool enabled = await isEnabledMethod;
+            if (!IsAddinEnabled)
+                return;
 
-            if (!enabled)
+            // And data model present
+            bool isSchemaPresent = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+            if (!isSchemaPresent)
                 return;
 
             //Get the selected features from the map and filter out the standalone table selection.
@@ -2529,7 +2748,7 @@ namespace ProSymbolEditor
             // First check if is already enabled
             bool isEnabled = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
             if (isEnabled)
-                return;
+                return; 
 
             // Clear the selected entries so they can be reselected after the schema adds
             // (they will not fully initialize without a valid schema)
@@ -2539,19 +2758,21 @@ namespace ProSymbolEditor
                 SelectedFavoriteSymbol = null;
 
             // If not enabled see if schema should be added
+            // Run on UI Thread
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
             {
                 string message = "The " + ProSymbolUtilities.StandardLabel +
-                    " Military Overlay schema is not detected in any database in your project," +
-                    " so the Pro Symbol Editor cannot continue." +
-                    " Would you like to add the Military Overlay Layer Package to add the schema to your project?";
+                    " Military Overlay schema is not detected in any database in your project. \n" +
+                    " so the Military Symbol Editor cannot continue." +
+                    " Would you like to add the Military Overlay Layer Package to your project?";
 
                 MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result.ToString() == "Yes")
                 {
                     if (MapView.Active != null)
                     {
-                        await AddLayerPackageToMapAsync();
+                        await ShowSettingsWindowAsync(true);
+
                         // Save the project with the layer package added
                         ProSymbolUtilities.SaveProject();
                         // Reselect this style item onced the layer package is added
@@ -2575,13 +2796,36 @@ namespace ProSymbolEditor
                     // WORKAROUND:
                     SearchString = "ADDIN NOT ENABLED";
                 }
+
             }));
         }
 
-        private async Task AddLayerPackageToMapAsync()
+        private async Task<bool> AddLayerPackageToMapAsync()
         {
             try
             {
+                // Check the active map is available+ready
+                if ((MapView.Active == null) || (MapView.Active.Map == null))
+                {
+                    var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                        "The project map is not currently available.\n" +
+                        "Would you like to try again?\n" +
+                        "Note: wait for map to be visible and ready.", "Retry Adding Military Overlay Datamodel?",
+                        System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
+                    if (Convert.ToString(result) != "Yes")
+                        return false;
+                }
+
+                // Check again
+                if ((MapView.Active == null) || (MapView.Active.Map == null))
+                {
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                        "Unable to add layer package to map.\n" +
+                        "Please ensure the project contains a map and the map is visible.",
+                        "Unable to Add Layer Package to Map", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    return false;
+                }
+
                 _progressDialogLoad.Show();
 
                 bool enabled = false;
@@ -2591,8 +2835,7 @@ namespace ProSymbolEditor
                     // "MilitaryOverlay-{standard}.lpkx"
                     string layerFileName = "MilitaryOverlay-" + ProSymbolUtilities.StandardString.ToLower() + ".lpkx";
                     LayerFactory.Instance.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
-                    Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
-                    enabled = await isEnabledMethod;
+                    enabled = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
 
                     if (enabled)
                         StatusMessage = "Military Layers Added";
@@ -2600,14 +2843,16 @@ namespace ProSymbolEditor
                         StatusMessage = "Addin Not Enabled";
                 });
 
-                _progressDialogLoad.Hide();
             }
             catch (Exception exception)
             {
                 // Catch any exception found and display a message box.
                 ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Exception caught: " + exception.Message);
-                return;
+                return false;
             }
+
+            _progressDialogLoad.Hide();
+            return true;
         }
 
         #endregion
@@ -2649,7 +2894,8 @@ namespace ProSymbolEditor
 
             pane.Activate();
         }
-    }
+
+    } // end class
 
     /// <summary>
     /// Button implementation to show the DockPane.
