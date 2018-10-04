@@ -28,36 +28,6 @@ namespace ProSymbolEditor
         public MilitarySymbolDockpaneView()
         {
             InitializeComponent();
-
-            ///////////////////////////////////////////////////////
-            // IMPORTANT + WORKAROUND + TRICKY:
-            // See: SymbolAttributeSet.GetBitmapImageAsync for explanation of
-            // this workaround, remove this flip transformation when workaround
-            // no longer needed
-            Point transformPoint = new Point(0.5, 0.5);
-            ScaleTransform flipTransform = new ScaleTransform();
-            flipTransform.ScaleX = -1;
-            flipTransform.ScaleY = -1;
-
-            searchTabImage.RenderTransformOrigin = transformPoint;
-            searchTabImage.RenderTransform = flipTransform;
-
-            modifyTabImage.RenderTransformOrigin = transformPoint;
-            modifyTabImage.RenderTransform = flipTransform;
-
-            symbolTabImage.RenderTransformOrigin = transformPoint;
-            symbolTabImage.RenderTransform = flipTransform;
-
-            favoritesTabImage.RenderTransformOrigin = transformPoint;
-            favoritesTabImage.RenderTransform = flipTransform;
-
-            textTabSymbolImage.RenderTransformOrigin = transformPoint;
-            textTabSymbolImage.RenderTransform = flipTransform;
-
-            coordTabSymbolImage.RenderTransformOrigin = transformPoint;
-            coordTabSymbolImage.RenderTransform = flipTransform;
-            // END WORKAROUND
-            ///////////////////////////////////////////////////////
         }
     }
 }

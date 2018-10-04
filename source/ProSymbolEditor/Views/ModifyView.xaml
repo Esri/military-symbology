@@ -1,0 +1,225 @@
+﻿<UserControl x:Class="ProSymbolEditor.Views.ModifyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions"
+            xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"             
+            xmlns:sys="clr-namespace:System;assembly=mscorlib"             
+            xmlns:local="clr-namespace:ProSymbolEditor"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0">
+            <StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition MaxHeight="240" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label
+                                                Grid.Column="0"
+                                                Margin="5,0,0,0"
+                                                Content="Use the select tool to select a feature to modify" />
+
+                        <ToggleButton
+                                                Grid.Column="1"
+                                                Margin="2,0,0,0"
+                                                Command="{Binding SelectToolCommand}"
+                                                IsChecked="{Binding SelectToolEnabled}"
+                                                Focusable="False">
+                            <Image
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Source="pack://application:,,,/MilitarySymbolEditor;component/Images/SelectionSelectTool16.png" />
+                            <ToggleButton.Style>
+                                <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Width" Value="20"/>
+                                    <Setter Property="Height" Value="20"/>
+                                    <Setter Property="Padding" Value="1"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="false">
+                                            <Setter Property="Opacity" Value="0.5"/>
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                        <ContentPresenter Margin="2" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}" RecognizesAccessKey="True" Content="{TemplateBinding ContentControl.Content}" />
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                    </Grid>
+
+                    <ListBox
+                                            x:Name="editSelectionList"
+                                            Grid.Row="1"
+                                            MinHeight="120"
+                                            MaxHeight="240"
+                                            Margin="5,5,5,5"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            ItemsSource="{Binding SelectedFeaturesCollection, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedItem="{Binding SelectedSelectedFeature, Mode=TwoWay}">
+                        <ListBox.Style>
+                            <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedFeaturesCollection.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.Style>
+
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel>
+                                    <!--  Memory footprint is only 200 mb  -->
+                                </VirtualizingStackPanel>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="2,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                                            Grid.Column="0"
+                                                            Text="{Binding FeatureLayerName}"
+                                                            TextAlignment="Left" />
+                                    <TextBlock
+                                                            Grid.Column="1"
+                                                            Text=" : "
+                                                            TextAlignment="Left" />
+                                    <TextBlock
+                                                            Grid.Column="2"
+                                                            Text="{Binding SymbolSetName}"
+                                                            TextAlignment="Left" />
+                                    <TextBlock
+                                                            Grid.Column="3"
+                                                            Text=" : "
+                                                            TextAlignment="Left" />
+                                    <TextBlock
+                                                            Grid.Column="4"
+                                                            Text="{Binding EntityName}"
+                                                            TextAlignment="Left" />
+                                    <TextBlock
+                                                            Grid.Column="5"
+                                                            Text=" : Object ID "
+                                                            TextAlignment="Left" />
+                                    <TextBlock
+                                                            Grid.Column="6"
+                                                            Text="{Binding ObjectId}"
+                                                            TextAlignment="Left" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Image
+                                            x:Name="modifyTabImage"
+                                            Grid.Row="0"
+                                            Width="180"
+                                            Height="180"
+                                            Margin="20,1,20,1"
+                                            VerticalAlignment="Top"
+                                            RenderOptions.BitmapScalingMode="HighQuality"
+                                            Source="{Binding EditSelectedFeatureSymbol.SymbolImage}">
+                        <Image.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding SaveImageToCommand}" Header="Save Image As..." />
+                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="Copy Image to Clipboard" />
+                            </ContextMenu>
+                        </Image.ContextMenu>
+                    </Image>
+
+                    <DataGrid 
+                                            Grid.Row="1"
+                                            Height="150"
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding EditSelectedFeatureSymbol.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}" 
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" 
+                                            Visibility="{Binding EditSelectedFeatureSymbol.IsValid, Converter={StaticResource BoolToVis}, FallbackValue=Collapsed}">
+                        <DataGrid.ToolTip>
+                            <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                            </ToolTip>
+                        </DataGrid.ToolTip>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                                    Grid.Column="2"
+                                    Margin="0,0,-10,10"
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding GoToTabCommand}"
+                                    CommandParameter="3"
+                                    IsEnabled="{Binding IsStyleItemSelected}"
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
+                                    ToolTip="Go to Symbol Tab">
+                <Button.RenderTransform>
+                    <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
+                </Button.RenderTransform>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>
