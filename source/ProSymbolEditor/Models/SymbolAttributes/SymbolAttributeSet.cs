@@ -170,6 +170,9 @@ namespace ProSymbolEditor
             }
         }
 
+        // disable some operations when resetting 
+        private bool resettingAttributes = false;
+
         /// <summary>
         /// These are the symbol tags retrieved from a military feature style file or favorite
         /// See the style file documentation: https://github.com/Esri/military-features-data
@@ -845,6 +848,8 @@ namespace ProSymbolEditor
             //Reset attributes
             _symbolImage = null;
 
+            resettingAttributes = true;
+
             DisplayAttributes.SymbolSet = "";
             DisplayAttributes.SymbolEntity = "";
             DisplayAttributes.ExtendedFunctionCode = "";
@@ -877,11 +882,17 @@ namespace ProSymbolEditor
 
             StandardVersion = ProSymbolUtilities.StandardString;
 
+            resettingAttributes = false;
+
             NotifyPropertyChanged(() => IsValid);
         }
 
         private void Attributes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            // disable this when everything being reset
+            if (resettingAttributes)
+                return;
+
             GeneratePreviewSymbol();
 
             // Tell the proprties datagrids to get the updated info
