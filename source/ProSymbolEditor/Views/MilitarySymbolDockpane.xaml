@@ -79,7 +79,7 @@
     </UserControl.Resources>
 
     <Grid Margin="3,3,3,3">
-        <DockPanel>
+        <DockPanel PreviewMouseDown="DockPanel_MouseDown">
             <Grid>
                 <Grid.RowDefinitions>
                     <!--        Tabs         -->
