@@ -257,6 +257,9 @@ namespace ProSymbolEditor
                 // If neither standard found in the project, prompt the user to:
                 // Add the Layer package for the desired standard and/or select an existing GDB 
                 // CheckAddinEnabled();
+                resetViewModelState();
+                IsAddinEnabled = false;
+
                 return;
             }
             else
