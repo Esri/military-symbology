@@ -166,7 +166,7 @@ namespace ProSymbolEditor
                 {
                     ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
                         "Database: " + selectedGDB + "\n" +
-                        "contains a schema for standard: " +
+                        "contains a schema for standard: \n" +
                         ProSymbolUtilities.GetStandardLabel(standardFound) + ".\n" +
                         "Setting standard to this value."
                         , "Database Contains Schema",

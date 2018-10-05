@@ -29,5 +29,14 @@ namespace ProSymbolEditor
         {
             InitializeComponent();
         }
+
+        private void DockPanel_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            FrameworkElement element = sender as FrameworkElement;
+
+            MilitarySymbolDockpaneViewModel vm = this.DataContext as MilitarySymbolDockpaneViewModel;
+
+            vm.DockPanel_MouseDown(e);
+        }
     }
 }

@@ -77,8 +77,15 @@ namespace ProSymbolEditor
                     IsCoordinateTabEnabled = false;
                     IsStyleItemSelected = false;
                     SelectedTabIndex = 0;
+
+                    _searchString = "Please click to enable addin...";
+                }
+                else
+                {
+                    _searchString = "";
                 }
 
+                NotifyPropertyChanged(() => SearchString);
                 NotifyPropertyChanged(() => IsAddinEnabled);
             }
         }
@@ -246,25 +253,14 @@ namespace ProSymbolEditor
 
             if (!isEnabled2525D && !isEnabled2525C_B2)
             {
+                // NOTE: this has been moved to DockPane_OnMouseClick
                 // If neither standard found in the project, prompt the user to:
                 // Add the Layer package for the desired standard and/or select an existing GDB 
+                // CheckAddinEnabled();
+                resetViewModelState();
+                IsAddinEnabled = false;
 
-                var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                    "The Military Symbol Editor requires the Military Overlay data model.\n" +
-                    "Would you like to add the data model \n" +
-                    "(database schema and layers to the TOC) to the project?. \n",
-                    "Add-in Disabled",
-                    System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
-
-                bool success = false;
-                if (Convert.ToString(result) == "Yes")
-                {
-                    success = await ShowSettingsWindowAsync(true);
-                }
-                if (!success)
-                {
-                    return;
-                }
+                return;
             }
             else
             {
@@ -2251,6 +2247,30 @@ namespace ProSymbolEditor
             SelectedSelectedFeature = SelectedFeaturesCollection.FirstOrDefault();
         }
 
+        private async Task CheckAddinEnabled()
+        {
+            if (!IsAddinEnabled)
+            {
+                await Task.FromResult<bool>(true);
+
+                var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                    "The Military Symbol Editor requires the Military Overlay data model.\n" +
+                    "Would you like to add the data model \n" +
+                    "(database schema and layers to the TOC) to the project?. \n",
+                    "Add-in Disabled",
+                    System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
+
+                if (Convert.ToString(result) == "Yes")
+                {
+                    bool success = await ShowSettingsWindowAsync(true);
+                }
+            }
+        }
+
+        public async void DockPanel_MouseDown(System.Windows.Input.MouseButtonEventArgs e)
+        {
+            await CheckAddinEnabled();
+        }
         #endregion
 
         private void ClearSearchSelection()

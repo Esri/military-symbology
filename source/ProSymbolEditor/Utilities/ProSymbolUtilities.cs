@@ -421,7 +421,7 @@ namespace ProSymbolEditor
             ArcGIS.Desktop.Catalog.OpenItemDialog pathDialog =
                 new ArcGIS.Desktop.Catalog.OpenItemDialog()
                 {
-                    Title = "Select Folder",
+                    Title = "Select Geodatabase",
                     InitialLocation = initialPath,
                     MultiSelect = false,
                     Filter = itemFilter,
