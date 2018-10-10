@@ -1852,6 +1852,11 @@ namespace ProSymbolEditor
                 //Serialize Favorites and save to file
                 var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
                 File.WriteAllText(_favoritesFilePath, favoritesJson);
+
+                // Switch to Favorites Tab to provide feedback favorite was added
+                SelectedTabIndex = 2;
+
+                SelectedFavoriteSymbol = favoriteSet;
             }
             catch (Exception ex)
             {
@@ -2618,7 +2623,10 @@ namespace ProSymbolEditor
                 //Transfer field values into SymbolAttributes
                 SymbolAttributeSet set = new SymbolAttributeSet(fieldValues);
                 set.SymbolTags = _selectedSelectedFeature.ToString().Replace(ProSymbolUtilities.NameSeparator,";");
-                set.SymbolTags += ";" + ProSymbolUtilities.GeometryTypeToGeometryTagString(geoType) + ";MAP_SELECTION;" + set.Name;
+                set.SymbolTags += ";" + ProSymbolUtilities.GeometryTypeToGeometryTagString(geoType);
+                set.SymbolTags += ";" + set.Name;
+                set.SymbolTags += ";MAP_SELECTION";
+
                 GeometryType = geoType;
                 EditSelectedFeatureSymbol = set;
                 LoadSymbolIntoWorkflow(true);

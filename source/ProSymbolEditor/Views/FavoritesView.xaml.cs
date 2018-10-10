@@ -39,5 +39,12 @@ namespace ProSymbolEditor.Views
             // END WORKAROUND
             ///////////////////////////////////////////////////////
         }
+
+        private void favortitesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // If SelectedItem binding element has been set from VM, 
+            // center the selection in the listview
+            favortitesList.ScrollIntoView(favortitesList.SelectedItem);
+        }
     }
 }
