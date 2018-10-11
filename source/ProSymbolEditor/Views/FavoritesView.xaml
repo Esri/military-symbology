@@ -79,7 +79,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <ListBox
+                        <ListBox x:Name="favortitesList" 
                                                 Grid.Row="0"
                                                 Grid.RowSpan="4"
                                                 Grid.Column="0"
@@ -89,7 +89,7 @@
                                                 VerticalAlignment="Stretch"
                                                 ItemsSource="{Binding FavoritesView, UpdateSourceTrigger=PropertyChanged}"
                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                SelectedItem="{Binding SelectedFavoriteSymbol, Mode=TwoWay}">
+                                                SelectedItem="{Binding SelectedFavoriteSymbol, Mode=TwoWay}" SelectionChanged="favortitesList_SelectionChanged">
 
                             <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
