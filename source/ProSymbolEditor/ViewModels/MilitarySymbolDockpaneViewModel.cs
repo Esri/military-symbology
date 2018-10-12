@@ -2625,7 +2625,7 @@ namespace ProSymbolEditor
                 set.SymbolTags = _selectedSelectedFeature.ToString().Replace(ProSymbolUtilities.NameSeparator,";");
                 set.SymbolTags += ";" + ProSymbolUtilities.GeometryTypeToGeometryTagString(geoType);
                 set.SymbolTags += ";" + set.Name;
-                set.SymbolTags += ";MAP_SELECTION";
+                set.SymbolTags += ";" + ProSymbolUtilities.StandardLabel;
 
                 GeometryType = geoType;
                 EditSelectedFeatureSymbol = set;
