@@ -1419,16 +1419,16 @@ namespace ProSymbolEditor
             _progressDialogSearch.Show();
             await SearchSymbols();
 
-            //Check for Schema again
-            Task<bool> isEnabledMethod = ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
-            bool enabled = await isEnabledMethod;
-
-            if (enabled)
-                StatusMessage = ""; // TODO: add message
-            else
-                StatusMessage = "Addin Not Enabled";
+            StatusMessage = "Search Complete";
 
             NotifyPropertyChanged(() => StyleItems);
+
+            if (_styleItems.Count > 0)
+            {
+                // Select the first item returned
+                SelectedStyleItem = _styleItems[0];
+                NotifyPropertyChanged(() => SelectedStyleItem);
+            }
         }
 
         private void GoToTab(object parameter)
@@ -2707,7 +2707,9 @@ namespace ProSymbolEditor
             {
                 var list = new List<StyleItemType>() { StyleItemType.PointSymbol, StyleItemType.LineSymbol, StyleItemType.PolygonSymbol };
 
-                IEnumerable<IList<SymbolStyleItem>> symbolQuery = from type in list select _militaryStyleItem.SearchSymbols(type, _searchString);
+                IEnumerable<IList<SymbolStyleItem>> symbolQuery = 
+                    from type in list
+                        select _militaryStyleItem.SearchSymbols(type, _searchString);
 
                 var combinedSymbols = new List<SymbolStyleItem>();
                 int outParse;
@@ -2735,6 +2737,8 @@ namespace ProSymbolEditor
                             ));
                     }
                 }
+
+                combinedSymbols.Sort((a, b) => (a.Name.CompareTo(b.Name)));
 
                 _styleItems = combinedSymbols;
 
