@@ -142,7 +142,7 @@
                                     Margin="0,0,-10,10"                                    
                                     HorizontalAlignment="Left"
                                     Command="{Binding GoToTabCommand}"
-                                    CommandParameter="4"
+                                    CommandParameter="3"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Back to Label" >
                 <Button.RenderTransform>

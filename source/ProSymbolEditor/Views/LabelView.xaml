@@ -348,7 +348,7 @@
                                     HorizontalAlignment="Left"
                                     Margin="0,0,-10,10"                                    
                                     Command="{Binding GoToTabCommand}"
-                                    CommandParameter="3"
+                                    CommandParameter="2"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Back to Symbol">
                 <Button.RenderTransform>
@@ -392,7 +392,7 @@
                                     Margin="0,0,-10,10"                                    
                                     HorizontalAlignment="Right"
                                     Command="{Binding GoToTabCommand}"
-                                    CommandParameter="5"
+                                    CommandParameter="4"
                                     IsEnabled="{Binding IsCoordinateTabEnabled}"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Enter Coordinates">

@@ -29,7 +29,7 @@ namespace ProSymbolEditor
         public SelectionMapTool()
         {
             IsSketchTool = true;
-            SketchType = SketchGeometryType.Rectangle;
+            SketchType = SketchGeometryType.Point; 
             SketchOutputMode = SketchOutputMode.Screen;
         }
 

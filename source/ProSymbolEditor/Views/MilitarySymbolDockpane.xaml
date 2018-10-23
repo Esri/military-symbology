@@ -84,6 +84,8 @@
                 <Grid.RowDefinitions>
                     <!--        Tabs         -->
                     <RowDefinition Height="*" />
+                    <!--  Bottom Selection Tool Row  -->
+                    <RowDefinition Height="Auto" />                    
                     <!--  Bottom Button Row  -->
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -99,9 +101,9 @@
                         <UserControl Content="{Binding SearchViewTab}" />
                     </TabItem>
 
-                    <TabItem Header="Modify">
+                    <!--<TabItem Header="Modify">
                         <UserControl Content="{Binding ModifyViewTab}" />
-                    </TabItem>
+                    </TabItem>-->
 
                     <TabItem Header="Favorites">
                         <UserControl Content="{Binding FavoritesViewTab}" />
@@ -121,8 +123,50 @@
 
                 </TabControl>
 
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" >
+                    <Label
+                            Grid.Column="0"
+                            Margin="5,0,0,0"
+                            Content="Use the select tool to select a feature to modify" />
+
+                    <ToggleButton
+                            Grid.Column="1"
+                            Margin="2,0,0,0"
+                            Command="{Binding SelectToolCommand}"
+                            IsChecked="{Binding SelectToolEnabled}"
+                            Focusable="False">
+                        <Image
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Source="pack://application:,,,/MilitarySymbolEditor;component/Images/SelectionSelectTool16.png" />
+                        <ToggleButton.Style>
+                            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                <Setter Property="Width" Value="20"/>
+                                <Setter Property="Height" Value="20"/>
+                                <Setter Property="Padding" Value="1"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="false">
+                                        <Setter Property="Opacity" Value="0.5"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                    <ContentPresenter Margin="2" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}" RecognizesAccessKey="True" Content="{TemplateBinding ContentControl.Content}" />
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ToggleButton.Style>
+                    </ToggleButton>
+                </StackPanel>
+                
                 <!-- Bottom Button Row -->
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
                     <Button
                         Margin="5"
                         Command="{Binding ShowAboutWindowCommand}"
@@ -171,7 +215,7 @@
                     </Button>
                 </StackPanel>
                 <StackPanel
-                    Grid.Row="1"
+                    Grid.Row="2"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
                     <Label

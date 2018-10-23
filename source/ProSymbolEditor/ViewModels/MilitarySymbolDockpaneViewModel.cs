@@ -756,47 +756,34 @@ namespace ProSymbolEditor
                 if (_selectedSelectedFeature == value)
                     return;
 
-                if (SelectedTabIndex == 0)
-                {
-                    // Don't allow selection from the Search Tab
-                    return;
-                }
-                else
-                {
-                    // for other tabs - clear the search selection (so user has to reselect)
-                    ClearSearchSelection();
-                }
-
                 _selectedSelectedFeature = value;
 
-                if (_selectedSelectedFeature != null)
-                {
-                    try
-                    {
-                        // TODO: there is an exception here when:
-                        // 1: Multiple Maps are open
-                        // 2: Trying to flash a feature that is selected on another map, that is not the active map
-                        MapView.Active.FlashFeature(_selectedSelectedFeature.FeatureLayer, _selectedSelectedFeature.ObjectId);
-                        ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(async () => {
-                            await CreateSymbolSetFromFieldValuesAsync();
-                        });
-                    }
-                    catch (Exception exception)
-                    {
-                        System.Diagnostics.Trace.WriteLine("Exception in SelectedSelectedFeature: " + exception.Message);
-                    }
-                }
-                else
+                if (_selectedSelectedFeature == null)
                 {
                     EditSelectedFeatureSymbol = null;
                     IsStyleItemSelected = false;
 
-                    if (SelectedTabIndex > 2)
-                    {
-                        //Reset tab to modify if the user is in symbol/text/coordinates (since they'll be disabled)
-                        SelectedTabIndex = 1;
-                    }
+                    return;
                 }
+
+                try
+                {
+                    // TODO: there is an exception here when:
+                    // 1: Multiple Maps are open
+                    // 2: Trying to flash a feature that is selected on another map, that is not the active map
+                    MapView.Active.FlashFeature(_selectedSelectedFeature.FeatureLayer, _selectedSelectedFeature.ObjectId);
+                    ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(async () => {
+                        await CreateSymbolSetFromFieldValuesAsync();
+                    });
+                }
+                catch (Exception exception)
+                {
+                    System.Diagnostics.Trace.WriteLine("Exception in SelectedSelectedFeature: " + exception.Message);
+                }
+
+                // if not on Symbol or Label Tab, set to Symbol Tab
+                if (!((SelectedTabIndex == 2) || (SelectedTabIndex == 3)))
+                    SelectedTabIndex = 2;  // Symbol Tab
 
                 NotifyPropertyChanged(() => SelectedSelectedFeature);
             }
@@ -1854,7 +1841,7 @@ namespace ProSymbolEditor
                 File.WriteAllText(_favoritesFilePath, favoritesJson);
 
                 // Switch to Favorites Tab to provide feedback favorite was added
-                SelectedTabIndex = 2;
+                SelectedTabIndex = 1;
 
                 SelectedFavoriteSymbol = favoriteSet;
             }
@@ -2816,7 +2803,7 @@ namespace ProSymbolEditor
             // (they will not fully initialize without a valid schema)
             if (SelectedTabIndex == 0)
                 SelectedStyleItem = null;
-            else if (SelectedTabIndex == 2)
+            else if (SelectedTabIndex == 1)
                 SelectedFavoriteSymbol = null;
 
             // If not enabled see if schema should be added
@@ -2840,7 +2827,7 @@ namespace ProSymbolEditor
                         // Reselect this style item onced the layer package is added
                         if (SelectedTabIndex == 0)
                             SelectedStyleItem = _savedStyleItem;
-                        else if (SelectedTabIndex == 2)
+                        else if (SelectedTabIndex == 1)
                             SelectedFavoriteSymbol = _savedSelectedFavoriteSymbol;
                     }
                     else
