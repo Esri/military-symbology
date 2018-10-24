@@ -127,7 +127,7 @@
                     <Label
                             Grid.Column="0"
                             Margin="5,0,0,0"
-                            Content="Use the select tool to select a feature to modify" />
+                            Content="Select a feature to modify" />
 
                     <ToggleButton
                             Grid.Column="1"

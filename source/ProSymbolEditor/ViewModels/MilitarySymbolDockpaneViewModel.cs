@@ -543,6 +543,12 @@ namespace ProSymbolEditor
                 else
                     IsCoordinateTabEnabled = value;
 
+                if (!_isStyleItemSelected && (SelectedTabIndex > 1))
+                {
+                    //Reset tab
+                    SelectedTabIndex = 0;
+                }
+
                 NotifyPropertyChanged(() => IsStyleItemSelected);
             }
         }
@@ -758,7 +764,8 @@ namespace ProSymbolEditor
 
                 _selectedSelectedFeature = value;
 
-                if (_selectedSelectedFeature == null)
+                if ((_selectedSelectedFeature == null) ||
+                    !IsAddinEnabled || (MapView.Active == null))
                 {
                     EditSelectedFeatureSymbol = null;
                     IsStyleItemSelected = false;
@@ -1363,6 +1370,9 @@ namespace ProSymbolEditor
 
             if (modificationResult)
             {
+                // Now actually save the edits
+                await ArcGIS.Desktop.Core.Project.Current.SaveEditsAsync();
+
                 // Reselect the saved feature (so UI is updated and feature flashed)
                 if (savedGeometry != null)
                 {
@@ -2231,6 +2241,9 @@ namespace ProSymbolEditor
                             }
 
                             SelectedFeaturesCollection.Add(newSelectedFeature);
+
+                            // Stop after the first one added
+                            break; 
                         }
                     } // for each id
                 });
