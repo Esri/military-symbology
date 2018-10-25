@@ -401,7 +401,7 @@
             <Button
                                     Grid.Row="0"
                                     Grid.Column="1"
-                                    Width="90"
+                                    
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveSymbolFileCommand}"
                                     Content="Add Favorite"
@@ -409,12 +409,11 @@
             <ToggleButton
                                     Grid.Row="0"
                                     Grid.Column="2"
-                                    Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
-                                    Content="Add to Map"
+                                    Content=" Add to Map "
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
                                     Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
@@ -424,8 +423,7 @@
             </ToggleButton>
             <Button
                                     Grid.Row="0"
-                                    Grid.Column="2"
-                                    Width="82"
+                                    Grid.Column="2"                                    
                                     Height="24"
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveEditsCommand}"

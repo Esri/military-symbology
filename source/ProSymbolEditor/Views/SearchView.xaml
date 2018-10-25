@@ -217,7 +217,6 @@
 
             <Button
                                     Grid.Column="0"
-                                    Width="90"
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveSymbolFileCommand}"
                                     Content="Add Favorite"
@@ -225,12 +224,11 @@
             <ToggleButton
                                     Name="searchAddToMapButton"
                                     Grid.Column="1"
-                                    Width="90"
                                     Height="24"
                                     HorizontalAlignment="Center"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
-                                    Content="Add to Map"
+                                    Content=" Add to Map "
                                     IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="{Binding IsStyleItemSelected}"
                                     ToolTip="Add to Map"

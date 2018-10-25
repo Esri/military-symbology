@@ -271,7 +271,6 @@
             <Button
                                     Grid.Row="0"
                                     Grid.Column="1"
-                                    Width="81"
                                     HorizontalAlignment="Center"
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="1"
