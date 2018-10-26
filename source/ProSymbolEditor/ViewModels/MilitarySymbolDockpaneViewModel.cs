@@ -2722,13 +2722,22 @@ namespace ProSymbolEditor
                     // Change style query based on current standard
                     if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
                     {
-                        // TODO: also include 2525C keys in search                                         
-                        combinedSymbols.AddRange(symbolType.Where(x =>
-                          (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
-                           ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
-                        // TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
-                        && (!x.Tags.Contains("NEW_AT_2525D"))
-                        ));
+                        // Keys changed format at 2.3
+                        if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 3))
+                        {
+                            combinedSymbols.AddRange(symbolType.Where(x =>
+                             ((x.Key.Length == 10) ||
+                              ((x.Key.Length == 12) && (x.Key[10] == '_')))
+                              ));
+                        }
+                        else
+                        {
+                            // TODO: also include 2525C keys in search                                         
+                            combinedSymbols.AddRange(symbolType.Where(x =>
+                              (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
+                               ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
+                               ));
+                        }
                     }
                     else // 2525D
                     {
