@@ -271,7 +271,6 @@
             <Button
                                     Grid.Row="0"
                                     Grid.Column="1"
-                                    Width="81"
                                     HorizontalAlignment="Center"
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="1"
@@ -300,7 +299,7 @@
                                     Margin="0,0,-10,10"                                    
                                     HorizontalAlignment="Right"
                                     Command="{Binding GoToTabCommand}"
-                                    CommandParameter="3"
+                                    CommandParameter="2"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Go to Symbol Tab">
                 <Button.RenderTransform>

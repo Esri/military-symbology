@@ -348,7 +348,7 @@
                                     HorizontalAlignment="Left"
                                     Margin="0,0,-10,10"                                    
                                     Command="{Binding GoToTabCommand}"
-                                    CommandParameter="3"
+                                    CommandParameter="2"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Back to Symbol">
                 <Button.RenderTransform>
@@ -357,19 +357,17 @@
             </Button>
             <Button
                                     Grid.Column="1"
-                                    Width="90"
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveSymbolFileCommand}"
                                     Content="Add Favorite"
                                     Style="{DynamicResource Esri_SimpleButton}" />
             <ToggleButton
                                     Grid.Column="2"
-                                    Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
-                                    Content="Add to Map"
+                                    Content=" Add to Map "
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
                                     Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
@@ -379,7 +377,6 @@
             </ToggleButton>
             <Button
                                     Grid.Column="2"
-                                    Width="82"
                                     Height="24"
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveEditsCommand}"
@@ -392,7 +389,7 @@
                                     Margin="0,0,-10,10"                                    
                                     HorizontalAlignment="Right"
                                     Command="{Binding GoToTabCommand}"
-                                    CommandParameter="5"
+                                    CommandParameter="4"
                                     IsEnabled="{Binding IsCoordinateTabEnabled}"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Enter Coordinates">

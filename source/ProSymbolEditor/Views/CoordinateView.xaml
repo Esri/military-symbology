@@ -142,7 +142,7 @@
                                     Margin="0,0,-10,10"                                    
                                     HorizontalAlignment="Left"
                                     Command="{Binding GoToTabCommand}"
-                                    CommandParameter="4"
+                                    CommandParameter="3"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Back to Label" >
                 <Button.RenderTransform>
@@ -150,20 +150,18 @@
                 </Button.RenderTransform>
             </Button>
             <Button
-                                    Grid.Column="1"
-                                    Width="90"
+                                    Grid.Column="1"                                 
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveSymbolFileCommand}"
                                     Content="Add Favorite"
                                     Style="{DynamicResource Esri_SimpleButton}" />
             <ToggleButton
-                                    Grid.Column="2"
-                                    Width="101"
+                                    Grid.Column="2"                                    
                                     Height="24"
                                     HorizontalAlignment="Center"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
-                                    Content="Add to Map"
+                                    Content=" Add to Map "
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
                                     Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" >
@@ -173,7 +171,6 @@
             </ToggleButton>
             <Button
                                     Grid.Column="2"
-                                    Width="101"
                                     Height="24"
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveEditsCommand}"

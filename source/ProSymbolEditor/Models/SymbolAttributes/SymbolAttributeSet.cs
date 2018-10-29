@@ -41,7 +41,9 @@ namespace ProSymbolEditor
         {
             Initialize();
 
+            resettingAttributes = true;
             SetPropertiesFromFieldAttributes(fieldValues);
+            resettingAttributes = false;
         }
 
         private void Initialize()
@@ -282,7 +284,13 @@ namespace ProSymbolEditor
             // Step 1: Create a dictionary/map of well known attribute names to values
             Dictionary<string, object> attributeSet = GenerateAttributeSetDictionary();
 
-            if ((attributeSet == null) || (attributeSet.Count == 0))
+            int minimumAttributeCount = 3;
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                minimumAttributeCount = 2;
+
+            // Don't create preview until we have the minimum number of attribute to 
+            // minimize flicker
+            if ((attributeSet == null) || (attributeSet.Count < minimumAttributeCount))
             {
                 _symbolImage = null;
                 return;
