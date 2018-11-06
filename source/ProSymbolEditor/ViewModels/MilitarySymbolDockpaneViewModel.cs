@@ -1356,7 +1356,20 @@ namespace ProSymbolEditor
                                 var task = editOperation.ExecuteAsync();
                                 modificationResult = task.Result;
                                 if (!modificationResult)
+                                {
                                     message = editOperation.ErrorMessage;
+                                    QueuedTask.Run(async () =>
+                                    {
+                                        await Project.Current.DiscardEditsAsync();
+                                    });
+                                }
+                                else
+                                {
+                                    QueuedTask.Run(async () =>
+                                    {
+                                        await Project.Current.SaveEditsAsync();
+                                    });
+                                }
                             }
                         }
                     }
@@ -1542,7 +1555,12 @@ namespace ProSymbolEditor
 
                                 if (!creationResult)
                                 {
-                                    message = editOperation.ErrorMessage;
+                                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message);
+                                    await Project.Current.DiscardEditsAsync();
+                                }
+                                else
+                                {
+                                    await Project.Current.SaveEditsAsync();
                                 }
 
                                 break;
