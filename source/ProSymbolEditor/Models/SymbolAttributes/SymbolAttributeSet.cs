@@ -284,9 +284,9 @@ namespace ProSymbolEditor
             // Step 1: Create a dictionary/map of well known attribute names to values
             Dictionary<string, object> attributeSet = GenerateAttributeSetDictionary();
 
-            int minimumAttributeCount = 3;
+            int minimumAttributeCount = 2;
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-                minimumAttributeCount = 2;
+                minimumAttributeCount = 1;
 
             // Don't create preview until we have the minimum number of attribute to 
             // minimize flicker
