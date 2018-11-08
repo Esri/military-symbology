@@ -284,12 +284,17 @@ namespace ProSymbolEditor
             // Step 1: Create a dictionary/map of well known attribute names to values
             Dictionary<string, object> attributeSet = GenerateAttributeSetDictionary();
 
-            int minimumAttributeCount = 2;
+            // Don't create preview until we have the minimum number of attributes in
+            // order to minimize flicker - minimum attributes:
+            // 2525D: { symbolset, entity, affiliation }
+            // 2525B: { functioncode, affiliation }
+            int minimumAttributeCount = 3;
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-                minimumAttributeCount = 1;
+            {
+                minimumAttributeCount = 2;
+            }
 
-            // Don't create preview until we have the minimum number of attribute to 
-            // minimize flicker
+            // Validate that image is ready to be created
             if ((attributeSet == null) || (attributeSet.Count < minimumAttributeCount))
             {
                 _symbolImage = null;
