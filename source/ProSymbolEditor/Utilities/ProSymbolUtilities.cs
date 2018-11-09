@@ -107,6 +107,24 @@ namespace ProSymbolEditor
             get { return " : "; }
         }
 
+        public static string ProVersion
+        {
+            get { return proVersion; }
+        }
+        private static string proVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+
+        public static int ProMajorVersion
+        {
+            get { return proMajorVersion; }
+        }
+        private static int proMajorVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Major;
+
+        public static int ProMinorVersion
+        {
+            get { return proMinorVersion; }
+        }
+        private static int proMinorVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Minor;
+
         public static string AddinAssemblyLocation()
         {
             var asm = System.Reflection.Assembly.GetExecutingAssembly();
@@ -436,6 +454,6 @@ namespace ProSymbolEditor
 
             return itemPath;
         }
-
+       
     }
 }

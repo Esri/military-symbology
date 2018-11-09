@@ -292,9 +292,16 @@ namespace ProSymbolEditor
                     if (isEnabled2525D)
                         ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
                     else
+                    {
                         ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
 
-                    StatusMessage = "Initialized";
+                        // Tricky 2525D check above disables 2525C/B2 so have to check again
+                        await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+                    }
+
+                    // One last check
+                    if (ProSymbolEditorModule.Current.MilitaryOverlaySchema.SchemaExists)
+                        StatusMessage = "Initialized";
                 }
             }
 
@@ -2371,7 +2378,9 @@ namespace ProSymbolEditor
             string affiliationField = "identity";
             string hostileValue = "Hostile/Faker";
             string friendValue = "Friend";
+            string neutralValue = "Neutral";
 
+            // These have different values for 2525C/B2
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
                 affiliationField = "affiliation";
@@ -2379,24 +2388,26 @@ namespace ProSymbolEditor
                 friendValue = "Friendly";
             }
 
+            string upperTagsName = _selectedStyleItem.Tags.ToUpper();
+            string upperItemName = _selectedStyleItem.Name.ToUpper();
+
             string identityCode = "";
-            if (_selectedStyleItem.Tags.ToUpper().Contains("FRIEND") ||
-                _selectedStyleItem.Name.ToUpper().Contains(": FRIEND"))
+            if (upperTagsName.Contains("FRIEND") || upperItemName.Contains(": FRIEND"))
             {
                 identityCode = await GetDomainValueAsync(affiliationField, friendValue);
             }
-            else if (_selectedStyleItem.Tags.ToUpper().Contains("HOSTILE") ||
-                _selectedStyleItem.Name.ToUpper().Contains(": HOSTILE"))
+            else if (upperTagsName.Contains("HOSTILE") || upperItemName.Contains(": HOSTILE"))
             {
                 identityCode = await GetDomainValueAsync(affiliationField, hostileValue);
             }
-            else if (_selectedStyleItem.Tags.ToUpper().Contains("NEUTRAL") ||
-                _selectedStyleItem.Name.ToUpper().Contains(": NEUTRAL"))
+            else if (upperTagsName.Contains("NEUTRAL") || upperItemName.Contains(": NEUTRAL"))
             {
-                identityCode = await GetDomainValueAsync(affiliationField, "Neutral");
+                identityCode = await GetDomainValueAsync(affiliationField, neutralValue);
             }
-            else if (_selectedStyleItem.Tags.ToUpper().Contains("UNKNOWN") ||
-                _selectedStyleItem.Name.ToUpper().Contains(": UNKNOWN"))
+            else
+            // IMPORTANT: Default to the "Unknown" value - as of 2.3 affiliation is now 
+            // a required attribute
+            // else if (upperTagsName.Contains("UNKNOWN") || upperItemName.Contains(": UNKNOWN"))
             {
                 identityCode = await GetDomainValueAsync(affiliationField, "Unknown");
             }
@@ -2740,13 +2751,24 @@ namespace ProSymbolEditor
                     // Change style query based on current standard
                     if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
                     {
-                        // TODO: also include 2525C keys in search                                         
-                        combinedSymbols.AddRange(symbolType.Where(x =>
-                          (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
-                           ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
-                        // TODO: Find less ugly way of filtering out 2525D symbols when in 2525C_B2 mode:
-                        && (!x.Tags.Contains("NEW_AT_2525D"))
-                        ));
+                        // Keys changed format at 2.3
+                        if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 3))
+                        {
+                            combinedSymbols.AddRange(symbolType.Where(x =>
+                             ((x.Key.Length == 10) ||
+                              ((x.Key.Length == 12) && (x.Key[10] == '_')))
+                              ));
+                        }
+                        else
+                        {
+                            // TODO: also include 2525C keys in search                                         
+                            combinedSymbols.AddRange(symbolType.Where(x =>
+                              (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
+                               ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
+                               // Filter out 2525D-only symbols when in 2525C_B2 mode:
+                               && (!x.Tags.Contains("NEW_AT_2525D"))
+                               ));
+                        }
                     }
                     else // 2525D
                     {
