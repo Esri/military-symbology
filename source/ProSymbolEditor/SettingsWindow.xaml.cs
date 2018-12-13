@@ -109,6 +109,7 @@ namespace ProSymbolEditor
             SymbologyStandards = new ObservableCollection<string>();
             SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2));
             SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.mil2525d));
+            SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.app6d));
         }
 
         public void ShowDialog(Window owner)

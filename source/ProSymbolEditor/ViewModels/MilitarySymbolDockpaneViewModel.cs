@@ -250,8 +250,9 @@ namespace ProSymbolEditor
             // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
             bool isEnabled2525C_B2 = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
             bool isEnabled2525D = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
+            bool isEnabledAPP6D = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.app6d);
 
-            if (!isEnabled2525D && !isEnabled2525C_B2)
+            if (!isEnabled2525D && !isEnabled2525C_B2 &&!isEnabledAPP6D)
             {
                 // NOTE: this has been moved to DockPane_OnMouseClick
                 // If neither standard found in the project, prompt the user to:
@@ -289,14 +290,19 @@ namespace ProSymbolEditor
                 }
                 else
                 {
-                    if (isEnabled2525D)
-                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                    if (isEnabledAPP6D)
+                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.app6d;
                     else
                     {
-                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+                        if (isEnabled2525D)
+                            ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                        else
+                        {
+                            ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
 
-                        // Tricky 2525D check above disables 2525C/B2 so have to check again
-                        await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+                            // Tricky 2525D check above disables 2525C/B2 so have to check again
+                            await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+                        }
                     }
 
                     // One last check
@@ -2286,7 +2292,7 @@ namespace ProSymbolEditor
                 var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
                     "The Military Symbol Editor requires the Military Overlay data model.\n" +
                     "Would you like to add the data model \n" +
-                    "(database schema and layers to the TOC) to the project?. \n",
+                    "(database schema and layers to the TOC) to the project? \n",
                     "Add-in Disabled",
                     System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
 

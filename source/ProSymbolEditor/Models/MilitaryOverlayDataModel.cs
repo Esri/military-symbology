@@ -89,6 +89,12 @@ namespace ProSymbolEditor
             else
                 symbolSetMapping = _symbolSetMapping2525D;
 
+            // For now, APP6D has this extra one
+            if (standard == ProSymbolUtilities.SupportedStandardsType.app6d)
+            {
+                symbolSetMapping.Add(new SymbolSetMapping("Dismounted", GeometryType.Point, "27"));
+            }
+
             foreach (SymbolSetMapping mapping in symbolSetMapping)
             {
                 string featureClassName = EGDBPrefixName + mapping.FeatureClassName;
