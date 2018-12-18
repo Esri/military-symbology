@@ -84,16 +84,12 @@ namespace ProSymbolEditor
             Dictionary<string, bool> featureClassExists = new Dictionary<string, bool>();
 
             List<SymbolSetMapping> symbolSetMapping = null;
-            if (standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-                symbolSetMapping = _symbolSetMapping2525C;
-            else
-                symbolSetMapping = _symbolSetMapping2525D;
-
-            // For now, APP6D has this extra one
             if (standard == ProSymbolUtilities.SupportedStandardsType.app6d)
-            {
-                symbolSetMapping.Add(new SymbolSetMapping("Dismounted", GeometryType.Point, "27"));
-            }
+                symbolSetMapping = _symbolSetMappingAPP6D;
+            else if (standard == ProSymbolUtilities.SupportedStandardsType.mil2525d)
+                symbolSetMapping = _symbolSetMapping2525D;
+            else
+                symbolSetMapping = _symbolSetMapping2525C;
 
             foreach (SymbolSetMapping mapping in symbolSetMapping)
             {
@@ -134,10 +130,12 @@ namespace ProSymbolEditor
 
         public string GetDatasetName()
         {            
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-                return EGDBPrefixName + "militaryoverlay2525b2";
-            else
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.app6d)
+                return EGDBPrefixName + "militaryoverlayapp6d";
+            else if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525d)
                 return EGDBPrefixName + "militaryoverlay2525d";
+            else
+                return EGDBPrefixName + "militaryoverlay2525b2";
         }
 
         public async Task<bool> IsGDBAndFeatureClassInActiveView(string featureClassName)
@@ -485,6 +483,18 @@ namespace ProSymbolEditor
         }
         private static List<SymbolSetMapping> _symbolSetMapping2525D = null;
 
+        public static List<SymbolSetMapping> SymbolSetToFeatureClassMappingAPP6D
+        {
+            get
+            {
+                if (_symbolSetMapping2525D == null)
+                    initializeSymbolSetToFeatureClassMapping();
+
+                return _symbolSetMappingAPP6D;
+            }
+        }
+        private static List<SymbolSetMapping> _symbolSetMappingAPP6D = null;
+
         public static List<SymbolSetMapping> SymbolSetToFeatureClassMapping2525C
         {
             get
@@ -533,6 +543,15 @@ namespace ProSymbolEditor
             _symbolSetMapping2525D.Add(new SymbolSetMapping("SIGINT", GeometryType.Point, "53"));
             _symbolSetMapping2525D.Add(new SymbolSetMapping("SIGINT", GeometryType.Point, "54"));
             _symbolSetMapping2525D.Add(new SymbolSetMapping("Cyberspace", GeometryType.Point, "60"));
+
+            // APP6D
+            _symbolSetMappingAPP6D = new List<SymbolSetMapping>();
+            _symbolSetMappingAPP6D.Add(new SymbolSetMapping("Dismounted", GeometryType.Point, "27"));
+            foreach (SymbolSetMapping mapping in _symbolSetMapping2525D)
+            {
+                _symbolSetMappingAPP6D.Add(mapping);
+            }
+
 
             // 2525C
             _symbolSetMapping2525C = new List<SymbolSetMapping>();

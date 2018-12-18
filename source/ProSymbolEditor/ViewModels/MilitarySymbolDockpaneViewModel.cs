@@ -299,11 +299,11 @@ namespace ProSymbolEditor
                         else
                         {
                             ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
-
-                            // Tricky 2525D check above disables 2525C/B2 so have to check again
-                            await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
                         }
                     }
+
+                    // Tricky APP6D/2525D/2525B checks above disables others, so have to check again
+                    await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
 
                     // One last check
                     if (ProSymbolEditorModule.Current.MilitaryOverlaySchema.SchemaExists)
