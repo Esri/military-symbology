@@ -250,7 +250,13 @@ namespace ProSymbolEditor
             // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
             bool isEnabled2525C_B2 = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
             bool isEnabled2525D = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
-            bool isEnabledAPP6D = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.app6d);
+
+            // APP6D only available after 2.2
+            bool isEnabledAPP6D = false;
+            if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 2))
+            {
+                isEnabledAPP6D = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.app6d);
+            }
 
             if (!isEnabled2525D && !isEnabled2525C_B2 &&!isEnabledAPP6D)
             {
