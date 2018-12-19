@@ -487,7 +487,7 @@ namespace ProSymbolEditor
         {
             get
             {
-                if (_symbolSetMapping2525D == null)
+                if (_symbolSetMappingAPP6D == null)
                     initializeSymbolSetToFeatureClassMapping();
 
                 return _symbolSetMappingAPP6D;
@@ -546,12 +546,13 @@ namespace ProSymbolEditor
 
             // APP6D
             _symbolSetMappingAPP6D = new List<SymbolSetMapping>();
+            // Adds this mapping
             _symbolSetMappingAPP6D.Add(new SymbolSetMapping("Dismounted", GeometryType.Point, "27"));
+            // Copy the remaining mappings from 2525D
             foreach (SymbolSetMapping mapping in _symbolSetMapping2525D)
             {
                 _symbolSetMappingAPP6D.Add(mapping);
             }
-
 
             // 2525C
             _symbolSetMapping2525C = new List<SymbolSetMapping>();
