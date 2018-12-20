@@ -14,14 +14,13 @@
  *   limitations under the License.
  ******************************************************************************/
 
-using ArcGIS.Desktop.Framework.Contracts;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+
+using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Framework.Contracts;
 
 namespace ProSymbolEditor
 {
@@ -132,6 +131,8 @@ namespace ProSymbolEditor
         private string _extendedFunctionCode;
         private DomainCodedValuePair _selectedExtendedFunctionCodeDomainPair;
 
+        public GeometryType SymbolGeometry { get; set; }
+
         public string LegacySymbolIdCode
         {
             get
@@ -142,30 +143,51 @@ namespace ProSymbolEditor
                 if ((ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
                     && (!String.IsNullOrEmpty(extendedFunctionCode)) && (extendedFunctionCode.Length >= 10))
                 {
-                    sb.Append(extendedFunctionCode[0]);
-                    // TODO: Check for Alpha
-                    if (String.IsNullOrEmpty(Identity))
-                        sb.Append('U');
-                    else
-                        sb.Append(Identity);
-                    sb.Append(extendedFunctionCode[2]);
+                    bool isWeather = (extendedFunctionCode[0] == 'W');
 
-                    // TODO: Check for Alpha
-                    if (String.IsNullOrEmpty(Status))
-                        sb.Append('P');
+                    if (isWeather)
+                    {
+                        sb.Append(extendedFunctionCode.Substring(0, 10));
+
+                        switch (this.SymbolGeometry)
+                        {
+                            case GeometryType.Point: sb.Append("P--"); break;
+                            case GeometryType.Polyline: sb.Append("-L-"); break;
+                            case GeometryType.Polygon: sb.Append("--A"); break;
+                            default: sb.Append("---"); break;
+                        }
+
+                        sb.Append("--");
+                    }
                     else
-                        sb.Append(Status);
-                    sb.Append(extendedFunctionCode.Substring(4, 6));
-                    // TODO: Check for Alpha
-                    if (String.IsNullOrEmpty(Indicator))
-                        sb.Append('-');
-                    else
-                        sb.Append(Indicator);
-                    if (String.IsNullOrEmpty(Echelon))
-                        sb.Append('-');
-                    else
-                        sb.Append(Echelon);
-                    sb.Append("---");
+                    {
+                        sb.Append(extendedFunctionCode[0]);
+                        if (String.IsNullOrEmpty(Identity))
+                            sb.Append('U');
+                        else
+                            sb.Append(Identity);
+
+                        sb.Append(extendedFunctionCode[2]);
+
+                        if (String.IsNullOrEmpty(Status))
+                            sb.Append('P');
+                        else
+                            sb.Append(Status);
+
+                        sb.Append(extendedFunctionCode.Substring(4, 6));
+
+                        if (String.IsNullOrEmpty(Indicator))
+                            sb.Append('-');
+                        else
+                            sb.Append(Indicator);
+
+                        if (String.IsNullOrEmpty(Echelon))
+                            sb.Append('-');
+                        else
+                            sb.Append(Echelon);
+
+                        sb.Append("---");
+                    }
                 }
 
                 return sb.ToString();

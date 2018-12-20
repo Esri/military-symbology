@@ -718,8 +718,10 @@ namespace ProSymbolEditor
                         }
                     }
 
+                    _symbolAttributeSet.DisplayAttributes.SymbolGeometry = GeometryType;
+
                     //Parse key for symbol id codes
-                    string[] symbolIdCode = ParseKeyForSymbolIdCode(_selectedStyleItem.Tags);
+                    string[] symbolIdCode = GetSymbolIdCodeFromStyle(_selectedStyleItem);
                     _symbolAttributeSet.DisplayAttributes.SymbolSet = symbolIdCode[0];
                     _symbolAttributeSet.DisplayAttributes.SymbolEntity = symbolIdCode[1];
 
@@ -2668,11 +2670,21 @@ namespace ProSymbolEditor
             return;
         }
 
-        private string[] ParseKeyForSymbolIdCode(string tags)
+        /// <summary>
+        /// Gets the Symbol ID Code from a Dictionary Style Item
+        /// </summary>
+        /// <param name="styleItem">Dictionary Style Item</param>
+        /// <returns>
+        /// symbolId[0] = symbol set
+        /// symbolId[1] = entity code
+        /// symbolId[2] = 2525B/C SIDC if applicable
+        /// </returns>
+        private string[] GetSymbolIdCodeFromStyle(SymbolStyleItem styleItem)
         {
-            string[] symbolId = new string[3];
+            string key = styleItem.Key;
+            string tags = styleItem.Tags;
 
-            //TODO: check if symbolid is in key
+            string[] symbolId = new string[3];
 
             int lastSemicolon = tags.LastIndexOf(';');
             string symbolIdCode = tags.Substring(lastSemicolon + 1, tags.Length - lastSemicolon - 1);
@@ -2685,18 +2697,25 @@ namespace ProSymbolEditor
             }
             else // mil2525c_b2
             {
-                string[] tagArray = tags.Split(';');
-                int tagCount = tagArray.Count();
-                if (tagCount > 5)
+                if (ProSymbolUtilities.IsNewStyleFormat)
                 {
-                    // Tricky - Legacy SIDC always Tags[-5]
-                    string legacySidc = tagArray[tagCount - 5];
-
-                    if (legacySidc.Count() >= 10)
+                    if (key.Length >= 10)
+                        symbolId[2] = key.Substring(0, 10);
+                }
+                else
+                {
+                    string[] tagArray = tags.Split(';');
+                    int tagCount = tagArray.Count();
+                    if (tagCount > 5)
                     {
-                        symbolId[2] = string.Format("{0}-{1}-{2}", legacySidc[0], legacySidc[2], legacySidc.Substring(4, 6));
-                    }
+                        // Tricky - Legacy SIDC always Tags[-5]
+                        string legacySidc = tagArray[tagCount - 5];
 
+                        if (legacySidc.Count() >= 10)
+                        {
+                            symbolId[2] = string.Format("{0}-{1}-{2}", legacySidc[0], legacySidc[2], legacySidc.Substring(4, 6));
+                        }
+                    }
                 }
             }
 
@@ -2752,11 +2771,10 @@ namespace ProSymbolEditor
                     if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
                     {
                         // Keys changed format at 2.3
-                        if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 3))
+                        if (ProSymbolUtilities.IsNewStyleFormat)
                         {
                             combinedSymbols.AddRange(symbolType.Where(x =>
-                             ((x.Key.Length == 10) ||
-                              ((x.Key.Length == 12) && (x.Key[10] == '_')))
+                             ((x.Key.Length == 10) || (x.Key.Length == 12) || (x.Key.Length == 13))
                               ));
                         }
                         else
