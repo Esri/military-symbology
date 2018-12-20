@@ -289,7 +289,7 @@ namespace ProSymbolEditor
             // Don't create preview until we have the minimum number of attributes in
             // order to minimize flicker - minimum attributes:
             // 2525D: { symbolset, entity, affiliation }
-            // 2525B: { functioncode, affiliation }
+            // 2525B: { extendedfunctioncode, affiliation }
             int minimumAttributeCount = 4;
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
@@ -298,9 +298,13 @@ namespace ProSymbolEditor
 
             if (attributeSet.ContainsKey("IsMETOC") && (bool)attributeSet["IsMETOC"])
             {
-                if (attributeSet.ContainsKey("extendedfunctioncode"))
+                //////////////////////////
+                // WORKAROUND: Pro 2.3 broke exporting METOC by attribute "extendedfunctioncode"
+                // so have to set "sidc" attribute instead
+                if (ProSymbolUtilities.IsNewStyleFormat && attributeSet.ContainsKey("extendedfunctioncode"))
                     attributeSet.Add("sidc", DisplayAttributes.LegacySymbolIdCode);
-                // METOC do not have identity/affiliation 
+
+                // METOC do not have identity/affiliation so have 1 less attribute
                 minimumAttributeCount--;
             }
 

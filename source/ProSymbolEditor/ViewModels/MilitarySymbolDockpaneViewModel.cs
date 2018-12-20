@@ -221,7 +221,8 @@ namespace ProSymbolEditor
             // re-load the favorites
             foreach (SymbolAttributeSet set in Favorites)
             {
-                set.GeneratePreviewSymbol();
+                if (set.StandardVersion == ProSymbolUtilities.StandardString)
+                    set.GeneratePreviewSymbol();
             }
 
             _favoritesView.Refresh();
@@ -2816,7 +2817,8 @@ namespace ProSymbolEditor
             //Go through favorites, generate symbol image
             foreach (SymbolAttributeSet set in Favorites)
             {
-                set.GeneratePreviewSymbol();
+                if (set.StandardVersion == ProSymbolUtilities.StandardString)
+                    set.GeneratePreviewSymbol();
             }
 
             //Set up filter
