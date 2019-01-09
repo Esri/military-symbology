@@ -97,7 +97,7 @@
                                             Grid.Row="3"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
-                                            Text="{Binding SymbolAttributeSet.LabelAttributes.Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.TypeFieldExists}" />
 
                     <Label
@@ -110,7 +110,7 @@
                                             Grid.Row="4"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
-                                            Text="{Binding SymbolAttributeSet.LabelAttributes.CommonIdentifier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.CommonIdentifier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.CommonIdentifierFieldExists}" />
 
                     <Label
@@ -140,7 +140,7 @@
                                             Grid.Row="6"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
-                                            Text="{Binding SymbolAttributeSet.LabelAttributes.UniqueDesignation}"
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.UniqueDesignation, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.UniqueDesignationFieldExists}" />
 
                     <Label
@@ -180,7 +180,7 @@
                                             Grid.Row="8"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
-                                            Text="{Binding SymbolAttributeSet.LabelAttributes.StaffComments}"
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.StaffComments, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.StaffCommentsFieldExists}" />
 
                     <Label
@@ -193,7 +193,7 @@
                                             Grid.Row="9"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
-                                            Text="{Binding SymbolAttributeSet.LabelAttributes.AdditionalInformation}"
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.AdditionalInformation, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.AdditionalInformationFieldExists}" />
 
                     <Label
@@ -206,7 +206,7 @@
                                             Grid.Row="10"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
-                                            Text="{Binding SymbolAttributeSet.LabelAttributes.HigherFormation}"
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.HigherFormation, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.HigherFormationFieldExists}" />
 
                     <Label
