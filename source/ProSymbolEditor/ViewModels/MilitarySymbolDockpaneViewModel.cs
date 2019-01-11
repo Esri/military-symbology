@@ -78,7 +78,7 @@ namespace ProSymbolEditor
                     IsStyleItemSelected = false;
                     SelectedTabIndex = 0;
 
-                    _searchString = "Please click to enable addin...";
+                    _searchString = "Please click to enable add-in...";
                 }
                 else
                 {
@@ -221,7 +221,8 @@ namespace ProSymbolEditor
             // re-load the favorites
             foreach (SymbolAttributeSet set in Favorites)
             {
-                set.GeneratePreviewSymbol();
+                if (set.StandardVersion == ProSymbolUtilities.StandardString)
+                    set.GeneratePreviewSymbol();
             }
 
             _favoritesView.Refresh();
@@ -245,7 +246,7 @@ namespace ProSymbolEditor
 
             ProSymbolEditorModule.Current.MilitaryOverlaySchema.Reset();
 
-            StatusMessage = "Addin Not Enabled";
+            StatusMessage = "Add-in Not Enabled";
 
             // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
             bool isEnabled2525C_B2 = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
@@ -278,7 +279,7 @@ namespace ProSymbolEditor
                     // However, if both standards are found in GDBs in the project, 
                     // let the user pick the one to use
                     var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                            "Multiple databases containing the Military Overlay datamodel were found in this project. \n" +
+                            "Multiple databases containing the Military Overlay data model were found in this project. \n" +
                             "Would you like to select the default database to use for edits?", "Multiple Military Overlay Databases",
                             System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
 
@@ -730,8 +731,10 @@ namespace ProSymbolEditor
                         }
                     }
 
+                    _symbolAttributeSet.DisplayAttributes.SymbolGeometry = GeometryType;
+
                     //Parse key for symbol id codes
-                    string[] symbolIdCode = ParseKeyForSymbolIdCode(_selectedStyleItem.Tags);
+                    string[] symbolIdCode = GetSymbolIdCodeFromStyle(_selectedStyleItem);
                     _symbolAttributeSet.DisplayAttributes.SymbolSet = symbolIdCode[0];
                     _symbolAttributeSet.DisplayAttributes.SymbolEntity = symbolIdCode[1];
 
@@ -1168,7 +1171,7 @@ namespace ProSymbolEditor
             if (!isSettingsReadOnly)
             {
                 // set this status in case user cancels any of this setup at start
-                StatusMessage = "Addin Not Enabled";
+                StatusMessage = "Add-in Not Enabled";
             }
 
             SettingsWindow settingsWindow = new SettingsWindow();
@@ -1300,7 +1303,7 @@ namespace ProSymbolEditor
 
             if (!enabledWithNewStandard)
             {
-                StatusMessage = "Addin Not Enabled";
+                StatusMessage = "Add-in Not Enabled";
                 return false;
             }
 
@@ -1823,6 +1826,7 @@ namespace ProSymbolEditor
                 //Get feature class name to generate domains
                 SymbolAttributeSet.DisplayAttributes.SymbolSet = loadSet.DisplayAttributes.SymbolSet;
                 SymbolAttributeSet.DisplayAttributes.SymbolEntity = loadSet.DisplayAttributes.SymbolEntity;
+                SymbolAttributeSet.DisplayAttributes.SymbolGeometry = GeometryType;
 
                 SymbolAttributeSet.DisplayAttributes.ExtendedFunctionCode = loadSet.DisplayAttributes.ExtendedFunctionCode;
 
@@ -2297,8 +2301,7 @@ namespace ProSymbolEditor
 
                 var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
                     "The Military Symbol Editor requires the Military Overlay data model.\n" +
-                    "Would you like to add the data model \n" +
-                    "(database schema and layers to the TOC) to the project? \n",
+                    "Would you like to add the data model (database schema and layers) to the project? \n",
                     "Add-in Disabled",
                     System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
 
@@ -2680,35 +2683,61 @@ namespace ProSymbolEditor
             return;
         }
 
-        private string[] ParseKeyForSymbolIdCode(string tags)
+        /// <summary>
+        /// Gets the Symbol ID Code from a Dictionary Style Item
+        /// </summary>
+        /// <param name="styleItem">Dictionary Style Item</param>
+        /// <returns>
+        /// symbolId[0] = symbol set
+        /// symbolId[1] = entity code
+        /// symbolId[2] = 2525B/C SIDC if applicable
+        /// </returns>
+        private string[] GetSymbolIdCodeFromStyle(SymbolStyleItem styleItem)
         {
-            string[] symbolId = new string[3];
+            string key = styleItem.Key;
+            string tags = styleItem.Tags;
 
-            //TODO: check if symbolid is in key
+            string[] symbolId = new string[3];
 
             int lastSemicolon = tags.LastIndexOf(';');
             string symbolIdCode = tags.Substring(lastSemicolon + 1, tags.Length - lastSemicolon - 1);
-            symbolId[0] = string.Format("{0}{1}", symbolIdCode[0], symbolIdCode[1]);
-            symbolId[1] = string.Format("{0}{1}{2}{3}{4}{5}", symbolIdCode[2], symbolIdCode[3], symbolIdCode[4], symbolIdCode[5], symbolIdCode[6], symbolIdCode[7]);
 
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525d)
+            if (string.IsNullOrEmpty(symbolIdCode) || (symbolIdCode.Length < 8))
+            {
+                symbolId[0] = String.Empty;
+                symbolId[1] = String.Empty;
+            }
+            else
+            {
+                symbolId[0] = string.Format("{0}{1}", symbolIdCode[0], symbolIdCode[1]);
+                symbolId[1] = string.Format("{0}{1}{2}{3}{4}{5}", symbolIdCode[2], symbolIdCode[3], symbolIdCode[4], symbolIdCode[5], symbolIdCode[6], symbolIdCode[7]);
+            }
+
+            if (ProSymbolUtilities.Standard != ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
                 symbolId[2] = String.Empty;
             }
             else // mil2525c_b2
             {
-                string[] tagArray = tags.Split(';');
-                int tagCount = tagArray.Count();
-                if (tagCount > 5)
+                if (ProSymbolUtilities.IsNewStyleFormat)
                 {
-                    // Tricky - Legacy SIDC always Tags[-5]
-                    string legacySidc = tagArray[tagCount - 5];
-
-                    if (legacySidc.Count() >= 10)
+                    if (key.Length >= 10)
+                        symbolId[2] = key.Substring(0, 10);
+                }
+                else
+                {
+                    string[] tagArray = tags.Split(';');
+                    int tagCount = tagArray.Count();
+                    if (tagCount > 5)
                     {
-                        symbolId[2] = string.Format("{0}-{1}-{2}", legacySidc[0], legacySidc[2], legacySidc.Substring(4, 6));
-                    }
+                        // Tricky - Legacy SIDC always Tags[-5]
+                        string legacySidc = tagArray[tagCount - 5];
 
+                        if (legacySidc.Count() >= 10)
+                        {
+                            symbolId[2] = string.Format("{0}-{1}-{2}", legacySidc[0], legacySidc[2], legacySidc.Substring(4, 6));
+                        }
+                    }
                 }
             }
 
@@ -2764,11 +2793,10 @@ namespace ProSymbolEditor
                     if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
                     {
                         // Keys changed format at 2.3
-                        if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 3))
+                        if (ProSymbolUtilities.IsNewStyleFormat)
                         {
                             combinedSymbols.AddRange(symbolType.Where(x =>
-                             ((x.Key.Length == 10) ||
-                              ((x.Key.Length == 12) && (x.Key[10] == '_')))
+                             ((x.Key.Length == 10) || (x.Key.Length == 12) || (x.Key.Length == 13))
                               ));
                         }
                         else
@@ -2810,7 +2838,8 @@ namespace ProSymbolEditor
             //Go through favorites, generate symbol image
             foreach (SymbolAttributeSet set in Favorites)
             {
-                set.GeneratePreviewSymbol();
+                if (set.StandardVersion == ProSymbolUtilities.StandardString)
+                    set.GeneratePreviewSymbol();
             }
 
             //Set up filter
@@ -2908,7 +2937,7 @@ namespace ProSymbolEditor
                     // StyleItems.Clear();
                     // NotifyPropertyChanged(() => StyleItems);
                     // WORKAROUND:
-                    SearchString = "ADDIN NOT ENABLED";
+                    SearchString = "ADD-IN NOT ENABLED";
                 }
 
             }));
@@ -2924,7 +2953,7 @@ namespace ProSymbolEditor
                     var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
                         "The project map is not currently available.\n" +
                         "Would you like to try again?\n" +
-                        "Note: wait for map to be visible and ready.", "Retry Adding Military Overlay Datamodel?",
+                        "Note: wait for map to be visible and ready.", "Retry Adding Military Overlay Data Model?",
                         System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
                     if (Convert.ToString(result) != "Yes")
                         return false;
@@ -2954,7 +2983,7 @@ namespace ProSymbolEditor
                     if (enabled)
                         StatusMessage = "Military Layers Added";
                     else
-                        StatusMessage = "Addin Not Enabled";
+                        StatusMessage = "Add-in Not Enabled";
                 });
 
             }

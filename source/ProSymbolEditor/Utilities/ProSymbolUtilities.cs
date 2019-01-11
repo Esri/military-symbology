@@ -179,6 +179,16 @@ namespace ProSymbolEditor
                                       new Uri(asm.CodeBase).LocalPath));
         }
 
+        public static bool IsNewStyleFormat
+        {
+            get
+            {
+                bool newStyleFormat = ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 3));
+
+                return newStyleFormat;
+            }
+        }
+
         public static CoordinateType GetCoordinateType(string input, out MapPoint point)
         {
             point = null;

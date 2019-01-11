@@ -17,10 +17,12 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
-using ArcGIS.Core.Data;
-using ArcGIS.Desktop.Framework.Contracts;
 using System.Web.Script.Serialization;
 using System.ComponentModel;
+
+using ArcGIS.Core.Data;
+using ArcGIS.Desktop.Framework.Contracts;
+
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace ProSymbolEditor
@@ -287,11 +289,23 @@ namespace ProSymbolEditor
             // Don't create preview until we have the minimum number of attributes in
             // order to minimize flicker - minimum attributes:
             // 2525D: { symbolset, entity, affiliation }
-            // 2525B: { functioncode, affiliation }
-            int minimumAttributeCount = 3;
+            // 2525B: { extendedfunctioncode, affiliation }
+            int minimumAttributeCount = 4;
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
-                minimumAttributeCount = 2;
+                minimumAttributeCount = 3;
+            }
+
+            if (attributeSet.ContainsKey("IsMETOC") && (bool)attributeSet["IsMETOC"])
+            {
+                //////////////////////////
+                // WORKAROUND: Pro 2.3 broke exporting METOC by attribute "extendedfunctioncode"
+                // so have to set "sidc" attribute instead
+                if (ProSymbolUtilities.IsNewStyleFormat && attributeSet.ContainsKey("extendedfunctioncode"))
+                    attributeSet.Add("sidc", DisplayAttributes.LegacySymbolIdCode);
+
+                // METOC do not have identity/affiliation so have 1 less attribute
+                minimumAttributeCount--;
             }
 
             // Validate that image is ready to be created
@@ -310,11 +324,15 @@ namespace ProSymbolEditor
         {
             Dictionary<string, object> attributeSet = new Dictionary<string, object>();
 
+            bool isMETOC = false;
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
                 if (!string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode))
                 {
                     attributeSet["extendedfunctioncode"] = DisplayAttributes.ExtendedFunctionCode;
+
+                    if (DisplayAttributes.ExtendedFunctionCode[0] == 'W')
+                        isMETOC = true;
                 }
 
                 if (!string.IsNullOrEmpty(DisplayAttributes.Identity))
@@ -347,6 +365,10 @@ namespace ProSymbolEditor
                 if (!string.IsNullOrEmpty(DisplayAttributes.SymbolSet))
                 {
                     attributeSet["symbolset"] = DisplayAttributes.SymbolSet;
+
+                    if ((DisplayAttributes.SymbolSet == "45") ||
+                        (DisplayAttributes.SymbolSet == "46"))
+                        isMETOC = true;
                 }
 
                 if (!string.IsNullOrEmpty(DisplayAttributes.SymbolEntity))
@@ -399,6 +421,8 @@ namespace ProSymbolEditor
                     attributeSet["modifier2"] = DisplayAttributes.Modifier2;
                 }
             }
+
+            attributeSet.Add("IsMETOC", isMETOC);
 
             return attributeSet;
         }
