@@ -97,8 +97,9 @@
                                             Grid.Row="3"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
-                                            Text="{Binding SymbolAttributeSet.LabelAttributes.Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                            Visibility="{Binding MilitaryFieldsInspectorModel.TypeFieldExists}" />
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.TypeFieldExists}" 
+                                            MaxLength="{Binding SymbolAttributeSet.LabelAttributes.MaxLen24, Mode=OneWay}"/>
 
                     <Label
                                             Grid.Row="4"
@@ -110,8 +111,9 @@
                                             Grid.Row="4"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
-                                            Text="{Binding SymbolAttributeSet.LabelAttributes.CommonIdentifier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                            Visibility="{Binding MilitaryFieldsInspectorModel.CommonIdentifierFieldExists}" />
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.CommonIdentifier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.CommonIdentifierFieldExists}" 
+                                            MaxLength="{Binding SymbolAttributeSet.LabelAttributes.MaxLen12, Mode=OneWay}"/>
 
                     <Label
                                             Grid.Row="5"
@@ -140,8 +142,9 @@
                                             Grid.Row="6"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
-                                            Text="{Binding SymbolAttributeSet.LabelAttributes.UniqueDesignation}"
-                                            Visibility="{Binding MilitaryFieldsInspectorModel.UniqueDesignationFieldExists}" />
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.UniqueDesignation, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.UniqueDesignationFieldExists}"
+                                            MaxLength="{Binding SymbolAttributeSet.LabelAttributes.MaxLen30, Mode=OneWay}" />
 
                     <Label
                                             Grid.Row="7"
@@ -180,8 +183,9 @@
                                             Grid.Row="8"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
-                                            Text="{Binding SymbolAttributeSet.LabelAttributes.StaffComments}"
-                                            Visibility="{Binding MilitaryFieldsInspectorModel.StaffCommentsFieldExists}" />
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.StaffComments, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.StaffCommentsFieldExists}"
+                                            MaxLength="{Binding SymbolAttributeSet.LabelAttributes.MaxLen20, Mode=OneWay}"/>
 
                     <Label
                                             Grid.Row="9"
@@ -193,8 +197,9 @@
                                             Grid.Row="9"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
-                                            Text="{Binding SymbolAttributeSet.LabelAttributes.AdditionalInformation}"
-                                            Visibility="{Binding MilitaryFieldsInspectorModel.AdditionalInformationFieldExists}" />
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.AdditionalInformation, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.AdditionalInformationFieldExists}" 
+                                            MaxLength="{Binding SymbolAttributeSet.LabelAttributes.MaxLen20, Mode=OneWay}"/>
 
                     <Label
                                             Grid.Row="10"
@@ -206,8 +211,9 @@
                                             Grid.Row="10"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
-                                            Text="{Binding SymbolAttributeSet.LabelAttributes.HigherFormation}"
-                                            Visibility="{Binding MilitaryFieldsInspectorModel.HigherFormationFieldExists}" />
+                                            Text="{Binding SymbolAttributeSet.LabelAttributes.HigherFormation, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.HigherFormationFieldExists}" 
+                                            MaxLength="{Binding SymbolAttributeSet.LabelAttributes.MaxLen21, Mode=OneWay}"/>
 
                     <Label
                                             Grid.Row="11"

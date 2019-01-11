@@ -1370,7 +1370,6 @@ namespace ProSymbolEditor
 
                                             // Has to be called after the store too
                                             context.Invalidate(feature);
-
                                         }
                                     }
                                 }, _selectedSelectedFeature.FeatureLayer.GetTable());
@@ -1571,13 +1570,19 @@ namespace ProSymbolEditor
                                     {
                                         message = geodatabaseException.Message;
                                     }
+                                    catch (Exception ex)
+                                    {
+                                        // Other exception
+                                        message = ex.Message;
+                                    }
                                 }, featureClass);
 
                                 creationResult = await editOperation.ExecuteAsync();
 
-                                if (!creationResult)
+                                if (!creationResult && !string.IsNullOrEmpty(message))
                                 {
-                                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message);
+                                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Feature Store Failure");
+                                    message = string.Empty; // set to empty so 2nd error message is not displayed below
                                     await Project.Current.DiscardEditsAsync();
                                 }
                                 else
@@ -1592,9 +1597,9 @@ namespace ProSymbolEditor
                 }
             });
 
-            if (!creationResult)
+            if (!creationResult && !string.IsNullOrEmpty(message))
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Feature Store Failure");
             }
         }
 
