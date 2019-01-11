@@ -32,7 +32,7 @@ namespace ProSymbolEditor
 {
     public class ProSymbolUtilities
     {
-        public enum SupportedStandardsType { mil2525d, mil2525c_b2 };
+        public enum SupportedStandardsType { mil2525d, mil2525c_b2, app6d };
 
         public static SupportedStandardsType Standard
         {
@@ -61,24 +61,51 @@ namespace ProSymbolEditor
             if (standardIn == SupportedStandardsType.mil2525d)
                 return "MIL-STD-2525D";
             else
-                return "MIL-STD-2525B w/ Change 2";
+                if (standardIn == SupportedStandardsType.app6d)
+                    return "APP-6(D)";
+                else
+                    return "MIL-STD-2525B w/ Change 2";
+        }
+
+        public static string GetDictionaryString()
+        {
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.app6d)
+                return ProSymbolUtilities.StandardString.ToLower();
+            else
+                return "mil" + ProSymbolUtilities.StandardString.ToLower();
+        }
+
+        public static string GetDictionaryString(SupportedStandardsType standardIn)
+        {
+            if (standardIn == SupportedStandardsType.mil2525d)
+                return "2525D";
+            else
+                if (standardIn == SupportedStandardsType.app6d)
+                    return "APP6D";
+                else
+                    return "2525C_B2";
         }
 
         public static SupportedStandardsType GetStandardFromLabel(string standardString)
         {
-            if (standardString == GetStandardLabel(SupportedStandardsType.mil2525c_b2))
-                return SupportedStandardsType.mil2525c_b2;
-            else
+            if (standardString == GetStandardLabel(SupportedStandardsType.mil2525d))
                 return SupportedStandardsType.mil2525d;
+            else 
+                if (standardString == GetStandardLabel(SupportedStandardsType.app6d))
+                    return SupportedStandardsType.app6d;
+                else
+                    return SupportedStandardsType.mil2525c_b2;
         }
 
-
         public static string GetShortStandardLabel(SupportedStandardsType standardIn)
-        {           
+        {
             if (standardIn == SupportedStandardsType.mil2525d)
                 return "2525D";
             else
-                return "2525B";
+                if (standardIn == SupportedStandardsType.app6d)
+                    return "APP6D";
+                else
+                    return "2525B";
         }
 
         public static string GetDatasetName(SupportedStandardsType standardIn)
@@ -86,7 +113,10 @@ namespace ProSymbolEditor
             if (standardIn == SupportedStandardsType.mil2525d)
                 return "militaryoverlay2525d";
             else
-                return "militaryoverlay2525b2";
+                if (standardIn == SupportedStandardsType.app6d)
+                    return "militaryoverlayapp6d";
+                else
+                    return "militaryoverlay2525b2";
         }
 
         public static string GetStandardString(SupportedStandardsType standardIn)
@@ -94,12 +124,10 @@ namespace ProSymbolEditor
             if (standardIn == SupportedStandardsType.mil2525c_b2)
                 return "2525C_B2";
             else
-                return "2525D";
-        }
-
-        public static string GetDictionaryString()
-        {
-            return "mil" + StandardString.ToLower();
+                if (standardIn == SupportedStandardsType.app6d)
+                    return "APP6D";
+                else
+                    return "2525D";
         }
 
         public static string NameSeparator
@@ -109,21 +137,39 @@ namespace ProSymbolEditor
 
         public static string ProVersion
         {
-            get { return proVersion; }
+            get
+            {
+                if (string.IsNullOrEmpty(proVersion))
+                    proVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+
+                return proVersion;
+            }
         }
-        private static string proVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+        private static string proVersion = string.Empty;
 
         public static int ProMajorVersion
         {
-            get { return proMajorVersion; }
+            get
+            {
+                if (proMajorVersion < 0)
+                    proMajorVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Major;
+
+                return proMajorVersion;
+            }
         }
-        private static int proMajorVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Major;
+        private static int proMajorVersion = -1;
 
         public static int ProMinorVersion
         {
-            get { return proMinorVersion; }
+            get
+            {
+                if (proMinorVersion < 0)
+                    proMinorVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Minor;
+
+                return proMinorVersion;
+            }
         }
-        private static int proMinorVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Minor;
+        private static int proMinorVersion = -1;
 
         public static string AddinAssemblyLocation()
         {
