@@ -252,7 +252,14 @@ namespace ProSymbolEditor
             bool isEnabled2525C_B2 = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
             bool isEnabled2525D = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
 
-            if (!isEnabled2525D && !isEnabled2525C_B2)
+            // APP6D only available after 2.2
+            bool isEnabledAPP6D = false;
+            if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 2))
+            {
+                isEnabledAPP6D = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.app6d);
+            }
+
+            if (!isEnabled2525D && !isEnabled2525C_B2 &&!isEnabledAPP6D)
             {
                 // NOTE: this has been moved to DockPane_OnMouseClick
                 // If neither standard found in the project, prompt the user to:
@@ -290,15 +297,20 @@ namespace ProSymbolEditor
                 }
                 else
                 {
-                    if (isEnabled2525D)
-                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                    if (isEnabledAPP6D)
+                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.app6d;
                     else
                     {
-                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
-
-                        // Tricky 2525D check above disables 2525C/B2 so have to check again
-                        await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
+                        if (isEnabled2525D)
+                            ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
+                        else
+                        {
+                            ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+                        }
                     }
+
+                    // Tricky APP6D/2525D/2525B checks above disables others, so have to check again
+                    await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
 
                     // One last check
                     if (ProSymbolEditorModule.Current.MilitaryOverlaySchema.SchemaExists)

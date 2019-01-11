@@ -29,6 +29,14 @@ namespace ProSymbolEditor
             }
         }
 
+        private List<SymbolSetMapping> SymbolSetMappingsAPP6D
+        {
+            get
+            {
+                return MilitaryOverlayDataModel.SymbolSetToFeatureClassMappingAPP6D;
+            }
+        }
+
         private List<SymbolSetMapping> SymbolSetMappings2525C
         {
             get
@@ -46,7 +54,7 @@ namespace ProSymbolEditor
             if (string.IsNullOrEmpty(symbolSet))
                 return "Units";
 
-            foreach (SymbolSetMapping mapping in SymbolSetMappings2525D)
+            foreach (SymbolSetMapping mapping in SymbolSetMappingsAPP6D)
             {
                 if ((mapping.SymbolSetOrRegex == symbolSet) && (mapping.GeometryType == geometryType))
                 {
@@ -82,7 +90,7 @@ namespace ProSymbolEditor
             {
                 return GetFeatureClassFromExtendedFunctionCode(displayAttributes.ExtendedFunctionCode, geometryType);
             }
-            else // 2525D
+            else // 2525D or APPD
             {
                 return GetFeatureClassFromSymbolSet(displayAttributes.SymbolSet, geometryType);
             }
