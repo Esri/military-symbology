@@ -75,13 +75,32 @@
                 </DataTemplate.Triggers>
             </DataTemplate>
 
-            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
                 <Style.Triggers>
                     <Trigger Property="Validation.HasError" Value="true">
                         <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},
                             Path=(Validation.Errors).CurrentItem.ErrorContent}" />
                     </Trigger>
                 </Style.Triggers>
+                <Setter Property="Validation.ErrorTemplate">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Grid>
+                                <Polygon    Fill="Yellow"
+                                            Margin="0,2,2,0"
+                                            Points="10,10 10,0 0,0"
+                                            VerticalAlignment="Top"
+                                            HorizontalAlignment="Right"
+                                            Tag="{Binding ElementName=adorner, Path=AdornedElement.(Validation.Errors).CurrentItem.ErrorContent}">
+                                    <Polygon.ToolTip>
+                                        <ToolTip Content="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}" />
+                                    </Polygon.ToolTip>
+                                </Polygon>
+                                <AdornedElementPlaceholder x:Name="adorner" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
             
         </ResourceDictionary>
