@@ -157,11 +157,13 @@ namespace ProSymbolEditor
             {
                 string checkString = value;
 
-                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen30))
+                if (!string.IsNullOrEmpty(checkString))
+                {
+                    _uniqueDesignation = checkString;
+                    NotifyPropertyChanged(() => UniqueDesignation);
+                }
+                if (checkString.Length >= MaxLen30)
                     throw new ArgumentException(lengthError);
-
-                _uniqueDesignation = checkString;
-                NotifyPropertyChanged(() => UniqueDesignation);
             }
         }
 
@@ -175,11 +177,13 @@ namespace ProSymbolEditor
             {
                 string checkString = value;
 
-                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen20))
+                if (!string.IsNullOrEmpty(checkString))
+                {
+                    _staffComments = checkString;
+                    NotifyPropertyChanged(() => StaffComments);
+                }
+                if (checkString.Length >= MaxLen20)
                     throw new ArgumentException(lengthError);
-
-                _staffComments = checkString;
-                NotifyPropertyChanged(() => StaffComments);
             }
         }
 
@@ -193,11 +197,13 @@ namespace ProSymbolEditor
             {
                 string checkString = value;
 
-                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen20))
+                if (!string.IsNullOrEmpty(checkString))
+                {
+                    _additionalInformation = checkString;
+                    NotifyPropertyChanged(() => AdditionalInformation);
+                }
+                if (checkString.Length >= MaxLen20)
                     throw new ArgumentException(lengthError);
-
-                _additionalInformation = checkString;
-                NotifyPropertyChanged(() => AdditionalInformation);
             }
         }
 
@@ -211,11 +217,13 @@ namespace ProSymbolEditor
             {
                 string checkString = value;
 
-                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen24))
-                    throw new ArgumentException(lengthError);
-
-                _type = checkString;
-                NotifyPropertyChanged(() => Type);
+                if (!string.IsNullOrEmpty(checkString))
+                {
+                    _type = checkString;
+                    NotifyPropertyChanged(() => Type);
+                }
+                if ((checkString.Length >= MaxLen24))
+                    throw new ArgumentException(lengthError);            
             }
         }
 
@@ -229,11 +237,13 @@ namespace ProSymbolEditor
             {
                 string checkString = value;
 
-                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen12))
+                if (!string.IsNullOrEmpty(checkString))
+                {
+                    _commonidentifier = checkString;
+                    NotifyPropertyChanged(() => CommonIdentifier);
+                }
+                if (checkString.Length >= MaxLen12)               
                     throw new ArgumentException(lengthError);
-
-                _commonidentifier = checkString;
-                NotifyPropertyChanged(() => CommonIdentifier);
             }
         }
 
@@ -260,11 +270,13 @@ namespace ProSymbolEditor
             {
                 string checkString = value;
 
-                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen21))
+                if (!string.IsNullOrEmpty(checkString))
+                {
+                    _higherFormation = checkString;
+                    NotifyPropertyChanged(() => HigherFormation);
+                }
+                if (checkString.Length >= MaxLen21)
                     throw new ArgumentException(lengthError);
-
-                _higherFormation = checkString;
-                NotifyPropertyChanged(() => HigherFormation);
             }
         }
 
