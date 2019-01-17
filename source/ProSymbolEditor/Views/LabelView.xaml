@@ -6,6 +6,7 @@
             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"         
             xmlns:controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions"
             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
+             xmlns:mtcontrols="clr-namespace:ProSymbolEditor.Controls"
             xmlns:local="clr-namespace:ProSymbolEditor"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">

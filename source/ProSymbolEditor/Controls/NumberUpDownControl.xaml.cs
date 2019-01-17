@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace WpfBuildUpDownControl
+namespace ProSymbolEditor.Controls
 {
     /// <summary>
     /// Interaction logic for NumberUpDownControl.xaml
