@@ -124,6 +124,9 @@ namespace ProSymbolEditor.Controls
 
         private void IncrementCurrentValue(int amount)
         {
+            if (IsDefault())
+                return;
+
             var newValue = CurrentValue + amount;
             CurrentValue = newValue > ValueMax ? ValueMax : newValue;
             UpdateControlText();
@@ -131,9 +134,23 @@ namespace ProSymbolEditor.Controls
 
         private void DecrementCurrentValue(int amount)
         {
+            if (IsDefault())
+                return;
+
             var newValue = CurrentValue - amount;
             CurrentValue = newValue < ValueMin ? ValueMin : newValue;
             UpdateControlText();
+        }
+
+        private bool IsDefault()
+        {
+            if (!string.IsNullOrWhiteSpace(NumberUpDownControlTextBox.Text))
+                return false;
+
+            CurrentValue = ValueStart;
+            UpdateControlText();
+
+            return true;
         }
 
         private void UpdateControlText()
