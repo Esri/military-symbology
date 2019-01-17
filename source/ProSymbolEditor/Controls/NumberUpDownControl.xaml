@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="WpfBuildUpDownControl.NumberUpDownControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfBuildUpDownControl"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Margin="0,50,0,0" PreviewKeyDown="NumberUpDownControl_PreviewKeyDown" MouseWheel="NumberUpDownControl_OnMouseWheel">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="13" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="13" />
+            <RowDefinition Height="13" />
+        </Grid.RowDefinitions>
+        <TextBox Name="NumberUpDownControlTextBox" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right"  TextChanged="NumberUpDownControl_TextChanged"/>
+        <Button Name="NumberUpDownControlButtonUP" Grid.Column="1" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="NumberUpDownControlButtonUP_Click" IsTabStop="False">
+            <Path Data="M1.5,4 5,0.5 8.5,4" Fill="Blue" />
+        </Button>
+        <Button Name="NumberUpDownControlButtonDown"   Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="NumberUpDownControlButtonDown_Click" IsTabStop="False" >
+            <Path Data="M1.5,2 5,5.5 8.5,2" Fill="Blue" />
+        </Button>
+    </Grid>
+</UserControl>
