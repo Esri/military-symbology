@@ -23,8 +23,6 @@ using System.ComponentModel;
 using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Framework.Contracts;
 
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
-
 namespace ProSymbolEditor
 {
     /// <summary>
@@ -145,10 +143,8 @@ namespace ProSymbolEditor
 
         #region Getters/Setters
 
-        [ExpandableObject]
         public DisplayAttributes DisplayAttributes { get; set; }
 
-        [ExpandableObject]
         public LabelAttributes LabelAttributes { get; set; }
 
         public string Name 
