@@ -6,6 +6,7 @@
             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"         
             xmlns:controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions"
             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
+             xmlns:fwcontrols="clr-namespace:ArcGIS.Desktop.Internal.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
              xmlns:mtcontrols="clr-namespace:ProSymbolEditor.Controls"
             xmlns:local="clr-namespace:ProSymbolEditor"
              mc:Ignorable="d" 
@@ -57,37 +58,31 @@
                                             Margin="3,3,3,3"
                                             Content="Date/Time Valid"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}" />
-                    <xctk:DateTimePicker
-                                            Grid.Row="0"
-                                            Grid.Column="1"
-                                            Margin="3,3,3,3" 
-                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
-                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
-                                            BorderBrush="{DynamicResource Esri_BorderBrush}"
-                                            DisplayDefaultValueOnEmptyText="False"
-                                            Format="Custom"
-                                            FormatString="MMM-dd-yy hh:mm tt"
-                                            Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}"
-                                            Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeValid}" />
 
+                    <fwcontrols:DateTimePicker 
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Margin="3,3,3,3" 
+                        Foreground="{DynamicResource Esri_TextControlBrush}" 
+                        Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                        BorderBrush="{DynamicResource Esri_BorderBrush}"
+                        Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}"
+                        Date="{Binding SymbolAttributeSet.LabelAttributes.DateTimeValid}"/>
                     <Label
                                             Grid.Row="1"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
                                             Content="Date/Time Expired"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}" />
-                    <xctk:DateTimePicker
+                    <fwcontrols:DateTimePicker 
                                             Grid.Row="1"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
                                             Foreground="{DynamicResource Esri_TextControlBrush}" 
                                             Background="{DynamicResource Esri_ControlBackgroundBrush}" 
                                             BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
-                                            DisplayDefaultValueOnEmptyText="False"
-                                            Format="Custom"
-                                            FormatString="MMM-dd-yy hh:mm tt"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}"
-                                            Value="{Binding SymbolAttributeSet.LabelAttributes.DateTimeExpired}" />
+                                            Date="{Binding SymbolAttributeSet.LabelAttributes.DateTimeExpired}" />
                     <Label
                                             Grid.Row="3"
                                             Grid.Column="0"
@@ -123,16 +118,17 @@
                                             Content="Speed"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}" />
                     <!--<TextBox Grid.Row="11" Width="170" Text="{Binding SymbolAttributeSet.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"/>-->
-                    <xctk:ShortUpDown
-                                            Name="speedUpDown"
-                                            Grid.Row="5"
-                                            Grid.Column="1"
-                                            Margin="3,3,3,3"
-                                            Foreground="{DynamicResource Esri_TextControlBrush}" 
-                                            Background="{DynamicResource Esri_ControlBackgroundBrush}" 
-                                            BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
-                                            Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"
-                                            Value="{Binding SymbolAttributeSet.LabelAttributes.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <mtcontrols:NumberUpDownControl 
+                        x:Name="speedUpDown"
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        Margin="3,3,3,3"
+                        Foreground="{DynamicResource Esri_TextControlBrush}" 
+                        Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                        BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
+                        Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"
+                        CurrentValue="{Binding SymbolAttributeSet.LabelAttributes.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        
                     <Label
                                             Grid.Row="6"
                                             Grid.Column="0"
