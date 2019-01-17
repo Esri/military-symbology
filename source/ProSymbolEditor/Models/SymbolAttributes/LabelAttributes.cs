@@ -46,10 +46,15 @@ namespace ProSymbolEditor
         private DomainCodedValuePair _selectedCountryCodeDomainPair;
         private string lengthError = "The label entered is at the maximum allowable length for this feature field";
 
+        [ScriptIgnore, Browsable(false)]
         public int MaxLen30 => 30;
+        [ScriptIgnore, Browsable(false)]
         public int MaxLen24 => 24;
+        [ScriptIgnore, Browsable(false)]
         public int MaxLen20 => 20;
+        [ScriptIgnore, Browsable(false)]
         public int MaxLen21 => 21;
+        [ScriptIgnore, Browsable(false)]
         public int MaxLen12 => 12;
 
         public LabelAttributes() {  }
@@ -157,11 +162,14 @@ namespace ProSymbolEditor
             {
                 string checkString = value;
 
+                if (!string.IsNullOrEmpty(checkString))
+                {
+                    _uniqueDesignation = checkString;
+                    NotifyPropertyChanged(() => UniqueDesignation);
+                }
+
                 if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen30))
                     throw new ArgumentException(lengthError);
-
-                _uniqueDesignation = checkString;
-                NotifyPropertyChanged(() => UniqueDesignation);
             }
         }
 
@@ -175,11 +183,14 @@ namespace ProSymbolEditor
             {
                 string checkString = value;
 
+                if (!string.IsNullOrEmpty(checkString))
+                {
+                    _staffComments = checkString;
+                    NotifyPropertyChanged(() => StaffComments);
+                }
+
                 if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen20))
                     throw new ArgumentException(lengthError);
-
-                _staffComments = checkString;
-                NotifyPropertyChanged(() => StaffComments);
             }
         }
 
@@ -193,11 +204,14 @@ namespace ProSymbolEditor
             {
                 string checkString = value;
 
+                if (!string.IsNullOrEmpty(checkString))
+                {
+                    _additionalInformation = checkString;
+                    NotifyPropertyChanged(() => AdditionalInformation);
+                }
+
                 if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen20))
                     throw new ArgumentException(lengthError);
-
-                _additionalInformation = checkString;
-                NotifyPropertyChanged(() => AdditionalInformation);
             }
         }
 
@@ -211,11 +225,14 @@ namespace ProSymbolEditor
             {
                 string checkString = value;
 
-                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen24))
-                    throw new ArgumentException(lengthError);
+                if (!string.IsNullOrEmpty(checkString))
+                {
+                    _type = checkString;
+                    NotifyPropertyChanged(() => Type);
+                }
 
-                _type = checkString;
-                NotifyPropertyChanged(() => Type);
+                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen24))
+                    throw new ArgumentException(lengthError);            
             }
         }
 
@@ -229,11 +246,14 @@ namespace ProSymbolEditor
             {
                 string checkString = value;
 
+                if (!string.IsNullOrEmpty(checkString))
+                {
+                    _commonidentifier = checkString;
+                    NotifyPropertyChanged(() => CommonIdentifier);
+                }
+
                 if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen12))
                     throw new ArgumentException(lengthError);
-
-                _commonidentifier = checkString;
-                NotifyPropertyChanged(() => CommonIdentifier);
             }
         }
 
@@ -260,11 +280,14 @@ namespace ProSymbolEditor
             {
                 string checkString = value;
 
+                if (!string.IsNullOrEmpty(checkString))
+                {
+                    _higherFormation = checkString;
+                    NotifyPropertyChanged(() => HigherFormation);
+                }
+
                 if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen21))
                     throw new ArgumentException(lengthError);
-
-                _higherFormation = checkString;
-                NotifyPropertyChanged(() => HigherFormation);
             }
         }
 
