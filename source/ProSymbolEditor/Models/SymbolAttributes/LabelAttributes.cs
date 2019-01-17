@@ -46,10 +46,15 @@ namespace ProSymbolEditor
         private DomainCodedValuePair _selectedCountryCodeDomainPair;
         private string lengthError = "The label entered is at the maximum allowable length for this feature field";
 
+        [ScriptIgnore, Browsable(false)]
         public int MaxLen30 => 30;
+        [ScriptIgnore, Browsable(false)]
         public int MaxLen24 => 24;
+        [ScriptIgnore, Browsable(false)]
         public int MaxLen20 => 20;
+        [ScriptIgnore, Browsable(false)]
         public int MaxLen21 => 21;
+        [ScriptIgnore, Browsable(false)]
         public int MaxLen12 => 12;
 
         public LabelAttributes() {  }
@@ -162,7 +167,8 @@ namespace ProSymbolEditor
                     _uniqueDesignation = checkString;
                     NotifyPropertyChanged(() => UniqueDesignation);
                 }
-                if (checkString.Length >= MaxLen30)
+
+                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen30))
                     throw new ArgumentException(lengthError);
             }
         }
@@ -182,7 +188,8 @@ namespace ProSymbolEditor
                     _staffComments = checkString;
                     NotifyPropertyChanged(() => StaffComments);
                 }
-                if (checkString.Length >= MaxLen20)
+
+                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen20))
                     throw new ArgumentException(lengthError);
             }
         }
@@ -202,7 +209,8 @@ namespace ProSymbolEditor
                     _additionalInformation = checkString;
                     NotifyPropertyChanged(() => AdditionalInformation);
                 }
-                if (checkString.Length >= MaxLen20)
+
+                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen20))
                     throw new ArgumentException(lengthError);
             }
         }
@@ -222,7 +230,8 @@ namespace ProSymbolEditor
                     _type = checkString;
                     NotifyPropertyChanged(() => Type);
                 }
-                if ((checkString.Length >= MaxLen24))
+
+                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen24))
                     throw new ArgumentException(lengthError);            
             }
         }
@@ -242,7 +251,8 @@ namespace ProSymbolEditor
                     _commonidentifier = checkString;
                     NotifyPropertyChanged(() => CommonIdentifier);
                 }
-                if (checkString.Length >= MaxLen12)               
+
+                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen12))
                     throw new ArgumentException(lengthError);
             }
         }
@@ -275,7 +285,8 @@ namespace ProSymbolEditor
                     _higherFormation = checkString;
                     NotifyPropertyChanged(() => HigherFormation);
                 }
-                if (checkString.Length >= MaxLen21)
+
+                if (!string.IsNullOrEmpty(checkString) && (checkString.Length >= MaxLen21))
                     throw new ArgumentException(lengthError);
             }
         }
