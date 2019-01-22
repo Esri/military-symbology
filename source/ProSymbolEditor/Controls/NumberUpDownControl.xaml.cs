@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -39,7 +40,22 @@ namespace ProSymbolEditor.Controls
             set { SetValue(ValueStartProperty, value); }
         }
 
-        public static readonly DependencyProperty CurrentValueProperty = DependencyProperty.Register("CurrentValue", typeof(object), typeof(NumberUpDownControl), new PropertyMetadata(null));
+        public static readonly DependencyProperty CurrentValueProperty = DependencyProperty.Register("CurrentValue", typeof(object), typeof(NumberUpDownControl), new PropertyMetadata(null, OnCurrentValueChanged));
+
+        private static void OnCurrentValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var numberUpDownControl = d as NumberUpDownControl;
+
+            if (numberUpDownControl == null)
+                return;
+
+            if (e.NewValue == null)
+            {
+                numberUpDownControl._ignoreTextUpdate = true;
+                numberUpDownControl.NumberUpDownControlTextBox.Text = String.Empty;
+                numberUpDownControl._ignoreTextUpdate = false;
+            }
+        }
 
         public short? CurrentValue
         {
