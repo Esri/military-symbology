@@ -98,6 +98,8 @@ namespace ProSymbolEditor
                         continue;
 
                     string valueAsString = value.ToString();
+                    if (string.IsNullOrEmpty(valueAsString))
+                        continue;
 
                     // Skip non-value types
                     if (valueAsString.StartsWith("ProSymbolEditor"))
@@ -115,11 +117,16 @@ namespace ProSymbolEditor
                 foreach (var prop in LabelAttributes.GetType().GetProperties())
                 {
                     string key = prop.Name;
+                    if (!string.IsNullOrEmpty(key) && key.StartsWith("Max"))
+                        continue;
+
                     object value = prop.GetValue(LabelAttributes, null);
                     if (value == null)
                         continue;
 
                     string valueAsString = value.ToString();
+                    if (string.IsNullOrEmpty(valueAsString))
+                        continue;
 
                     // Skip non-value types
                     if (valueAsString.StartsWith("ProSymbolEditor"))
