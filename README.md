@@ -229,10 +229,6 @@ This software is governed by [the Apache V2 License](http://www.apache.org/licen
 * Military Features Data - .stylx file and symbol data - https://github.com/Esri/military-features-data
 * Coordinate Conversion Addin - Coordinate Conversion library - https://github.com/Esri/coordinate-conversion-addin-dotnet
 
-This software is governed by [the Microsoft Public License (Ms-PL)](http://wpftoolkit.codeplex.com/license):
-
-* Extended WPF Toolkit Community Edition - http://wpftoolkit.codeplex.com
-
 ## Repository Points of Contact 
 Contact the [Military Tools team](mailto:defensesolutions@esri.com)
 

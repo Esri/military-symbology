@@ -57,6 +57,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -93,14 +94,11 @@
     </Reference>
     <Reference Include="ArcGIS.Desktop.Docking.Wpf">
       <HintPath>C:\Program Files\ArcGIS\Pro\bin\ArcGIS.Desktop.Docking.Wpf.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ArcGIS.Desktop.Extensions">
       <HintPath>C:\Program Files\ArcGIS\Pro\bin\Extensions\DesktopExtensions\ArcGIS.Desktop.Extensions.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependencies\Extended WPF Toolkit Binaries\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +113,9 @@
   <ItemGroup>
     <Compile Include="AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NumberUpDownControl.xaml.cs">
+      <DependentUpon>NumberUpDownControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\StringCharacterValueConverter.cs" />
     <Compile Include="MapTools\CoordinateMapTool.cs" />
@@ -169,6 +170,10 @@
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\NumberUpDownControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="SettingsWindow.xaml">
       <SubType>Designer</SubType>

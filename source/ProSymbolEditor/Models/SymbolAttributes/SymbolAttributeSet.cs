@@ -23,8 +23,6 @@ using System.ComponentModel;
 using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Framework.Contracts;
 
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
-
 namespace ProSymbolEditor
 {
     /// <summary>
@@ -100,6 +98,8 @@ namespace ProSymbolEditor
                         continue;
 
                     string valueAsString = value.ToString();
+                    if (string.IsNullOrEmpty(valueAsString))
+                        continue;
 
                     // Skip non-value types
                     if (valueAsString.StartsWith("ProSymbolEditor"))
@@ -117,11 +117,16 @@ namespace ProSymbolEditor
                 foreach (var prop in LabelAttributes.GetType().GetProperties())
                 {
                     string key = prop.Name;
+                    if (!string.IsNullOrEmpty(key) && key.StartsWith("Max"))
+                        continue;
+
                     object value = prop.GetValue(LabelAttributes, null);
                     if (value == null)
                         continue;
 
                     string valueAsString = value.ToString();
+                    if (string.IsNullOrEmpty(valueAsString))
+                        continue;
 
                     // Skip non-value types
                     if (valueAsString.StartsWith("ProSymbolEditor"))
@@ -145,10 +150,8 @@ namespace ProSymbolEditor
 
         #region Getters/Setters
 
-        [ExpandableObject]
         public DisplayAttributes DisplayAttributes { get; set; }
 
-        [ExpandableObject]
         public LabelAttributes LabelAttributes { get; set; }
 
         public string Name 
