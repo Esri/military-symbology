@@ -104,24 +104,21 @@ A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating m
 			* Type a search term into the bar, and click Search (or hit enter)
 			* The tool will return matches to that term in the Military style file
 			* Selecting a search result will show a preview and associated tags with that symbol
-			* Click the next arrow button or the Modify tab when you have selected a symbol
-		* The Modify tab is the second tab:
-			* Use the select tool in ArcGIS Pro to select already existing features
-			* When selected, this will populate a list on this tab
-			* Select a feature in this list to start editing it.  The feature's data will be loading into the other tabs for editing.
-		* The Favorites tab is the third tab:
+			* Click the next arrow button when you have selected a symbol
+
+		* The Favorites tab is the second tab:
 			* Users can save a symbol to Favorites that they have previously created so they can easily reuse this symbol
 			* The favorites save in a user's account, and show up on this tab
 			* Selecting a favorite from the list will load it into the pre-existing workflow.
-		* The Symbol tab is the fourth tab:
+		* The Symbol tab is the third tab:
 			* The application will show all symbol display attributes associated with the chosen symbol, with combo boxes for selecting values
 			* As you select values, the symbol will update to incorporate those changes
 			* A table below has a summary of the values you select
 			* After you are finished loading values, click the next arrow or the Text tab
-		* The Label tab is the fifth tab:
+		* The Label tab is the fourth tab:
 			* Various values that will be saved into the feature are available for edit here. These values will appear around the symbol on the map.
 			* After you are finished populating any text values, you can click the next arrow button to go the last tab.
-		* The Enter Coordinates tab is the sixth tab:
+		* The Enter Coordinates tab is the fifth tab:
 			* Coordinates can be entered in DD, DMS, DD, MGRS, or [other coordinate systems] (https://github.com/Esri/coordinate-conversion-addin-dotnet#features).
 			* Once valid coordinates are entered, a button can be clicked to add a feature to those coordinates.
 		* At any time/tab in this process, the "Add to Map" button, included on every tab, can be clicked to graphically add the feature to the map by clicking.
