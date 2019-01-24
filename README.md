@@ -191,13 +191,6 @@ A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating m
         2. Military Symbol Editor Add-in: `%LOCALAPPDATA%\ESRI\ArcGISPro\AssemblyCache\{4ff462b0-2910-47f3-b6fd-d1d17e5f7dfc}`
         3. Military Tools for ArcGIS Add-in: `%LOCALAPPDATA%\ESRI\ArcGISPro\AssemblyCache\{bea7f059-c69e-4e17-84bd-072236629c0c}`
 
-### Edit the symbol for a military feature that is already on the map
-1. Click the **Modify** tab in the Military Symbol Editor.
-2. Activate the select tool on the Modify pane.
-3. On the map, select the military feature that you want to change with the select tool.
-4. Click the appropriate feature in the list on this tab.
-5. The feature's attribute data will load into the **Symbol** and **Label** tabs for editing.
-6. Click the Save Edits button to write the edits back to the feature.
 
 ## Resources
 
