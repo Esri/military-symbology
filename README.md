@@ -2,7 +2,7 @@
 
 ## Military Symbol Editor add-in
 
-A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating military symbols and overlays using MIL-STD-2525D and MILSTD-2525B Change 2.
+A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating military symbols and overlays using MIL-STD-2525D, MILSTD-2525B Change 2, and APP-6(D).
 
 ![Image of Military Symbol Editor Addin](screenshot.png)
 
