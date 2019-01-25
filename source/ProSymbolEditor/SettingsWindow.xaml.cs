@@ -13,9 +13,11 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  ******************************************************************************/
- 
+
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,37 +35,84 @@ namespace ProSymbolEditor
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml
     /// </summary>
-    public partial class SettingsWindow : ArcGIS.Desktop.Framework.Controls.ProWindow
+    public partial class SettingsWindow : ArcGIS.Desktop.Framework.Controls.ProWindow, INotifyPropertyChanged
     {
-
-        // Radio Button binding special binding case:
-        public bool Checked2525D
+        public bool IsSettingsReadOnly
         {
-            get { return _checked2525D; }
+            get; set;
+        }
+
+        public bool IsSettingsNotReadOnly
+        {
+            get { return !IsSettingsReadOnly; }
+        }
+
+        public ProSymbolUtilities.SupportedStandardsType Standard
+        {
+            get; set;
+        }
+
+        public ObservableCollection<string> SymbologyStandards { get; set; }
+
+        public string SelectedSymbologyStandard
+        {
+            get
+            {
+                return ProSymbolUtilities.GetStandardLabel(Standard);
+            }
             set
             {
-                _checked2525D = value;
-                _checked2525C_B2 = !_checked2525D;
+                string standardString = value;
+
+                Standard = ProSymbolUtilities.GetStandardFromLabel(standardString);
             }
         }
-        bool _checked2525D;
 
-        public bool Checked2525C_B2
+
+        public bool IsSelectDBEnabled
         {
-            get { return _checked2525C_B2; }
+            get; set;
+        }
+
+        public string DefaultDatabase
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_defaultDatabase))
+                    return "{default}";
+                else
+                    return _defaultDatabase;
+            }
             set
             {
-                _checked2525C_B2 = value;
-                _checked2525D = !_checked2525C_B2;
+                _defaultDatabase = value;
             }
         }
-        bool _checked2525C_B2;
+        private string _defaultDatabase;
+
+        public bool DefaultDatabaseChanged
+        {
+            get;
+            set;
+        }
 
         public SettingsWindow()
         {
             InitializeComponent();
 
             this.DataContext = this;
+
+            IsSettingsReadOnly = false;
+            DefaultDatabaseChanged = false;
+            IsSelectDBEnabled = false;
+
+            SymbologyStandards = new ObservableCollection<string>();
+            SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2));
+            SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.mil2525d));
+
+            // APP6D only available after 2.2
+            if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 2))
+                SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.app6d));
         }
 
         public void ShowDialog(Window owner)
@@ -76,5 +125,77 @@ namespace ProSymbolEditor
         {
             this.DialogResult = true;
         }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            // or give user the option of selecting workspace:
+            string selectedGDB = ProSymbolUtilities.BrowseItem(ArcGIS.Desktop.Catalog.ItemFilters.geodatabases);
+
+            if (string.IsNullOrEmpty(selectedGDB))
+                return;
+
+            if (DefaultDatabase != selectedGDB)
+            {
+                DefaultDatabaseChanged = true;
+                DefaultDatabase = selectedGDB;
+
+                // See if the selected database already contains a standard, 
+                // if so set the standard, and disable the control
+
+                var selectedGDBasItem = ArcGIS.Desktop.Core.ItemFactory.
+                    Instance.Create(selectedGDB);
+
+                bool hasStandard = false;
+                ProSymbolUtilities.SupportedStandardsType standardFound = 
+                    ProSymbolUtilities.SupportedStandardsType.mil2525d;
+
+                foreach (ProSymbolUtilities.SupportedStandardsType standard in
+                    Enum.GetValues(typeof(ProSymbolUtilities.SupportedStandardsType)))
+                {
+                    bool containsStandard = 
+                        await ProSymbolEditorModule.Current.MilitaryOverlaySchema.
+                            GDBContainsMilitaryOverlay(
+                            selectedGDBasItem as ArcGIS.Desktop.Catalog.GDBProjectItem, 
+                            standard);
+
+                    if (containsStandard)
+                    {
+                        hasStandard = true;
+                        standardFound = standard;
+                        break;
+                    }
+                }
+
+                if (hasStandard)
+                {
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
+                        "Database: " + selectedGDB + "\n" +
+                        "contains a schema for standard: \n" +
+                        ProSymbolUtilities.GetStandardLabel(standardFound) + ".\n" +
+                        "Setting standard to this value."
+                        , "Database Contains Schema",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    Standard = standardFound;
+                    RaisePropertyChanged("SelectedSymbologyStandard");
+                }
+
+                // Disable/enable the standard button if GDB had schema 
+                IsSettingsReadOnly = hasStandard;
+                RaisePropertyChanged("IsSettingsNotReadOnly");
+
+                RaisePropertyChanged("DefaultDatabase");
+            }
+        }
+
+        private void RaisePropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

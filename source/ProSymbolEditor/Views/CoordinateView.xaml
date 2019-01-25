@@ -1,0 +1,184 @@
+﻿<UserControl x:Class="ProSymbolEditor.Views.CoordinateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions"
+            xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
+            xmlns:local="clr-namespace:ProSymbolEditor"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0">
+            <StackPanel>
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Content="Coordinates" />
+                    <AdornerDecorator Grid.Row="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBox
+                                                    Grid.Row="0"
+                                                    Margin="5"
+                                                    IsEnabled="{Binding IsCoordinateTabEnabled}"
+                                                    Text="{Binding MapPointCoordinatesString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                                    Visibility="{Binding PointCoordinateVisibility}" />
+                            <DataGrid
+                                                    x:Name="dataGrid"
+                                                    Grid.Row="1"
+                                                    AutoGenerateColumns="False"
+                                                    CanUserAddRows="True"
+                                                    ItemsSource="{Binding PolyCoordinates, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    Visibility="{Binding PolyCoordinateVisibility}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
+                                                            Width="*"
+                                                            Binding="{Binding Coordinate, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                                            Header="List of Coordinates" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+
+                    </AdornerDecorator>
+
+                    <WrapPanel Grid.Row="2">
+                        <Button
+                                                HorizontalAlignment="Left"
+                                                Command="{Binding AddCoordinateToMapCommand}"
+                                                CommandParameter="True"
+                                                Content="Add Coordinate(s) to Map"
+                                                Style="{DynamicResource Esri_SimpleButton}"
+                                                Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                        <Button
+                                                HorizontalAlignment="Left"
+                                                Command="{Binding MarkCoordinateOnMapCommand}"
+                                                CommandParameter="True"
+                                                Content="Mark/Pan to Coordinate"
+                                                Style="{DynamicResource Esri_SimpleButton}"
+                                                Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
+                    </WrapPanel>
+                </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Image
+                                            x:Name="coordTabSymbolImage"
+                                            Grid.Row="0"
+                                            Width="180"
+                                            Height="180"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Top"
+                                            RenderOptions.BitmapScalingMode="HighQuality"
+                                            Source="{Binding SymbolAttributeSet.SymbolImage}">
+                        <Image.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding SaveImageToCommand}" Header="Save Image As..." />
+                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="Copy Image to Clipboard" />
+                            </ContextMenu>
+                        </Image.ContextMenu>
+                    </Image>
+
+                    <DataGrid 
+                                            Grid.Row="1"
+                                            Height="150"
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding SymbolAttributeSet.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}" 
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" >
+                        <DataGrid.ToolTip>
+                            <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                            </ToolTip>
+                        </DataGrid.ToolTip>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                                    Grid.Column="0"
+                                    Margin="0,0,-10,10"                                    
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding GoToTabCommand}"
+                                    CommandParameter="3"
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
+                                    ToolTip="Back to Label" >
+                <Button.RenderTransform>
+                    <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                </Button.RenderTransform>
+            </Button>
+            <Button
+                                    Grid.Column="1"                                 
+                                    HorizontalAlignment="Center"
+                                    Command="{Binding SaveSymbolFileCommand}"
+                                    Content="Add Favorite"
+                                    Style="{DynamicResource Esri_SimpleButton}" />
+            <ToggleButton
+                                    Grid.Column="2"                                    
+                                    Height="24"
+                                    HorizontalAlignment="Center"
+                                    BorderThickness="0.5"
+                                    Command="{Binding ActivateAddToMapToolCommand}"
+                                    Content=" Add to Map "
+                                    IsChecked="{Binding AddToMapToolEnabled}"
+                                    ToolTip="Add to Map"
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" >
+                <ToggleButton.Style>
+                    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                </ToggleButton.Style>
+            </ToggleButton>
+            <Button
+                                    Grid.Column="2"
+                                    Height="24"
+                                    HorizontalAlignment="Center"
+                                    Command="{Binding SaveEditsCommand}"
+                                    Content="Save Edits"
+                                    Style="{DynamicResource Esri_SimpleButton}"
+                                    ToolTip="Save Edits"
+                                    Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
+        </Grid>
+    </Grid>
+
+</UserControl>

@@ -1,0 +1,451 @@
+﻿<UserControl x:Class="ProSymbolEditor.Views.SymbolView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions"
+            xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"             
+            xmlns:sys="clr-namespace:System;assembly=mscorlib"             
+            xmlns:local="clr-namespace:ProSymbolEditor"             
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <extensions:DesignOnlyResourceDictionary Source="pack://application:,,,/ArcGIS.Desktop.Framework;component\Themes\Default.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer>
+            <StackPanel>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Identity/Affiliation  -->
+
+                    <Label
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Margin="5,5,5,5"
+                                            Content="Identity/Affiliation"
+                                            Visibility="{Binding ElementName=identityComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            x:Name="identityComboBox"
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Margin="5,5,5,5"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.IdentityDomainValues, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedIdentityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <!--  Status or Operation  -->
+
+                    <Label
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Margin="5,5,5,5"
+                                            Content="Status/Planned"
+                                            Visibility="{Binding ElementName=statusComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            x:Name="statusComboBox"
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Margin="5,5,5,5"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.StatusDomainValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedStatusDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <Label
+                                            Grid.Row="2"
+                                            Grid.Column="0"
+                                            Margin="5,5,5,5"
+                                            Content="Operational Condition Amplifier"
+                                            Visibility="{Binding ElementName=operationalConditionAmplifierComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            x:Name="operationalConditionAmplifierComboBox"
+                                            Grid.Row="2"
+                                            Grid.Column="1"
+                                            Margin="5,5,5,5"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.OperationalConditionAmplifierDomainValues, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedOperationalConditionDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <!--  TFFDHQ/Indicator  -->
+
+                    <Label
+                                            Grid.Row="3"
+                                            Grid.Column="0"
+                                            Margin="5,5,5,5"
+                                            Content="TF, FD, HQ"
+                                            Visibility="{Binding ElementName=tfFdHqComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            x:Name="tfFdHqComboBox"
+                                            Grid.Row="3"
+                                            Grid.Column="1"
+                                            Margin="5,5,5,5"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.TfFdHqDomainValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedIndicatorDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <!--  Echelon or Mobility  -->
+
+                    <Label
+                                            Grid.Row="4"
+                                            Grid.Column="0"
+                                            Margin="5,5,5,5"
+                                            Content="Echelon"
+                                            Visibility="{Binding ElementName=echelonComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            x:Name="echelonComboBox"
+                                            Grid.Row="4"
+                                            Grid.Column="1"
+                                            Margin="5,5,5,5"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.EchelonDomainValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedEchelonDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <Label
+                                            Grid.Row="5"
+                                            Grid.Column="0"
+                                            Margin="5,5,5,5"
+                                            Content="Mobility"
+                                            Visibility="{Binding ElementName=mobilityComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            x:Name="mobilityComboBox"
+                                            Grid.Row="5"
+                                            Grid.Column="1"
+                                            Margin="5,5,5,5"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.MobilityDomainValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedMobilityDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <!--  Identity/Reality/Context  -->
+
+                    <Label
+                                            Grid.Row="6"
+                                            Grid.Column="0"
+                                            Margin="5,5,5,5"
+                                            Content="Context"
+                                            Visibility="{Binding ElementName=contextComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            x:Name="contextComboBox"
+                                            Grid.Row="6"
+                                            Grid.Column="1"
+                                            Margin="5,5,5,5"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.ContextDomainValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedContextDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <!--  Modifier 1  -->
+
+                    <Label
+                                            Grid.Row="7"
+                                            Grid.Column="0"
+                                            Margin="5,5,5,5"
+                                            Content="Modifier 1"
+                                            Visibility="{Binding ElementName=modifier1ComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            x:Name="modifier1ComboBox"
+                                            Grid.Row="7"
+                                            Grid.Column="1"
+                                            Margin="5,5,5,5"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier1DomainValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedModifier1DomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <!--  Modifier 2  -->
+
+                    <Label
+                                            Grid.Row="8"
+                                            Grid.Column="0"
+                                            Margin="5,5,5,5"
+                                            Content="Modifier 2"
+                                            Visibility="{Binding ElementName=modifier2ComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            x:Name="modifier2ComboBox"
+                                            Grid.Row="8"
+                                            Grid.Column="1"
+                                            Margin="5,5,5,5"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier2DomainValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedModifier2DomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <!--  Extended Function Code (2525C_B2 Only)  -->
+                    <Label
+                                            Grid.Row="5"
+                                            Grid.Column="0"
+                                            Margin="5,5,5,5"
+                                            Content="Function"
+                                            Visibility="{Binding ElementName=extendedFunctionCodeComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            x:Name="extendedFunctionCodeComboBox"
+                                            Grid.Row="5"
+                                            Grid.Column="1"
+                                            Margin="5,5,5,5"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.ExtendedFunctionCodeValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedExtendedFunctionCodeDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code"
+                                            ToolTip="{Binding Path=SelectedItem.Name, RelativeSource={RelativeSource Self}}">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+                </Grid>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Image
+                                            x:Name="symbolTabImage"
+                                            Grid.Row="0"
+                                            Width="180"
+                                            Height="180"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Top"
+                                            RenderOptions.BitmapScalingMode="HighQuality"
+                                            Source="{Binding SymbolAttributeSet.SymbolImage}">
+                        <Image.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding SaveImageToCommand}" Header="Save Image As..." />
+                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="Copy Image to Clipboard" />
+                            </ContextMenu>
+                        </Image.ContextMenu>
+                    </Image>
+
+                    <DataGrid 
+                                            Grid.Row="1"
+                                            Height="150"
+                                            Margin="5,5,5,5"                                       
+                                            ItemsSource="{Binding SymbolAttributeSet.AttributesDictionary}" 
+                                            Style="{DynamicResource Esri_DataGridStyle}"
+                                            HeadersVisibility="Column" 
+                                            RowHeaderWidth="0" >
+                        <DataGrid.ToolTip>
+                            <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
+                                <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
+                            </ToolTip>
+                        </DataGrid.ToolTip>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Margin="0,0,-10,10"
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding GoToTabCommand}"
+                                    CommandParameter="0"
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
+                                    ToolTip="Back to Search">
+                <Button.RenderTransform>
+                    <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                </Button.RenderTransform>
+            </Button>
+            <Button
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    
+                                    HorizontalAlignment="Center"
+                                    Command="{Binding SaveSymbolFileCommand}"
+                                    Content="Add Favorite"
+                                    Style="{DynamicResource Esri_SimpleButton}" />
+            <ToggleButton
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Height="24"
+                                    HorizontalAlignment="Center"
+                                    BorderThickness="0.5"
+                                    Command="{Binding ActivateAddToMapToolCommand}"
+                                    Content=" Add to Map "
+                                    IsChecked="{Binding AddToMapToolEnabled}"
+                                    ToolTip="Add to Map"
+                                    Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
+                <ToggleButton.Style>
+                    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                </ToggleButton.Style>
+            </ToggleButton>
+            <Button
+                                    Grid.Row="0"
+                                    Grid.Column="2"                                    
+                                    Height="24"
+                                    HorizontalAlignment="Center"
+                                    Command="{Binding SaveEditsCommand}"
+                                    Content="Save Edits"
+                                    Style="{DynamicResource Esri_SimpleButton}"
+                                    ToolTip="Save Edits"
+                                    Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
+            <Button
+                                    Grid.Row="0"
+                                    Grid.Column="3"
+                                    Margin="0,0,-10,10"                                    
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding GoToTabCommand}"
+                                    CommandParameter="3"
+                                    Style="{DynamicResource Esri_ButtonBackSmall}"
+                                    ToolTip="Go to Label Tab">
+                <Button.RenderTransform>
+                    <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
+                </Button.RenderTransform>
+            </Button>
+
+        </Grid>
+    </Grid>
+
+</UserControl>

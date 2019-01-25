@@ -17,11 +17,11 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
-using ArcGIS.Core.Data;
-using ArcGIS.Desktop.Framework.Contracts;
 using System.Web.Script.Serialization;
 using System.ComponentModel;
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+
+using ArcGIS.Core.Data;
+using ArcGIS.Desktop.Framework.Contracts;
 
 namespace ProSymbolEditor
 {
@@ -41,7 +41,9 @@ namespace ProSymbolEditor
         {
             Initialize();
 
+            resettingAttributes = true;
             SetPropertiesFromFieldAttributes(fieldValues);
+            resettingAttributes = false;
         }
 
         private void Initialize()
@@ -96,6 +98,8 @@ namespace ProSymbolEditor
                         continue;
 
                     string valueAsString = value.ToString();
+                    if (string.IsNullOrEmpty(valueAsString))
+                        continue;
 
                     // Skip non-value types
                     if (valueAsString.StartsWith("ProSymbolEditor"))
@@ -113,11 +117,16 @@ namespace ProSymbolEditor
                 foreach (var prop in LabelAttributes.GetType().GetProperties())
                 {
                     string key = prop.Name;
+                    if (!string.IsNullOrEmpty(key) && key.StartsWith("Max"))
+                        continue;
+
                     object value = prop.GetValue(LabelAttributes, null);
                     if (value == null)
                         continue;
 
                     string valueAsString = value.ToString();
+                    if (string.IsNullOrEmpty(valueAsString))
+                        continue;
 
                     // Skip non-value types
                     if (valueAsString.StartsWith("ProSymbolEditor"))
@@ -141,10 +150,8 @@ namespace ProSymbolEditor
 
         #region Getters/Setters
 
-        [ExpandableObject]
         public DisplayAttributes DisplayAttributes { get; set; }
 
-        [ExpandableObject]
         public LabelAttributes LabelAttributes { get; set; }
 
         public string Name 
@@ -169,6 +176,9 @@ namespace ProSymbolEditor
                 }
             }
         }
+
+        // disable some operations when resetting 
+        private bool resettingAttributes = false;
 
         /// <summary>
         /// These are the symbol tags retrieved from a military feature style file or favorite
@@ -279,7 +289,30 @@ namespace ProSymbolEditor
             // Step 1: Create a dictionary/map of well known attribute names to values
             Dictionary<string, object> attributeSet = GenerateAttributeSetDictionary();
 
-            if ((attributeSet == null) || (attributeSet.Count == 0))
+            // Don't create preview until we have the minimum number of attributes in
+            // order to minimize flicker - minimum attributes:
+            // 2525D: { symbolset, entity, affiliation }
+            // 2525B: { extendedfunctioncode, affiliation }
+            int minimumAttributeCount = 4;
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            {
+                minimumAttributeCount = 3;
+            }
+
+            if (attributeSet.ContainsKey("IsMETOC") && (bool)attributeSet["IsMETOC"])
+            {
+                //////////////////////////
+                // WORKAROUND: Pro 2.3 broke exporting METOC by attribute "extendedfunctioncode"
+                // so have to set "sidc" attribute instead
+                if (ProSymbolUtilities.IsNewStyleFormat && attributeSet.ContainsKey("extendedfunctioncode"))
+                    attributeSet.Add("sidc", DisplayAttributes.LegacySymbolIdCode);
+
+                // METOC do not have identity/affiliation so have 1 less attribute
+                minimumAttributeCount--;
+            }
+
+            // Validate that image is ready to be created
+            if ((attributeSet == null) || (attributeSet.Count < minimumAttributeCount))
             {
                 _symbolImage = null;
                 return;
@@ -294,11 +327,15 @@ namespace ProSymbolEditor
         {
             Dictionary<string, object> attributeSet = new Dictionary<string, object>();
 
+            bool isMETOC = false;
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
                 if (!string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode))
                 {
                     attributeSet["extendedfunctioncode"] = DisplayAttributes.ExtendedFunctionCode;
+
+                    if (DisplayAttributes.ExtendedFunctionCode[0] == 'W')
+                        isMETOC = true;
                 }
 
                 if (!string.IsNullOrEmpty(DisplayAttributes.Identity))
@@ -331,6 +368,10 @@ namespace ProSymbolEditor
                 if (!string.IsNullOrEmpty(DisplayAttributes.SymbolSet))
                 {
                     attributeSet["symbolset"] = DisplayAttributes.SymbolSet;
+
+                    if ((DisplayAttributes.SymbolSet == "45") ||
+                        (DisplayAttributes.SymbolSet == "46"))
+                        isMETOC = true;
                 }
 
                 if (!string.IsNullOrEmpty(DisplayAttributes.SymbolEntity))
@@ -383,6 +424,8 @@ namespace ProSymbolEditor
                     attributeSet["modifier2"] = DisplayAttributes.Modifier2;
                 }
             }
+
+            attributeSet.Add("IsMETOC", isMETOC);
 
             return attributeSet;
         }
@@ -845,6 +888,8 @@ namespace ProSymbolEditor
             //Reset attributes
             _symbolImage = null;
 
+            resettingAttributes = true;
+
             DisplayAttributes.SymbolSet = "";
             DisplayAttributes.SymbolEntity = "";
             DisplayAttributes.ExtendedFunctionCode = "";
@@ -877,11 +922,17 @@ namespace ProSymbolEditor
 
             StandardVersion = ProSymbolUtilities.StandardString;
 
+            resettingAttributes = false;
+
             NotifyPropertyChanged(() => IsValid);
         }
 
         private void Attributes_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            // disable this when everything being reset
+            if (resettingAttributes)
+                return;
+
             GeneratePreviewSymbol();
 
             // Tell the proprties datagrids to get the updated info

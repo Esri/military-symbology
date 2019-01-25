@@ -44,6 +44,18 @@ namespace ProSymbolEditor
         private DomainCodedValuePair _selectedReliabilityDomainPair;
         private string _countryCode;
         private DomainCodedValuePair _selectedCountryCodeDomainPair;
+        private string lengthError = "The label entered is at the maximum allowable length for this feature field";
+
+        [ScriptIgnore, Browsable(false)]
+        public int MaxLen30 => 30;
+        [ScriptIgnore, Browsable(false)]
+        public int MaxLen24 => 24;
+        [ScriptIgnore, Browsable(false)]
+        public int MaxLen20 => 20;
+        [ScriptIgnore, Browsable(false)]
+        public int MaxLen21 => 21;
+        [ScriptIgnore, Browsable(false)]
+        public int MaxLen12 => 12;
 
         public LabelAttributes() {  }
 
@@ -149,6 +161,10 @@ namespace ProSymbolEditor
             set
             {
                 _uniqueDesignation = value;
+
+                if (!string.IsNullOrEmpty(_uniqueDesignation) && (_uniqueDesignation.Length >= MaxLen30))
+                    throw new ArgumentException(lengthError);
+
                 NotifyPropertyChanged(() => UniqueDesignation);
             }
         }
@@ -162,6 +178,10 @@ namespace ProSymbolEditor
             set
             {
                 _staffComments = value;
+
+                if (!string.IsNullOrEmpty(_staffComments) && (_staffComments.Length >= MaxLen20))
+                    throw new ArgumentException(lengthError);
+
                 NotifyPropertyChanged(() => StaffComments);
             }
         }
@@ -175,6 +195,10 @@ namespace ProSymbolEditor
             set
             {
                 _additionalInformation = value;
+
+                if (!string.IsNullOrEmpty(_additionalInformation) && (_additionalInformation.Length >= MaxLen20))
+                    throw new ArgumentException(lengthError);
+
                 NotifyPropertyChanged(() => AdditionalInformation);
             }
         }
@@ -188,6 +212,10 @@ namespace ProSymbolEditor
             set
             {
                 _type = value;
+
+                if (!string.IsNullOrEmpty(_type) && (_type.Length >= MaxLen24))
+                    throw new ArgumentException(lengthError);
+
                 NotifyPropertyChanged(() => Type);
             }
         }
@@ -201,6 +229,10 @@ namespace ProSymbolEditor
             set
             {
                 _commonidentifier = value;
+
+                if (!string.IsNullOrEmpty(_commonidentifier) && (_commonidentifier.Length >= MaxLen12))
+                    throw new ArgumentException(lengthError);
+
                 NotifyPropertyChanged(() => CommonIdentifier);
             }
         }
@@ -227,6 +259,10 @@ namespace ProSymbolEditor
             set
             {
                 _higherFormation = value;
+
+                if (!string.IsNullOrEmpty(_higherFormation) && (_higherFormation.Length >= MaxLen21))
+                    throw new ArgumentException(lengthError);
+
                 NotifyPropertyChanged(() => HigherFormation);
             }
         }

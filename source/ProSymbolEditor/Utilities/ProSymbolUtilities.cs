@@ -32,7 +32,7 @@ namespace ProSymbolEditor
 {
     public class ProSymbolUtilities
     {
-        public enum SupportedStandardsType { mil2525d, mil2525c_b2 };
+        public enum SupportedStandardsType { mil2525d, mil2525c_b2, app6d };
 
         public static SupportedStandardsType Standard
         {
@@ -52,16 +52,71 @@ namespace ProSymbolEditor
         {
             get
             {
-                return GetStandardLabel(Standard);
+                return GetShortStandardLabel(Standard);
             }
         }
 
         public static string GetStandardLabel(SupportedStandardsType standardIn)
-        {           
+        {
+            if (standardIn == SupportedStandardsType.mil2525d)
+                return "MIL-STD-2525D";
+            else
+                if (standardIn == SupportedStandardsType.app6d)
+                    return "APP-6(D)";
+                else
+                    return "MIL-STD-2525B w/ Change 2";
+        }
+
+        public static string GetDictionaryString()
+        {
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.app6d)
+                return ProSymbolUtilities.StandardString.ToLower();
+            else
+                return "mil" + ProSymbolUtilities.StandardString.ToLower();
+        }
+
+        public static string GetDictionaryString(SupportedStandardsType standardIn)
+        {
             if (standardIn == SupportedStandardsType.mil2525d)
                 return "2525D";
             else
-                return "2525B";
+                if (standardIn == SupportedStandardsType.app6d)
+                    return "APP6D";
+                else
+                    return "2525C_B2";
+        }
+
+        public static SupportedStandardsType GetStandardFromLabel(string standardString)
+        {
+            if (standardString == GetStandardLabel(SupportedStandardsType.mil2525d))
+                return SupportedStandardsType.mil2525d;
+            else 
+                if (standardString == GetStandardLabel(SupportedStandardsType.app6d))
+                    return SupportedStandardsType.app6d;
+                else
+                    return SupportedStandardsType.mil2525c_b2;
+        }
+
+        public static string GetShortStandardLabel(SupportedStandardsType standardIn)
+        {
+            if (standardIn == SupportedStandardsType.mil2525d)
+                return "2525D";
+            else
+                if (standardIn == SupportedStandardsType.app6d)
+                    return "APP6D";
+                else
+                    return "2525B";
+        }
+
+        public static string GetDatasetName(SupportedStandardsType standardIn)
+        {
+            if (standardIn == SupportedStandardsType.mil2525d)
+                return "militaryoverlay2525d";
+            else
+                if (standardIn == SupportedStandardsType.app6d)
+                    return "militaryoverlayapp6d";
+                else
+                    return "militaryoverlay2525b2";
         }
 
         public static string GetStandardString(SupportedStandardsType standardIn)
@@ -69,20 +124,10 @@ namespace ProSymbolEditor
             if (standardIn == SupportedStandardsType.mil2525c_b2)
                 return "2525C_B2";
             else
-                return "2525D";
-        }
-
-        public static string GetDictionaryString()
-        {
-            return "mil" + StandardString.ToLower();
-        }
-
-        public static string GetDatasetName()
-        {
-            if (Standard == SupportedStandardsType.mil2525c_b2)
-                return "militaryoverlay2525b2";
-            else
-                return "militaryoverlay2525d";
+                if (standardIn == SupportedStandardsType.app6d)
+                    return "APP6D";
+                else
+                    return "2525D";
         }
 
         public static string NameSeparator
@@ -90,12 +135,58 @@ namespace ProSymbolEditor
             get { return " : "; }
         }
 
+        public static string ProVersion
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(proVersion))
+                    proVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+
+                return proVersion;
+            }
+        }
+        private static string proVersion = string.Empty;
+
+        public static int ProMajorVersion
+        {
+            get
+            {
+                if (proMajorVersion < 0)
+                    proMajorVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Major;
+
+                return proMajorVersion;
+            }
+        }
+        private static int proMajorVersion = -1;
+
+        public static int ProMinorVersion
+        {
+            get
+            {
+                if (proMinorVersion < 0)
+                    proMinorVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.Minor;
+
+                return proMinorVersion;
+            }
+        }
+        private static int proMinorVersion = -1;
+
         public static string AddinAssemblyLocation()
         {
             var asm = System.Reflection.Assembly.GetExecutingAssembly();
             return System.IO.Path.GetDirectoryName(
                               Uri.UnescapeDataString(
                                       new Uri(asm.CodeBase).LocalPath));
+        }
+
+        public static bool IsNewStyleFormat
+        {
+            get
+            {
+                bool newStyleFormat = ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 3));
+
+                return newStyleFormat;
+            }
         }
 
         public static CoordinateType GetCoordinateType(string input, out MapPoint point)
@@ -394,5 +485,31 @@ namespace ProSymbolEditor
             return dictionaryRenderer;
         }
 
+        public static string BrowseItem(string itemFilter, string initialPath = "")
+        {
+            string itemPath = "";
+
+            if (string.IsNullOrEmpty(initialPath))
+                initialPath = ArcGIS.Desktop.Core.Project.Current.HomeFolderPath;
+
+            ArcGIS.Desktop.Catalog.OpenItemDialog pathDialog =
+                new ArcGIS.Desktop.Catalog.OpenItemDialog()
+                {
+                    Title = "Select Geodatabase",
+                    InitialLocation = initialPath,
+                    MultiSelect = false,
+                    Filter = itemFilter,
+                };
+
+            bool? ok = pathDialog.ShowDialog();
+            if ((ok == true) && (pathDialog.Items.Count() > 0))
+            {
+                IEnumerable<ArcGIS.Desktop.Core.Item> selectedItems = pathDialog.Items;
+                itemPath = selectedItems.First().Path;
+            }
+
+            return itemPath;
+        }
+       
     }
 }

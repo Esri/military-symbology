@@ -57,6 +57,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -91,13 +92,13 @@
       <HintPath>C:\Program Files\ArcGIS\Pro\bin\Extensions\Editing\ArcGIS.Desktop.Editing.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ArcGIS.Desktop.Docking.Wpf">
+      <HintPath>C:\Program Files\ArcGIS\Pro\bin\ArcGIS.Desktop.Docking.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="ArcGIS.Desktop.Extensions">
       <HintPath>C:\Program Files\ArcGIS\Pro\bin\Extensions\DesktopExtensions\ArcGIS.Desktop.Extensions.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependencies\Extended WPF Toolkit Binaries\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +113,9 @@
   <ItemGroup>
     <Compile Include="AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NumberUpDownControl.xaml.cs">
+      <DependentUpon>NumberUpDownControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\StringCharacterValueConverter.cs" />
     <Compile Include="MapTools\CoordinateMapTool.cs" />
@@ -136,6 +140,15 @@
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Extensions.cs" />
+    <Compile Include="Views\CoordinateView.xaml.cs">
+      <DependentUpon>CoordinateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FavoritesView.xaml.cs">
+      <DependentUpon>FavoritesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LabelView.xaml.cs">
+      <DependentUpon>LabelView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MilitarySymbolDockpane.xaml.cs">
       <DependentUpon>MilitarySymbolDockpane.xaml</DependentUpon>
     </Compile>
@@ -143,17 +156,54 @@
     <Compile Include="ProSymbolEditorModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ProSymbolUtilities.cs" />
+    <Compile Include="Views\ModifyView.xaml.cs">
+      <DependentUpon>ModifyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SearchView.xaml.cs">
+      <DependentUpon>SearchView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SymbolView.xaml.cs">
+      <DependentUpon>SymbolView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\NumberUpDownControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CoordinateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FavoritesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LabelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MilitarySymbolDockpane.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ModifyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SearchView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SymbolView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -184,15 +234,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Content Include="Data\LegacyMappingTableCtoD.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="LayerFiles\MilitaryOverlay-2525c_b2.lpkx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Data\LegacyIconMappingTableCtoD.csv">
+    <Content Include="LayerFiles\MilitaryOverlay-app6d.lpkx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -203,6 +250,9 @@
       <Project>{67ffdfae-f8ec-45aa-a3f9-6109bcf5bbf4}</Project>
       <Name>CoordinateConversionLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="C:\Program Files\ArcGIS\Pro\bin\proapp-sdk-MSBuild.dll" TaskName="proapp_sdk_MSBuild.PackageAddIn" />
