@@ -330,7 +330,8 @@ namespace ProSymbolEditor
             bool isMETOC = false;
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
-                if (!string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode))
+                if (!string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode) &&
+                    (DisplayAttributes.ExtendedFunctionCode != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["extendedfunctioncode"] = DisplayAttributes.ExtendedFunctionCode;
 
@@ -338,34 +339,40 @@ namespace ProSymbolEditor
                         isMETOC = true;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Identity))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Identity) &&
+                    (DisplayAttributes.Identity != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["affiliation"] = DisplayAttributes.Identity;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Status))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Status) &&
+                    (DisplayAttributes.Status != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["status"] = DisplayAttributes.Status;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator) &&
+                    (DisplayAttributes.Indicator != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["hqtffd"] = DisplayAttributes.Indicator;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon))
-                {
+                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon) && 
+                    (DisplayAttributes.Echelon != ProSymbolUtilities.NullFieldValueFlag))
+                { 
                     attributeSet["echelonmobility"] = DisplayAttributes.Echelon;
                 }
             }
             else // 2525D
             {
-                if (!string.IsNullOrEmpty(DisplayAttributes.Identity))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Identity) &&
+                    (DisplayAttributes.Identity != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["identity"] = DisplayAttributes.Identity;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolSet))
+                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolSet) &&
+                    (DisplayAttributes.SymbolSet != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["symbolset"] = DisplayAttributes.SymbolSet;
 
@@ -374,52 +381,59 @@ namespace ProSymbolEditor
                         isMETOC = true;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolEntity))
+                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolEntity) &&
+                    (DisplayAttributes.SymbolEntity != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["symbolentity"] = DisplayAttributes.SymbolEntity;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator) &&
+                    (DisplayAttributes.Indicator != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["indicator"] = DisplayAttributes.Indicator;
                 }
 
                 //Echelon or Mobility
-
-                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon) && 
+                    (DisplayAttributes.Echelon != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["echelon"] = DisplayAttributes.Echelon;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Mobility))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Mobility) &&
+                    (DisplayAttributes.Mobility != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["echelon"] = DisplayAttributes.Mobility;
                 }
 
                 //Statuses or Operation
-
-                if (!string.IsNullOrEmpty(DisplayAttributes.OperationalCondition))
+                if (!string.IsNullOrEmpty(DisplayAttributes.OperationalCondition) &&
+                    (DisplayAttributes.OperationalCondition != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["operationalcondition"] = DisplayAttributes.OperationalCondition;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Status))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Status) &&
+                    (DisplayAttributes.Status != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["operationalcondition"] = DisplayAttributes.Status;
                 }
 
-                //Delta attributes
-                if (!string.IsNullOrEmpty(DisplayAttributes.Context))
+                // 2525D attributes
+                if (!string.IsNullOrEmpty(DisplayAttributes.Context) &&
+                    (DisplayAttributes.Context != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["context"] = DisplayAttributes.Context;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier1))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier1) &&
+                    (DisplayAttributes.Modifier1 != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["modifier1"] = DisplayAttributes.Modifier1;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier2))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier2) &&
+                    (DisplayAttributes.Modifier2 != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     attributeSet["modifier2"] = DisplayAttributes.Modifier2;
                 }
@@ -442,88 +456,102 @@ namespace ProSymbolEditor
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode))
+                if (!string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode) &&
+                    (DisplayAttributes.ExtendedFunctionCode != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["extendedfunctioncode"] = DisplayAttributes.ExtendedFunctionCode;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Identity))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Identity) &&
+                    (DisplayAttributes.Identity != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["affiliation"] = DisplayAttributes.Identity;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator) &&
+                    (DisplayAttributes.Indicator != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["hqtffd"] = DisplayAttributes.Indicator;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon) &&
+                    (DisplayAttributes.Echelon != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["echelonmobility"] = DisplayAttributes.Echelon;
                 }
-
             }
             else
             {
-                if (!string.IsNullOrEmpty(DisplayAttributes.Identity))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Identity) &&
+                    (DisplayAttributes.Identity != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["identity"] = DisplayAttributes.Identity;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolSet))
+                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolSet) &&
+                    (DisplayAttributes.SymbolSet != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["symbolset"] = Convert.ToInt32(DisplayAttributes.SymbolSet);
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolEntity))
+                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolEntity) &&
+                    (DisplayAttributes.SymbolEntity != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["symbolentity"] = Convert.ToInt32(DisplayAttributes.SymbolEntity);
                 }
 
                 //Indicator / HQTFFD /
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator) &&
+                    (DisplayAttributes.Indicator != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["indicator"] = DisplayAttributes.Indicator;
                 }
 
                 //Echelon or Mobility
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon) &&
+                    (DisplayAttributes.Echelon != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["echelon"] = DisplayAttributes.Echelon;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Mobility))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Mobility) &&
+                    (DisplayAttributes.Mobility != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["mobility"] = DisplayAttributes.Mobility;
                 }
 
                 //Statuses or Operation
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.OperationalCondition))
+                if (!string.IsNullOrEmpty(DisplayAttributes.OperationalCondition) &&
+                    (DisplayAttributes.OperationalCondition != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["operationalcondition"] = DisplayAttributes.OperationalCondition;
                 }
 
-                //Delta attributes
-                if (!string.IsNullOrEmpty(DisplayAttributes.Context))
+                // 2525D attributes
+                if (!string.IsNullOrEmpty(DisplayAttributes.Context) &&
+                    (DisplayAttributes.Context != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["context"] = DisplayAttributes.Context;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier1))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier1) &&
+                    (DisplayAttributes.Modifier1 != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["modifier1"] = DisplayAttributes.Modifier1;
                 }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier2))
+                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier2) &&
+                    (DisplayAttributes.Modifier2 != ProSymbolUtilities.NullFieldValueFlag))
                 {
                     rowBuffer["modifier2"] = DisplayAttributes.Modifier2;
                 }
             }
 
-            if (!string.IsNullOrEmpty(DisplayAttributes.Status))
+            if (!string.IsNullOrEmpty(DisplayAttributes.Status) &&
+                (DisplayAttributes.Status != ProSymbolUtilities.NullFieldValueFlag))
             {
                 rowBuffer["status"] = DisplayAttributes.Status;
             }
@@ -605,77 +633,154 @@ namespace ProSymbolEditor
                 return;
             }
 
-            // Implementation Note: feature fields with domains attached can not be set to null
-            // so these fields with domains must also be checked for IsNullOrEmpty
+            // Implementation Note: only force a feature field value with domains attached 
+            // to null if NullFieldValueFlag("<null>) is set on that field
+
+            // 2525C/B attributes:
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             { 
                 if (!string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode) && 
                     (feature.FindField("extendedfunctioncode") >= 0))
-                    feature["extendedfunctioncode"] = DisplayAttributes.ExtendedFunctionCode;
+                {
+                    if (DisplayAttributes.ExtendedFunctionCode == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["extendedfunctioncode"] = null;
+                    else
+                        feature["extendedfunctioncode"] = DisplayAttributes.ExtendedFunctionCode;
+                }
 
                 if (!string.IsNullOrEmpty(DisplayAttributes.Identity) && 
                     (feature.FindField("affiliation") >= 0))
-                    feature["affiliation"] = DisplayAttributes.Identity;
+                {
+                    if (DisplayAttributes.Identity == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["affiliation"] = null;
+                    else
+                        feature["affiliation"] = DisplayAttributes.Identity;
+                }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator) && 
+                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator) &&
                     (feature.FindField("hqtffd") >= 0))
-                    feature["hqtffd"] = DisplayAttributes.Indicator;
+                {
+                    if (DisplayAttributes.Indicator == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["hqtffd"] = null;
+                    else
+                        feature["hqtffd"] = DisplayAttributes.Indicator;
+                }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon) && 
+                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon) &&
                     (feature.FindField("echelonmobility") >= 0))
-                    feature["echelonmobility"] = DisplayAttributes.Echelon;
+                {
+                    if (DisplayAttributes.Echelon == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["echelonmobility"] = null;
+                    else
+                        feature["echelonmobility"] = DisplayAttributes.Echelon;
+                }
             }
-            else // 2525D/Delta attributes
+            else // 2525D attributes:
             {
                 if (!string.IsNullOrEmpty(DisplayAttributes.Identity) && 
                     (feature.FindField("identity") >= 0))
-                    feature["identity"] = DisplayAttributes.Identity;
+                {
+                    if (DisplayAttributes.Identity == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["identity"] = null;
+                    else
+                        feature["identity"] = DisplayAttributes.Identity;
+                }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolSet) && 
+                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolSet) &&
                     (feature.FindField("symbolset") >= 0))
-                    feature["symbolset"] = Convert.ToInt32(DisplayAttributes.SymbolSet);
+                {
+                    if (DisplayAttributes.SymbolSet == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["symbolset"] = null;
+                    else
+                        feature["symbolset"] = Convert.ToInt32(DisplayAttributes.SymbolSet);
+                }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolEntity) && 
+                if (!string.IsNullOrEmpty(DisplayAttributes.SymbolEntity) &&
                     (feature.FindField("symbolentity") >= 0))
-                    feature["symbolentity"] = Convert.ToInt32(DisplayAttributes.SymbolEntity);
+                {
+                    if (DisplayAttributes.SymbolEntity == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["symbolentity"] = null;
+                    else
+                        feature["symbolentity"] = Convert.ToInt32(DisplayAttributes.SymbolEntity);
+                }
 
                 //Indicator / HQTFFD
-                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator) && 
+                if (!string.IsNullOrEmpty(DisplayAttributes.Indicator) &&
                     (feature.FindField("indicator") >= 0))
-                    feature["indicator"] = DisplayAttributes.Indicator;
+                {
+                    if (DisplayAttributes.Indicator == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["indicator"] = null;
+                    else
+                        feature["indicator"] = DisplayAttributes.Indicator;
+                }
 
                 //Echelon or Mobility
-                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon) && 
+                if (!string.IsNullOrEmpty(DisplayAttributes.Echelon) &&
                     (feature.FindField("echelon") >= 0))
-                    feature["echelon"] = DisplayAttributes.Echelon;
+                {
+                    if (DisplayAttributes.Echelon == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["echelon"] = null;
+                    else
+                        feature["echelon"] = DisplayAttributes.Echelon;
+                }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Mobility) && 
+                if (!string.IsNullOrEmpty(DisplayAttributes.Mobility) &&
                     (feature.FindField("mobility") >= 0))
-                    feature["mobility"] = DisplayAttributes.Mobility;
+                {
+                    if (DisplayAttributes.Mobility == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["mobility"] = null;
+                    else
+                        feature["mobility"] = DisplayAttributes.Mobility;
+                }
 
                 //Statuses or Operation
-                if (!string.IsNullOrEmpty(DisplayAttributes.OperationalCondition) && 
+                if (!string.IsNullOrEmpty(DisplayAttributes.OperationalCondition) &&
                     (feature.FindField("operationalcondition") >= 0))
-                    feature["operationalcondition"] = DisplayAttributes.OperationalCondition;
+                {
+                    if (DisplayAttributes.OperationalCondition == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["operationalcondition"] = null;
+                    else
+                        feature["operationalcondition"] = DisplayAttributes.OperationalCondition;
+                }
 
-                if (!string.IsNullOrEmpty(DisplayAttributes.Context) && 
+                if (!string.IsNullOrEmpty(DisplayAttributes.Context) &&
                     (feature.FindField("context") >= 0))
-                    feature["context"] = DisplayAttributes.Context;
+                {
+                    if (DisplayAttributes.Context == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["context"] = null;
+                    else
+                        feature["context"] = DisplayAttributes.Context;
+                }
 
                 //Modifiers
-                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier1) && 
+                if (!string.IsNullOrEmpty(DisplayAttributes.Modifier1) &&
                     (feature.FindField("modifier1") >= 0))
-                    feature["modifier1"] = DisplayAttributes.Modifier1;
+                {
+                    if (DisplayAttributes.Modifier1 == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["modifier1"] = null;
+                    else
+                        feature["modifier1"] = DisplayAttributes.Modifier1;
+                }
 
                 if (!string.IsNullOrEmpty(DisplayAttributes.Modifier2) && 
                     (feature.FindField("modifier2") >= 0))
-                    feature["modifier2"] = DisplayAttributes.Modifier2;
+                {
+                    if (DisplayAttributes.Modifier2 == ProSymbolUtilities.NullFieldValueFlag)
+                        feature["modifier2"] = null;
+                    else
+                        feature["modifier2"] = DisplayAttributes.Modifier2;
+                }
             }
 
-            // Apply to all versions of the standard
-            if (!string.IsNullOrEmpty(DisplayAttributes.Status) && 
+            // Applies to all versions of the standard
+            if (!string.IsNullOrEmpty(DisplayAttributes.Status) &&
                (feature.FindField("status") >= 0))
-                feature["status"] = DisplayAttributes.Status;
+            {
+                if (DisplayAttributes.Status == ProSymbolUtilities.NullFieldValueFlag)
+                    feature["status"] = null;
+                else
+                    feature["status"] = DisplayAttributes.Status;
+            }
 
             //LABELS
             if ((LabelAttributes.DateTimeValid != null) && 
@@ -711,21 +816,41 @@ namespace ProSymbolEditor
             if (feature.FindField("higherFormation") >= 0)
                 feature["higherFormation"] = LabelAttributes.HigherFormation;
 
-            if (!string.IsNullOrEmpty(LabelAttributes.Reinforced) && 
+            if (!string.IsNullOrEmpty(LabelAttributes.Reinforced) &&
                 (feature.FindField("reinforced") >= 0))
-                feature["reinforced"] = LabelAttributes.Reinforced;
+            {
+                if (LabelAttributes.Reinforced == ProSymbolUtilities.NullFieldValueFlag)
+                    feature["reinforced"] = null;
+                else
+                    feature["reinforced"] = LabelAttributes.Reinforced;
+            }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.Credibility) && 
+            if (!string.IsNullOrEmpty(LabelAttributes.Credibility) &&
                 (feature.FindField("credibility") >= 0))
-                feature["credibility"] = LabelAttributes.Credibility;
+            {
+                if (LabelAttributes.Credibility == ProSymbolUtilities.NullFieldValueFlag)
+                    feature["credibility"] = null;
+                else
+                    feature["credibility"] = LabelAttributes.Credibility;
+            }
 
             if (!string.IsNullOrEmpty(LabelAttributes.Reliability) &&
                 (feature.FindField("reliability") >= 0))
-                feature["reliability"] = LabelAttributes.Reliability;
+            {
+                if (LabelAttributes.Reliability == ProSymbolUtilities.NullFieldValueFlag)
+                    feature["reliability"] = null;
+                else
+                    feature["reliability"] = LabelAttributes.Reliability;
+            }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.CountryCode) && 
+            if (!string.IsNullOrEmpty(LabelAttributes.CountryCode) &&
                 (feature.FindField("countrycode") >= 0))
-                feature["countrycode"] = LabelAttributes.CountryCode;
+            {
+                if (LabelAttributes.CountryCode == ProSymbolUtilities.NullFieldValueFlag)
+                    feature["countrycode"] = null;
+                else
+                    feature["countrycode"] = LabelAttributes.CountryCode;
+            }
         }
 
         private void SetPropertiesFromFieldAttributes(Dictionary<string, string> fieldValues)

@@ -310,6 +310,10 @@ namespace ProSymbolEditor
                         //Order the collection alphabetically by the names, rather than the default by the code
                         memberCodedValueDomains.Sort();
                     }
+
+                    // Add a "<null>" value to the domain list - so this field can be cleared with this flag
+                    memberCodedValueDomains.Add(new DomainCodedValuePair(ProSymbolUtilities.NullFieldValueFlag, 
+                        ProSymbolUtilities.NullFieldValueFlag));
                 }
             }
         }
