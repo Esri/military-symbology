@@ -294,6 +294,7 @@ namespace ProSymbolEditor
             if (foundField != null)
             {
                 Domain domain = foundField.GetDomain();
+
                 var codedValueDomain = domain as CodedValueDomain;
                 if (codedValueDomain != null)
                 {
@@ -309,6 +310,22 @@ namespace ProSymbolEditor
                     {
                         //Order the collection alphabetically by the names, rather than the default by the code
                         memberCodedValueDomains.Sort();
+                    }
+
+                    // Minor hack to make USA appear first in the list
+                    if (fieldName == "countrycode")
+                    {
+                        DomainCodedValuePair domainObjectPair = new DomainCodedValuePair("USA", "United States");
+                        memberCodedValueDomains.Insert(0, domainObjectPair);
+                    }
+
+                    // Add a "<null>" value to the domain list - so this field can be cleared with this flag
+                    // but skip ones that will cause problems with the addin
+                    if (!((fieldName == "identity") || (fieldName == "affiliation") || 
+                        (fieldName == "extendedfunctioncode") || (fieldName == "symbolentity")))
+                    {
+                        memberCodedValueDomains.Add(new DomainCodedValuePair(ProSymbolUtilities.NullFieldValueFlag,
+                        ProSymbolUtilities.NullFieldValueFlag));
                     }
                 }
             }
