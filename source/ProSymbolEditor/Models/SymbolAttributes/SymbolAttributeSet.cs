@@ -603,22 +603,26 @@ namespace ProSymbolEditor
                 rowBuffer["higherFormation"] = LabelAttributes.HigherFormation;
             }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.Reinforced))
+            if (!string.IsNullOrEmpty(LabelAttributes.Reinforced) &&
+                (LabelAttributes.Reinforced != ProSymbolUtilities.NullFieldValueFlag))
             {
                 rowBuffer["reinforced"] = LabelAttributes.Reinforced;
             }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.Credibility))
+            if (!string.IsNullOrEmpty(LabelAttributes.Credibility) &&
+                (LabelAttributes.Credibility != ProSymbolUtilities.NullFieldValueFlag))
             {
                 rowBuffer["credibility"] = LabelAttributes.Credibility;
             }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.Reliability))
+            if (!string.IsNullOrEmpty(LabelAttributes.Reliability) &&
+                (LabelAttributes.Reliability != ProSymbolUtilities.NullFieldValueFlag))
             {
                 rowBuffer["reliability"] = LabelAttributes.Reliability;
             }
 
-            if (!string.IsNullOrEmpty(LabelAttributes.CountryCode))
+            if (!string.IsNullOrEmpty(LabelAttributes.CountryCode) &&
+                (LabelAttributes.CountryCode != ProSymbolUtilities.NullFieldValueFlag))
             {
                 rowBuffer["countrycode"] = LabelAttributes.CountryCode;
             }
