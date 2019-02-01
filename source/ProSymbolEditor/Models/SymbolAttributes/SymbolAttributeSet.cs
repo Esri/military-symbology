@@ -943,6 +943,9 @@ namespace ProSymbolEditor
                 DisplayAttributes.Status = fieldValues["status"];
             }
 
+            // TRICKY: turn off the UI validation for max length, so this exception is not thrown
+            LabelAttributes.MaxLengthValidationOn = false;
+
             //LABELS
             if (fieldValues.ContainsKey("datetimevalid"))
             {
@@ -1010,6 +1013,9 @@ namespace ProSymbolEditor
             {
                 LabelAttributes.CountryCode = fieldValues["countrycode"];
             }
+
+            // TRICKY: turn UI validation back on
+            LabelAttributes.MaxLengthValidationOn = true;
         }
 
         public void ResetAttributes()

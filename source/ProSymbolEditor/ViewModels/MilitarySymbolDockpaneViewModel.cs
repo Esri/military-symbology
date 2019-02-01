@@ -1848,6 +1848,7 @@ namespace ProSymbolEditor
                 IsStyleItemSelected = true;
 
                 //Set label values (that are not combo boxes)
+                LabelAttributes.MaxLengthValidationOn = false;
                 SymbolAttributeSet.LabelAttributes.DateTimeValid = loadSet.LabelAttributes.DateTimeValid;
                 SymbolAttributeSet.LabelAttributes.DateTimeExpired = loadSet.LabelAttributes.DateTimeExpired;
                 SymbolAttributeSet.LabelAttributes.Type = loadSet.LabelAttributes.Type;
@@ -1858,6 +1859,7 @@ namespace ProSymbolEditor
                 SymbolAttributeSet.LabelAttributes.AdditionalInformation = loadSet.LabelAttributes.AdditionalInformation;
                 SymbolAttributeSet.LabelAttributes.HigherFormation = loadSet.LabelAttributes.HigherFormation;
                 SymbolAttributeSet.SymbolTags = loadSet.SymbolTags;
+                LabelAttributes.MaxLengthValidationOn = true;
 
                 SymbolAttributeSet.StandardVersion = ProSymbolUtilities.StandardString;
             }
@@ -1881,9 +1883,26 @@ namespace ProSymbolEditor
                 }
 
                 SymbolAttributeSet.FavoriteId = Guid.NewGuid().ToString();
+                LabelAttributes.MaxLengthValidationOn = false;
+
                 //Create copy by serializing/deserializing
-                var json = new JavaScriptSerializer().Serialize(SymbolAttributeSet);
-                SymbolAttributeSet favoriteSet = new JavaScriptSerializer().Deserialize<SymbolAttributeSet>(json);
+                SymbolAttributeSet favoriteSet = null;
+
+                try
+                {
+                    var json = new JavaScriptSerializer().Serialize(SymbolAttributeSet);
+                    favoriteSet = new JavaScriptSerializer().Deserialize<SymbolAttributeSet>(json);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Trace.WriteLine("Deserialize failure: " + ex.Message);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Error - the favorites file: " +
+                        _favoritesFilePath + "\ncould not be loaded. \n" +
+                        "Please delete the file and try again.",
+                        "Corrupt Favorites Files", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+
+                LabelAttributes.MaxLengthValidationOn = true;
 
                 //Add to favorites
                 if (favoriteSet == null) // should not happen
@@ -2030,9 +2049,28 @@ namespace ProSymbolEditor
             {
                 if (Path.GetExtension(openFileDialog.FileName).ToUpper() == ".JSON")
                 {
-                    string json = File.ReadAllText(openFileDialog.FileName);
 
-                    ObservableCollection<SymbolAttributeSet> importedFavorites = new JavaScriptSerializer().Deserialize<ObservableCollection<SymbolAttributeSet>>(json);
+                    ObservableCollection<SymbolAttributeSet> importedFavorites = null;
+
+                    LabelAttributes.MaxLengthValidationOn = false;
+                    try
+                    {
+                        string json = File.ReadAllText(openFileDialog.FileName);
+
+                        importedFavorites = new JavaScriptSerializer().Deserialize<ObservableCollection<SymbolAttributeSet>>(json);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Trace.WriteLine("Deserialize failure: " + ex.Message);
+                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Error: the favorites file: " +
+                            _favoritesFilePath + "\ncould not be loaded. \n" +
+                            "Please delete the file and try again.",
+                            "Corrupt Favorites Files", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    }
+                    LabelAttributes.MaxLengthValidationOn = true;
+
+                    if (importedFavorites == null)
+                        return;
 
                     //Go through favorites, find if uid is already in favorites - if so, replace that favorite
                     //If not found, add favorite
@@ -2834,11 +2872,26 @@ namespace ProSymbolEditor
 
         private void LoadAllFavoritesFromFile()
         {
+            LabelAttributes.MaxLengthValidationOn = false;
+
             if (File.Exists(_favoritesFilePath))
             {
-                string json = File.ReadAllText(_favoritesFilePath);
-                Favorites = new JavaScriptSerializer().Deserialize<ObservableCollection<SymbolAttributeSet>>(json);
+                try
+                {
+                    string json = File.ReadAllText(_favoritesFilePath);
+                    Favorites = new JavaScriptSerializer().Deserialize<ObservableCollection<SymbolAttributeSet>>(json);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Trace.WriteLine("Deserialize failure: " + ex.Message);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Error - the favorites file: " + 
+                        _favoritesFilePath + "\ncould not be loaded. \n" +
+                        "Please delete the file and try again.", 
+                        "Corrupt Favorites Files", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
             }
+
+            LabelAttributes.MaxLengthValidationOn = true;
 
             //Go through favorites, generate symbol image
             foreach (SymbolAttributeSet set in Favorites)

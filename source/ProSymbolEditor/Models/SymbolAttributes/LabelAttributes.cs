@@ -46,6 +46,10 @@ namespace ProSymbolEditor
         private DomainCodedValuePair _selectedCountryCodeDomainPair;
         private string lengthError = "The label entered is at the maximum allowable length for this feature field";
 
+
+        [ScriptIgnore, Browsable(false)]
+        public static bool MaxLengthValidationOn { get; set; } = true;
+
         [ScriptIgnore, Browsable(false)]
         public int MaxLen30 => 30;
         [ScriptIgnore, Browsable(false)]
@@ -162,7 +166,8 @@ namespace ProSymbolEditor
             {
                 _uniqueDesignation = value;
 
-                if (!string.IsNullOrEmpty(_uniqueDesignation) && (_uniqueDesignation.Length >= MaxLen30))
+                if (MaxLengthValidationOn && 
+                    !string.IsNullOrEmpty(_uniqueDesignation) && (_uniqueDesignation.Length >= MaxLen30))
                     throw new ArgumentException(lengthError);
 
                 NotifyPropertyChanged(() => UniqueDesignation);
@@ -179,7 +184,8 @@ namespace ProSymbolEditor
             {
                 _staffComments = value;
 
-                if (!string.IsNullOrEmpty(_staffComments) && (_staffComments.Length >= MaxLen20))
+                if (MaxLengthValidationOn && 
+                    !string.IsNullOrEmpty(_staffComments) && (_staffComments.Length >= MaxLen20))
                     throw new ArgumentException(lengthError);
 
                 NotifyPropertyChanged(() => StaffComments);
@@ -196,7 +202,8 @@ namespace ProSymbolEditor
             {
                 _additionalInformation = value;
 
-                if (!string.IsNullOrEmpty(_additionalInformation) && (_additionalInformation.Length >= MaxLen20))
+                if (MaxLengthValidationOn &&
+                    !string.IsNullOrEmpty(_additionalInformation) && (_additionalInformation.Length >= MaxLen20))
                     throw new ArgumentException(lengthError);
 
                 NotifyPropertyChanged(() => AdditionalInformation);
@@ -213,7 +220,8 @@ namespace ProSymbolEditor
             {
                 _type = value;
 
-                if (!string.IsNullOrEmpty(_type) && (_type.Length >= MaxLen24))
+                if (MaxLengthValidationOn &&
+                    !string.IsNullOrEmpty(_type) && (_type.Length >= MaxLen24))
                     throw new ArgumentException(lengthError);
 
                 NotifyPropertyChanged(() => Type);
@@ -230,7 +238,8 @@ namespace ProSymbolEditor
             {
                 _commonidentifier = value;
 
-                if (!string.IsNullOrEmpty(_commonidentifier) && (_commonidentifier.Length >= MaxLen12))
+                if (MaxLengthValidationOn &&
+                    !string.IsNullOrEmpty(_commonidentifier) && (_commonidentifier.Length >= MaxLen12))
                     throw new ArgumentException(lengthError);
 
                 NotifyPropertyChanged(() => CommonIdentifier);
@@ -260,7 +269,8 @@ namespace ProSymbolEditor
             {
                 _higherFormation = value;
 
-                if (!string.IsNullOrEmpty(_higherFormation) && (_higherFormation.Length >= MaxLen21))
+                if (MaxLengthValidationOn &&
+                    !string.IsNullOrEmpty(_higherFormation) && (_higherFormation.Length >= MaxLen21))
                     throw new ArgumentException(lengthError);
 
                 NotifyPropertyChanged(() => HigherFormation);
