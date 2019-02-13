@@ -110,6 +110,7 @@ namespace ProSymbolEditor
         //Base attributes
         private string _symbolSet;
         private string _symbolEntity;
+        private DomainCodedValuePair _selectedEntityCodeDomainPair;
         private string _identity;
         private DomainCodedValuePair _selectedIdentityDomainPair;
         private string _status;
@@ -226,6 +227,28 @@ namespace ProSymbolEditor
                 else
                 {
                     _extendedFunctionCode = "";
+                }
+            }
+        }
+
+        [ScriptIgnore, Browsable(false)]
+        public DomainCodedValuePair SelectedEntityCodeDomainPair
+        {
+            get
+            {
+                return _selectedEntityCodeDomainPair;
+            }
+            set
+            {
+                _selectedEntityCodeDomainPair = value;
+                if (_selectedEntityCodeDomainPair != null)
+                {
+                    _symbolEntity = _selectedEntityCodeDomainPair.Code.ToString();
+                    NotifyPropertyChanged(() => SelectedEntityCodeDomainPair);
+                }
+                else
+                {
+                    _symbolEntity = "";
                 }
             }
         }

@@ -373,6 +373,7 @@ namespace ProSymbolEditor
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CredibilityDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CountryCodeDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ExtendedFunctionCodeValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.EntityCodeValues, _lock);
 
             //Set up Commands
             SearchResultCommand = new RelayCommand(SearchStylesAsync, param => true);
@@ -735,18 +736,28 @@ namespace ProSymbolEditor
 
                     //Parse key for symbol id codes
                     string[] symbolIdCode = GetSymbolIdCodeFromStyle(_selectedStyleItem);
-                    _symbolAttributeSet.DisplayAttributes.SymbolSet = symbolIdCode[0];
-                    _symbolAttributeSet.DisplayAttributes.SymbolEntity = symbolIdCode[1];
+
+                    if (symbolIdCode.Length >= 2)
+                    {
+                        _symbolAttributeSet.DisplayAttributes.SymbolSet = symbolIdCode[0];
+                        _symbolAttributeSet.DisplayAttributes.SymbolEntity = symbolIdCode[1];
+                    }
 
                     SymbolAttributeSet loadSet = new SymbolAttributeSet();
 
                     // Set 2525C_B2 SIDC/attribute if applicable
-                    if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                    if ((ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2) 
+                        && (symbolIdCode.Length >= 3))
                     {
                         string functionCode = symbolIdCode[2];
                         _symbolAttributeSet.DisplayAttributes.ExtendedFunctionCode = functionCode;
 
                         loadSet.DisplayAttributes.ExtendedFunctionCode = functionCode;
+                    }
+                    else
+                    {
+                        loadSet.DisplayAttributes.SymbolSet = _symbolAttributeSet.DisplayAttributes.SymbolSet;
+                        loadSet.DisplayAttributes.SymbolEntity = _symbolAttributeSet.DisplayAttributes.SymbolEntity;
                     }
 
                     //Get feature class name to generate domains
@@ -2247,7 +2258,7 @@ namespace ProSymbolEditor
                 await QueuedTask.Run(() =>
                 {
                     ArcGIS.Core.Data.Field symbolSetField = kvp.Key.GetTable().GetDefinition().GetFields().FirstOrDefault(x => x.Name == symbolSetFieldName);
-                    if (symbolSetField == null) 
+                    if (symbolSetField == null)
                     {
                         // then feature does not have required field, skip
                         // Note: we used to issue a warning, but it was requested to remove
@@ -2293,8 +2304,8 @@ namespace ProSymbolEditor
                         {
                             SelectedFeature newSelectedFeature = new SelectedFeature(kvp.Key, id);
 
-                            if ((row.FindField(symbolSetFieldName) >=0) &&
-                                ( row[symbolSetFieldName] != null))
+                            if ((row.FindField(symbolSetFieldName) >= 0) &&
+                                (row[symbolSetFieldName] != null))
                             {
                                 string symbolSetString = row[symbolSetFieldName].ToString();
                                 foreach (KeyValuePair<object, string> symbolSetKeyValuePair in symbolSetDomainSortedList)
@@ -2307,10 +2318,10 @@ namespace ProSymbolEditor
                                 }
                             }
 
-                            if (!string.IsNullOrEmpty(symbolEntityFieldName) && 
+                            if (!string.IsNullOrEmpty(symbolEntityFieldName) &&
                                 (row.FindField(symbolEntityFieldName) >= 0) &&
-                                (row[symbolEntityFieldName] != null) &&                                  
-                                (symbolEntityDomainSortedList !=null))
+                                (row[symbolEntityFieldName] != null) &&
+                                (symbolEntityDomainSortedList != null))
                             {
                                 string symbolEntityString = row[symbolEntityFieldName].ToString();
 
@@ -2327,13 +2338,21 @@ namespace ProSymbolEditor
                             SelectedFeaturesCollection.Add(newSelectedFeature);
 
                             // Stop after the first one added
-                            break; 
+                            // break; 
                         }
                     } // for each id
                 });
             }
 
-            SelectedSelectedFeature = SelectedFeaturesCollection.FirstOrDefault();
+            if (SelectedFeaturesCollection.Count > 1)
+            {
+                // TRICKY: if > 1 feature selected, we want to select the last one, since that will be drawn on top/visible
+                SelectedSelectedFeature = SelectedFeaturesCollection.Last();
+            }
+            else
+            {
+                SelectedSelectedFeature = SelectedFeaturesCollection.FirstOrDefault();
+            }
         }
 
         private async Task CheckAddinEnabled()
@@ -2544,6 +2563,10 @@ namespace ProSymbolEditor
                     if (loadSet.DisplayAttributes.ExtendedFunctionCode != null)
                         SymbolAttributeSet.DisplayAttributes.SelectedExtendedFunctionCodeDomainPair 
                             = MilitaryFieldsInspectorModel.ExtendedFunctionCodeValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.ExtendedFunctionCode);
+
+                    if (loadSet.DisplayAttributes.SymbolEntity != null)
+                        SymbolAttributeSet.DisplayAttributes.SelectedEntityCodeDomainPair
+                            = MilitaryFieldsInspectorModel.EntityCodeValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.DisplayAttributes.SymbolEntity);
 
                     if (loadSet.DisplayAttributes.Identity != null)
                         SymbolAttributeSet.DisplayAttributes.SelectedIdentityDomainPair 
