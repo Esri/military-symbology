@@ -1336,7 +1336,7 @@ namespace ProSymbolEditor
             ArcGIS.Core.Geometry.Geometry savedGeometry = null;
 
             IEnumerable<GDBProjectItem> gdbProjectItems = Project.Current.GetItems<GDBProjectItem>();
-            await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+            await ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(async () =>
             {
                 try
                 {
@@ -1353,7 +1353,7 @@ namespace ProSymbolEditor
                                 continue;
 
                             //Find the correct gdb for the one with the complete schema
-                            string geodatabasePath = gdbProjectItem.Path; 
+                            string geodatabasePath = gdbProjectItem.Path;
                             if (geodatabasePath == ProSymbolEditorModule.Current.MilitaryOverlaySchema.DatabaseName)
                             {
                                 EditOperation editOperation = new EditOperation();
@@ -1385,27 +1385,21 @@ namespace ProSymbolEditor
                                     }
                                 }, _selectedSelectedFeature.FeatureLayer.GetTable());
 
-                                var task = editOperation.ExecuteAsync();
-                                modificationResult = task.Result;
+                                modificationResult = await editOperation.ExecuteAsync();
+
                                 if (!modificationResult)
                                 {
                                     message = editOperation.ErrorMessage;
-                                    QueuedTask.Run(async () =>
-                                    {
-                                        await Project.Current.DiscardEditsAsync();
-                                    });
+                                    await Project.Current.DiscardEditsAsync();
                                 }
                                 else
                                 {
-                                    QueuedTask.Run(async () =>
-                                    {
-                                        await Project.Current.SaveEditsAsync();
-                                    });
+                                    await Project.Current.SaveEditsAsync();
                                 }
-                            }
-                        }
-                    }
-                }
+                            } // ifcorrect geodatabase
+                        } // using
+                    } // for each 
+                } // try
                 catch (Exception exception)
                 {
                     message = exception.ToString();
@@ -1415,15 +1409,12 @@ namespace ProSymbolEditor
 
             if (modificationResult)
             {
-                // Now actually save the edits
-                await ArcGIS.Desktop.Core.Project.Current.SaveEditsAsync();
-
                 // Reselect the saved feature (so UI is updated and feature flashed)
                 if (savedGeometry != null)
                 {
                     await QueuedTask.Run(() =>
                     {
-                        MapView.Active.SelectFeatures(savedGeometry, SelectionCombinationMethod.New);
+                        MapView.Active.SelectFeatures(savedGeometry, SelectionCombinationMethod.And);
                     });
                 }
             }
@@ -2336,9 +2327,6 @@ namespace ProSymbolEditor
                             }
 
                             SelectedFeaturesCollection.Add(newSelectedFeature);
-
-                            // Stop after the first one added
-                            // break; 
                         }
                     } // for each id
                 });
