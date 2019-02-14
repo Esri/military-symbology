@@ -56,6 +56,7 @@ namespace ProSymbolEditor
         public ObservableCollection<DomainCodedValuePair> Modifier2DomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> CountryCodeDomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> ExtendedFunctionCodeValues { get; set; }
+        public ObservableCollection<DomainCodedValuePair> EntityCodeValues { get; set; }
 
         public Visibility DateTimeValidFieldExists
         {
@@ -189,6 +190,7 @@ namespace ProSymbolEditor
             MobilityDomainValues = new ObservableCollection<DomainCodedValuePair>();
             TfFdHqDomainValues = new ObservableCollection<DomainCodedValuePair>();
             ContextDomainValues = new ObservableCollection<DomainCodedValuePair>();
+            EntityCodeValues = new ObservableCollection<DomainCodedValuePair>();
             Modifier1DomainValues = new ObservableCollection<DomainCodedValuePair>();
             Modifier2DomainValues = new ObservableCollection<DomainCodedValuePair>();
             CountryCodeDomainValues = new ObservableCollection<DomainCodedValuePair>();
@@ -262,6 +264,7 @@ namespace ProSymbolEditor
 
             if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
             {
+                EntityCodeValues.Clear();
                 GetDomainAndPopulateList(fields, "affiliation", IdentityDomainValues);
                 GetDomainAndPopulateList(fields, "echelonmobility", EchelonDomainValues);
                 GetDomainAndPopulateList(fields, "extendedfunctioncode", ExtendedFunctionCodeValues);
@@ -279,6 +282,7 @@ namespace ProSymbolEditor
             GetDomainAndPopulateList(fields, "operationalcondition", OperationalConditionAmplifierDomainValues);
             GetDomainAndPopulateList(fields, "mobility", MobilityDomainValues);
             GetDomainAndPopulateList(fields, "context", ContextDomainValues);
+            GetDomainAndPopulateList(fields, "symbolentity", EntityCodeValues);
             GetDomainAndPopulateList(fields, "modifier1", Modifier1DomainValues);
             GetDomainAndPopulateList(fields, "modifier2", Modifier2DomainValues);
             GetDomainAndPopulateList(fields, "countrycode", CountryCodeDomainValues, true);

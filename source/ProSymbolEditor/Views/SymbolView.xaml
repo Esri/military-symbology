@@ -38,6 +38,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -107,7 +108,7 @@
                                             Grid.Row="2"
                                             Grid.Column="0"
                                             Margin="5,5,5,5"
-                                            Content="Operational Condition Amplifier"
+                                            Content="Operational Condition"
                                             Visibility="{Binding ElementName=operationalConditionAmplifierComboBox, Path=Visibility}" />
                     <ComboBox
                                             x:Name="operationalConditionAmplifierComboBox"
@@ -291,6 +292,35 @@
                                             ItemsSource="{Binding MilitaryFieldsInspectorModel.Modifier2DomainValues}"
                                             SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedModifier2DomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
+
+                    <!--  Entity Code (2525D Only)  -->
+                    <Label
+                        Grid.Row="10"
+                        Grid.Column="0"
+                        Margin="5,5,5,5"
+                        Content="Entity"
+                        Visibility="{Binding ElementName=entityCodeComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            x:Name="entityCodeComboBox"
+                                            Grid.Row="10"
+                                            Grid.Column="1"
+                                            Margin="5,5,5,5"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.EntityCodeValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.DisplayAttributes.SelectedEntityCodeDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code"
+                                            ToolTip="{Binding Path=SelectedItem.Name, RelativeSource={RelativeSource Self}}">
                         <ComboBox.Style>
                             <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                                 <Style.Triggers>
