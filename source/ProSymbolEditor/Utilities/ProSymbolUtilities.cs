@@ -189,6 +189,11 @@ namespace ProSymbolEditor
             }
         }
 
+        public static string NullFieldValueFlag
+        {
+            get { return "<null>";  }
+        }
+
         public static CoordinateType GetCoordinateType(string input, out MapPoint point)
         {
             point = null;
