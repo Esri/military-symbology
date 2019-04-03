@@ -8,12 +8,12 @@
     </citation>
     <descript>
       <abstract>Military Features that support Space features.</abstract>
-      <purpose>Military Features for use as part of a Plan or Operation. This feature class is intended to be used with space data (MIL-STD-2525D Symbol Set 05).</purpose>
+      <purpose>Military Features for use as part of a Plan or Operation. This feature class is intended to be used with space data (APP-6(D) Symbol Set 05).</purpose>
     </descript>
     <spdom>
       <bounding>
         <westbc>-97.618885</westbc>
-        <eastbc>-94.356430</eastbc>
+        <eastbc>-94.35643</eastbc>
         <northbc>44.869022</northbc>
         <southbc>40.258853</southbc>
       </bounding>
@@ -22,16 +22,20 @@
       <theme>
         <themekt>None</themekt>
         <themekey>ArcGIS for the Military</themekey>
+        <themekey>ArcGISSolutions</themekey>
         <themekey>Defense</themekey>
         <themekey>Intelligence</themekey>
-        <themekey>MIL-STD-2525D</themekey>
-        <themekey>ArcGISSolutions</themekey>
+        <themekey>APP-6(D)</themekey>
         <themekey>Space</themekey>
+      </theme>
+      <theme>
+        <themekt>ISO 19115 Topic Categories</themekt>
+        <themekey>intelligenceMilitary</themekey>
       </theme>
     </keywords>
     <accconst>None</accconst>
     <useconst>None</useconst>
-    <native> Version 6.2 (Build 9200) ; Esri ArcGIS 10.4.1.5686</native>
+    <native> Version 6.2 (Build 9200) ; Esri ArcGIS 10.6.1.9270</native>
   </idinfo>
   <spdoinfo>
     <direct>Vector</direct>
@@ -74,14 +78,6 @@
         <enttypl>Space</enttypl>
       </enttyp>
       <attr>
-        <attrlabl>OBJECTID</attrlabl>
-        <attrdef>Internal feature number.</attrdef>
-        <attrdefs>Esri</attrdefs>
-        <attrdomv>
-          <udom>Sequential unique whole numbers that are automatically generated.</udom>
-        </attrdomv>
-      </attr>
-      <attr>
         <attrlabl>Shape</attrlabl>
         <attrdef>Feature geometry.</attrdef>
         <attrdefs>Esri</attrdefs>
@@ -90,55 +86,24 @@
         </attrdomv>
       </attr>
       <attr>
-        <attrlabl>identity</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>context</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>symbolset</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>symbolentity</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>modifier1</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>modifier2</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>indicator</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>operationalcondition</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>uniquedesignation</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>additionalinformation</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>staffcomment</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>type</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>direction</attrlabl>
-      </attr>
-      <attr>
         <attrlabl>speed</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>speedunit</attrlabl>
       </attr>
       <attr>
         <attrlabl>x</attrlabl>
       </attr>
       <attr>
-        <attrlabl>y</attrlabl>
+        <attrlabl>context</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>identity</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>OBJECTID</attrlabl>
+        <attrdef>Internal feature number.</attrdef>
+        <attrdefs>Esri</attrdefs>
+        <attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
       </attr>
       <attr>
         <attrlabl>z</attrlabl>
@@ -147,22 +112,7 @@
         <attrlabl>size</attrlabl>
       </attr>
       <attr>
-        <attrlabl>rotation</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>countrycode</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>datetimevalid</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>datetimeexpired</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>createdby</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>createdtime</attrlabl>
+        <attrlabl>y</attrlabl>
       </attr>
       <attr>
         <attrlabl>editedby</attrlabl>
@@ -171,12 +121,66 @@
         <attrlabl>editedtime</attrlabl>
       </attr>
       <attr>
+        <attrlabl>createdtime</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>direction</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>additionalinformation</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>staffcomment</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>operationalcondition</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>uniquedesignation</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>modifier2</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>indicator</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>rotation</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>speedunit</attrlabl>
+      </attr>
+      <attr>
         <attrlabl>civilian</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>createdby</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>datetimevalid</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>datetimeexpired</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>modifier1</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>symbolset</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>symbolentity</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>type</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>countrycode</attrlabl>
       </attr>
     </detailed>
   </eainfo>
   <metainfo>
-    <metd>20170712</metd>
+    <metd>20190403</metd>
     <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
     <metstdv>FGDC-STD-001-1998</metstdv>
     <mettc>local time</mettc>

@@ -8,7 +8,7 @@
     </citation>
     <descript>
       <abstract>Military Features that support Oceanographic (METOC) line features.</abstract>
-      <purpose>Millitary features for use as part of a Plan or Operation. This feature class is intended to be used with Oceanographic (METOC) line/polyline data (MIL-STD-2525D Symbol Set 46).</purpose>
+      <purpose>Millitary features for use as part of a Plan or Operation. This feature class is intended to be used with Oceanographic (METOC) line/polyline data (APP-6(D) Symbol Set 46).</purpose>
     </descript>
     <spdom>
       <bounding>
@@ -22,17 +22,21 @@
       <theme>
         <themekt>None</themekt>
         <themekey>ArcGIS for the Military</themekey>
+        <themekey>ArcGISSolutions</themekey>
         <themekey>Defense</themekey>
         <themekey>Intelligence</themekey>
-        <themekey>MIL-STD-2525D</themekey>
-        <themekey>ArcGISSolutions</themekey>
-        <themekey>Meteorological and Oceanographic</themekey>
+        <themekey>APP-6(D)</themekey>
         <themekey>METOC</themekey>
+        <themekey>Meteorological and Oceanographic</themekey>
+      </theme>
+      <theme>
+        <themekt>ISO 19115 Topic Categories</themekt>
+        <themekey>intelligenceMilitary</themekey>
       </theme>
     </keywords>
     <accconst>None</accconst>
     <useconst>None</useconst>
-    <native> Version 6.2 (Build 9200) ; Esri ArcGIS 10.4.1.5686</native>
+    <native> Version 6.2 (Build 9200) ; Esri ArcGIS 10.6.1.9270</native>
   </idinfo>
   <spdoinfo>
     <direct>Vector</direct>
@@ -83,14 +87,6 @@
         </attrdomv>
       </attr>
       <attr>
-        <attrlabl>Shape</attrlabl>
-        <attrdef>Feature geometry.</attrdef>
-        <attrdefs>Esri</attrdefs>
-        <attrdomv>
-          <udom>Coordinates defining the features.</udom>
-        </attrdomv>
-      </attr>
-      <attr>
         <attrlabl>Shape_Length</attrlabl>
         <attrdef>Length of feature in internal units.</attrdef>
         <attrdefs>Esri</attrdefs>
@@ -102,22 +98,12 @@
         <attrlabl>symbolset</attrlabl>
       </attr>
       <attr>
-        <attrlabl>symbolentity</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>additionalinformation</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>datetimevalid</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>datetimeexpired</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>createdby</attrlabl>
-      </attr>
-      <attr>
-        <attrlabl>createdtime</attrlabl>
+        <attrlabl>Shape</attrlabl>
+        <attrdef>Feature geometry.</attrdef>
+        <attrdefs>Esri</attrdefs>
+        <attrdomv>
+          <udom>Coordinates defining the features.</udom>
+        </attrdomv>
       </attr>
       <attr>
         <attrlabl>editedby</attrlabl>
@@ -126,12 +112,30 @@
         <attrlabl>editedtime</attrlabl>
       </attr>
       <attr>
+        <attrlabl>createdtime</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>symbolentity</attrlabl>
+      </attr>
+      <attr>
         <attrlabl>optionallabel</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>createdby</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>datetimevalid</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>datetimeexpired</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>additionalinformation</attrlabl>
       </attr>
     </detailed>
   </eainfo>
   <metainfo>
-    <metd>20170712</metd>
+    <metd>20190403</metd>
     <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
     <metstdv>FGDC-STD-001-1998</metstdv>
     <mettc>local time</mettc>
