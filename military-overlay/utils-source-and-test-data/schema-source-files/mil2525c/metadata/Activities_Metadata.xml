@@ -7,7 +7,7 @@
       </citeinfo>
     </citation>
     <descript>
-      <abstract>Activities include stability operations, defense support to civil authorities, foreign humanitarian assistance, incidents, natural events, and operations. Among the types of activities represented are acts of terrorism, sabotage, crime, natural disasters, relief operations, and the uncontrolled movement of large numbers of people (MIL-STD-2525B).</abstract>
+      <abstract>Activities include stability operations, defense support to civil authorities, foreign humanitarian assistance, incidents, natural events, and operations. Among the types of activities represented are acts of terrorism, sabotage, crime, natural disasters, relief operations, and the uncontrolled movement of large numbers of people (MIL-STD-2525C).</abstract>
       <purpose>Military Features for use as part of a plan or operation. This feature class is intended to be used with activities data.</purpose>
     </descript>
     <spdom>
@@ -25,7 +25,7 @@
         <themekey>Defense</themekey>
         <themekey>Intelligence</themekey>
         <themekey>Military</themekey>
-        <themekey>MIL-STD-2525B</themekey>
+        <themekey>MIL-STD-2525C</themekey>
         <themekey>ArcGISSolutions</themekey>
         <themekey>Activities</themekey>
       </theme>
