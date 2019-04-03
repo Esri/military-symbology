@@ -13,7 +13,7 @@
 # ----------------------------------------------------------------------------------
 # ExportGDBFieldsToFolder.py
 # Description: Exports all fields and field properties from a Military Features GDB
-#      as a set of csvs to the folder selected
+#	  as a set of csvs to the folder selected
 #-------------------------------------------------------------------------------
 # Requires: ArcGIS Desktop/Pro, arcpy, Python 2 or 3
 #-------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ import sys
 import arcpy
 
 def exportFields():
-	gdb    = arcpy.GetParameter(0)
+	gdb	= arcpy.GetParameter(0)
 	folder = arcpy.GetParameter(1)
 
 	if (gdb == '') or (gdb is None):
@@ -52,63 +52,62 @@ def exportFields():
 
 	# Set the workspace for ListFeatureClasses
 	arcpy.env.workspace = gdb
-
-	# List feature classes from this dataset name
-	featureClasses = arcpy.ListFeatureClasses(feature_dataset='MilitaryOverlay')
-
-	# Check for alternate dataset names
-	if len(featureClasses) == 0:
-		featureClasses = arcpy.ListFeatureClasses(feature_dataset='militaryoverlay2525d')
-
-	if len(featureClasses) == 0:
-		featureClasses = arcpy.ListFeatureClasses(feature_dataset='militaryoverlay2525b2')
-
-	# If still no feature classes found, add error
-	if len(featureClasses) == 0:
-		arcpy.AddError("Failed to find Military Overlay dataset")
 	
-	for featureClass in featureClasses : 
+	datasets = arcpy.ListDatasets()
+	
+	if datasets is None:
+		arcpy.AddError("Failed to find any datasets")
 
-		csvFileName = 'Fields_' + str(featureClass) + '.csv'
+	for dataset in datasets: 
 
-		arcpy.AddMessage('Exporting ' + str(featureClass) + ' to CSV: ' + csvFileName)
+		# List feature classes from this dataset 
+		# IMPORTANT: Assumes all feature classes will be within a dataset
+		featureClasses = arcpy.ListFeatureClasses(feature_dataset=dataset)
 
-		# Create a csv file and writer to export the fields
-		csvFullFileName = os.path.join(str(folder), csvFileName)
-		
-		if sys.version < '3' :      # Python 2 or 3 check for csv difference
-			csvFile = open(csvFullFileName, 'wb', newline='')
-		else :
-			csvFile = open(csvFullFileName, 'w', newline='')
+		for featureClass in featureClasses : 
 
-		writer = csv.writer(csvFile, delimiter=',')
+			csvFileName = 'Fields_' + str(featureClass) + '.csv'
 
-		# Expected order/format:
-		# field_name,field_type,field_length,field_alias,nullability,field_domain
-		# Make header row:
-		writer.writerow(["field_name", "field_type", "field_length", "field_alias", "nullability", "field_domain"])
+			arcpy.AddMessage('-------------------------------------------------')
+			arcpy.AddMessage('---> Exporting: ' + str(featureClass) + ' to CSV: ' + csvFileName)
+			arcpy.AddMessage('-------------------------------------------------')
 
-		fields = arcpy.ListFields(featureClass)
-
-		for field in fields : 
+			# Create a csv file and writer to export the fields
+			csvFullFileName = os.path.join(str(folder), csvFileName)
 			
-			# Skip OID & Shape fields
-			if 'OBJECTID' in field.name or 'SHAPE' in field.name or 'Shape' in field.name :
-				print('Skipping field: ' + field.name)
-				continue
-
-			if field.isNullable : 
-				nullability = 'NULLABLE'
+			if sys.version < '3' :	  # Python 2 or 3 check for csv difference
+				csvFile = open(csvFullFileName, 'wb', newline='')
 			else :
-				nullability = 'NON_NULLABLE'
+				csvFile = open(csvFullFileName, 'w', newline='')
 
-			row = [field.name, str(field.type), str(field.length), field.aliasName, \
-			    nullability, field.domain]
+			writer = csv.writer(csvFile, delimiter=',')
 
-			arcpy.AddMessage('Field Name: ' + field.name + ', Properties= ' + str(row))
-			writer.writerow(row)
+			# Expected order/format:
+			# field_name,field_type,field_length,field_alias,nullability,field_domain
+			# Make header row:
+			writer.writerow(["field_name", "field_type", "field_length", "field_alias", "nullability", "field_domain"])
 
-		csvFile.close()
+			fields = arcpy.ListFields(featureClass)
+
+			for field in fields : 
+				
+				# Skip OID & Shape fields
+				if 'OBJECTID' in field.name or 'SHAPE' in field.name or 'Shape' in field.name :
+					print('Skipping field: ' + field.name)
+					continue
+
+				if field.isNullable : 
+					nullability = 'NULLABLE'
+				else :
+					nullability = 'NON_NULLABLE'
+
+				row = [field.name, str(field.type), str(field.length), field.aliasName, \
+					nullability, field.domain]
+
+				arcpy.AddMessage('Field Name: ' + field.name + ', Properties= ' + str(row))
+				writer.writerow(row)
+
+			csvFile.close()
 
 if __name__ == '__main__':
 	exportFields()
