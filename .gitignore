@@ -1,8 +1,6 @@
 # Defense Template specific ignores
 NuGet.exe
 *.pyt.xml
-*.zip
-*.zip
 *-old.*
 *-old
 *-sav
