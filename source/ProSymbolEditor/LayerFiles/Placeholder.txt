@@ -1,0 +1,1 @@
+This folder will contain the Pro Layer Packages (lpkx) from the ..\..\military-overlay folder when the addin is built.

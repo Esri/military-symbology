@@ -130,6 +130,20 @@ namespace ProSymbolEditor
                     return "2525D";
         }
 
+        public static string GetLayerFileFromCurrentStandard()
+        {
+            string layerFileStandard = "2525BChange2"; // this name format is slightly different
+            if (ProSymbolUtilities.Standard != SupportedStandardsType.mil2525c_b2)
+                layerFileStandard = ProSymbolUtilities.StandardString;
+            
+            string layerFileName = "MilitaryOverlay-" + layerFileStandard + ".lpkx"; 
+
+            string layerFilePath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), 
+                "LayerFiles", layerFileName);
+
+            return layerFilePath;
+        }
+
         public static string NameSeparator
         {
             get { return " : "; }

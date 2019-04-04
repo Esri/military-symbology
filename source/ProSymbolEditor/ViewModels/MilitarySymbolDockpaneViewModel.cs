@@ -3044,9 +3044,8 @@ namespace ProSymbolEditor
 
                 await QueuedTask.Run(async () =>
                 {
-                    // "MilitaryOverlay-{standard}.lpkx"
-                    string layerFileName = "MilitaryOverlay-" + ProSymbolUtilities.StandardString.ToLower() + ".lpkx";
-                    LayerFactory.Instance.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
+                    // Load layer file: "MilitaryOverlay-{standard}.lpkx"
+                    LayerFactory.Instance.CreateLayer(new Uri(ProSymbolUtilities.GetLayerFileFromCurrentStandard()), MapView.Active.Map);
                     enabled = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
 
                     if (enabled)
