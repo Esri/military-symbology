@@ -225,25 +225,26 @@
     <AddInContent Include="Images\MIL-16x16.png" />
     <AddInContent Include="Images\MIL-32x32.png" />
     <Resource Include="Images\SelectionSelectTool16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\UnknownSymbol.png" />
-    <Content Include="LayerFiles\MilitaryOverlay-2525d.lpkx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
-    <Content Include="LayerFiles\MilitaryOverlay-2525c_b2.lpkx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LayerFiles\MilitaryOverlay-app6d.lpkx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\military-overlay\mil2525d\lpkx\MilitaryOverlay-2525D.lpkx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>LayerFiles\MilitaryOverlay-2525D.lpkx</Link>
+    </Content>
+    <Content Include="..\..\military-overlay\mil2525b2\lpkx\MilitaryOverlay-2525BChange2.lpkx">
+      <Link>LayerFiles\MilitaryOverlay-2525BChange2.lpkx</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\military-overlay\app6d\lpkx\MilitaryOverlay-APP6D.lpkx">
+      <Link>LayerFiles\MilitaryOverlay-APP6D.lpkx</Link>    
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\coordinate-conversion-addin-dotnet\source\CoordinateConversion\CoordinateConversionLibrary\CoordinateConversionLibrary.csproj">
