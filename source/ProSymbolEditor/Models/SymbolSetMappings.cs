@@ -86,7 +86,7 @@ namespace ProSymbolEditor
             if (displayAttributes == null)
                 return string.Empty;
 
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
                 return GetFeatureClassFromExtendedFunctionCode(displayAttributes.ExtendedFunctionCode, geometryType);
             }

@@ -107,12 +107,16 @@ namespace ProSymbolEditor
             IsSelectDBEnabled = false;
 
             SymbologyStandards = new ObservableCollection<string>();
-            SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2));
+            SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.mil2525b));
             SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.mil2525d));
+            SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.mil2525c));
 
-            // APP6D only available after 2.2
             if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 2))
+            {
+                // APP6D only available after 2.2
                 SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.app6d));
+            }
+
         }
 
         public void ShowDialog(Window owner)

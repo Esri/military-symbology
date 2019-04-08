@@ -232,9 +232,10 @@ namespace ProSymbolEditor
 
         private void setStandardFromSettings()
         {
+// TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             if (Properties.Settings.Default.DefaultStandard ==
-                    ProSymbolUtilities.GetStandardString(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2))
-                ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+                    ProSymbolUtilities.GetStandardString(ProSymbolUtilities.SupportedStandardsType.mil2525b))
+                ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525b;
             else
                 ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
         }
@@ -248,8 +249,9 @@ namespace ProSymbolEditor
 
             StatusMessage = "Add-in Not Enabled";
 
+// TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
-            bool isEnabled2525C_B2 = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
+            bool isEnabled2525C_B2 = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525b);
             bool isEnabled2525D = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
 
             // APP6D only available after 2.2
@@ -297,6 +299,7 @@ namespace ProSymbolEditor
                 }
                 else
                 {
+//TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     if (isEnabledAPP6D)
                         ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.app6d;
                     else
@@ -305,7 +308,7 @@ namespace ProSymbolEditor
                             ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
                         else
                         {
-                            ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+                            ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525b;
                         }
                     }
 
@@ -746,7 +749,7 @@ namespace ProSymbolEditor
                     SymbolAttributeSet loadSet = new SymbolAttributeSet();
 
                     // Set 2525C_B2 SIDC/attribute if applicable
-                    if ((ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2) 
+                    if ((ProSymbolUtilities.IsLegacyStandard()) 
                         && (symbolIdCode.Length >= 3))
                     {
                         string functionCode = symbolIdCode[2];
@@ -2238,7 +2241,7 @@ namespace ProSymbolEditor
             string symbolSetFieldName = "symbolset";
             string symbolEntityFieldName = "symbolentity";
 
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
                 symbolSetFieldName = "extendedfunctioncode";
                 symbolEntityFieldName = ""; // not used
@@ -2446,7 +2449,7 @@ namespace ProSymbolEditor
             string neutralValue = "Neutral";
 
             // These have different values for 2525C/B2
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
                 affiliationField = "affiliation";
                 hostileValue = "Hostile";
@@ -2767,7 +2770,7 @@ namespace ProSymbolEditor
                 symbolId[1] = string.Format("{0}{1}{2}{3}{4}{5}", symbolIdCode[2], symbolIdCode[3], symbolIdCode[4], symbolIdCode[5], symbolIdCode[6], symbolIdCode[7]);
             }
 
-            if (ProSymbolUtilities.Standard != ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
                 symbolId[2] = String.Empty;
             }
@@ -2844,7 +2847,7 @@ namespace ProSymbolEditor
                 foreach (var symbolType in symbolQuery)
                 {
                     // Change style query based on current standard
-                    if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                    if (ProSymbolUtilities.IsLegacyStandard())
                     {
                         // Keys changed format at 2.3
                         if (ProSymbolUtilities.IsNewStyleFormat)
