@@ -262,7 +262,7 @@ namespace ProSymbolEditor
 
             //Get domains for attributes
 
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
                 EntityCodeValues.Clear();
                 GetDomainAndPopulateList(fields, "affiliation", IdentityDomainValues);

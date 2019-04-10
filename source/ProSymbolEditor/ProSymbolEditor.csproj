@@ -237,6 +237,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>LayerFiles\MilitaryOverlay-2525D.lpkx</Link>
     </Content>
+    <Content Include="..\..\military-overlay\mil2525c\lpkx\MilitaryOverlay-2525C.lpkx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>LayerFiles\MilitaryOverlay-2525C.lpkx</Link>
+    </Content>
     <Content Include="..\..\military-overlay\mil2525b2\lpkx\MilitaryOverlay-2525BChange2.lpkx">
       <Link>LayerFiles\MilitaryOverlay-2525BChange2.lpkx</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -64,7 +64,7 @@ namespace ProSymbolEditor
                 if (sb.Length == 0)
                 {
                     // use an alternate (the SIDC) if Coded Domains not yet set
-                    if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                    if (ProSymbolUtilities.IsLegacyStandard())
                         sb.Append(LegacySymbolIdCode);
                     else
                         sb.Append(SymbolSet + ProSymbolUtilities.NameSeparator + SymbolEntity);
@@ -141,7 +141,7 @@ namespace ProSymbolEditor
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
         
                 string extendedFunctionCode = ExtendedFunctionCode;
-                if ((ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                if ((ProSymbolUtilities.IsLegacyStandard())
                     && (!String.IsNullOrEmpty(extendedFunctionCode)) && (extendedFunctionCode.Length >= 10))
                 {
                     bool isWeather = (extendedFunctionCode[0] == 'W');
