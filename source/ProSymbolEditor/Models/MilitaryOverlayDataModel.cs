@@ -317,6 +317,7 @@ namespace ProSymbolEditor
             return gdbContainsMilitaryOverlay;
         }
 
+        // TODO: we may be able to deprecate this method (GDBContainsSchema) and use the method above (GDBContainsMilitaryOverlay)
         public async Task<bool> GDBContainsSchema(GDBProjectItem gdbProjectItem, 
             ProSymbolUtilities.SupportedStandardsType standard)
         {
@@ -453,11 +454,16 @@ namespace ProSymbolEditor
                     if (gdbProjectItem.Name == "map.gdb") // ignore the project Map GDB
                         continue;
 
-                    bool isSchemaComplete = await GDBContainsSchema(gdbProjectItem, standard);
+                    bool isSchemaComplete = await GDBContainsMilitaryOverlay(gdbProjectItem, standard);
 
                     // if schema is there/complete then done
                     if (isSchemaComplete)
                     {
+                        // If we get here, then schema is found for this standard
+                        // Save geodatabase path to use as the selected database
+                        _databaseName = gdbProjectItem.Path;
+                        _schemaExists = true;
+                        _standard = standard;
                         break;
                     }
                 }
