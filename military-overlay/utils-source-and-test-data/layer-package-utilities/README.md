@@ -11,6 +11,6 @@ To create the layer packages:
 3. **Spatial Index Layer Packaging Workaround**
     a. There is currently a workaround to address an error "Spatial Index Invalid" (See: https://github.com/Esri/military-features-data/issues/287 )
     b. Run the following tools from the LayerPackageUtilities toolbox on each geodatabase being packaged. These tools/models should be run immediately before packaging the (schema only) Military Overlay Layer Packages in ArcGIS Pro:
-		i. Delete All Features From Workspace
+	i. Delete All Features From Workspace
         ii. SpatialIndexWorkaround  - This is a model that will add a blank spatial index to a layer package
 4. Export as a **Schema-Only** layer package
