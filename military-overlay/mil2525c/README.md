@@ -9,6 +9,19 @@ This folder contains the Military Features Core Geodatabase Schema format and an
 
 The following information is intended to capture the format of the Military Overlay Schema for other applications that may depend upon this format. 
 
+## Graphic Display Amplifiers
+
+The following fields control the display of symbols.
+
+| Attribute Name | 2525 C Field ID | Data Type | Range of Values | Default Value/Meaning | Sample Name | Sample Value/Meaning | Explanatory Notes |
+| -------------- | --------- | --------- | --------------- | ----------- | -------------------- | ----------------- | ----------------- |
+| affiliation  | A | char | A-Z  | -/Not Set | "Friend" | "F" | **REQUIRED** | 
+| extendedfunctioncode  | A | string/TEXT | N/A | (per feature class) | "Military (Air) : Fixed-Wing" | "S-A-MF----"  | **REQUIRED** |
+| echelonmobility | B | char | A-Z | - (None) | "Team" | "A" | Optional |
+| status | A/AL | char | A-Z | P(Present)  | "Present" | "P" | Optional |
+| hqtffd | A/AB | char | A-Z | -/Not Set | Headquarters | Headquarters=A | Optional (="HQ/TF/FD") |
+| sidc | | string/TEXT | string length(15) | N/A | "SFGPUCI---USG" | Friend Infantry Unit |  |
+
 ## Text Amplifiers
 
 The following table lists the Modifier definitions from 2525C and their corresponding attributes in the symbol dictionary.
