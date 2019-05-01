@@ -123,7 +123,7 @@ def addFieldsFromSchema(schemasFolder, featureClass, schema):
             
             subTypes = {}
             
-            # Make sure the specfied field schema CSV file exists
+            # Make sure the specified field schema CSV file exists
             
             fieldSchemaFile = os.path.join(schemasFolder, "Fields_" + schema + ".csv")
             if os.path.exists(fieldSchemaFile):
@@ -138,44 +138,47 @@ def addFieldsFromSchema(schemasFolder, featureClass, schema):
                     
                     fieldName = None
             
-                    for line in reader:
-                        fieldType = Utility.fieldTypeLookup(line[1])
-                        
-                        # Add a line as a new field if this is the first occurence of that "field"
-                        
-                        if line[0] != fieldName:
-                            addAField(featureClass, fieldType, line)
-                            fieldName = line[0]
-                            
-                        # Set the domain for the field, including subtype code if necessary
-                        
-                        if bool(line[5]):
-                            if bool(line[8]):
-                                arcpy.AssignDomainToField_management(featureClass, line[0], line[5], line[8] + ": " + subTypes[line[8]])
-                            else:
-                                if len(subTypes) > 0:
-                                    subTypeItems = subTypes.items()
-                                    for subTypeItem in subTypeItems:
-                                        arcpy.AssignDomainToField_management(featureClass, line[0], line[5], subTypeItem[0] + ": " + subTypeItem[1])
-                                else:
-                                    arcpy.AssignDomainToField_management(featureClass, line[0], line[5])
-                            
-                        # Set the default value for the field
-                        
-                        if bool(line[6]):
-                            defaultValue = line[6]
-                            castedDefault = castValue(fieldType, defaultValue)
-                            
-                            if bool(line[8]):
-                                arcpy.AssignDefaultToField_management(featureClass, line[0], castedDefault, line[8] + ": " + subTypes[line[8]])
-                            else:
-                                arcpy.AssignDefaultToField_management(featureClass, line[0], castedDefault)
+                    for line in reader:                       
+                        try : 
+                            fieldType = Utility.fieldTypeLookup(line[1])                       
+                            # Add a line as a new field if this is the first occurence of that "field"
+
+                            if line[0] != fieldName:
+                                addAField(featureClass, fieldType, line)
+                                fieldName = line[0]
                                 
-                        # Check to see if this field sets a subtype and if it does, go create the subtypes
+                            # Set the domain for the field, including subtype code if necessary
                         
-                        if line[7] == "True":
-                            subTypes = addSubtypes(schemasFolder, schema, featureClass, line[0])
-                                     
+                            if bool(line[5]):
+                                if bool(line[8]):
+                                    arcpy.AssignDomainToField_management(featureClass, line[0], line[5], line[8] + ": " + subTypes[line[8]])
+                                else:
+                                    if len(subTypes) > 0:
+                                        subTypeItems = subTypes.items()
+                                        for subTypeItem in subTypeItems:
+                                            arcpy.AssignDomainToField_management(featureClass, line[0], line[5], subTypeItem[0] + ": " + subTypeItem[1])
+                                    else:
+                                        arcpy.AssignDomainToField_management(featureClass, line[0], line[5])
+                               
+                            # Set the default value for the field
+                            
+                            if bool(line[6]):
+                                defaultValue = line[6]
+                                castedDefault = castValue(fieldType, defaultValue)
+                                
+                                if bool(line[8]):
+                                    arcpy.AssignDefaultToField_management(featureClass, line[0], castedDefault, line[8] + ": " + subTypes[line[8]])
+                                else:
+                                    arcpy.AssignDefaultToField_management(featureClass, line[0], castedDefault)
+                                    
+                            # Check to see if this field sets a subtype and if it does, go create the subtypes
+                            
+                            if line[7] == "True":
+                                subTypes = addSubtypes(schemasFolder, schema, featureClass, line[0])
+
+                        except Exception as err: 
+                            arcpy.AddError(traceback.format_exception_only(type(err), err)[0].rstrip())
+                            arcpy.AddError('Failed at: ' + ':'.join(line))                                
     except Exception as err: 
         arcpy.AddError(traceback.format_exception_only(type(err), err)[0].rstrip())
     
