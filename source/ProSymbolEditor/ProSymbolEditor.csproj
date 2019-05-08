@@ -246,9 +246,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\military-overlay\app6d\lpkx\MilitaryOverlay-APP6D.lpkx">
-      <Link>LayerFiles\MilitaryOverlay-APP6D.lpkx</Link>    
+      <Link>LayerFiles\MilitaryOverlay-APP6D.lpkx</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\..\military-overlay\app6b\lpkx\MilitaryOverlay-APP6B.lpkx">
+      <Link>LayerFiles\MilitaryOverlay-APP6B.lpkx</Link>    
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content> 
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\coordinate-conversion-addin-dotnet\source\CoordinateConversion\CoordinateConversionLibrary\CoordinateConversionLibrary.csproj">

@@ -32,7 +32,7 @@ namespace ProSymbolEditor
 {
     public class ProSymbolUtilities
     {
-        public enum SupportedStandardsType { mil2525d, mil2525c, mil2525b, app6d };
+        public enum SupportedStandardsType { mil2525d, mil2525c, mil2525b, app6d, app6b };
 
         public static SupportedStandardsType Standard
         {
@@ -62,6 +62,7 @@ namespace ProSymbolEditor
 
             switch (standardIn)
             {
+                case SupportedStandardsType.app6b: standardLabel = "APP-6(B)"; break;
                 case SupportedStandardsType.app6d: standardLabel = "APP-6(D)"; break;
                 case SupportedStandardsType.mil2525c : standardLabel = "MIL-STD-2525C"; break;
                 case SupportedStandardsType.mil2525b : standardLabel = "MIL-STD-2525B w/ Change 2"; break;
@@ -80,11 +81,22 @@ namespace ProSymbolEditor
         {
             string dictionaryString = "mil2525d"; // default
 
+            string dictionaryStringMil2525b = "mil2525c_b2";
+            string dictionaryStringMil2525c = "mil2525c_b2";
+
+            if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 4))
+            {
+                // These were split into separate styles after 2.4
+                dictionaryStringMil2525b = "mil2525bc2";
+                dictionaryStringMil2525c = "mil2525c";
+            }
+
             switch (standardIn)
             {
+                case SupportedStandardsType.app6b: dictionaryString = "app6b"; break;
                 case SupportedStandardsType.app6d: dictionaryString = "app6d"; break;
-                case SupportedStandardsType.mil2525c: dictionaryString = "mil2525c_b2"; break;
-                case SupportedStandardsType.mil2525b: dictionaryString = "mil2525c_b2"; break;
+                case SupportedStandardsType.mil2525c: dictionaryString = dictionaryStringMil2525c; break;
+                case SupportedStandardsType.mil2525b: dictionaryString = dictionaryStringMil2525b; break;
                 default: break;
             }
 
@@ -97,12 +109,21 @@ namespace ProSymbolEditor
                 return SupportedStandardsType.mil2525d;
             else
                 if (standardString == GetStandardLabel(SupportedStandardsType.app6d))
-                return SupportedStandardsType.app6d;
+                    return SupportedStandardsType.app6d;
             else
                 if (standardString == GetStandardLabel(SupportedStandardsType.mil2525c))
-                return SupportedStandardsType.mil2525c;
+                   return SupportedStandardsType.mil2525c;
             else
-                return SupportedStandardsType.mil2525b;
+                if (standardString == GetStandardLabel(SupportedStandardsType.mil2525b))
+                    return SupportedStandardsType.mil2525b;
+            else
+                if (standardString == GetStandardLabel(SupportedStandardsType.app6b))
+                    return SupportedStandardsType.app6b;
+            else
+            {
+                System.Diagnostics.Trace.WriteLine("Warning - GetStandardFromLabel unrecognized standard string: " + standardString);
+                return SupportedStandardsType.mil2525d;
+            }
         }
 
         public static string GetShortStandardLabel(SupportedStandardsType standardIn)
@@ -111,6 +132,7 @@ namespace ProSymbolEditor
 
             switch (standardIn)
             {
+                case SupportedStandardsType.app6b: standardLabel = "APP6B"; break;
                 case SupportedStandardsType.app6d: standardLabel = "APP6D"; break;
                 case SupportedStandardsType.mil2525c: standardLabel = "2525C"; break;
                 case SupportedStandardsType.mil2525b: standardLabel = "2525B"; break;
@@ -126,6 +148,7 @@ namespace ProSymbolEditor
 
             switch (standardIn)
             {
+                case SupportedStandardsType.app6b: datasetName = "MilitaryOverlayAPP6B"; break;
                 case SupportedStandardsType.app6d: datasetName = "militaryoverlayapp6d"; break;
                 case SupportedStandardsType.mil2525c: datasetName = "MilitaryOverlay2525C"; break;
                 case SupportedStandardsType.mil2525b: datasetName = "militaryoverlay2525b2"; break;
@@ -141,6 +164,7 @@ namespace ProSymbolEditor
 
             switch (standardIn)
             {
+                case SupportedStandardsType.app6b: standardName = "APP6B"; break;
                 case SupportedStandardsType.app6d: standardName = "APP6D"; break;
                 case SupportedStandardsType.mil2525c: standardName = "2525C"; break;
                 case SupportedStandardsType.mil2525b: standardName = "2525Bc2"; break;
@@ -158,7 +182,8 @@ namespace ProSymbolEditor
         public static bool IsLegacyStandard(SupportedStandardsType standardIn)
         {
             if ((standardIn == SupportedStandardsType.mil2525b) ||
-                (standardIn == SupportedStandardsType.mil2525c))
+                (standardIn == SupportedStandardsType.mil2525c) ||
+                (standardIn == SupportedStandardsType.app6b))
                 return true;
             else
                 return false;
