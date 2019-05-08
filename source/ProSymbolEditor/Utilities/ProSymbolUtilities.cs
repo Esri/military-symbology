@@ -80,11 +80,21 @@ namespace ProSymbolEditor
         {
             string dictionaryString = "mil2525d"; // default
 
+            string dictionaryStringMil2525b = "mil2525c_b2";
+            string dictionaryStringMil2525c = "mil2525c_b2";
+
+            if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 4))
+            {
+                // These were split into separate styles after 2.4
+                dictionaryStringMil2525b = "mil2525bc2";
+                dictionaryStringMil2525c = "mil2525c";
+            }
+
             switch (standardIn)
             {
                 case SupportedStandardsType.app6d: dictionaryString = "app6d"; break;
-                case SupportedStandardsType.mil2525c: dictionaryString = "mil2525c_b2"; break;
-                case SupportedStandardsType.mil2525b: dictionaryString = "mil2525c_b2"; break;
+                case SupportedStandardsType.mil2525c: dictionaryString = dictionaryStringMil2525c; break;
+                case SupportedStandardsType.mil2525b: dictionaryString = dictionaryStringMil2525b; break;
                 default: break;
             }
 
