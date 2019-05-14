@@ -227,6 +227,8 @@ namespace ProSymbolEditor
 
             _favoritesView.Refresh();
 
+            NotifyPropertyChanged(() => EchelonLabel);
+
             SymbolAttributeSet.StandardVersion = ProSymbolUtilities.StandardString;
         }
 
@@ -847,6 +849,17 @@ namespace ProSymbolEditor
                 //Load into editing???
 
                 NotifyPropertyChanged(() => EditSelectedFeatureSymbol);
+            }
+        }
+
+        public string EchelonLabel
+        {
+            get
+            {
+                if (ProSymbolUtilities.IsLegacyStandard())
+                    return "Echelon/Mobility";
+                else
+                    return "Echelon";
             }
         }
 
@@ -2409,7 +2422,8 @@ namespace ProSymbolEditor
             {
                 affiliationField = "affiliation";
                 hostileValue = "Hostile";
-                friendValue = "Friendly";
+                if (ProSymbolUtilities.Standard != ProSymbolUtilities.SupportedStandardsType.app6b) // app6b is different for some reason 
+                    friendValue = "Friendly";
             }
 
             string upperTagsName = _selectedStyleItem.Tags.ToUpper();
