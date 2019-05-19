@@ -244,6 +244,19 @@ namespace ProSymbolEditor
         }
         private static int proMinorVersion = -1;
 
+        public static string UserSettingsLocation()
+        {
+            // Use local user settings Pro folder 
+            string settingsPath = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ESRI", "ArcGISPro");
+
+            // This should not happen, but use MyDocuments as backup just in case there is some odd roaming case 
+            if (!System.IO.Directory.Exists(settingsPath))
+                settingsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            return settingsPath;
+        }
+
         public static string AddinAssemblyLocation()
         {
             var asm = System.Reflection.Assembly.GetExecutingAssembly();

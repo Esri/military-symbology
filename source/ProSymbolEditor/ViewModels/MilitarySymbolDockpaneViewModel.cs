@@ -372,7 +372,7 @@ namespace ProSymbolEditor
             _progressDialogSearch = new ProgressDialog("Searching...");
 
             //Load saved favorites
-            _favoritesFilePath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "SymbolFavorites.json");
+            _favoritesFilePath = System.IO.Path.Combine(ProSymbolUtilities.UserSettingsLocation(), "SymbolFavorites.json");
             LoadAllFavoritesFromFile();
 
             // If the Addin has been opened while there is already a Military Overlay loaded, set the state/standard
