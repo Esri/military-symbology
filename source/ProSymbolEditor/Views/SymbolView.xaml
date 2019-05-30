@@ -166,7 +166,7 @@
                                             Grid.Row="4"
                                             Grid.Column="0"
                                             Margin="5,5,5,5"
-                                            Content="Echelon"
+                                            Content="{Binding EchelonLabel}"
                                             Visibility="{Binding ElementName=echelonComboBox, Path=Visibility}" />
                     <ComboBox
                                             x:Name="echelonComboBox"

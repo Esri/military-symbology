@@ -116,6 +116,11 @@ namespace ProSymbolEditor
                 // APP6D only available after 2.2
                 SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.app6d));
             }
+            if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 4))
+            {
+                // APP6B only available after 2.4
+                SymbologyStandards.Add(ProSymbolUtilities.GetStandardLabel(ProSymbolUtilities.SupportedStandardsType.app6b));
+            }
 
         }
 

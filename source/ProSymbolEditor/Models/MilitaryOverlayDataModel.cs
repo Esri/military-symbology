@@ -87,9 +87,10 @@ namespace ProSymbolEditor
 
             switch (standard)
             {
+                case ProSymbolUtilities.SupportedStandardsType.app6b: symbolSetMapping = _symbolSetMappingAPP6B; break;
                 case ProSymbolUtilities.SupportedStandardsType.app6d: symbolSetMapping = _symbolSetMappingAPP6D; break;
-                case ProSymbolUtilities.SupportedStandardsType.mil2525c: symbolSetMapping = _symbolSetMapping2525C; break;
                 case ProSymbolUtilities.SupportedStandardsType.mil2525b: symbolSetMapping = _symbolSetMapping2525B; break;
+                case ProSymbolUtilities.SupportedStandardsType.mil2525c: symbolSetMapping = _symbolSetMapping2525C; break;
                 default:
                     symbolSetMapping = _symbolSetMapping2525D;
                     break;
@@ -500,6 +501,18 @@ namespace ProSymbolEditor
         }
         private static List<SymbolSetMapping> _symbolSetMappingAPP6D = null;
 
+        public static List<SymbolSetMapping> SymbolSetToFeatureClassMappingAPP6B
+        {
+            get
+            {
+                if (_symbolSetMappingAPP6B == null)
+                    initializeSymbolSetToFeatureClassMapping();
+
+                return _symbolSetMappingAPP6B;
+            }
+        }
+        private static List<SymbolSetMapping> _symbolSetMappingAPP6B = null;
+
         public static List<SymbolSetMapping> SymbolSetToFeatureClassMapping2525C
         {
             get
@@ -570,6 +583,23 @@ namespace ProSymbolEditor
             {
                 _symbolSetMappingAPP6D.Add(mapping);
             }
+
+            // APP6B
+            _symbolSetMappingAPP6B = new List<SymbolSetMapping>();
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("Air", GeometryType.Point, "^[S].[A].{7,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("Space", GeometryType.Point, "^[S].[P].{7,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("LandEquipment", GeometryType.Point, "^[S].[G].[E].{5,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("Installations", GeometryType.Point, "^[S].[G].[I].{5,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("Units", GeometryType.Point, "^[S].[GF].{7,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("Activities", GeometryType.Point, "^[G].[O].{7,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("ControlMeasuresPoints", GeometryType.Point, "^[G].{9,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("ControlMeasuresLines", GeometryType.Polyline, "^[G].{9,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("ControlMeasuresAreas", GeometryType.Polygon, "^[G].{9,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("SeaSurface", GeometryType.Point, "^[S].[S].{7,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("SeaSubsurface", GeometryType.Point, "^[S].[U].{7,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("METOCPoints", GeometryType.Point, "^[W].{9,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("METOCLines", GeometryType.Polyline, "^[W].{9,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("METOCAreas", GeometryType.Polygon, "^[W].{9,}"));
 
             // 2525B
             _symbolSetMapping2525B = new List<SymbolSetMapping>();
