@@ -84,12 +84,17 @@ namespace ProSymbolEditor
             Dictionary<string, bool> featureClassExists = new Dictionary<string, bool>();
 
             List<SymbolSetMapping> symbolSetMapping = null;
-            if (standard == ProSymbolUtilities.SupportedStandardsType.app6d)
-                symbolSetMapping = _symbolSetMappingAPP6D;
-            else if (standard == ProSymbolUtilities.SupportedStandardsType.mil2525d)
-                symbolSetMapping = _symbolSetMapping2525D;
-            else
-                symbolSetMapping = _symbolSetMapping2525C;
+
+            switch (standard)
+            {
+                case ProSymbolUtilities.SupportedStandardsType.app6b: symbolSetMapping = _symbolSetMappingAPP6B; break;
+                case ProSymbolUtilities.SupportedStandardsType.app6d: symbolSetMapping = _symbolSetMappingAPP6D; break;
+                case ProSymbolUtilities.SupportedStandardsType.mil2525b: symbolSetMapping = _symbolSetMapping2525B; break;
+                case ProSymbolUtilities.SupportedStandardsType.mil2525c: symbolSetMapping = _symbolSetMapping2525C; break;
+                default:
+                    symbolSetMapping = _symbolSetMapping2525D;
+                    break;
+            }
 
             foreach (SymbolSetMapping mapping in symbolSetMapping)
             {
@@ -129,13 +134,8 @@ namespace ProSymbolEditor
         }
 
         public string GetDatasetName()
-        {            
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.app6d)
-                return EGDBPrefixName + "militaryoverlayapp6d";
-            else if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525d)
-                return EGDBPrefixName + "militaryoverlay2525d";
-            else
-                return EGDBPrefixName + "militaryoverlay2525b2";
+        {
+            return EGDBPrefixName + ProSymbolUtilities.GetDatasetName(ProSymbolUtilities.Standard);
         }
 
         public async Task<bool> IsGDBAndFeatureClassInActiveView(string featureClassName)
@@ -318,6 +318,7 @@ namespace ProSymbolEditor
             return gdbContainsMilitaryOverlay;
         }
 
+        // TODO: we may be able to deprecate this method (GDBContainsSchema) and use the method above (GDBContainsMilitaryOverlay)
         public async Task<bool> GDBContainsSchema(GDBProjectItem gdbProjectItem, 
             ProSymbolUtilities.SupportedStandardsType standard)
         {
@@ -340,12 +341,12 @@ namespace ProSymbolEditor
                     // Set up Fields to check
                     List<string> fieldsToCheck = new List<string>();
 
-                    if (standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                    if (ProSymbolUtilities.IsLegacyStandard(standard))
                     {
                         fieldsToCheck.Add("extendedfunctioncode");
                     }
                     else
-                    {   // 2525d
+                    {   // 2525d / app6d
                         fieldsToCheck.Add("symbolset");
                         fieldsToCheck.Add("symbolentity");
                     }
@@ -454,11 +455,16 @@ namespace ProSymbolEditor
                     if (gdbProjectItem.Name == "map.gdb") // ignore the project Map GDB
                         continue;
 
-                    bool isSchemaComplete = await GDBContainsSchema(gdbProjectItem, standard);
+                    bool isSchemaComplete = await GDBContainsMilitaryOverlay(gdbProjectItem, standard);
 
                     // if schema is there/complete then done
                     if (isSchemaComplete)
                     {
+                        // If we get here, then schema is found for this standard
+                        // Save geodatabase path to use as the selected database
+                        _databaseName = gdbProjectItem.Path;
+                        _schemaExists = true;
+                        _standard = standard;
                         break;
                     }
                 }
@@ -495,6 +501,18 @@ namespace ProSymbolEditor
         }
         private static List<SymbolSetMapping> _symbolSetMappingAPP6D = null;
 
+        public static List<SymbolSetMapping> SymbolSetToFeatureClassMappingAPP6B
+        {
+            get
+            {
+                if (_symbolSetMappingAPP6B == null)
+                    initializeSymbolSetToFeatureClassMapping();
+
+                return _symbolSetMappingAPP6B;
+            }
+        }
+        private static List<SymbolSetMapping> _symbolSetMappingAPP6B = null;
+
         public static List<SymbolSetMapping> SymbolSetToFeatureClassMapping2525C
         {
             get
@@ -506,6 +524,18 @@ namespace ProSymbolEditor
             }
         }
         private static List<SymbolSetMapping> _symbolSetMapping2525C = null;
+
+        public static List<SymbolSetMapping> SymbolSetToFeatureClassMapping2525B
+        {
+            get
+            {
+                if (_symbolSetMapping2525B == null)
+                    initializeSymbolSetToFeatureClassMapping();
+
+                return _symbolSetMapping2525B;
+            }
+        }
+        private static List<SymbolSetMapping> _symbolSetMapping2525B = null;
 
         private static void initializeSymbolSetToFeatureClassMapping()
         {
@@ -554,23 +584,48 @@ namespace ProSymbolEditor
                 _symbolSetMappingAPP6D.Add(mapping);
             }
 
+            // APP6B
+            _symbolSetMappingAPP6B = new List<SymbolSetMapping>();
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("Air", GeometryType.Point, "^[S].[A].{7,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("Space", GeometryType.Point, "^[S].[P].{7,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("LandEquipment", GeometryType.Point, "^[S].[G].[E].{5,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("Installations", GeometryType.Point, "^[S].[G].[I].{5,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("Units", GeometryType.Point, "^[S].[GF].{7,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("Activities", GeometryType.Point, "^[G].[O].{7,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("ControlMeasuresPoints", GeometryType.Point, "^[G].{9,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("ControlMeasuresLines", GeometryType.Polyline, "^[G].{9,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("ControlMeasuresAreas", GeometryType.Polygon, "^[G].{9,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("SeaSurface", GeometryType.Point, "^[S].[S].{7,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("SeaSubsurface", GeometryType.Point, "^[S].[U].{7,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("METOCPoints", GeometryType.Point, "^[W].{9,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("METOCLines", GeometryType.Polyline, "^[W].{9,}"));
+            _symbolSetMappingAPP6B.Add(new SymbolSetMapping("METOCAreas", GeometryType.Polygon, "^[W].{9,}"));
+
+            // 2525B
+            _symbolSetMapping2525B = new List<SymbolSetMapping>();
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("Air", GeometryType.Point, "^[S].[A].{7,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("Space", GeometryType.Point, "^[S].[P].{7,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("LandEquipment", GeometryType.Point, "^[S].[G].[E].{5,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("Installations", GeometryType.Point, "^[S].[G].[I].{5,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("Units", GeometryType.Point, "^[S].[GF].{7,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("ControlMeasuresPoints", GeometryType.Point, "^[G].{9,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("ControlMeasuresLines", GeometryType.Polyline, "^[G].{9,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("ControlMeasuresAreas", GeometryType.Polygon, "^[G].{9,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("SeaSurface", GeometryType.Point, "^[S].[S].{7,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("SeaSubsurface", GeometryType.Point, "^[S].[U].{7,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("Activities", GeometryType.Point, "^[OE].{9,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("METOCPoints", GeometryType.Point, "^[W].{9,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("METOCLines", GeometryType.Polyline, "^[W].{9,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("METOCAreas", GeometryType.Polygon, "^[W].{9,}"));
+            _symbolSetMapping2525B.Add(new SymbolSetMapping("SIGINT", GeometryType.Point, "^[I].{9,}"));
+
             // 2525C
             _symbolSetMapping2525C = new List<SymbolSetMapping>();
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("Air", GeometryType.Point, "^[S].[A].{7,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("Space", GeometryType.Point, "^[S].[P].{7,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("LandEquipment", GeometryType.Point, "^[S].[G].[E].{5,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("Installations", GeometryType.Point, "^[S].[G].[I].{5,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("Units", GeometryType.Point, "^[S].[GF].{7,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("ControlMeasuresPoints", GeometryType.Point, "^[G].{9,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("ControlMeasuresLines", GeometryType.Polyline, "^[G].{9,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("ControlMeasuresAreas", GeometryType.Polygon, "^[G].{9,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("SeaSurface", GeometryType.Point, "^[S].[S].{7,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("SeaSubsurface", GeometryType.Point, "^[S].[U].{7,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("Activities", GeometryType.Point, "^[OE].{9,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("METOCPoints", GeometryType.Point, "^[W].{9,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("METOCLines", GeometryType.Polyline, "^[W].{9,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("METOCAreas", GeometryType.Polygon, "^[W].{9,}"));
-            _symbolSetMapping2525C.Add(new SymbolSetMapping("SIGINT", GeometryType.Point, "^[I].{9,}"));
+            // Copy the mappings from 2525B
+            foreach (SymbolSetMapping mapping in _symbolSetMapping2525B)
+            {
+                _symbolSetMapping2525C.Add(mapping);
+            }
         }
     }
 }

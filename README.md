@@ -4,7 +4,7 @@
 
 A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating military symbols and overlays using MIL-STD-2525D, MILSTD-2525B Change 2, and APP-6(D).
 
-![Image of Military Symbol Editor Addin](screenshot.png)
+![Image of Military Symbol Editor Addin](MilitarySymbolEditor.png)
 
 ## Features
 
@@ -28,19 +28,14 @@ A user-focused [ArcGIS Pro](http://pro.arcgis.com) add-in for quickly creating m
 ### Build Requirements 
 
 * Visual Studio 2015
-    * Important Note: Visual Studio 2013 is required if building on ArcGIS 10.3.1
 * ArcGIS for Desktop 
-	* ArcMap 10.3.1+
-	* ArcGIS Pro 2.1+
-* ArcGIS Desktop SDK for .NET 10.3.1+
-	* [ArcGIS Desktop for .NET Requirements](https://desktop.arcgis.com/en/desktop/latest/get-started/system-requirements/arcobjects-sdk-system-requirements.htm)
+	* ArcGIS Pro 2.2+
 * [ArcGIS Pro SDK](http://pro.arcgis.com/en/pro-app/sdk/) 2.1+
 
 ### Run Requirements
 
 * ArcGIS for Desktop 
-	* ArcMap 10.3.1+
-	* ArcGIS Pro 2.1+
+	* ArcGIS Pro 2.2+
 
 ## Instructions
 

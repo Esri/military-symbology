@@ -32,7 +32,7 @@ namespace ProSymbolEditor
 {
     public class ProSymbolUtilities
     {
-        public enum SupportedStandardsType { mil2525d, mil2525c_b2, app6d };
+        public enum SupportedStandardsType { mil2525d, mil2525c, mil2525b, app6d, app6b };
 
         public static SupportedStandardsType Standard
         {
@@ -58,76 +58,149 @@ namespace ProSymbolEditor
 
         public static string GetStandardLabel(SupportedStandardsType standardIn)
         {
-            if (standardIn == SupportedStandardsType.mil2525d)
-                return "MIL-STD-2525D";
-            else
-                if (standardIn == SupportedStandardsType.app6d)
-                    return "APP-6(D)";
-                else
-                    return "MIL-STD-2525B w/ Change 2";
+            string standardLabel = "MIL-STD-2525D"; // default
+
+            switch (standardIn)
+            {
+                case SupportedStandardsType.app6b: standardLabel = "APP-6(B)"; break;
+                case SupportedStandardsType.app6d: standardLabel = "APP-6(D)"; break;
+                case SupportedStandardsType.mil2525c : standardLabel = "MIL-STD-2525C"; break;
+                case SupportedStandardsType.mil2525b : standardLabel = "MIL-STD-2525B w/ Change 2"; break;
+                default: break;
+            }
+
+            return standardLabel;
         }
 
         public static string GetDictionaryString()
         {
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.app6d)
-                return ProSymbolUtilities.StandardString.ToLower();
-            else
-                return "mil" + ProSymbolUtilities.StandardString.ToLower();
+            return GetDictionaryString(ProSymbolUtilities.Standard);
         }
 
         public static string GetDictionaryString(SupportedStandardsType standardIn)
         {
-            if (standardIn == SupportedStandardsType.mil2525d)
-                return "2525D";
-            else
-                if (standardIn == SupportedStandardsType.app6d)
-                    return "APP6D";
-                else
-                    return "2525C_B2";
+            string dictionaryString = "mil2525d"; // default
+
+            string dictionaryStringMil2525b = "mil2525c_b2";
+            string dictionaryStringMil2525c = "mil2525c_b2";
+
+            if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 4))
+            {
+                // These were split into separate styles after 2.4
+                dictionaryStringMil2525b = "mil2525bc2";
+                dictionaryStringMil2525c = "mil2525c";
+            }
+
+            switch (standardIn)
+            {
+                case SupportedStandardsType.app6b: dictionaryString = "app6b"; break;
+                case SupportedStandardsType.app6d: dictionaryString = "app6d"; break;
+                case SupportedStandardsType.mil2525c: dictionaryString = dictionaryStringMil2525c; break;
+                case SupportedStandardsType.mil2525b: dictionaryString = dictionaryStringMil2525b; break;
+                default: break;
+            }
+
+            return dictionaryString;
         }
 
         public static SupportedStandardsType GetStandardFromLabel(string standardString)
         {
             if (standardString == GetStandardLabel(SupportedStandardsType.mil2525d))
                 return SupportedStandardsType.mil2525d;
-            else 
+            else
                 if (standardString == GetStandardLabel(SupportedStandardsType.app6d))
                     return SupportedStandardsType.app6d;
-                else
-                    return SupportedStandardsType.mil2525c_b2;
+            else
+                if (standardString == GetStandardLabel(SupportedStandardsType.mil2525c))
+                   return SupportedStandardsType.mil2525c;
+            else
+                if (standardString == GetStandardLabel(SupportedStandardsType.mil2525b))
+                    return SupportedStandardsType.mil2525b;
+            else
+                if (standardString == GetStandardLabel(SupportedStandardsType.app6b))
+                    return SupportedStandardsType.app6b;
+            else
+            {
+                System.Diagnostics.Trace.WriteLine("Warning - GetStandardFromLabel unrecognized standard string: " + standardString);
+                return SupportedStandardsType.mil2525d;
+            }
         }
 
         public static string GetShortStandardLabel(SupportedStandardsType standardIn)
         {
-            if (standardIn == SupportedStandardsType.mil2525d)
-                return "2525D";
-            else
-                if (standardIn == SupportedStandardsType.app6d)
-                    return "APP6D";
-                else
-                    return "2525B";
+            string standardLabel = "2525D";
+
+            switch (standardIn)
+            {
+                case SupportedStandardsType.app6b: standardLabel = "APP6B"; break;
+                case SupportedStandardsType.app6d: standardLabel = "APP6D"; break;
+                case SupportedStandardsType.mil2525c: standardLabel = "2525C"; break;
+                case SupportedStandardsType.mil2525b: standardLabel = "2525B"; break;
+                default: break;
+            }
+
+            return standardLabel;
         }
 
         public static string GetDatasetName(SupportedStandardsType standardIn)
         {
-            if (standardIn == SupportedStandardsType.mil2525d)
-                return "militaryoverlay2525d";
-            else
-                if (standardIn == SupportedStandardsType.app6d)
-                    return "militaryoverlayapp6d";
-                else
-                    return "militaryoverlay2525b2";
+            string datasetName = "militaryoverlay2525d";
+
+            switch (standardIn)
+            {
+                case SupportedStandardsType.app6b: datasetName = "MilitaryOverlayAPP6B"; break;
+                case SupportedStandardsType.app6d: datasetName = "militaryoverlayapp6d"; break;
+                case SupportedStandardsType.mil2525c: datasetName = "MilitaryOverlay2525C"; break;
+                case SupportedStandardsType.mil2525b: datasetName = "militaryoverlay2525b2"; break;
+                default: break;
+            }
+
+            return datasetName;
         }
 
         public static string GetStandardString(SupportedStandardsType standardIn)
         {
-            if (standardIn == SupportedStandardsType.mil2525c_b2)
-                return "2525C_B2";
+            string standardName = "2525D";
+
+            switch (standardIn)
+            {
+                case SupportedStandardsType.app6b: standardName = "APP6B"; break;
+                case SupportedStandardsType.app6d: standardName = "APP6D"; break;
+                case SupportedStandardsType.mil2525c: standardName = "2525C"; break;
+                case SupportedStandardsType.mil2525b: standardName = "2525Bc2"; break;
+                default: break;
+            }
+
+            return standardName;
+        }
+
+        public static bool IsLegacyStandard()
+        {
+            return IsLegacyStandard(Standard);
+        }
+
+        public static bool IsLegacyStandard(SupportedStandardsType standardIn)
+        {
+            if ((standardIn == SupportedStandardsType.mil2525b) ||
+                (standardIn == SupportedStandardsType.mil2525c) ||
+                (standardIn == SupportedStandardsType.app6b))
+                return true;
             else
-                if (standardIn == SupportedStandardsType.app6d)
-                    return "APP6D";
-                else
-                    return "2525D";
+                return false;
+        }
+
+        public static string GetLayerFileFromCurrentStandard()
+        {
+            string layerFileStandard = "2525BChange2"; // this name format is slightly different
+            if (ProSymbolUtilities.Standard != SupportedStandardsType.mil2525b)
+                layerFileStandard = ProSymbolUtilities.StandardString;
+            
+            string layerFileName = "MilitaryOverlay-" + layerFileStandard + ".lpkx"; 
+
+            string layerFilePath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), 
+                "LayerFiles", layerFileName);
+
+            return layerFilePath;
         }
 
         public static string NameSeparator
@@ -170,6 +243,19 @@ namespace ProSymbolEditor
             }
         }
         private static int proMinorVersion = -1;
+
+        public static string UserSettingsLocation()
+        {
+            // Use local user settings Pro folder 
+            string settingsPath = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ESRI", "ArcGISPro");
+
+            // This should not happen, but use MyDocuments as backup just in case there is some odd roaming case 
+            if (!System.IO.Directory.Exists(settingsPath))
+                settingsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            return settingsPath;
+        }
 
         public static string AddinAssemblyLocation()
         {
@@ -465,7 +551,7 @@ namespace ProSymbolEditor
         {
             Dictionary<string, string> fieldMapDictionary;
 
-            if (Standard == SupportedStandardsType.mil2525c_b2)
+            if (IsLegacyStandard())
                 fieldMapDictionary = fieldMap2525C_B2;
             else
                 fieldMapDictionary = fieldMap2525D;

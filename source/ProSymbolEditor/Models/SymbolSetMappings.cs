@@ -45,6 +45,14 @@ namespace ProSymbolEditor
             }
         }
 
+        private List<SymbolSetMapping> SymbolSetMappingsAPP6B
+        {
+            get
+            {
+                return MilitaryOverlayDataModel.SymbolSetToFeatureClassMappingAPP6B;
+            }
+        }
+
         public SymbolSetMappings()
         {
         }
@@ -61,6 +69,8 @@ namespace ProSymbolEditor
                     return mapping.FeatureClassName;
                 }
             }
+
+            System.Diagnostics.Trace.WriteLine("GetFeatureClassFromExtendedFunctionCode - could not find feature class for: " + symbolSet);
             return "";
         }
 
@@ -69,7 +79,11 @@ namespace ProSymbolEditor
             if (string.IsNullOrEmpty(extendedFunctionCode))
                 return "Units";
 
-            foreach (SymbolSetMapping mapping in SymbolSetMappings2525C)
+            var symbolSetMappings = SymbolSetMappings2525C;
+            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.app6b)
+                symbolSetMappings = SymbolSetMappingsAPP6B;
+
+            foreach (SymbolSetMapping mapping in symbolSetMappings)
             {
                 if (System.Text.RegularExpressions.Regex.IsMatch(extendedFunctionCode, mapping.SymbolSetOrRegex) &&
                                 (mapping.GeometryType == geometryType))
@@ -78,6 +92,8 @@ namespace ProSymbolEditor
                 }
 
             }
+
+            System.Diagnostics.Trace.WriteLine("GetFeatureClassFromExtendedFunctionCode - could not find feature class for: " + extendedFunctionCode);
             return "";
         }
 
@@ -86,7 +102,7 @@ namespace ProSymbolEditor
             if (displayAttributes == null)
                 return string.Empty;
 
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
                 return GetFeatureClassFromExtendedFunctionCode(displayAttributes.ExtendedFunctionCode, geometryType);
             }

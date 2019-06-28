@@ -294,7 +294,7 @@ namespace ProSymbolEditor
             // 2525D: { symbolset, entity, affiliation }
             // 2525B: { extendedfunctioncode, affiliation }
             int minimumAttributeCount = 4;
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
                 minimumAttributeCount = 3;
             }
@@ -328,7 +328,7 @@ namespace ProSymbolEditor
             Dictionary<string, object> attributeSet = new Dictionary<string, object>();
 
             bool isMETOC = false;
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
                 if (!string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode) &&
                     (DisplayAttributes.ExtendedFunctionCode != ProSymbolUtilities.NullFieldValueFlag))
@@ -453,9 +453,8 @@ namespace ProSymbolEditor
                 return;
             }
 
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
-
                 if (!string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode) &&
                     (DisplayAttributes.ExtendedFunctionCode != ProSymbolUtilities.NullFieldValueFlag))
                 {
@@ -641,7 +640,7 @@ namespace ProSymbolEditor
             // to null if NullFieldValueFlag("<null>) is set on that field
 
             // 2525C/B attributes:
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             { 
                 if (!string.IsNullOrEmpty(DisplayAttributes.ExtendedFunctionCode) && 
                     (feature.FindField("extendedfunctioncode") >= 0))
@@ -862,7 +861,7 @@ namespace ProSymbolEditor
             if (fieldValues == null)
                 return;
 
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
                 if (fieldValues.ContainsKey("extendedfunctioncode"))
                 {

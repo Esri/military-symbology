@@ -227,14 +227,17 @@ namespace ProSymbolEditor
 
             _favoritesView.Refresh();
 
+            NotifyPropertyChanged(() => EchelonLabel);
+
             SymbolAttributeSet.StandardVersion = ProSymbolUtilities.StandardString;
         }
 
         private void setStandardFromSettings()
         {
+// TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             if (Properties.Settings.Default.DefaultStandard ==
-                    ProSymbolUtilities.GetStandardString(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2))
-                ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
+                    ProSymbolUtilities.GetStandardString(ProSymbolUtilities.SupportedStandardsType.mil2525b))
+                ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525b;
             else
                 ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
         }
@@ -246,78 +249,36 @@ namespace ProSymbolEditor
 
             ProSymbolEditorModule.Current.MilitaryOverlaySchema.Reset();
 
-            StatusMessage = "Add-in Not Enabled";
+            bool isExistingStandardSchemaFound = false;
+            ProSymbolUtilities.SupportedStandardsType foundStandard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
 
-            // Somewhat tricky, see if the project has a GDB with an existing standard, if so just set to that
-            bool isEnabled2525C_B2 = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525c_b2);
-            bool isEnabled2525D = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.mil2525d);
-
-            // APP6D only available after 2.2
-            bool isEnabledAPP6D = false;
-            if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 2))
+            // Loop through the supported standards to see if a datamodel already exists for one of these
+            Array standards = Enum.GetValues(typeof(ProSymbolUtilities.SupportedStandardsType));
+            foreach (ProSymbolUtilities.SupportedStandardsType standard in standards)
             {
-                isEnabledAPP6D = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(ProSymbolUtilities.SupportedStandardsType.app6d);
+                bool isEnabledWithStandard =
+                    await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync(standard);
+
+                if (isEnabledWithStandard)
+                {
+                    isExistingStandardSchemaFound = true;
+                    foundStandard = standard;
+                    break;
+                }
             }
 
-            if (!isEnabled2525D && !isEnabled2525C_B2 &&!isEnabledAPP6D)
+            if (!isExistingStandardSchemaFound ||
+                !ProSymbolEditorModule.Current.MilitaryOverlaySchema.SchemaExists) // extra check
             {
-                // NOTE: this has been moved to DockPane_OnMouseClick
-                // If neither standard found in the project, prompt the user to:
-                // Add the Layer package for the desired standard and/or select an existing GDB 
-                // CheckAddinEnabled();
                 resetViewModelState();
                 IsAddinEnabled = false;
+                StatusMessage = "Add-in Not Enabled";
 
                 return;
             }
-            else
-            {
-                // Note: this special case where both standards/databases exist only 
-                // occurs in the Military Overlay Template
-                if (isEnabled2525D && isEnabled2525C_B2)
-                {
-                    // However, if both standards are found in GDBs in the project, 
-                    // let the user pick the one to use
-                    var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                            "Multiple databases containing the Military Overlay data model were found in this project. \n" +
-                            "Would you like to select the default database to use for edits?", "Multiple Military Overlay Databases",
-                            System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
 
-                    if (Convert.ToString(result) == "Yes")
-                    {
-                        bool success = await ShowSettingsWindowAsync(true);
-
-                        if (!success)
-                            return;
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    if (isEnabledAPP6D)
-                        ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.app6d;
-                    else
-                    {
-                        if (isEnabled2525D)
-                            ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525d;
-                        else
-                        {
-                            ProSymbolUtilities.Standard = ProSymbolUtilities.SupportedStandardsType.mil2525c_b2;
-                        }
-                    }
-
-                    // Tricky APP6D/2525D/2525B checks above disables others, so have to check again
-                    await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
-
-                    // One last check
-                    if (ProSymbolEditorModule.Current.MilitaryOverlaySchema.SchemaExists)
-                        StatusMessage = "Initialized";
-                }
-            }
-
+            ProSymbolUtilities.Standard = foundStandard;
+            StatusMessage = "Initialized";
             IsAddinEnabled = true;
 
             //Add military style to project
@@ -411,7 +372,7 @@ namespace ProSymbolEditor
             _progressDialogSearch = new ProgressDialog("Searching...");
 
             //Load saved favorites
-            _favoritesFilePath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "SymbolFavorites.json");
+            _favoritesFilePath = System.IO.Path.Combine(ProSymbolUtilities.UserSettingsLocation(), "SymbolFavorites.json");
             LoadAllFavoritesFromFile();
 
             // If the Addin has been opened while there is already a Military Overlay loaded, set the state/standard
@@ -746,7 +707,7 @@ namespace ProSymbolEditor
                     SymbolAttributeSet loadSet = new SymbolAttributeSet();
 
                     // Set 2525C_B2 SIDC/attribute if applicable
-                    if ((ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2) 
+                    if ((ProSymbolUtilities.IsLegacyStandard()) 
                         && (symbolIdCode.Length >= 3))
                     {
                         string functionCode = symbolIdCode[2];
@@ -888,6 +849,17 @@ namespace ProSymbolEditor
                 //Load into editing???
 
                 NotifyPropertyChanged(() => EditSelectedFeatureSymbol);
+            }
+        }
+
+        public string EchelonLabel
+        {
+            get
+            {
+                if (ProSymbolUtilities.IsLegacyStandard())
+                    return "Echelon/Mobility";
+                else
+                    return "Echelon";
             }
         }
 
@@ -2238,7 +2210,7 @@ namespace ProSymbolEditor
             string symbolSetFieldName = "symbolset";
             string symbolEntityFieldName = "symbolentity";
 
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
                 symbolSetFieldName = "extendedfunctioncode";
                 symbolEntityFieldName = ""; // not used
@@ -2446,11 +2418,12 @@ namespace ProSymbolEditor
             string neutralValue = "Neutral";
 
             // These have different values for 2525C/B2
-            if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
                 affiliationField = "affiliation";
                 hostileValue = "Hostile";
-                friendValue = "Friendly";
+                if (ProSymbolUtilities.Standard != ProSymbolUtilities.SupportedStandardsType.app6b) // app6b is different for some reason 
+                    friendValue = "Friendly";
             }
 
             string upperTagsName = _selectedStyleItem.Tags.ToUpper();
@@ -2756,23 +2729,22 @@ namespace ProSymbolEditor
             int lastSemicolon = tags.LastIndexOf(';');
             string symbolIdCode = tags.Substring(lastSemicolon + 1, tags.Length - lastSemicolon - 1);
 
-            if (string.IsNullOrEmpty(symbolIdCode) || (symbolIdCode.Length < 8))
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
                 symbolId[0] = String.Empty;
                 symbolId[1] = String.Empty;
             }
-            else
+            else // 2525d/app6d or later
             {
                 symbolId[0] = string.Format("{0}{1}", symbolIdCode[0], symbolIdCode[1]);
                 symbolId[1] = string.Format("{0}{1}{2}{3}{4}{5}", symbolIdCode[2], symbolIdCode[3], symbolIdCode[4], symbolIdCode[5], symbolIdCode[6], symbolIdCode[7]);
-            }
-
-            if (ProSymbolUtilities.Standard != ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
-            {
                 symbolId[2] = String.Empty;
             }
-            else // mil2525c_b2
+
+            if (ProSymbolUtilities.IsLegacyStandard())
             {
+                // Set symbolId[2] with legacy SIDC
+
                 if (ProSymbolUtilities.IsNewStyleFormat)
                 {
                     if (key.Length >= 10)
@@ -2844,7 +2816,7 @@ namespace ProSymbolEditor
                 foreach (var symbolType in symbolQuery)
                 {
                     // Change style query based on current standard
-                    if (ProSymbolUtilities.Standard == ProSymbolUtilities.SupportedStandardsType.mil2525c_b2)
+                    if (ProSymbolUtilities.IsLegacyStandard())
                     {
                         // Keys changed format at 2.3
                         if (ProSymbolUtilities.IsNewStyleFormat)
@@ -3044,9 +3016,8 @@ namespace ProSymbolEditor
 
                 await QueuedTask.Run(async () =>
                 {
-                    // "MilitaryOverlay-{standard}.lpkx"
-                    string layerFileName = "MilitaryOverlay-" + ProSymbolUtilities.StandardString.ToLower() + ".lpkx";
-                    LayerFactory.Instance.CreateLayer(new Uri(System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), "LayerFiles", layerFileName)), MapView.Active.Map);
+                    // Load layer file: "MilitaryOverlay-{standard}.lpkx"
+                    LayerFactory.Instance.CreateLayer(new Uri(ProSymbolUtilities.GetLayerFileFromCurrentStandard()), MapView.Active.Map);
                     enabled = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
 
                     if (enabled)
