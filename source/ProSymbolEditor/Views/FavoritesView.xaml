@@ -286,6 +286,7 @@
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
                                     Content="Add to Map"
+                                    IsEnabled="{Binding IsFavoriteItemSelected}"                                  
                                     IsChecked="{Binding AddToMapToolEnabled}"
                                     ToolTip="Add to Map"
                                     Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
@@ -299,6 +300,7 @@
                                     Margin="0,0,-10,10"                                    
                                     HorizontalAlignment="Right"
                                     Command="{Binding GoToTabCommand}"
+                                    IsEnabled="{Binding IsFavoriteItemSelected}"
                                     CommandParameter="2"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
                                     ToolTip="Go to Symbol Tab">

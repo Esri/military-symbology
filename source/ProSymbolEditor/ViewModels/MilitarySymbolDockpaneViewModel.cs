@@ -1910,6 +1910,12 @@ namespace ProSymbolEditor
                 var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
                 File.WriteAllText(_favoritesFilePath, favoritesJson);
             }
+
+            SelectedFavoriteSymbol = null;
+            IsStyleItemSelected = false;
+            if (AddToMapToolEnabled)
+                FrameworkApplication.SetCurrentToolAsync("esri_mapping_exploreTool");  // select another tool to disable add to map tool 
+
         }
 
         private async void CreateTemplateFromFavorite(object parameter)
