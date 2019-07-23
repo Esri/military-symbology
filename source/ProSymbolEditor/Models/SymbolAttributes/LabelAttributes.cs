@@ -35,6 +35,7 @@ namespace ProSymbolEditor
         private string _type;
         private string _commonidentifier;
         private short? _speed;
+        private short? _direction;
         private string _higherFormation;
         private string _reinforced;
         private DomainCodedValuePair _selectedReinforcedDomainPair;
@@ -42,6 +43,8 @@ namespace ProSymbolEditor
         private DomainCodedValuePair _selectedCredibilityDomainPair;
         private string _reliability;
         private DomainCodedValuePair _selectedReliabilityDomainPair;
+        private string _signatureEquipment;
+        private DomainCodedValuePair _selectedSignatureEquipmentDomainPair;
         private string _countryCode;
         private DomainCodedValuePair _selectedCountryCodeDomainPair;
         private string lengthError = "The label entered is at the maximum allowable length for this feature field";
@@ -117,6 +120,7 @@ namespace ProSymbolEditor
                 hashcode = (hashcode * PRIME) ^ (_type != null ? _type.GetHashCode() : 0);
                 hashcode = (hashcode * PRIME) ^ (_commonidentifier != null ? _commonidentifier.GetHashCode() : 0);
                 hashcode = (hashcode * PRIME) ^ (_speed != null ? _speed.GetHashCode() : 0);
+                hashcode = (hashcode * PRIME) ^ (_direction != null ? _direction.GetHashCode() : 0);
                 hashcode = (hashcode * PRIME) ^ (_higherFormation != null ? _higherFormation.GetHashCode() : 0);
                 hashcode = (hashcode * PRIME) ^ (_reinforced != null ? _reinforced.GetHashCode() : 0);
                 hashcode = (hashcode * PRIME) ^ (_credibility != null ? _credibility.GetHashCode() : 0);
@@ -259,6 +263,19 @@ namespace ProSymbolEditor
             }
         }
 
+        public short? Direction
+        {
+            get
+            {
+                return _direction;
+            }
+            set
+            {
+                _direction = value;
+                NotifyPropertyChanged(() => Direction);
+            }
+        }
+
         public string HigherFormation
         {
             get
@@ -382,6 +399,43 @@ namespace ProSymbolEditor
             }
         }
 
+        public string SignatureEquipment
+        {
+            get
+            {
+                return _signatureEquipment;
+            }
+            set
+            {
+                _signatureEquipment = value;
+                NotifyPropertyChanged(() => SignatureEquipment);
+            }
+        }
+
+        [ScriptIgnore, Browsable(false)]
+        public DomainCodedValuePair SelectedSignatureEquipmentDomainPair
+        {
+            get
+            {
+                return _selectedSignatureEquipmentDomainPair;
+            }
+            set
+            {
+                _selectedSignatureEquipmentDomainPair = value;
+                if (_selectedSignatureEquipmentDomainPair != null)
+                {
+                    SignatureEquipment = _selectedSignatureEquipmentDomainPair.Code.ToString();
+                }
+                else
+                {
+                    SignatureEquipment = "";
+                }
+                NotifyPropertyChanged(() => SelectedSignatureEquipmentDomainPair);
+            }
+        }
+
+        public string CountryLabel { get; set; }
+
         public string CountryCode
         {
             get
@@ -408,10 +462,12 @@ namespace ProSymbolEditor
                 if (_selectedCountryCodeDomainPair != null)
                 {
                     CountryCode = _selectedCountryCodeDomainPair.Code.ToString();
+                    CountryLabel = _selectedCountryCodeDomainPair.Name;
                 }
                 else
                 {
                     CountryCode = "";
+                    CountryLabel = "";
                 }
                 NotifyPropertyChanged(() => SelectedCountryCodeDomainPair);
             }

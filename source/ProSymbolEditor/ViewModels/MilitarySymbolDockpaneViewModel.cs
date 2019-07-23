@@ -332,6 +332,7 @@ namespace ProSymbolEditor
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReinforcedDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReliabilityDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CredibilityDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.SignatureEquipmentDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CountryCodeDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ExtendedFunctionCodeValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.EntityCodeValues, _lock);
@@ -1828,6 +1829,7 @@ namespace ProSymbolEditor
                 SymbolAttributeSet.LabelAttributes.Type = loadSet.LabelAttributes.Type;
                 SymbolAttributeSet.LabelAttributes.CommonIdentifier = loadSet.LabelAttributes.CommonIdentifier;
                 SymbolAttributeSet.LabelAttributes.Speed = loadSet.LabelAttributes.Speed;
+                SymbolAttributeSet.LabelAttributes.Direction = loadSet.LabelAttributes.Direction;
                 SymbolAttributeSet.LabelAttributes.UniqueDesignation = loadSet.LabelAttributes.UniqueDesignation;
                 SymbolAttributeSet.LabelAttributes.StaffComments = loadSet.LabelAttributes.StaffComments;
                 SymbolAttributeSet.LabelAttributes.AdditionalInformation = loadSet.LabelAttributes.AdditionalInformation;
@@ -2577,7 +2579,11 @@ namespace ProSymbolEditor
                         SymbolAttributeSet.LabelAttributes.SelectedReliabilityDomainPair = 
                             MilitaryFieldsInspectorModel.ReliabilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Reliability);
 
-                    if (loadSet.LabelAttributes.SelectedCountryCodeDomainPair != null)
+                    if (loadSet.LabelAttributes.SignatureEquipment != null)
+                        SymbolAttributeSet.LabelAttributes.SelectedSignatureEquipmentDomainPair =
+                            MilitaryFieldsInspectorModel.SignatureEquipmentDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.SignatureEquipment);
+
+                    if (loadSet.LabelAttributes.CountryCode != null)
                         SymbolAttributeSet.LabelAttributes.SelectedCountryCodeDomainPair = 
                             MilitaryFieldsInspectorModel.CountryCodeDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.CountryCode);
                 }

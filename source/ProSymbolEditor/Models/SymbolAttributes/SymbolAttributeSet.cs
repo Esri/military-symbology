@@ -597,6 +597,12 @@ namespace ProSymbolEditor
                 rowBuffer["speed"] = LabelAttributes.Speed;
             }
 
+            if (LabelAttributes.Direction != null)
+            {
+                //Short
+                rowBuffer["direction"] = LabelAttributes.Direction;
+            }
+
             if (!string.IsNullOrEmpty(LabelAttributes.HigherFormation))
             {
                 rowBuffer["higherFormation"] = LabelAttributes.HigherFormation;
@@ -620,11 +626,19 @@ namespace ProSymbolEditor
                 rowBuffer["reliability"] = LabelAttributes.Reliability;
             }
 
+            if (!string.IsNullOrEmpty(LabelAttributes.SignatureEquipment) &&
+                (LabelAttributes.SignatureEquipment != ProSymbolUtilities.NullFieldValueFlag))
+            {
+                rowBuffer["signatureequipment"] = LabelAttributes.SignatureEquipment;
+            }
+
             if (!string.IsNullOrEmpty(LabelAttributes.CountryCode) &&
                 (LabelAttributes.CountryCode != ProSymbolUtilities.NullFieldValueFlag))
             {
                 rowBuffer["countrycode"] = LabelAttributes.CountryCode;
+                rowBuffer["countrylabel"] = LabelAttributes.CountryLabel;
             }
+
         }
 
         public void PopulateFeatureWithAttributes(ref Feature feature)
@@ -816,6 +830,9 @@ namespace ProSymbolEditor
             if (feature.FindField("speed") >= 0)
                 feature["speed"] = LabelAttributes.Speed;
 
+            if (feature.FindField("direction") >= 0)
+                feature["direction"] = LabelAttributes.Direction;
+
             if (feature.FindField("higherFormation") >= 0)
                 feature["higherFormation"] = LabelAttributes.HigherFormation;
 
@@ -846,6 +863,15 @@ namespace ProSymbolEditor
                     feature["reliability"] = LabelAttributes.Reliability;
             }
 
+            if (!string.IsNullOrEmpty(LabelAttributes.SignatureEquipment) &&
+                (feature.FindField("signatureequipment") >= 0))
+            {
+                if (LabelAttributes.SignatureEquipment == ProSymbolUtilities.NullFieldValueFlag)
+                    feature["signatureequipment"] = null;
+                else
+                    feature["signatureequipment"] = LabelAttributes.SignatureEquipment;
+            }
+
             if (!string.IsNullOrEmpty(LabelAttributes.CountryCode) &&
                 (feature.FindField("countrycode") >= 0))
             {
@@ -854,6 +880,13 @@ namespace ProSymbolEditor
                 else
                     feature["countrycode"] = LabelAttributes.CountryCode;
             }
+
+            if (!string.IsNullOrEmpty(LabelAttributes.CountryLabel) &&
+                (feature.FindField("countrylabel") >= 0))
+            {
+                feature["countrylabel"] = LabelAttributes.CountryLabel;
+            }
+
         }
 
         private void SetPropertiesFromFieldAttributes(Dictionary<string, string> fieldValues)
@@ -988,6 +1021,11 @@ namespace ProSymbolEditor
                 LabelAttributes.Speed = short.Parse(fieldValues["speed"]);
             }
 
+            if (fieldValues.ContainsKey("direction"))
+            {
+                LabelAttributes.Direction = short.Parse(fieldValues["direction"]);
+            }
+
             if (fieldValues.ContainsKey("higherFormation"))
             {
                 LabelAttributes.HigherFormation = fieldValues["higherFormation"];
@@ -1006,6 +1044,11 @@ namespace ProSymbolEditor
             if (fieldValues.ContainsKey("reliability"))
             {
                 LabelAttributes.Reliability = fieldValues["reliability"];
+            }
+
+            if (fieldValues.ContainsKey("signatureequipment"))
+            {
+                LabelAttributes.SignatureEquipment = fieldValues["signatureequipment"];
             }
 
             if (fieldValues.ContainsKey("countrycode"))
@@ -1046,11 +1089,14 @@ namespace ProSymbolEditor
             LabelAttributes.Type = "";
             LabelAttributes.CommonIdentifier = "";
             LabelAttributes.Speed = null;
+            LabelAttributes.Direction = null;
             LabelAttributes.HigherFormation = "";
             LabelAttributes.Reinforced = "";
             LabelAttributes.Credibility = null;
             LabelAttributes.Reliability = "";
+            LabelAttributes.SignatureEquipment = "";
             LabelAttributes.CountryCode = "";
+            LabelAttributes.CountryLabel = "";
 
             SymbolTags = "";
 
