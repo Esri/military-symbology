@@ -220,6 +220,7 @@
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveSymbolFileCommand}"
                                     Content="Add Favorite"
+                                    IsEnabled="{Binding IsStyleItemSelected}"
                                     Style="{DynamicResource Esri_SimpleButton}" />
             <ToggleButton
                                     Name="searchAddToMapButton"
