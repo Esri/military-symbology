@@ -636,7 +636,9 @@ namespace ProSymbolEditor
                 (LabelAttributes.CountryCode != ProSymbolUtilities.NullFieldValueFlag))
             {
                 rowBuffer["countrycode"] = LabelAttributes.CountryCode;
-                rowBuffer["countrylabel"] = LabelAttributes.CountryLabel;
+
+                if (rowBuffer.FindField("countrylabel") >= 0) // does not exist in all versions of the database
+                    rowBuffer["countrylabel"] = LabelAttributes.CountryLabel;
             }
 
         }
