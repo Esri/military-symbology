@@ -1,281 +1,239 @@
 Name,Value
-Afghanistan,AFG
-Akrotiri,XQZ
-Albania,ALB
-Algeria,DZA
-American Samoa,ASM
-Andorra,AND
-Angola,AGO
-Anguilla,AIA
-Antarctica,ATA
-Antigua and Barbuda,ATG
-Argentina,ARG
-Armenia,ARM
-Aruba,ABW
-Ashmore and Cartier Islands,XAC
-Australia,AUS
-Austria,AUT
-Azerbaijan,AZE
-"Bahamas, The",BHS
-Bahrain,BHR
-Baker Island,XBK
-Bangladesh,BGD
-Barbados,BRB
-Bassas Da India,XBI
-Belarus,BLR
-Belgium,BEL
-Belize,BLZ
-Benin,BEN
-Bermuda,BMU
-Bhutan,BTN
-Bolivia,BOL
-"Bonaire, Sint Eustatius, and Saba",BES
-Bosnia and Herzegovina,BIH
-Botswana,BWA
-Bouvet Island,BVT
-Brazil,BRA
-British Indian Ocean Territory,IOT
-Brunei,BRN
-Bulgaria,BGR
-Burkina Faso,BFA
-Burma,MMR
-Burundi,BDI
-Cabo Verde,CPV
-Cambodia,KHM
-Cameroon,CMR
-Canada,CAN
-Cayman Islands,CYM
-Central African Republic,CAF
-Chad,TCD
-Chile,CHL
-China,CHN
-Christmas Island,CXR
-Clipperton Island,CPT
-Cocos (Keeling) Islands,CCK
-Colombia,COL
-Comoros,COM
-Congo (Brazzaville),COG
-Congo (Kinshasa),COD
-Cook Islands,COK
-Coral Sea Islands,XCS
-Costa Rica,CRI
-Côte d’Ivoire,CIV
-Croatia,HRV
-Cuba,CUB
-Curaçao,CUW
-Cyprus,CYP
-Czech Republic,CZE
-Denmark,DNK
-Dhekelia,XXD
-Diego Garcia,DGA
-Djibouti,DJI
-Dominica,DMA
-Dominican Republic,DOM
-Ecuador,ECU
-Egypt,EGY
-El Salvador,SLV
-Entity 1,XAZ
-Entity 2,XCR
-Entity 3,XCY
-Entity 4,XKM
-Entity 5,XKN
-Entity 6,AX3
-Equatorial Guinea,GNQ
-Eritrea,ERI
-Estonia,EST
-Ethiopia,ETH
-Europa Island,XEU
-Falkland Islands (Islas Malvinas),FLK
-Faroe Islands,FRO
-Fiji,FJI
-Finland,FIN
-France,FRA
-French Guiana,GUF
-French Polynesia,PYF
-French Southern and Antarctic Lands,ATF
-Gabon,GAB
-"Gambia, The",GMB
-Gaza Strip,XGZ
-Georgia,GEO
-Germany,DEU
-Ghana,GHA
-Gibraltar,GIB
-Glorioso Islands,XGL
-Greece,GRC
-Greenland,GRL
-Grenada,GRD
-Guadeloupe,GLP
-Guam,GUM
-Guantanamo Bay Naval Base,AX2
-Guatemala,GTM
-Guernsey,GGY
-Guinea,GIN
-Guinea-Bissau,GNB
-Guyana,GUY
-Haiti,HTI
-Heard Island and Mcdonald Islands,HMD
-Honduras,HND
-Hong Kong,HKG
-Howland Island,XHO
-Hungary,HUN
-Iceland,ISL
-India,IND
-Indonesia,IDN
-Iran,IRN
-Iraq,IRQ
-Ireland,IRL
-Isle Of Man,IMN
-Israel,ISR
-Italy,ITA
-Jamaica,JAM
-Jan Mayen,XJM
-Japan,JPN
-Jarvis Island,XJV
-Jersey,JEY
-Johnston Atoll,XJA
-Jordan,JOR
-Juan De Nova Island,XJN
-Kazakhstan,KAZ
-Kenya,KEN
-Kingman Reef,XKR
-Kiribati,KIR
-"Korea, North",PRK
-"Korea, South",KOR
-Kosovo,XKS
-Kuwait,KWT
-Kyrgyzstan,KGZ
-Laos,LAO
-Latvia,LVA
-Lebanon,LBN
-Lesotho,LSO
-Liberia,LBR
-Libya,LBY
-Liechtenstein,LIE
-Lithuania,LTU
-Luxembourg,LUX
-Macau,MAC
-Macedonia,MKD
-Madagascar,MDG
-Malawi,MWI
-Malaysia,MYS
-Maldives,MDV
-Mali,MLI
-Malta,MLT
-Marshall Islands,MHL
-Martinique,MTQ
-Mauritania,MRT
-Mauritius,MUS
-Mayotte,MYT
-Mexico,MEX
-"Micronesia, Federated States Of",FSM
-Midway Islands,XMW
-Moldova,MDA
-Monaco,MCO
-Mongolia,MNG
-Montenegro,MNE
-Montserrat,MSR
-Morocco,MAR
-Mozambique,MOZ
-Namibia,NAM
-Nauru,NRU
-Navassa Island,XNV
-Nepal,NPL
-Netherlands,NLD
-New Caledonia,NCL
-New Zealand,NZL
-Nicaragua,NIC
-Niger,NER
-Nigeria,NGA
-Niue,NIU
-Norfolk Island,NFK
-Northern Mariana Islands,MNP
-Norway,NOR
-Oman,OMN
-Pakistan,PAK
-Palau,PLW
-Palmyra Atoll,XPL
-Panama,PAN
-Papua New Guinea,PNG
-Paracel Islands,XPR
-Paraguay,PRY
-Peru,PER
-Philippines,PHL
-Pitcairn Islands,PCN
-Poland,POL
-Portugal,PRT
-Puerto Rico,PRI
-Qatar,QAT
-Reunion,REU
-Romania,ROU
-Russia,RUS
-Rwanda,RWA
-Saint Barthelemy,BLM
-"Saint Helena, Ascension, and Tristan Da Cunha",SHN
-Saint Kitts and Nevis,KNA
-Saint Lucia,LCA
-Saint Martin,MAF
-Saint Pierre and Miquelon,SPM
-Saint Vincent and The Grenadines,VCT
-Samoa,WSM
-San Marino,SMR
-Sao Tome and Principe,STP
-Saudi Arabia,SAU
-Senegal,SEN
-Serbia,SRB
-Seychelles,SYC
-Sierra Leone,SLE
-Singapore,SGP
-Sint Maarten,SXM
-Slovakia,SVK
-Slovenia,SVN
-Solomon Islands,SLB
-Somalia,SOM
-South Africa,ZAF
-South Georgia and South Sandwich Islands,SGS
-South Sudan,SSD
-Spain,ESP
-Spratly Islands,XSP
-Sri Lanka,LKA
-Sudan,SDN
-Suriname,SUR
-Svalbard,XSV
-Swaziland,SWZ
-Sweden,SWE
-Switzerland,CHE
-Syria,SYR
-Taiwan,TWN
-Tajikistan,TJK
-Tanzania,TZA
-Thailand,THA
-Timor-Leste,TLS
-Togo,TGO
-Tokelau,TKL
-Tonga,TON
-Trinidad and Tobago,TTO
-Tromelin Island,XTR
-Tunisia,TUN
-Turkey,TUR
-Turkmenistan,TKM
-Turks and Caicos Islands,TCA
-Tuvalu,TUV
-Uganda,UGA
-Ukraine,UKR
-United Arab Emirates,ARE
-United Kingdom,GBR
-United States,USA
-Unknown,AX1
-Uruguay,URY
-Uzbekistan,UZB
-Vanuatu,VUT
-Vatican City,VAT
-Venezuela,VEN
-Vietnam,VNM
-"Virgin Islands, British",VGB
-"Virgin Islands, U.S.",VIR
-Wake Island,XWK
-Wallis and Futuna,WLF
-West Bank,XWB
-Western Sahara,ESH
-Yemen,YEM
-Zambia,ZMB
-Zimbabwe,ZWE
+United States,US
+Andorra,AD
+United Arab Emirates,AE
+Afghanistan,AF
+Antigua and Barbuda,AG
+Anguilla,AI
+Albania,AL
+Armenia,AM
+Angola,AO
+Antarctica,AQ
+Argentina,AR
+American Samoa,AS
+Austria,AT
+Australia,AU
+Aruba,AW
+Azerbaijan,AZ
+Bosnia and Herzegovina,BA
+Barbados,BB
+Bangladesh,BD
+Belgium,BE
+Burkina Faso,BF
+Bulgaria,BG
+Bahrain,BH
+Burundi,BI
+Benin,BJ
+Bermuda,BM
+Brunei Darussalam,BN
+"Bolivia, Plurinational State of",BO
+Brazil,BR
+Bahamas,BS
+Bhutan,BT
+Bouvet Island,BV
+Botswana,BW
+Belarus,BY
+Belize,BZ
+Canada,CA
+Cocos (Keeling) Islands,CC
+"Congo, the Democratic Republic of the",CD
+Central African Republic,CF
+Congo,CG
+Switzerland,CH
+Cote d'Ivoire,CI
+Cook Islands,CK
+Chile,CL
+Cameroon,CM
+China,CN
+Colombia,CO
+Costa Rica,CR
+Cuba,CU
+Cabo Verde,CV
+Christmas Island,CX
+Cyprus,CY
+Czech Republic,CZ
+Germany,DE
+Djibouti,DJ
+Denmark,DK
+Dominica,DM
+Dominican Republic,DO
+Algeria,DZ
+Ecuador,EC
+Estonia,EE
+Egypt,EG
+Western Sahara,EH
+Eritrea,ER
+Spain,ES
+Ethiopia,ET
+Finland,FI
+Fiji,FJ
+Falkland Islands,FK
+"Micronesia, Federated States of",FM
+Faroe Islands,FO
+France,FR
+Gabon,GA
+United Kingdom,GB
+Grenada,GD
+Georgia,GE
+French Guiana,GF
+Ghana,GH
+Gibraltar,GI
+Greenland,GL
+Gambia,GM
+Guinea,GN
+Guadeloupe,GP
+Equatorial Guinea,GQ
+Greece,GR
+South Georgia and the South Sandwich Islands,GS
+Guatemala,GT
+Guam,GU
+Guinea-Bissau,GW
+Guyana,GY
+Hong Kong,HK
+Heard Island and McDonald Islands,HM
+Honduras,HN
+Croatia,HR
+Haiti,HT
+Hungary,HU
+Indonesia,ID
+Ireland,IE
+Israel,IL
+India,IN
+British Indian Ocean Territory,IO
+Iraq,IQ
+"Iran, Islamic Republic of",IR
+Iceland,IS
+Italy,IT
+Jamaica,JM
+Jordan,JO
+Japan,JP
+Kenya,KE
+Kyrgyzstan,KG
+Cambodia,KH
+Kiribati,KI
+Comoros,KM
+"Korea, North (the Democratic People's Republic of)",KP
+"Korea, South (the Republic of)",KR
+Kuwait,KW
+Cayman Islands,KY
+Kazakhstan,KZ
+Lao People's Democratic Republic,LA
+Lebanon,LB
+Saint Lucia,LC
+Liechtenstein,LI
+Sri Lanka,LK
+Liberia,LR
+Lesotho,LS
+Lithuania,LT
+Luxembourg,LU
+Latvia,LV
+Libya,LY
+Morocco,MA
+Monaco,MC
+"Moldova, Republic of",MD
+Montenegro,ME
+Madagascar,MG
+Marshall Islands,MH
+"Macedonia, the former Yugoslav Republic of",MK
+Mali,ML
+Myanmar,MM
+Mongolia,MN
+Macao,MO
+Northern Mariana Islands,MP
+Martinique,MQ
+Mauritania,MR
+Montserrat,MS
+Malta,MT
+Mauritius,MU
+Maldives,MV
+Malawi,MW
+Mexico,MX
+Malaysia,MY
+Mozambique,MZ
+Namibia,NA
+New Caledonia,NC
+Niger,NE
+Norfolk Island,NF
+Nigeria,NG
+Nicaragua,NI
+Netherlands,NL
+Norway,NO
+Nepal,NP
+Nauru,NR
+Niue,NU
+New Zealand,NZ
+Oman,OM
+Panama,PA
+Peru,PE
+French Polynesia,PF
+Papua New Guinea,PG
+Philippines,PH
+Pakistan,PK
+Poland,PL
+Saint Pierre and Miquelon,PM
+Pitcairn,PN
+Puerto Rico,PR
+"Palestine, State of",PS
+Portugal,PT
+Palau,PW
+Paraguay,PY
+Qatar,QA
+Reunion,RE
+Romania,RO
+Serbia,RS
+Russian Federation,RU
+Rwanda,RW
+Saudi Arabia,SA
+Solomon Islands,SB
+Seychelles,SC
+Sudan,SD
+Sweden,SE
+Singapore,SG
+"Saint Helena, Ascension and Tristan da Cunha",SH
+Slovenia,SI
+Svalbard and Jan Mayen,SJ
+Slovakia,SK
+Sierra Leone,SL
+San Marino,SM
+Senegal,SN
+Somalia,SO
+Suriname,SR
+South Sudan,SS
+Sao Tome and Principe,ST
+El Salvador,SV
+Syrian Arab Republic,SY
+Swaziland,SZ
+Turks and Caicos Islands,TC
+Chad,TD
+French Southern Territories,TF
+Togo,TG
+Thailand,TH
+Tajikistan,TJ
+Tokelau,TK
+Timor-Leste,TL
+Turkmenistan,TM
+Tunisia,TN
+Tonga,TO
+Turkey,TR
+Trinidad and Tobago,TT
+Tuvalu,TV
+"Taiwan, Province of China",TW
+"Tanzania, United Republic of ",TZ
+Ukraine,UA
+Uganda,UG
+United States Minor Outlying Islands,UM
+Uruguay,UY
+Uzbekistan,UZ
+Holy See (Vatican City State),VA
+Saint Vincent and the Grenadines,VC
+"Venezuela, Bolivarian Republic of",VE
+"Virgin Islands, British",VG
+"Virgin Islands, U.S.",VI
+Viet Nam,VN
+Vanuatu,VU
+Wallis and Futuna,WF
+Samoa,WS
+Yemen,YE
+South Africa,ZA
+Zambia,ZM
+Zimbabwe,ZW

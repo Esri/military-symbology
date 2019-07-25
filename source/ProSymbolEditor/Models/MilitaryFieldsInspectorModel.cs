@@ -32,6 +32,7 @@ namespace ProSymbolEditor
         private Visibility _typeFieldExists = Visibility.Collapsed;
         private Visibility _commonIdentifierFieldExists = Visibility.Collapsed;
         private Visibility _speedFieldExists = Visibility.Collapsed; //short
+        private Visibility _directionFieldExists = Visibility.Collapsed; //short
         private Visibility _staffCommentsFieldExists = Visibility.Collapsed;
         private Visibility _additionalInformationFieldExists = Visibility.Collapsed;
         private Visibility _higherFormationFieldExists = Visibility.Collapsed;
@@ -39,9 +40,11 @@ namespace ProSymbolEditor
         #region Mutators
 
         //Domains for combo boxes for text labels
+
         public ObservableCollection<DomainCodedValuePair> ReinforcedDomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> CredibilityDomainValues { get; set; }
         public ObservableCollection<DomainCodedValuePair> ReliabilityDomainValues { get; set; }
+        public ObservableCollection<DomainCodedValuePair> SignatureEquipmentDomainValues { get; set; }
 
         //Domains for attribute combo boxes
 
@@ -136,6 +139,19 @@ namespace ProSymbolEditor
             }
         }
 
+        public Visibility DirectionFieldExists
+        {
+            get
+            {
+                return _directionFieldExists;
+            }
+            set
+            {
+                _directionFieldExists = value;
+                NotifyPropertyChanged(() => DirectionFieldExists);
+            }
+        }
+
         public Visibility StaffCommentsFieldExists
         {
             get
@@ -182,6 +198,8 @@ namespace ProSymbolEditor
             ReinforcedDomainValues = new ObservableCollection<DomainCodedValuePair>();
             CredibilityDomainValues = new ObservableCollection<DomainCodedValuePair>();
             ReliabilityDomainValues = new ObservableCollection<DomainCodedValuePair>();
+            SignatureEquipmentDomainValues = new ObservableCollection<DomainCodedValuePair>();
+
             ExtendedFunctionCodeValues = new ObservableCollection<DomainCodedValuePair>();
             IdentityDomainValues = new ObservableCollection<DomainCodedValuePair>();
             EchelonDomainValues = new ObservableCollection<DomainCodedValuePair>();
@@ -234,6 +252,12 @@ namespace ProSymbolEditor
                 SpeedFieldExists = Visibility.Visible;
             }
 
+            DirectionFieldExists = Visibility.Collapsed;
+            if (fields.FirstOrDefault(field => field.Name == "direction") != null)
+            {
+                DirectionFieldExists = Visibility.Visible;
+            }
+
             StaffCommentsFieldExists = Visibility.Collapsed;
             if (fields.FirstOrDefault(field => field.Name == "staffcomment") != null)
             {
@@ -259,6 +283,7 @@ namespace ProSymbolEditor
             GetDomainAndPopulateList(fields, "reinforced", ReinforcedDomainValues);
             GetDomainAndPopulateList(fields, "credibility", CredibilityDomainValues);
             GetDomainAndPopulateList(fields, "reliability", ReliabilityDomainValues);
+            GetDomainAndPopulateList(fields, "signatureequipment", SignatureEquipmentDomainValues);
 
             //Get domains for attributes
 
@@ -319,8 +344,29 @@ namespace ProSymbolEditor
                     // Minor hack to make USA appear first in the list
                     if (fieldName == "countrycode")
                     {
-                        DomainCodedValuePair domainObjectPair = new DomainCodedValuePair("USA", "United States");
-                        memberCodedValueDomains.Insert(0, domainObjectPair);
+                        // TRICKY: Domains have 3 different formats, old format: "USA" and new format: "US" "840"
+                        // Check the format of the domains to see which format we should use
+                        DomainCodedValuePair testDomainPair = memberCodedValueDomains[0];
+                        object code = testDomainPair.Code;
+
+                        DomainCodedValuePair usaDomainObjectPair = null; 
+
+                        if (code is int)
+                        {
+                            // New Format
+                            usaDomainObjectPair = new DomainCodedValuePair(840, "United States"); // new format, 2525D/APP6D
+                        }
+                        else if (code is string)
+                        {
+                            string testString = code as string;
+                            if (testString.Length == 2)
+                                usaDomainObjectPair = new DomainCodedValuePair("US", "United States"); // new format, 2525B/C/APP6B
+                            else
+                                usaDomainObjectPair = new DomainCodedValuePair("USA", "United States"); // old format
+                        }
+
+                        if (usaDomainObjectPair != null)
+                            memberCodedValueDomains.Insert(0, usaDomainObjectPair);
                     }
 
                     // Add a "<null>" value to the domain list - so this field can be cleared with this flag

@@ -55,6 +55,12 @@ namespace ProSymbolEditor.Controls
                 numberUpDownControl.NumberUpDownControlTextBox.Text = String.Empty;
                 numberUpDownControl._ignoreTextUpdate = false;
             }
+            else
+            {
+                numberUpDownControl._ignoreTextUpdate = true;
+                numberUpDownControl.NumberUpDownControlTextBox.Text = e.NewValue.ToString();
+                numberUpDownControl._ignoreTextUpdate = false;
+            }
         }
 
         public short? CurrentValue
