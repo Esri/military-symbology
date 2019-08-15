@@ -392,12 +392,18 @@
                                             ItemsSource="{Binding SymbolAttributeSet.AttributesDictionary}" 
                                             Style="{DynamicResource Esri_DataGridStyle}"
                                             HeadersVisibility="Column" 
-                                            RowHeaderWidth="0" >
+                                            RowHeaderWidth="0" 
+                                            SelectionUnit="FullRow" ClipboardCopyMode="ExcludeHeader" >
                         <DataGrid.ToolTip>
                             <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
                                 <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
                             </ToolTip>
                         </DataGrid.ToolTip>
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="Copy"/>
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>                        
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
                             <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
