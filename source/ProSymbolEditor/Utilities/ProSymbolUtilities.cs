@@ -646,5 +646,19 @@ namespace ProSymbolEditor
             return searchString;
         }
 
+        public static string ZeroPadLeft(string original, int requiredLength)
+        {
+            if (string.IsNullOrEmpty(original))
+                return string.Empty.PadLeft(requiredLength, '0');
+
+            string zeroPaddedString;
+            if (original.Length < requiredLength)
+                zeroPaddedString = original.PadLeft(requiredLength, '0');
+            else
+                zeroPaddedString = original;
+
+            return zeroPaddedString;
+        }
+
     }
 }

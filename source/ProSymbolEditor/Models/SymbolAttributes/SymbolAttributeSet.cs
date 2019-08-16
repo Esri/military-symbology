@@ -305,7 +305,7 @@ namespace ProSymbolEditor
                 // WORKAROUND: Pro 2.3 broke exporting METOC by attribute "extendedfunctioncode"
                 // so have to set "sidc" attribute instead
                 if (ProSymbolUtilities.IsNewStyleFormat && attributeSet.ContainsKey("extendedfunctioncode"))
-                    attributeSet.Add("sidc", DisplayAttributes.LegacySymbolIdCode);
+                    attributeSet.Add("sidc", DisplayAttributes.SymbolIdCode);
 
                 // METOC do not have identity/affiliation so have 1 less attribute
                 minimumAttributeCount--;
