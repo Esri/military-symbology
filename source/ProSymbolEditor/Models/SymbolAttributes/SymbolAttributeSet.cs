@@ -85,7 +85,6 @@ namespace ProSymbolEditor
         {
             get
             {
-
                 Dictionary<string, string> dict = new Dictionary<string, string>();
 
                 dict.Add("SymbolType", this.Name);
@@ -93,6 +92,11 @@ namespace ProSymbolEditor
                 foreach (var prop in DisplayAttributes.GetType().GetProperties())
                 {
                     string key = prop.Name;
+
+                    // WORKAROUND: Skip this property
+                    if (key == "CountryCodeForSIDC")
+                        continue;
+
                     object value = prop.GetValue(DisplayAttributes, null);
                     if (value == null)
                         continue;
@@ -1127,6 +1131,10 @@ namespace ProSymbolEditor
             // Tell the proprties datagrids to get the updated info
             NotifyPropertyChanged(() => Name);
             NotifyPropertyChanged(() => AttributesDictionary);
+
+            // WORKAROUND: 2525B/C includes Country Code in SIDC so need this here
+            if (!String.IsNullOrEmpty(LabelAttributes.CountryCode))
+                DisplayAttributes.CountryCodeForSIDC = LabelAttributes.CountryCode;
         }
     }
 }

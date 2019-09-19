@@ -142,6 +142,9 @@ namespace ProSymbolEditor
             }
         }
 
+        // WORKAROUND: 2525B/C includes Country Code in SIDC so need this here
+        public string CountryCodeForSIDC { get; set; }
+
         public string ExtendedFunctionCode
         {
             get
@@ -620,7 +623,13 @@ namespace ProSymbolEditor
                         else
                             sb.Append(Echelon);
 
-                        sb.Append("---");
+                        if (String.IsNullOrEmpty(CountryCodeForSIDC) ||
+                            CountryCodeForSIDC.Length != 2)
+                            sb.Append("--");
+                        else
+                            sb.Append(CountryCodeForSIDC);
+
+                        sb.Append("-");
                     }
                 }
             }
