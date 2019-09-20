@@ -64,8 +64,8 @@ namespace ProSymbolEditor
             {
                 case SupportedStandardsType.app6b: standardLabel = "APP-6(B)"; break;
                 case SupportedStandardsType.app6d: standardLabel = "APP-6(D)"; break;
-                case SupportedStandardsType.mil2525c : standardLabel = "MIL-STD-2525C"; break;
-                case SupportedStandardsType.mil2525b : standardLabel = "MIL-STD-2525B w/ Change 2"; break;
+                case SupportedStandardsType.mil2525c: standardLabel = "MIL-STD-2525C"; break;
+                case SupportedStandardsType.mil2525b: standardLabel = "MIL-STD-2525B w/ Change 2"; break;
                 default: break;
             }
 
@@ -109,16 +109,16 @@ namespace ProSymbolEditor
                 return SupportedStandardsType.mil2525d;
             else
                 if (standardString == GetStandardLabel(SupportedStandardsType.app6d))
-                    return SupportedStandardsType.app6d;
+                return SupportedStandardsType.app6d;
             else
                 if (standardString == GetStandardLabel(SupportedStandardsType.mil2525c))
-                   return SupportedStandardsType.mil2525c;
+                return SupportedStandardsType.mil2525c;
             else
                 if (standardString == GetStandardLabel(SupportedStandardsType.mil2525b))
-                    return SupportedStandardsType.mil2525b;
+                return SupportedStandardsType.mil2525b;
             else
                 if (standardString == GetStandardLabel(SupportedStandardsType.app6b))
-                    return SupportedStandardsType.app6b;
+                return SupportedStandardsType.app6b;
             else
             {
                 System.Diagnostics.Trace.WriteLine("Warning - GetStandardFromLabel unrecognized standard string: " + standardString);
@@ -194,10 +194,10 @@ namespace ProSymbolEditor
             string layerFileStandard = "2525BChange2"; // this name format is slightly different
             if (ProSymbolUtilities.Standard != SupportedStandardsType.mil2525b)
                 layerFileStandard = ProSymbolUtilities.StandardString;
-            
-            string layerFileName = "MilitaryOverlay-" + layerFileStandard + ".lpkx"; 
 
-            string layerFilePath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(), 
+            string layerFileName = "MilitaryOverlay-" + layerFileStandard + ".lpkx";
+
+            string layerFilePath = System.IO.Path.Combine(ProSymbolUtilities.AddinAssemblyLocation(),
                 "LayerFiles", layerFileName);
 
             return layerFilePath;
@@ -277,7 +277,7 @@ namespace ProSymbolEditor
 
         public static string NullFieldValueFlag
         {
-            get { return "<null>";  }
+            get { return "<null>"; }
         }
 
         public static CoordinateType GetCoordinateType(string input, out MapPoint point)
@@ -452,7 +452,7 @@ namespace ProSymbolEditor
         public static void SaveProject()
         {
             // Note: Must be called on Main/UI Thread
-            ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(async() =>
+            ArcGIS.Desktop.Framework.FrameworkApplication.Current.Dispatcher.Invoke(async () =>
             {
                 bool success = await ArcGIS.Desktop.Core.Project.Current.SaveAsync();
             });
@@ -562,7 +562,7 @@ namespace ProSymbolEditor
             foreach (KeyValuePair<string, string> pair in fieldMapDictionary)
             {
                 stringMap[count] = new ArcGIS.Core.CIM.CIMStringMap();
-                stringMap[count].Key   = pair.Key;
+                stringMap[count].Key = pair.Key;
                 stringMap[count].Value = pair.Value;
                 count++;
             }
@@ -601,6 +601,64 @@ namespace ProSymbolEditor
 
             return itemPath;
         }
-       
+
+        public static bool IsSIDC(string checkString)
+        {
+            if (string.IsNullOrEmpty(checkString))
+                return false;
+
+            bool isSIDC = false;
+            bool isLegacy = IsLegacyStandard();
+
+            if (isLegacy && checkString.Length == 15)
+            {
+                string checkStringUpper = checkString.ToUpper();
+                const string validSIDCExpression = @"^[SGWIOE][PUAFNSHGWMDLJKO\-][PAGSUFXTMOEVLIRNZ\-][APCDXF\-][A-Z0-9\-\*]{6}[A-Z\-\*]{2}[A-Z\-\*]{2}[AECGNSX\-\*]$";
+                if (System.Text.RegularExpressions.Regex.IsMatch(checkStringUpper, validSIDCExpression))
+                    isSIDC = true;
+            }
+            else if (checkString.Length == 20)
+            {
+                // is it a 20 digit number? Then assume 2525D or later SIDC
+                UInt64 result;
+                if (UInt64.TryParse(checkString, out result))
+                    isSIDC = true;
+            }
+
+            return isSIDC;
+        }
+
+        public static string GetSearchStringFromSIDC(string sidc)
+        {
+            string searchString = string.Empty;
+
+            // validate length
+            if (!IsSIDC(sidc))
+                return searchString;
+
+            string sidcUpper = sidc.ToUpper();
+
+            if (IsLegacyStandard())
+                searchString = sidcUpper.Substring(4, 6); // Function Code
+            else
+                searchString = sidcUpper.Substring(4, 2) + sidcUpper.Substring(10, 6); // Symbol Set + Entity 
+
+            return searchString;
+        }
+
+        public static string ZeroPadLeft(string original, int requiredLength)
+        {
+            if (string.IsNullOrEmpty(original))
+                return string.Empty.PadLeft(requiredLength, '0');
+
+            string zeroPaddedString;
+            if (original.Length < requiredLength)
+                zeroPaddedString = original.PadLeft(requiredLength, '0');
+            else
+                zeroPaddedString = original;
+
+            return zeroPaddedString;
+        }
+
     }
 }

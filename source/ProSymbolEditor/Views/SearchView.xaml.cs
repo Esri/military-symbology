@@ -38,7 +38,23 @@ namespace ProSymbolEditor.Views
             searchTabImage.RenderTransform = flipTransform;
             // END WORKAROUND
             ///////////////////////////////////////////////////////
-
         }
+
+        void CopyTagsButton(Object sender, RoutedEventArgs args)
+        {
+            // Copy the tags to the clipboard
+            if ((tStack.Items == null) && (tStack.Items.Count == 0))
+                return;
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var item in tStack.Items)
+            {
+                sb.AppendLine(item.ToString());
+            }
+
+            Clipboard.SetText(sb.ToString());
+        }
+                
     }
 }

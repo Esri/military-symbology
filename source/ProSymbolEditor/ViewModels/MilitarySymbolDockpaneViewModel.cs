@@ -463,8 +463,9 @@ namespace ProSymbolEditor
 
                 NotifyPropertyChanged(() => SearchString);
 
-                if (_searchString.Length > 0)
+                if (!string.IsNullOrEmpty(_searchString))
                 {
+                    _searchString = _searchString.Trim();
                     SearchStylesAsync(null);
                 }
                 else
@@ -1424,6 +1425,15 @@ namespace ProSymbolEditor
 
             _progressDialogSearch.Show();
             await SearchSymbols();
+
+            if ((_styleItems.Count == 0) && ProSymbolUtilities.IsSIDC(_searchString))
+            {
+                // If nothing found, but search text matches SIDC format, then do the search again  
+                // with the search string set to the subset of the SIDC that each style item contains
+                _searchString = ProSymbolUtilities.GetSearchStringFromSIDC(_searchString);
+                await SearchSymbols();
+            }
+
 
             StatusMessage = "Search Complete";
 
