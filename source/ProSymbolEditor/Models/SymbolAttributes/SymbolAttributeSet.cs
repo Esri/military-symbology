@@ -1085,6 +1085,7 @@ namespace ProSymbolEditor
             DisplayAttributes.Context = "";
             DisplayAttributes.Modifier1 = "";
             DisplayAttributes.Modifier2 = "";
+            DisplayAttributes.CountryCodeForSIDC = "";
 
             //Reset label text attributes
             LabelAttributes.DateTimeValid = null;
@@ -1133,7 +1134,7 @@ namespace ProSymbolEditor
             NotifyPropertyChanged(() => AttributesDictionary);
 
             // WORKAROUND: 2525B/C includes Country Code in SIDC so need this here
-            if (!String.IsNullOrEmpty(LabelAttributes.CountryCode))
+            if (e.PropertyName == "CountryCode")
                 DisplayAttributes.CountryCodeForSIDC = LabelAttributes.CountryCode;
         }
     }
