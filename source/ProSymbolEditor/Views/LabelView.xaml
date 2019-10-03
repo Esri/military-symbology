@@ -35,20 +35,23 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" /> <!-- 1 -->
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" /> <!-- 5 -->
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" /> <!-- 10 -->
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" /> <!-- 15 -->
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />                        
                     </Grid.RowDefinitions>
 
                     <Label
@@ -127,15 +130,32 @@
                         BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
                         Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"
                         CurrentValue="{Binding SymbolAttributeSet.LabelAttributes.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        
+
                     <Label
                                             Grid.Row="6"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Direction"
+                                            Visibility="{Binding MilitaryFieldsInspectorModel.DirectionFieldExists}" />
+                    <mtcontrols:NumberUpDownControl 
+                        x:Name="directionUpDown"
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        Margin="3,3,3,3"
+                        Foreground="{DynamicResource Esri_TextControlBrush}" 
+                        Background="{DynamicResource Esri_ControlBackgroundBrush}" 
+                        BorderBrush="{DynamicResource Esri_BorderBrush}"                                            
+                        Visibility="{Binding MilitaryFieldsInspectorModel.DirectionFieldExists}"
+                        CurrentValue="{Binding SymbolAttributeSet.LabelAttributes.Direction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <Label
+                                            Grid.Row="7"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
                                             Content="Unique Designation"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.UniqueDesignationFieldExists}" />
                     <TextBox
-                                            Grid.Row="6"
+                                            Grid.Row="7"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
                                             Text="{Binding SymbolAttributeSet.LabelAttributes.UniqueDesignation, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
@@ -143,14 +163,14 @@
                                             MaxLength="{Binding SymbolAttributeSet.LabelAttributes.MaxLen30, Mode=OneWay}" />
 
                     <Label
-                                            Grid.Row="7"
+                                            Grid.Row="8"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
                                             Content="Reinforced"
                                             Visibility="{Binding ElementName=reinforcedComboBox, Path=Visibility}" />
                     <ComboBox
                                             Name="reinforcedComboBox"
-                                            Grid.Row="7"
+                                            Grid.Row="8"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
                                             DisplayMemberPath="Name"
@@ -170,13 +190,13 @@
                     </ComboBox>
 
                     <Label
-                                            Grid.Row="8"
+                                            Grid.Row="9"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
                                             Content="Staff Comments"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.StaffCommentsFieldExists}" />
                     <TextBox
-                                            Grid.Row="8"
+                                            Grid.Row="9"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
                                             Text="{Binding SymbolAttributeSet.LabelAttributes.StaffComments, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
@@ -184,13 +204,13 @@
                                             MaxLength="{Binding SymbolAttributeSet.LabelAttributes.MaxLen20, Mode=OneWay}"/>
 
                     <Label
-                                            Grid.Row="9"
+                                            Grid.Row="10"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
                                             Content="Additional Information"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.AdditionalInformationFieldExists}" />
                     <TextBox
-                                            Grid.Row="9"
+                                            Grid.Row="10"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
                                             Text="{Binding SymbolAttributeSet.LabelAttributes.AdditionalInformation, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
@@ -198,13 +218,13 @@
                                             MaxLength="{Binding SymbolAttributeSet.LabelAttributes.MaxLen20, Mode=OneWay}"/>
 
                     <Label
-                                            Grid.Row="10"
+                                            Grid.Row="11"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
                                             Content="Higher Formation"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.HigherFormationFieldExists}" />
                     <TextBox
-                                            Grid.Row="10"
+                                            Grid.Row="11"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
                                             Text="{Binding SymbolAttributeSet.LabelAttributes.HigherFormation, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
@@ -212,14 +232,14 @@
                                             MaxLength="{Binding SymbolAttributeSet.LabelAttributes.MaxLen21, Mode=OneWay}"/>
 
                     <Label
-                                            Grid.Row="11"
+                                            Grid.Row="12"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
                                             Content="Credibility"
                                             Visibility="{Binding ElementName=credibilityComboBox, Path=Visibility}" />
                     <ComboBox
                                             Name="credibilityComboBox"
-                                            Grid.Row="11"
+                                            Grid.Row="12"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
                                             DisplayMemberPath="Name"
@@ -239,14 +259,14 @@
                     </ComboBox>
 
                     <Label
-                                            Grid.Row="12"
+                                            Grid.Row="13"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
                                             Content="Reliability"
                                             Visibility="{Binding ElementName=reliabilityComboBox, Path=Visibility}" />
                     <ComboBox
                                             Name="reliabilityComboBox"
-                                            Grid.Row="12"
+                                            Grid.Row="13"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
                                             DisplayMemberPath="Name"
@@ -266,14 +286,41 @@
                     </ComboBox>
 
                     <Label
-                                            Grid.Row="13"
+                                            Grid.Row="14"
+                                            Grid.Column="0"
+                                            Margin="3,3,3,3"
+                                            Content="Signature Equipment(ENY)"
+                                            Visibility="{Binding ElementName=signatureEquipmentComboBox, Path=Visibility}" />
+                    <ComboBox
+                                            Name="signatureEquipmentComboBox"
+                                            Grid.Row="14"
+                                            Grid.Column="1"
+                                            Margin="3,3,3,3"
+                                            DisplayMemberPath="Name"
+                                            ItemContainerStyle="{DynamicResource Esri_HighlightListBoxItem}"
+                                            ItemsSource="{Binding MilitaryFieldsInspectorModel.SignatureEquipmentDomainValues}"
+                                            SelectedItem="{Binding SymbolAttributeSet.LabelAttributes.SelectedSignatureEquipmentDomainPair, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedValuePath="Code">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>                    
+                    
+                    <Label
+                                            Grid.Row="15"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
                                             Content="Country Code"
                                             Visibility="{Binding ElementName=countryComboBox, Path=Visibility}" />
                     <ComboBox
                                             Name="countryComboBox"
-                                            Grid.Row="13"
+                                            Grid.Row="15"
                                             Grid.Column="1"
                                             Margin="3,3,3,3"
                                             DisplayMemberPath="Name"
@@ -322,12 +369,18 @@
                                             ItemsSource="{Binding SymbolAttributeSet.AttributesDictionary}" 
                                             Style="{DynamicResource Esri_DataGridStyle}" 
                                             HeadersVisibility="Column" 
-                                            RowHeaderWidth="0" >
+                                            RowHeaderWidth="0" 
+                                            SelectionUnit="FullRow" ClipboardCopyMode="ExcludeHeader" >
                         <DataGrid.ToolTip>
                             <ToolTip Background="{DynamicResource Esri_ControlBackgroundBrush}">
                                 <TextBlock Text="{Binding SymbolAttributeSet.Name}" Style="{DynamicResource RegularText}" />
                             </ToolTip>
                         </DataGrid.ToolTip>
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="Copy"/>
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>                        
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
                             <DataGridTextColumn Header="Value" Binding="{Binding Value}" />

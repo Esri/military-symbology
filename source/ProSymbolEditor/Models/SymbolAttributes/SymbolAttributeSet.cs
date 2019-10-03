@@ -85,7 +85,6 @@ namespace ProSymbolEditor
         {
             get
             {
-
                 Dictionary<string, string> dict = new Dictionary<string, string>();
 
                 dict.Add("SymbolType", this.Name);
@@ -93,6 +92,11 @@ namespace ProSymbolEditor
                 foreach (var prop in DisplayAttributes.GetType().GetProperties())
                 {
                     string key = prop.Name;
+
+                    // WORKAROUND: Skip this property
+                    if (key == "CountryCodeForSIDC")
+                        continue;
+
                     object value = prop.GetValue(DisplayAttributes, null);
                     if (value == null)
                         continue;
@@ -305,7 +309,7 @@ namespace ProSymbolEditor
                 // WORKAROUND: Pro 2.3 broke exporting METOC by attribute "extendedfunctioncode"
                 // so have to set "sidc" attribute instead
                 if (ProSymbolUtilities.IsNewStyleFormat && attributeSet.ContainsKey("extendedfunctioncode"))
-                    attributeSet.Add("sidc", DisplayAttributes.LegacySymbolIdCode);
+                    attributeSet.Add("sidc", DisplayAttributes.SymbolIdCode);
 
                 // METOC do not have identity/affiliation so have 1 less attribute
                 minimumAttributeCount--;
@@ -597,6 +601,12 @@ namespace ProSymbolEditor
                 rowBuffer["speed"] = LabelAttributes.Speed;
             }
 
+            if (LabelAttributes.Direction != null)
+            {
+                //Short
+                rowBuffer["direction"] = LabelAttributes.Direction;
+            }
+
             if (!string.IsNullOrEmpty(LabelAttributes.HigherFormation))
             {
                 rowBuffer["higherFormation"] = LabelAttributes.HigherFormation;
@@ -620,11 +630,21 @@ namespace ProSymbolEditor
                 rowBuffer["reliability"] = LabelAttributes.Reliability;
             }
 
+            if (!string.IsNullOrEmpty(LabelAttributes.SignatureEquipment) &&
+                (LabelAttributes.SignatureEquipment != ProSymbolUtilities.NullFieldValueFlag))
+            {
+                rowBuffer["signatureequipment"] = LabelAttributes.SignatureEquipment;
+            }
+
             if (!string.IsNullOrEmpty(LabelAttributes.CountryCode) &&
                 (LabelAttributes.CountryCode != ProSymbolUtilities.NullFieldValueFlag))
             {
                 rowBuffer["countrycode"] = LabelAttributes.CountryCode;
+
+                if (rowBuffer.FindField("countrylabel") >= 0) // does not exist in all versions of the database
+                    rowBuffer["countrylabel"] = LabelAttributes.CountryLabel;
             }
+
         }
 
         public void PopulateFeatureWithAttributes(ref Feature feature)
@@ -816,6 +836,9 @@ namespace ProSymbolEditor
             if (feature.FindField("speed") >= 0)
                 feature["speed"] = LabelAttributes.Speed;
 
+            if (feature.FindField("direction") >= 0)
+                feature["direction"] = LabelAttributes.Direction;
+
             if (feature.FindField("higherFormation") >= 0)
                 feature["higherFormation"] = LabelAttributes.HigherFormation;
 
@@ -846,6 +869,15 @@ namespace ProSymbolEditor
                     feature["reliability"] = LabelAttributes.Reliability;
             }
 
+            if (!string.IsNullOrEmpty(LabelAttributes.SignatureEquipment) &&
+                (feature.FindField("signatureequipment") >= 0))
+            {
+                if (LabelAttributes.SignatureEquipment == ProSymbolUtilities.NullFieldValueFlag)
+                    feature["signatureequipment"] = null;
+                else
+                    feature["signatureequipment"] = LabelAttributes.SignatureEquipment;
+            }
+
             if (!string.IsNullOrEmpty(LabelAttributes.CountryCode) &&
                 (feature.FindField("countrycode") >= 0))
             {
@@ -854,6 +886,13 @@ namespace ProSymbolEditor
                 else
                     feature["countrycode"] = LabelAttributes.CountryCode;
             }
+
+            if (!string.IsNullOrEmpty(LabelAttributes.CountryLabel) &&
+                (feature.FindField("countrylabel") >= 0))
+            {
+                feature["countrylabel"] = LabelAttributes.CountryLabel;
+            }
+
         }
 
         private void SetPropertiesFromFieldAttributes(Dictionary<string, string> fieldValues)
@@ -988,6 +1027,11 @@ namespace ProSymbolEditor
                 LabelAttributes.Speed = short.Parse(fieldValues["speed"]);
             }
 
+            if (fieldValues.ContainsKey("direction"))
+            {
+                LabelAttributes.Direction = short.Parse(fieldValues["direction"]);
+            }
+
             if (fieldValues.ContainsKey("higherFormation"))
             {
                 LabelAttributes.HigherFormation = fieldValues["higherFormation"];
@@ -1006,6 +1050,11 @@ namespace ProSymbolEditor
             if (fieldValues.ContainsKey("reliability"))
             {
                 LabelAttributes.Reliability = fieldValues["reliability"];
+            }
+
+            if (fieldValues.ContainsKey("signatureequipment"))
+            {
+                LabelAttributes.SignatureEquipment = fieldValues["signatureequipment"];
             }
 
             if (fieldValues.ContainsKey("countrycode"))
@@ -1036,6 +1085,7 @@ namespace ProSymbolEditor
             DisplayAttributes.Context = "";
             DisplayAttributes.Modifier1 = "";
             DisplayAttributes.Modifier2 = "";
+            DisplayAttributes.CountryCodeForSIDC = "";
 
             //Reset label text attributes
             LabelAttributes.DateTimeValid = null;
@@ -1046,11 +1096,14 @@ namespace ProSymbolEditor
             LabelAttributes.Type = "";
             LabelAttributes.CommonIdentifier = "";
             LabelAttributes.Speed = null;
+            LabelAttributes.Direction = null;
             LabelAttributes.HigherFormation = "";
             LabelAttributes.Reinforced = "";
             LabelAttributes.Credibility = null;
             LabelAttributes.Reliability = "";
+            LabelAttributes.SignatureEquipment = "";
             LabelAttributes.CountryCode = "";
+            LabelAttributes.CountryLabel = "";
 
             SymbolTags = "";
 
@@ -1079,6 +1132,10 @@ namespace ProSymbolEditor
             // Tell the proprties datagrids to get the updated info
             NotifyPropertyChanged(() => Name);
             NotifyPropertyChanged(() => AttributesDictionary);
+
+            // WORKAROUND: 2525B/C includes Country Code in SIDC so need this here
+            if (e.PropertyName == "CountryCode")
+                DisplayAttributes.CountryCodeForSIDC = LabelAttributes.CountryCode;
         }
     }
 }

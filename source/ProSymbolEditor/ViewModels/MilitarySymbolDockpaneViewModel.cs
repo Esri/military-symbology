@@ -332,6 +332,7 @@ namespace ProSymbolEditor
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReinforcedDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ReliabilityDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CredibilityDomainValues, _lock);
+            BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.SignatureEquipmentDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.CountryCodeDomainValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.ExtendedFunctionCodeValues, _lock);
             BindingOperations.EnableCollectionSynchronization(MilitaryFieldsInspectorModel.EntityCodeValues, _lock);
@@ -462,8 +463,9 @@ namespace ProSymbolEditor
 
                 NotifyPropertyChanged(() => SearchString);
 
-                if (_searchString.Length > 0)
+                if (!string.IsNullOrEmpty(_searchString))
                 {
+                    _searchString = _searchString.Trim();
                     SearchStylesAsync(null);
                 }
                 else
@@ -1424,6 +1426,15 @@ namespace ProSymbolEditor
             _progressDialogSearch.Show();
             await SearchSymbols();
 
+            if ((_styleItems.Count == 0) && ProSymbolUtilities.IsSIDC(_searchString))
+            {
+                // If nothing found, but search text matches SIDC format, then do the search again  
+                // with the search string set to the subset of the SIDC that each style item contains
+                _searchString = ProSymbolUtilities.GetSearchStringFromSIDC(_searchString);
+                await SearchSymbols();
+            }
+
+
             StatusMessage = "Search Complete";
 
             NotifyPropertyChanged(() => StyleItems);
@@ -1828,6 +1839,7 @@ namespace ProSymbolEditor
                 SymbolAttributeSet.LabelAttributes.Type = loadSet.LabelAttributes.Type;
                 SymbolAttributeSet.LabelAttributes.CommonIdentifier = loadSet.LabelAttributes.CommonIdentifier;
                 SymbolAttributeSet.LabelAttributes.Speed = loadSet.LabelAttributes.Speed;
+                SymbolAttributeSet.LabelAttributes.Direction = loadSet.LabelAttributes.Direction;
                 SymbolAttributeSet.LabelAttributes.UniqueDesignation = loadSet.LabelAttributes.UniqueDesignation;
                 SymbolAttributeSet.LabelAttributes.StaffComments = loadSet.LabelAttributes.StaffComments;
                 SymbolAttributeSet.LabelAttributes.AdditionalInformation = loadSet.LabelAttributes.AdditionalInformation;
@@ -1910,6 +1922,12 @@ namespace ProSymbolEditor
                 var favoritesJson = new JavaScriptSerializer().Serialize(Favorites);
                 File.WriteAllText(_favoritesFilePath, favoritesJson);
             }
+
+            SelectedFavoriteSymbol = null;
+            IsStyleItemSelected = false;
+            if (AddToMapToolEnabled)
+                FrameworkApplication.SetCurrentToolAsync("esri_mapping_exploreTool");  // select another tool to disable add to map tool 
+
         }
 
         private async void CreateTemplateFromFavorite(object parameter)
@@ -2577,7 +2595,11 @@ namespace ProSymbolEditor
                         SymbolAttributeSet.LabelAttributes.SelectedReliabilityDomainPair = 
                             MilitaryFieldsInspectorModel.ReliabilityDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.Reliability);
 
-                    if (loadSet.LabelAttributes.SelectedCountryCodeDomainPair != null)
+                    if (loadSet.LabelAttributes.SignatureEquipment != null)
+                        SymbolAttributeSet.LabelAttributes.SelectedSignatureEquipmentDomainPair =
+                            MilitaryFieldsInspectorModel.SignatureEquipmentDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.SignatureEquipment);
+
+                    if (loadSet.LabelAttributes.CountryCode != null)
                         SymbolAttributeSet.LabelAttributes.SelectedCountryCodeDomainPair = 
                             MilitaryFieldsInspectorModel.CountryCodeDomainValues.FirstOrDefault(pair => pair.Code.ToString() == loadSet.LabelAttributes.CountryCode);
                 }

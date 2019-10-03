@@ -166,6 +166,11 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         ItemsSource="{Binding SelectedStyleTags, UpdateSourceTrigger=PropertyChanged}">
+                        <ItemsControl.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Copy" Click="CopyTagsButton" />
+                            </ContextMenu>
+                        </ItemsControl.ContextMenu>                        
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border
@@ -220,6 +225,7 @@
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveSymbolFileCommand}"
                                     Content="Add Favorite"
+                                    IsEnabled="{Binding IsStyleItemSelected}"
                                     Style="{DynamicResource Esri_SimpleButton}" />
             <ToggleButton
                                     Name="searchAddToMapButton"

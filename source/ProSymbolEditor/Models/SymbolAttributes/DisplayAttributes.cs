@@ -65,7 +65,7 @@ namespace ProSymbolEditor
                 {
                     // use an alternate (the SIDC) if Coded Domains not yet set
                     if (ProSymbolUtilities.IsLegacyStandard())
-                        sb.Append(LegacySymbolIdCode);
+                        sb.Append(SymbolIdCode);
                     else
                         sb.Append(SymbolSet + ProSymbolUtilities.NameSeparator + SymbolEntity);
                 }
@@ -134,67 +134,16 @@ namespace ProSymbolEditor
 
         public GeometryType SymbolGeometry { get; set; }
 
-        public string LegacySymbolIdCode
+        public string SymbolIdCode
         {
             get
             {
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        
-                string extendedFunctionCode = ExtendedFunctionCode;
-                if ((ProSymbolUtilities.IsLegacyStandard())
-                    && (!String.IsNullOrEmpty(extendedFunctionCode)) && (extendedFunctionCode.Length >= 10))
-                {
-                    bool isWeather = (extendedFunctionCode[0] == 'W');
-
-                    if (isWeather)
-                    {
-                        sb.Append(extendedFunctionCode.Substring(0, 10));
-
-                        switch (this.SymbolGeometry)
-                        {
-                            case GeometryType.Point: sb.Append("P--"); break;
-                            case GeometryType.Polyline: sb.Append("-L-"); break;
-                            case GeometryType.Polygon: sb.Append("--A"); break;
-                            default: sb.Append("---"); break;
-                        }
-
-                        sb.Append("--");
-                    }
-                    else
-                    {
-                        sb.Append(extendedFunctionCode[0]);
-                        if (String.IsNullOrEmpty(Identity))
-                            sb.Append('U');
-                        else
-                            sb.Append(Identity);
-
-                        sb.Append(extendedFunctionCode[2]);
-
-                        if (String.IsNullOrEmpty(Status))
-                            sb.Append('P');
-                        else
-                            sb.Append(Status);
-
-                        sb.Append(extendedFunctionCode.Substring(4, 6));
-
-                        if (String.IsNullOrEmpty(Indicator))
-                            sb.Append('-');
-                        else
-                            sb.Append(Indicator);
-
-                        if (String.IsNullOrEmpty(Echelon))
-                            sb.Append('-');
-                        else
-                            sb.Append(Echelon);
-
-                        sb.Append("---");
-                    }
-                }
-
-                return sb.ToString();
+                return getSymbolIdCodeFromAttributes();
             }
-                
         }
+
+        // WORKAROUND: 2525B/C includes Country Code in SIDC so need this here
+        public string CountryCodeForSIDC { get; set; }
 
         public string ExtendedFunctionCode
         {
@@ -205,7 +154,7 @@ namespace ProSymbolEditor
             set
             {
                 _extendedFunctionCode = value;
-                NotifyPropertyChanged(() => LegacySymbolIdCode);
+                NotifyPropertyChanged(() => SymbolIdCode);
             }
         }
 
@@ -267,6 +216,7 @@ namespace ProSymbolEditor
             {
                 _symbolSet = value;
                 NotifyPropertyChanged(() => SymbolSet);
+                NotifyPropertyChanged(() => SymbolIdCode);
             }
         }
 
@@ -280,6 +230,7 @@ namespace ProSymbolEditor
             {
                 _symbolEntity = value;
                 NotifyPropertyChanged(() => SymbolEntity);
+                NotifyPropertyChanged(() => SymbolIdCode);
             }
         }
 
@@ -617,5 +568,142 @@ namespace ProSymbolEditor
         }
 
         #endregion
+
+        private string getSymbolIdCodeFromAttributes()
+        {
+            // Build SIDC from the symbol attributes
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            if (ProSymbolUtilities.IsLegacyStandard())
+            {
+                string extendedFunctionCode = ExtendedFunctionCode;
+                if ((ProSymbolUtilities.IsLegacyStandard())
+                    && (!String.IsNullOrEmpty(extendedFunctionCode)) && (extendedFunctionCode.Length >= 10))
+                {
+                    bool isWeather = (extendedFunctionCode[0] == 'W');
+
+                    if (isWeather)
+                    {
+                        sb.Append(extendedFunctionCode.Substring(0, 10));
+
+                        switch (this.SymbolGeometry)
+                        {
+                            case GeometryType.Point: sb.Append("P--"); break;
+                            case GeometryType.Polyline: sb.Append("-L-"); break;
+                            case GeometryType.Polygon: sb.Append("--A"); break;
+                            default: sb.Append("---"); break;
+                        }
+
+                        sb.Append("--");
+                    }
+                    else
+                    {
+                        sb.Append(extendedFunctionCode[0]);
+                        if (String.IsNullOrEmpty(Identity))
+                            sb.Append('U');
+                        else
+                            sb.Append(Identity);
+
+                        sb.Append(extendedFunctionCode[2]);
+
+                        if (String.IsNullOrEmpty(Status))
+                            sb.Append('P');
+                        else
+                            sb.Append(Status);
+
+                        sb.Append(extendedFunctionCode.Substring(4, 6));
+
+                        if (String.IsNullOrEmpty(Indicator))
+                            sb.Append('-');
+                        else
+                            sb.Append(Indicator);
+
+                        if (String.IsNullOrEmpty(Echelon))
+                            sb.Append('-');
+                        else
+                            sb.Append(Echelon);
+
+                        if (String.IsNullOrEmpty(CountryCodeForSIDC) ||
+                            CountryCodeForSIDC.Length != 2)
+                            sb.Append("--");
+                        else
+                            sb.Append(CountryCodeForSIDC);
+
+                        sb.Append("-");
+                    }
+                }
+            }
+            else
+            {
+                // 2525D / APP6D
+
+                // Version - 1, 2
+                sb.Append("10");
+
+                // identity-context - 3
+                if (string.IsNullOrEmpty(_context))
+                    sb.Append("0");
+                else
+                    sb.Append(_context);
+
+                // identity-affiliation - 4 
+                if (string.IsNullOrEmpty(_identity))
+                    sb.Append("0");
+                else
+                    sb.Append(_identity);
+
+                // symbolset - 5, 6
+                if (string.IsNullOrEmpty(_symbolSet))
+                    sb.Append("00");
+                else
+                    sb.Append(ProSymbolUtilities.ZeroPadLeft(_symbolSet, 2));
+
+                // status/operational condition - 7
+                if (string.IsNullOrEmpty(_status) && string.IsNullOrEmpty(_operationalCondition))
+                    sb.Append("0");
+                else
+                {
+                    if (!string.IsNullOrEmpty(_status))
+                        sb.Append(_status);
+                    else
+                        sb.Append(_operationalCondition);
+                }
+
+                // HQ, TF, FD indicator - 8
+                if (string.IsNullOrEmpty(_indicator))
+                    sb.Append("0");
+                else
+                    sb.Append(_indicator);
+
+                // Echelon/Mobility 9, 10
+                if (string.IsNullOrEmpty(_echelon) && string.IsNullOrEmpty(_mobility))
+                    sb.Append("00");
+                else
+                {
+                    if (!string.IsNullOrEmpty(_echelon))
+                        sb.Append(ProSymbolUtilities.ZeroPadLeft(_echelon, 2));
+                    else
+                        sb.Append(ProSymbolUtilities.ZeroPadLeft(_mobility, 2));
+                }
+
+                if (string.IsNullOrEmpty(_symbolEntity))
+                    sb.Append("000000");
+                else
+                    sb.Append(ProSymbolUtilities.ZeroPadLeft(_symbolEntity, 6));
+
+                if (string.IsNullOrEmpty(_modifier1))
+                    sb.Append("00");
+                else
+                    sb.Append(ProSymbolUtilities.ZeroPadLeft(_modifier1, 2));
+
+                if (string.IsNullOrEmpty(_modifier2))
+                    sb.Append("00");
+                else
+                    sb.Append(ProSymbolUtilities.ZeroPadLeft(_modifier2, 2));
+            }
+
+            return sb.ToString();
+        }
+
     }
 }
