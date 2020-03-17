@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
             xmlns:controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions"
             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"             
-            xmlns:sys="clr-namespace:System;assembly=mscorlib"             
+            xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:prop="clr-namespace:ProSymbolEditor.Properties"
             xmlns:local="clr-namespace:ProSymbolEditor"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -40,7 +41,7 @@
                         <Label
                                                 Grid.Column="0"
                                                 Margin="5,0,0,0"
-                                                Content="Use the select tool to select a feature to modify" />
+                                                Content="{x:Static prop:Resources.ModLabel1}" />
 
                         <ToggleButton
                                                 Grid.Column="1"
@@ -141,7 +142,7 @@
                                                             TextAlignment="Left" />
                                     <TextBlock
                                                             Grid.Column="5"
-                                                            Text=" : Object ID "
+                                                            Text="{x:Static prop:Resources.ModTxt1}"
                                                             TextAlignment="Left" />
                                     <TextBlock
                                                             Grid.Column="6"
@@ -170,8 +171,8 @@
                                             Source="{Binding EditSelectedFeatureSymbol.SymbolImage}">
                         <Image.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding SaveImageToCommand}" Header="Save Image As..." />
-                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="Copy Image to Clipboard" />
+                                <MenuItem Command="{Binding SaveImageToCommand}" Header="{x:Static prop:Resources.ModMenu1}" />
+                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="{x:Static prop:Resources.ModMenu2}"  />
                             </ContextMenu>
                         </Image.ContextMenu>
                     </Image>
@@ -197,8 +198,8 @@
                             </ContextMenu>
                         </DataGrid.ContextMenu>                        
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
-                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                            <DataGridTextColumn Header="{x:Static prop:Resources.ModDGHeader1}" Binding="{Binding Key}" />
+                            <DataGridTextColumn Header="{x:Static prop:Resources.ModDGHeader2}" Binding="{Binding Value}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -220,7 +221,7 @@
                                     CommandParameter="3"
                                     IsEnabled="{Binding IsStyleItemSelected}"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
-                                    ToolTip="Go to Symbol Tab">
+                                    ToolTip="{x:Static prop:Resources.ModBtn1ToolTip}">
                 <Button.RenderTransform>
                     <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
                 </Button.RenderTransform>

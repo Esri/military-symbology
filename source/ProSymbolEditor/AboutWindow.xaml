@@ -6,8 +6,9 @@
     xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
     xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"    
     xmlns:local="clr-namespace:ProSymbolEditor"
+    xmlns:prop="clr-namespace:ProSymbolEditor.Properties"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="About"
+    Title="{x:Static prop:Resources.AbtTitle}"
     Width="315"
     Height="300"
     ResizeMode="NoResize"
@@ -36,8 +37,7 @@
             Grid.Row="0"
             Style="{DynamicResource RegularText}" 
             Margin="5,0,0,0"
-            FontSize="14">
-            Military Symbol Editor
+            FontSize="14" Text="{x:Static prop:Resources.AbtTxt1}">
         </TextBlock>
         <TextBlock
             x:Name="VersionBox"
@@ -49,39 +49,35 @@
             Grid.Row="2"
             Style="{DynamicResource RegularText}" 
             Margin="10,5,5,5"
-            TextWrapping="Wrap">
-            The Military Symbol Editor is a tool for quickly creating military overlays in ArcGIS Pro using the Military Overlay template.
-            The tool is useful for searching, modifying attributes, and previewing military symbols. These military symbols can then be added
-            to the map through map click or entering coordinates.  The Military Symbol Editor is intended to be used with the ArcGIS for Defense Military Overlay Template or the Military Overlay Information Model.
-        </TextBlock>
+            TextWrapping="Wrap" Text="{x:Static prop:Resources.AbtTxt2}" >
+          </TextBlock>
         <TextBlock
             Grid.Row="3"
             Margin="5,0,0,0"
             FontSize="14"
-            Visibility="Hidden">
-            Resources
+            Visibility="Hidden" Text="{x:Static prop:Resources.AbtTxt3}">
         </TextBlock>
         <TextBlock
             Grid.Row="4"
             Margin="10,0,0,0"
             Visibility="Hidden">
-            <Hyperlink NavigateUri="http://esriurl.com/AFDMilitaryOverlay" RequestNavigate="Hyperlink_RequestNavigate">
-                Military Overlay Template
+            <Hyperlink NavigateUri="{x:Static prop:Resources.AbtUrl4}" RequestNavigate="Hyperlink_RequestNavigate">
+            <TextBlock Text="{x:Static prop:Resources.AbtTxt4}" />
             </Hyperlink>
         </TextBlock>
         <TextBlock
             Grid.Row="5"
             Margin="10,0,0,0"
             Visibility="Hidden">
-            <Hyperlink NavigateUri="http://esriurl.com/MilitaryOverlayInformationModel" RequestNavigate="Hyperlink_RequestNavigate">
-                Military Overlay Information Model
+            <Hyperlink NavigateUri="{x:Static prop:Resources.AbtUrl5}" RequestNavigate="Hyperlink_RequestNavigate">
+             <TextBlock Text="{x:Static prop:Resources.AbtTxt5}" />
             </Hyperlink>
         </TextBlock>
         <Button
             x:Name="ok"
             Grid.Row="6"
             Width="70"
-            Content="OK"
+            Content="{x:Static prop:Resources.btnOK}"
             Style="{DynamicResource Esri_SimpleButton}" 
             IsCancel="True"
             IsDefault="True" 

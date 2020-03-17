@@ -5,7 +5,8 @@
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
             xmlns:controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions"
             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"             
-            xmlns:sys="clr-namespace:System;assembly=mscorlib"             
+            xmlns:sys="clr-namespace:System;assembly=mscorlib"
+            xmlns:prop="clr-namespace:ProSymbolEditor.Properties"
             xmlns:local="clr-namespace:ProSymbolEditor"
             mc:Ignorable="d" 
             d:DesignHeight="300" d:DesignWidth="300">
