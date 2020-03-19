@@ -121,7 +121,7 @@ namespace ProSymbolEditor
                 return SupportedStandardsType.app6b;
             else
             {
-                System.Diagnostics.Trace.WriteLine("Warning - GetStandardFromLabel unrecognized standard string: " + standardString);
+                System.Diagnostics.Trace.WriteLine(Properties.Resources.PSymMsg1 + standardString);
                 return SupportedStandardsType.mil2525d;
             }
         }

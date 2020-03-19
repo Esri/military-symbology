@@ -745,6 +745,978 @@ namespace ProSymbolEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to identity.
+        /// </summary>
+        public static string MSDocVMaff {
+            get {
+                return ResourceManager.GetString("MSDocVMaff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to affiliation.
+        /// </summary>
+        public static string MSDocVMaff1 {
+            get {
+                return ResourceManager.GetString("MSDocVMaff1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application Settings Read-Only.
+        /// </summary>
+        public static string MSDocVMCpt1 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corrupt Favorites Files.
+        /// </summary>
+        public static string MSDocVMCpt10 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt10", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error Adding Favorite.
+        /// </summary>
+        public static string MSDocVMCpt11 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt11", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could Not Create Template.
+        /// </summary>
+        public static string MSDocVMCpt12 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt12", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove Military Overlay?.
+        /// </summary>
+        public static string MSDocVMCpt13 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt13", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Military Overlay Removed.
+        /// </summary>
+        public static string MSDocVMCpt14 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt14", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add-in Disabled.
+        /// </summary>
+        public static string MSDocVMCpt15 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt15", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Selection.
+        /// </summary>
+        public static string MSDocVMCpt16 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt16", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add-In Disabled.
+        /// </summary>
+        public static string MSDocVMCpt17 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt17", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please Add Map to Your Project.
+        /// </summary>
+        public static string MSDocVMCpt18 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt18", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retry Adding Military Overlay Data Model?.
+        /// </summary>
+        public static string MSDocVMCpt19 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt19", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could Not Open Database.
+        /// </summary>
+        public static string MSDocVMCpt2 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to Add Layer Package to Map.
+        /// </summary>
+        public static string MSDocVMCpt20 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt20", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to Select Database.
+        /// </summary>
+        public static string MSDocVMCpt3 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adding Schema to Database.
+        /// </summary>
+        public static string MSDocVMCpt4 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to Add Layer Package to Map.
+        /// </summary>
+        public static string MSDocVMCpt5 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Layer to Map?.
+        /// </summary>
+        public static string MSDocVMCpt6 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could Not Create Map Feature.
+        /// </summary>
+        public static string MSDocVMCpt7 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature Store Failure.
+        /// </summary>
+        public static string MSDocVMCpt8 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Favorite.
+        /// </summary>
+        public static string MSDocVMCpt9 {
+            get {
+                return ResourceManager.GetString("MSDocVMCpt9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Echelon/Mobility.
+        /// </summary>
+        public static string MSDocVMEchLabel1 {
+            get {
+                return ResourceManager.GetString("MSDocVMEchLabel1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Echelon.
+        /// </summary>
+        public static string MSDocVMEchLabel2 {
+            get {
+                return ResourceManager.GetString("MSDocVMEchLabel2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Military Symbol Insert.
+        /// </summary>
+        public static string MSDocVMEd1 {
+            get {
+                return ResourceManager.GetString("MSDocVMEd1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exception in SelectedSelectedFeature: .
+        /// </summary>
+        public static string MSDocVMEx1 {
+            get {
+                return ResourceManager.GetString("MSDocVMEx1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exception caught: .
+        /// </summary>
+        public static string MSDocVMExt1 {
+            get {
+                return ResourceManager.GetString("MSDocVMExt1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The coordinates are invalid.
+        /// </summary>
+        public static string MSDocVMExt2 {
+            get {
+                return ResourceManager.GetString("MSDocVMExt2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Friend.
+        /// </summary>
+        public static string MSDocVMfri {
+            get {
+                return ResourceManager.GetString("MSDocVMfri", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Friendly.
+        /// </summary>
+        public static string MSDocVMfri1 {
+            get {
+                return ResourceManager.GetString("MSDocVMfri1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to : FRIEND.
+        /// </summary>
+        public static string MSDocVMfri1Up {
+            get {
+                return ResourceManager.GetString("MSDocVMfri1Up", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FRIEND.
+        /// </summary>
+        public static string MSDocVMfriUp {
+            get {
+                return ResourceManager.GetString("MSDocVMfriUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hostile/Faker.
+        /// </summary>
+        public static string MSDocVMhos {
+            get {
+                return ResourceManager.GetString("MSDocVMhos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hostile.
+        /// </summary>
+        public static string MSDocVMhos1 {
+            get {
+                return ResourceManager.GetString("MSDocVMhos1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to : HOSTILE.
+        /// </summary>
+        public static string MSDocVMhos1Up {
+            get {
+                return ResourceManager.GetString("MSDocVMhos1Up", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HOSTILE.
+        /// </summary>
+        public static string MSDocVMhosUp {
+            get {
+                return ResourceManager.GetString("MSDocVMhosUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .JSON.
+        /// </summary>
+        public static string MSDocVMImpExt {
+            get {
+                return ResourceManager.GetString("MSDocVMImpExt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JSON Files (*.json)|*.json.
+        /// </summary>
+        public static string MSDocVMImpFlt {
+            get {
+                return ResourceManager.GetString("MSDocVMImpFlt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add-in Not Enabled.
+        /// </summary>
+        public static string MSDocVMMsg1 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to already contains a schema for Military Overlay..
+        /// </summary>
+        public static string MSDocVMMsg10 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg10", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a different database from Addin Settings..
+        /// </summary>
+        public static string MSDocVMMsg11 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg11", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A military overlay schema matching standard: .
+        /// </summary>
+        public static string MSDocVMMsg12 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg12", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to will be added to database: .
+        /// </summary>
+        public static string MSDocVMMsg13 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg13", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note: this may take several minutes..
+        /// </summary>
+        public static string MSDocVMMsg14 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg14", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to add layer package to map..
+        /// </summary>
+        public static string MSDocVMMsg15 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg15", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please try again from Addin Settings when map available..
+        /// </summary>
+        public static string MSDocVMMsg16 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg16", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Military Layers Added.
+        /// </summary>
+        public static string MSDocVMMsg17 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg17", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search Complete.
+        /// </summary>
+        public static string MSDocVMMsg18 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg18", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {Layer Not Found}.
+        /// </summary>
+        public static string MSDocVMMsg19 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg19", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initialized.
+        /// </summary>
+        public static string MSDocVMMsg2 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The required layer is not in the Active Map. .
+        /// </summary>
+        public static string MSDocVMMsg20 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg20", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required layer: .
+        /// </summary>
+        public static string MSDocVMMsg21 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg21", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add this military overlay layer to the map?.
+        /// </summary>
+        public static string MSDocVMMsg22 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg22", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not create map feature in layer: .
+        /// </summary>
+        public static string MSDocVMMsg23 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg23", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The current favorite is not valid..
+        /// </summary>
+        public static string MSDocVMMsg24 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg24", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deserialize failure: .
+        /// </summary>
+        public static string MSDocVMMsg25 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg25", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error - the favorites file: .
+        /// </summary>
+        public static string MSDocVMMsg26 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg26", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to could not be loaded..
+        /// </summary>
+        public static string MSDocVMMsg27 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg27", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please delete the file and try again..
+        /// </summary>
+        public static string MSDocVMMsg28 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg28", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not create Favorite..
+        /// </summary>
+        public static string MSDocVMMsg29 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg29", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This project already contains a database with schema for standard: .
+        /// </summary>
+        public static string MSDocVMMsg3 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to add the current favorite. .
+        /// </summary>
+        public static string MSDocVMMsg30 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg30", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could Not Create Template.
+        /// </summary>
+        public static string MSDocVMMsg31 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg31", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The import file you selected is invalid - please choose a valid JSON file..
+        /// </summary>
+        public static string MSDocVMMsg32 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removing the required Military Overlay layers will reset the Military Symbol Editor..
+        /// </summary>
+        public static string MSDocVMMsg33 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg33", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Continue?.
+        /// </summary>
+        public static string MSDocVMMsg34 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg34", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The required Military Overlay layers have been removed from the active map..
+        /// </summary>
+        public static string MSDocVMMsg35 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg35", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Military Symbol Editor has been reset..
+        /// </summary>
+        public static string MSDocVMMsg36 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg36", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Military Symbol Editor requires the Military Overlay data model..
+        /// </summary>
+        public static string MSDocVMMsg37 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg37", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to add the data model (database schema and layers) to the project?.
+        /// </summary>
+        public static string MSDocVMMsg38 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg38", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Selected Feature does not seem to be a Military Feature or does not match the Military Standard in use (.
+        /// </summary>
+        public static string MSDocVMMsg39 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg39", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please create a new project to change these settings..
+        /// </summary>
+        public static string MSDocVMMsg4 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to )..
+        /// </summary>
+        public static string MSDocVMMsg40 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg40", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Required Military Style (.
+        /// </summary>
+        public static string MSDocVMMsg41 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg41", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ) is not detected in Pro Install..
+        /// </summary>
+        public static string MSDocVMMsg42 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg42", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The.
+        /// </summary>
+        public static string MSDocVMMsg43 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg43", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Military Overlay schema is not detected in any database in your project..
+        /// </summary>
+        public static string MSDocVMMsg44 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg44", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  so the Military Symbol Editor cannot continue. Would you like to add the Military Overlay Layer Package to your project?.
+        /// </summary>
+        public static string MSDocVMMsg45 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg45", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your project does not contain any active map.  Create one and try again..
+        /// </summary>
+        public static string MSDocVMMsg46 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg46", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The project map is not currently available..
+        /// </summary>
+        public static string MSDocVMMsg47 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg47", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to try again?.
+        /// </summary>
+        public static string MSDocVMMsg48 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg48", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note: wait for map to be visible and ready..
+        /// </summary>
+        public static string MSDocVMMsg49 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg49", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not open Database: .
+        /// </summary>
+        public static string MSDocVMMsg5 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to add layer package to map..
+        /// </summary>
+        public static string MSDocVMMsg50 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg50", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please ensure the project contains a map and the map is visible..
+        /// </summary>
+        public static string MSDocVMMsg51 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg51", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database Added.
+        /// </summary>
+        public static string MSDocVMMsg6 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database: .
+        /// </summary>
+        public static string MSDocVMMsg7 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ..
+        /// </summary>
+        public static string MSDocVMMsg8 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database: .
+        /// </summary>
+        public static string MSDocVMMsg9 {
+            get {
+                return ResourceManager.GetString("MSDocVMMsg9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Neutral.
+        /// </summary>
+        public static string MSDocVMNeu {
+            get {
+                return ResourceManager.GetString("MSDocVMNeu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to : NEUTRAL.
+        /// </summary>
+        public static string MSDocVMNeu1Up {
+            get {
+                return ResourceManager.GetString("MSDocVMNeu1Up", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NEUTRAL.
+        /// </summary>
+        public static string MSDocVMNeuUp {
+            get {
+                return ResourceManager.GetString("MSDocVMNeuUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading Layer Package....
+        /// </summary>
+        public static string MSDocVMPg1 {
+            get {
+                return ResourceManager.GetString("MSDocVMPg1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Searching....
+        /// </summary>
+        public static string MSDocVMPg2 {
+            get {
+                return ResourceManager.GetString("MSDocVMPg2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to symbol.
+        /// </summary>
+        public static string MSDocVMSaveFln {
+            get {
+                return ResourceManager.GetString("MSDocVMSaveFln", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to favorites.
+        /// </summary>
+        public static string MSDocVMSaveFln1 {
+            get {
+                return ResourceManager.GetString("MSDocVMSaveFln1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Png Image|*.png.
+        /// </summary>
+        public static string MSDocVMSaveFlt {
+            get {
+                return ResourceManager.GetString("MSDocVMSaveFlt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JSON|*.json.
+        /// </summary>
+        public static string MSDocVMSaveFlt1 {
+            get {
+                return ResourceManager.GetString("MSDocVMSaveFlt1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please click to enable add-in....
+        /// </summary>
+        public static string MSDocVMSS {
+            get {
+                return ResourceManager.GetString("MSDocVMSS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to symbolset.
+        /// </summary>
+        public static string MSDocVMStr1 {
+            get {
+                return ResourceManager.GetString("MSDocVMStr1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to symbolentity.
+        /// </summary>
+        public static string MSDocVMStr2 {
+            get {
+                return ResourceManager.GetString("MSDocVMStr2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to extendedfunctioncode.
+        /// </summary>
+        public static string MSDocVMStr3 {
+            get {
+                return ResourceManager.GetString("MSDocVMStr3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NEW_AT_2525D.
+        /// </summary>
+        public static string MSDocVMStr4 {
+            get {
+                return ResourceManager.GetString("MSDocVMStr4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ADD MAP TO PROJECT.
+        /// </summary>
+        public static string MSDocVMStr5 {
+            get {
+                return ResourceManager.GetString("MSDocVMStr5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ADD-IN NOT ENABLED.
+        /// </summary>
+        public static string MSDocVMStr6 {
+            get {
+                return ResourceManager.GetString("MSDocVMStr6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Military Layers Added.
+        /// </summary>
+        public static string MSDocVMStr7 {
+            get {
+                return ResourceManager.GetString("MSDocVMStr7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add-in Not Enabled.
+        /// </summary>
+        public static string MSDocVMStr8 {
+            get {
+                return ResourceManager.GetString("MSDocVMStr8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string MSDocVMUnk {
+            get {
+                return ResourceManager.GetString("MSDocVMUnk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
         public static string MsdTabHeader1 {
@@ -790,6 +1762,114 @@ namespace ProSymbolEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Warning - GetStandardFromLabel unrecognized standard string: .
+        /// </summary>
+        public static string PSymMsg1 {
+            get {
+                return ResourceManager.GetString("PSymMsg1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X.
+        /// </summary>
+        public static string SearBtn1 {
+            get {
+                return ResourceManager.GetString("SearBtn1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Favorite.
+        /// </summary>
+        public static string SearBtn2 {
+            get {
+                return ResourceManager.GetString("SearBtn2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to Symbol Tab.
+        /// </summary>
+        public static string SearBtn4 {
+            get {
+                return ResourceManager.GetString("SearBtn4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search....
+        /// </summary>
+        public static string SearLabel1 {
+            get {
+                return ResourceManager.GetString("SearLabel1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result Count:.
+        /// </summary>
+        public static string SearLabel2 {
+            get {
+                return ResourceManager.GetString("SearLabel2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Image As....
+        /// </summary>
+        public static string SearMenu1 {
+            get {
+                return ResourceManager.GetString("SearMenu1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Image to Clipboard.
+        /// </summary>
+        public static string SearMenu2 {
+            get {
+                return ResourceManager.GetString("SearMenu2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string SearMenu3 {
+            get {
+                return ResourceManager.GetString("SearMenu3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Add to Map .
+        /// </summary>
+        public static string SearToggleBtn3 {
+            get {
+                return ResourceManager.GetString("SearToggleBtn3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add to Map.
+        /// </summary>
+        public static string SearToggleBtn3ToolTip {
+            get {
+                return ResourceManager.GetString("SearToggleBtn3ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Favorite already exists..
+        /// </summary>
+        public static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Database Contains Schema.
         /// </summary>
         public static string SWCaption {
@@ -826,7 +1906,7 @@ namespace ProSymbolEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to \ncontains a schema for standard: \n.
+        ///   Looks up a localized string similar to contains a schema for standard: .
         /// </summary>
         public static string SWMsg2 {
             get {
@@ -835,11 +1915,20 @@ namespace ProSymbolEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .\nSetting standard to this value..
+        ///   Looks up a localized string similar to Setting standard to this value..
         /// </summary>
         public static string SWMsg3 {
             get {
                 return ResourceManager.GetString("SWMsg3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ..
+        /// </summary>
+        public static string SWMsg4 {
+            get {
+                return ResourceManager.GetString("SWMsg4", resourceCulture);
             }
         }
         
@@ -849,6 +1938,195 @@ namespace ProSymbolEditor.Properties {
         public static string SWTitle {
             get {
                 return ResourceManager.GetString("SWTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Back to Search.
+        /// </summary>
+        public static string SymBtn1ToolTip {
+            get {
+                return ResourceManager.GetString("SymBtn1ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Favorite.
+        /// </summary>
+        public static string SymBtn2 {
+            get {
+                return ResourceManager.GetString("SymBtn2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Edits.
+        /// </summary>
+        public static string SymBtn4 {
+            get {
+                return ResourceManager.GetString("SymBtn4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Edits.
+        /// </summary>
+        public static string SymBtn4ToolTip {
+            get {
+                return ResourceManager.GetString("SymBtn4ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to Label Tab.
+        /// </summary>
+        public static string SymBtn5ToolTip {
+            get {
+                return ResourceManager.GetString("SymBtn5ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attribute.
+        /// </summary>
+        public static string SymDGHeader1 {
+            get {
+                return ResourceManager.GetString("SymDGHeader1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        public static string SymDGHeader2 {
+            get {
+                return ResourceManager.GetString("SymDGHeader2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Identity/Affiliation.
+        /// </summary>
+        public static string SymLabel1 {
+            get {
+                return ResourceManager.GetString("SymLabel1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Function.
+        /// </summary>
+        public static string SymLabel10 {
+            get {
+                return ResourceManager.GetString("SymLabel10", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status/Planned.
+        /// </summary>
+        public static string SymLabel2 {
+            get {
+                return ResourceManager.GetString("SymLabel2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operational Condition.
+        /// </summary>
+        public static string SymLabel3 {
+            get {
+                return ResourceManager.GetString("SymLabel3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TF, FD, HQ.
+        /// </summary>
+        public static string SymLabel4 {
+            get {
+                return ResourceManager.GetString("SymLabel4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mobility.
+        /// </summary>
+        public static string SymLabel5 {
+            get {
+                return ResourceManager.GetString("SymLabel5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Context.
+        /// </summary>
+        public static string SymLabel6 {
+            get {
+                return ResourceManager.GetString("SymLabel6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modifier 1.
+        /// </summary>
+        public static string SymLabel7 {
+            get {
+                return ResourceManager.GetString("SymLabel7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modifier 2.
+        /// </summary>
+        public static string SymLabel8 {
+            get {
+                return ResourceManager.GetString("SymLabel8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entity.
+        /// </summary>
+        public static string SymLabel9 {
+            get {
+                return ResourceManager.GetString("SymLabel9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Image As....
+        /// </summary>
+        public static string SymMenu1 {
+            get {
+                return ResourceManager.GetString("SymMenu1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Image to Clipboard.
+        /// </summary>
+        public static string SymMenu2 {
+            get {
+                return ResourceManager.GetString("SymMenu2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Add to Map .
+        /// </summary>
+        public static string SymToggleBtn3 {
+            get {
+                return ResourceManager.GetString("SymToggleBtn3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add to Map.
+        /// </summary>
+        public static string SymToggleBtn3ToolTip {
+            get {
+                return ResourceManager.GetString("SymToggleBtn3ToolTip", resourceCulture);
             }
         }
     }

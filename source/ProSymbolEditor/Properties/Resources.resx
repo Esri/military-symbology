@@ -376,9 +376,435 @@
     <value>Database: </value>
   </data>
   <data name="SWMsg2" xml:space="preserve">
-    <value>\ncontains a schema for standard: \n</value>
+    <value>contains a schema for standard: </value>
   </data>
   <data name="SWMsg3" xml:space="preserve">
-    <value>.\nSetting standard to this value.</value>
+    <value>Setting standard to this value.</value>
+  </data>
+  <data name="SearBtn1" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="SearBtn2" xml:space="preserve">
+    <value>Add Favorite</value>
+  </data>
+  <data name="SearBtn4" xml:space="preserve">
+    <value>Go to Symbol Tab</value>
+  </data>
+  <data name="SearLabel1" xml:space="preserve">
+    <value>Search...</value>
+  </data>
+  <data name="SearLabel2" xml:space="preserve">
+    <value>Result Count:</value>
+  </data>
+  <data name="SearMenu1" xml:space="preserve">
+    <value>Save Image As...</value>
+  </data>
+  <data name="SearMenu2" xml:space="preserve">
+    <value>Copy Image to Clipboard</value>
+  </data>
+  <data name="SearMenu3" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="SearToggleBtn3" xml:space="preserve">
+    <value> Add to Map </value>
+  </data>
+  <data name="SearToggleBtn3ToolTip" xml:space="preserve">
+    <value>Add to Map</value>
+  </data>
+  <data name="SymBtn1ToolTip" xml:space="preserve">
+    <value>Back to Search</value>
+  </data>
+  <data name="SymBtn2" xml:space="preserve">
+    <value>Add Favorite</value>
+  </data>
+  <data name="SymBtn4" xml:space="preserve">
+    <value>Save Edits</value>
+  </data>
+  <data name="SymBtn4ToolTip" xml:space="preserve">
+    <value>Save Edits</value>
+  </data>
+  <data name="SymBtn5ToolTip" xml:space="preserve">
+    <value>Go to Label Tab</value>
+  </data>
+  <data name="SymDGHeader1" xml:space="preserve">
+    <value>Attribute</value>
+  </data>
+  <data name="SymDGHeader2" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="SymLabel1" xml:space="preserve">
+    <value>Identity/Affiliation</value>
+  </data>
+  <data name="SymLabel10" xml:space="preserve">
+    <value>Function</value>
+  </data>
+  <data name="SymLabel2" xml:space="preserve">
+    <value>Status/Planned</value>
+  </data>
+  <data name="SymLabel3" xml:space="preserve">
+    <value>Operational Condition</value>
+  </data>
+  <data name="SymLabel4" xml:space="preserve">
+    <value>TF, FD, HQ</value>
+  </data>
+  <data name="SymLabel5" xml:space="preserve">
+    <value>Mobility</value>
+  </data>
+  <data name="SymLabel6" xml:space="preserve">
+    <value>Context</value>
+  </data>
+  <data name="SymLabel7" xml:space="preserve">
+    <value>Modifier 1</value>
+  </data>
+  <data name="SymLabel8" xml:space="preserve">
+    <value>Modifier 2</value>
+  </data>
+  <data name="SymLabel9" xml:space="preserve">
+    <value>Entity</value>
+  </data>
+  <data name="SymMenu1" xml:space="preserve">
+    <value>Save Image As...</value>
+  </data>
+  <data name="SymMenu2" xml:space="preserve">
+    <value>Copy Image to Clipboard</value>
+  </data>
+  <data name="SymToggleBtn3" xml:space="preserve">
+    <value> Add to Map </value>
+  </data>
+  <data name="SymToggleBtn3ToolTip" xml:space="preserve">
+    <value>Add to Map</value>
+  </data>
+  <data name="MSDocVMCpt1" xml:space="preserve">
+    <value>Application Settings Read-Only</value>
+  </data>
+  <data name="MSDocVMCpt2" xml:space="preserve">
+    <value>Could Not Open Database</value>
+  </data>
+  <data name="MSDocVMCpt3" xml:space="preserve">
+    <value>Unable to Select Database</value>
+  </data>
+  <data name="MSDocVMCpt4" xml:space="preserve">
+    <value>Adding Schema to Database</value>
+  </data>
+  <data name="MSDocVMCpt5" xml:space="preserve">
+    <value>Unable to Add Layer Package to Map</value>
+  </data>
+  <data name="MSDocVMCpt6" xml:space="preserve">
+    <value>Add Layer to Map?</value>
+  </data>
+  <data name="MSDocVMCpt7" xml:space="preserve">
+    <value>Could Not Create Map Feature</value>
+  </data>
+  <data name="MSDocVMCpt8" xml:space="preserve">
+    <value>Feature Store Failure</value>
+  </data>
+  <data name="MSDocVMCpt9" xml:space="preserve">
+    <value>Invalid Favorite</value>
+  </data>
+  <data name="MSDocVMEchLabel1" xml:space="preserve">
+    <value>Echelon/Mobility</value>
+  </data>
+  <data name="MSDocVMEchLabel2" xml:space="preserve">
+    <value>Echelon</value>
+  </data>
+  <data name="MSDocVMEd1" xml:space="preserve">
+    <value>Military Symbol Insert</value>
+  </data>
+  <data name="MSDocVMEx1" xml:space="preserve">
+    <value>Exception in SelectedSelectedFeature: </value>
+  </data>
+  <data name="MSDocVMMsg1" xml:space="preserve">
+    <value>Add-in Not Enabled</value>
+  </data>
+  <data name="MSDocVMMsg10" xml:space="preserve">
+    <value>already contains a schema for Military Overlay.</value>
+  </data>
+  <data name="MSDocVMMsg11" xml:space="preserve">
+    <value>Please select a different database from Addin Settings.</value>
+  </data>
+  <data name="MSDocVMMsg12" xml:space="preserve">
+    <value>A military overlay schema matching standard: </value>
+  </data>
+  <data name="MSDocVMMsg13" xml:space="preserve">
+    <value>will be added to database: </value>
+  </data>
+  <data name="MSDocVMMsg14" xml:space="preserve">
+    <value>Note: this may take several minutes.</value>
+  </data>
+  <data name="MSDocVMMsg15" xml:space="preserve">
+    <value>Unable to add layer package to map.</value>
+  </data>
+  <data name="MSDocVMMsg16" xml:space="preserve">
+    <value>Please try again from Addin Settings when map available.</value>
+  </data>
+  <data name="MSDocVMMsg17" xml:space="preserve">
+    <value>Military Layers Added</value>
+  </data>
+  <data name="MSDocVMMsg18" xml:space="preserve">
+    <value>Search Complete</value>
+  </data>
+  <data name="MSDocVMMsg19" xml:space="preserve">
+    <value>{Layer Not Found}</value>
+  </data>
+  <data name="MSDocVMMsg2" xml:space="preserve">
+    <value>Initialized</value>
+  </data>
+  <data name="MSDocVMMsg20" xml:space="preserve">
+    <value>The required layer is not in the Active Map. </value>
+  </data>
+  <data name="MSDocVMMsg21" xml:space="preserve">
+    <value>Required layer: </value>
+  </data>
+  <data name="MSDocVMMsg22" xml:space="preserve">
+    <value>Add this military overlay layer to the map?</value>
+  </data>
+  <data name="MSDocVMMsg23" xml:space="preserve">
+    <value>Could not create map feature in layer: </value>
+  </data>
+  <data name="MSDocVMMsg24" xml:space="preserve">
+    <value>The current favorite is not valid.</value>
+  </data>
+  <data name="MSDocVMMsg3" xml:space="preserve">
+    <value>This project already contains a database with schema for standard: </value>
+  </data>
+  <data name="MSDocVMMsg4" xml:space="preserve">
+    <value>Please create a new project to change these settings.</value>
+  </data>
+  <data name="MSDocVMMsg5" xml:space="preserve">
+    <value>Could not open Database: </value>
+  </data>
+  <data name="MSDocVMMsg6" xml:space="preserve">
+    <value>Database Added</value>
+  </data>
+  <data name="MSDocVMMsg7" xml:space="preserve">
+    <value>Database: </value>
+  </data>
+  <data name="MSDocVMMsg8" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="MSDocVMMsg9" xml:space="preserve">
+    <value>Database: </value>
+  </data>
+  <data name="MSDocVMPg1" xml:space="preserve">
+    <value>Loading Layer Package...</value>
+  </data>
+  <data name="MSDocVMPg2" xml:space="preserve">
+    <value>Searching...</value>
+  </data>
+  <data name="MSDocVMSaveFln" xml:space="preserve">
+    <value>symbol</value>
+  </data>
+  <data name="MSDocVMSaveFlt" xml:space="preserve">
+    <value>Png Image|*.png</value>
+  </data>
+  <data name="MSDocVMSS" xml:space="preserve">
+    <value>Please click to enable add-in...</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value>Favorite already exists.</value>
+  </data>
+  <data name="SWMsg4" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="MSDocVMaff" xml:space="preserve">
+    <value>identity</value>
+  </data>
+  <data name="MSDocVMaff1" xml:space="preserve">
+    <value>affiliation</value>
+  </data>
+  <data name="MSDocVMCpt10" xml:space="preserve">
+    <value>Corrupt Favorites Files</value>
+  </data>
+  <data name="MSDocVMCpt11" xml:space="preserve">
+    <value>Error Adding Favorite</value>
+  </data>
+  <data name="MSDocVMCpt12" xml:space="preserve">
+    <value>Could Not Create Template</value>
+  </data>
+  <data name="MSDocVMCpt13" xml:space="preserve">
+    <value>Remove Military Overlay?</value>
+  </data>
+  <data name="MSDocVMCpt14" xml:space="preserve">
+    <value>Military Overlay Removed</value>
+  </data>
+  <data name="MSDocVMCpt15" xml:space="preserve">
+    <value>Add-in Disabled</value>
+  </data>
+  <data name="MSDocVMCpt16" xml:space="preserve">
+    <value>Invalid Selection</value>
+  </data>
+  <data name="MSDocVMCpt17" xml:space="preserve">
+    <value>Add-In Disabled</value>
+  </data>
+  <data name="MSDocVMCpt18" xml:space="preserve">
+    <value>Please Add Map to Your Project</value>
+  </data>
+  <data name="MSDocVMCpt19" xml:space="preserve">
+    <value>Retry Adding Military Overlay Data Model?</value>
+  </data>
+  <data name="MSDocVMCpt20" xml:space="preserve">
+    <value>Unable to Add Layer Package to Map</value>
+  </data>
+  <data name="MSDocVMExt1" xml:space="preserve">
+    <value>Exception caught: </value>
+  </data>
+  <data name="MSDocVMExt2" xml:space="preserve">
+    <value>The coordinates are invalid</value>
+  </data>
+  <data name="MSDocVMfri" xml:space="preserve">
+    <value>Friend</value>
+  </data>
+  <data name="MSDocVMfri1" xml:space="preserve">
+    <value>Friendly</value>
+  </data>
+  <data name="MSDocVMfri1Up" xml:space="preserve">
+    <value>: FRIEND</value>
+  </data>
+  <data name="MSDocVMfriUp" xml:space="preserve">
+    <value>FRIEND</value>
+  </data>
+  <data name="MSDocVMhos" xml:space="preserve">
+    <value>Hostile/Faker</value>
+  </data>
+  <data name="MSDocVMhos1" xml:space="preserve">
+    <value>Hostile</value>
+  </data>
+  <data name="MSDocVMhos1Up" xml:space="preserve">
+    <value>: HOSTILE</value>
+  </data>
+  <data name="MSDocVMhosUp" xml:space="preserve">
+    <value>HOSTILE</value>
+  </data>
+  <data name="MSDocVMImpExt" xml:space="preserve">
+    <value>.JSON</value>
+  </data>
+  <data name="MSDocVMImpFlt" xml:space="preserve">
+    <value>JSON Files (*.json)|*.json</value>
+  </data>
+  <data name="MSDocVMMsg25" xml:space="preserve">
+    <value>Deserialize failure: </value>
+  </data>
+  <data name="MSDocVMMsg26" xml:space="preserve">
+    <value>Error - the favorites file: </value>
+  </data>
+  <data name="MSDocVMMsg27" xml:space="preserve">
+    <value>could not be loaded.</value>
+  </data>
+  <data name="MSDocVMMsg28" xml:space="preserve">
+    <value>Please delete the file and try again.</value>
+  </data>
+  <data name="MSDocVMMsg29" xml:space="preserve">
+    <value>Could not create Favorite.</value>
+  </data>
+  <data name="MSDocVMMsg30" xml:space="preserve">
+    <value>Unable to add the current favorite. </value>
+  </data>
+  <data name="MSDocVMMsg31" xml:space="preserve">
+    <value>Could Not Create Template</value>
+  </data>
+  <data name="MSDocVMMsg32" xml:space="preserve">
+    <value>The import file you selected is invalid - please choose a valid JSON file.</value>
+  </data>
+  <data name="MSDocVMMsg33" xml:space="preserve">
+    <value>Removing the required Military Overlay layers will reset the Military Symbol Editor.</value>
+  </data>
+  <data name="MSDocVMMsg34" xml:space="preserve">
+    <value>Continue?</value>
+  </data>
+  <data name="MSDocVMMsg35" xml:space="preserve">
+    <value>The required Military Overlay layers have been removed from the active map.</value>
+  </data>
+  <data name="MSDocVMMsg36" xml:space="preserve">
+    <value>The Military Symbol Editor has been reset.</value>
+  </data>
+  <data name="MSDocVMMsg37" xml:space="preserve">
+    <value>The Military Symbol Editor requires the Military Overlay data model.</value>
+  </data>
+  <data name="MSDocVMMsg38" xml:space="preserve">
+    <value>Would you like to add the data model (database schema and layers) to the project?</value>
+  </data>
+  <data name="MSDocVMMsg39" xml:space="preserve">
+    <value>The Selected Feature does not seem to be a Military Feature or does not match the Military Standard in use (</value>
+  </data>
+  <data name="MSDocVMMsg40" xml:space="preserve">
+    <value>).</value>
+  </data>
+  <data name="MSDocVMMsg41" xml:space="preserve">
+    <value>The Required Military Style (</value>
+  </data>
+  <data name="MSDocVMMsg42" xml:space="preserve">
+    <value>) is not detected in Pro Install.</value>
+  </data>
+  <data name="MSDocVMMsg43" xml:space="preserve">
+    <value>The</value>
+  </data>
+  <data name="MSDocVMMsg44" xml:space="preserve">
+    <value> Military Overlay schema is not detected in any database in your project.</value>
+  </data>
+  <data name="MSDocVMMsg45" xml:space="preserve">
+    <value> so the Military Symbol Editor cannot continue. Would you like to add the Military Overlay Layer Package to your project?</value>
+  </data>
+  <data name="MSDocVMMsg46" xml:space="preserve">
+    <value>Your project does not contain any active map.  Create one and try again.</value>
+  </data>
+  <data name="MSDocVMMsg47" xml:space="preserve">
+    <value>The project map is not currently available.</value>
+  </data>
+  <data name="MSDocVMMsg48" xml:space="preserve">
+    <value>Would you like to try again?</value>
+  </data>
+  <data name="MSDocVMMsg49" xml:space="preserve">
+    <value>Note: wait for map to be visible and ready.</value>
+  </data>
+  <data name="MSDocVMMsg50" xml:space="preserve">
+    <value>Unable to add layer package to map.</value>
+  </data>
+  <data name="MSDocVMMsg51" xml:space="preserve">
+    <value>Please ensure the project contains a map and the map is visible.</value>
+  </data>
+  <data name="MSDocVMNeu" xml:space="preserve">
+    <value>Neutral</value>
+  </data>
+  <data name="MSDocVMNeu1Up" xml:space="preserve">
+    <value>: NEUTRAL</value>
+  </data>
+  <data name="MSDocVMNeuUp" xml:space="preserve">
+    <value>NEUTRAL</value>
+  </data>
+  <data name="MSDocVMSaveFln1" xml:space="preserve">
+    <value>favorites</value>
+  </data>
+  <data name="MSDocVMSaveFlt1" xml:space="preserve">
+    <value>JSON|*.json</value>
+  </data>
+  <data name="MSDocVMStr1" xml:space="preserve">
+    <value>symbolset</value>
+  </data>
+  <data name="MSDocVMStr2" xml:space="preserve">
+    <value>symbolentity</value>
+  </data>
+  <data name="MSDocVMStr3" xml:space="preserve">
+    <value>extendedfunctioncode</value>
+  </data>
+  <data name="MSDocVMStr4" xml:space="preserve">
+    <value>NEW_AT_2525D</value>
+  </data>
+  <data name="MSDocVMStr5" xml:space="preserve">
+    <value>ADD MAP TO PROJECT</value>
+  </data>
+  <data name="MSDocVMStr6" xml:space="preserve">
+    <value>ADD-IN NOT ENABLED</value>
+  </data>
+  <data name="MSDocVMStr7" xml:space="preserve">
+    <value>Military Layers Added</value>
+  </data>
+  <data name="MSDocVMStr8" xml:space="preserve">
+    <value>Add-in Not Enabled</value>
+  </data>
+  <data name="MSDocVMUnk" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="PSymMsg1" xml:space="preserve">
+    <value>Warning - GetStandardFromLabel unrecognized standard string: </value>
   </data>
 </root>

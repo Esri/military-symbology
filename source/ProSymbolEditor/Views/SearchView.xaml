@@ -55,7 +55,7 @@
                                         <VisualBrush.Visual>
                                             <Label 
                                                                     Width="10000"
-                                                                    Content="Search..." />
+                                                                    Content="{x:Static prop:Resources.SearLabel1}" />
                                         </VisualBrush.Visual>
                                     </VisualBrush>
                                 </Style.Resources>
@@ -81,9 +81,9 @@
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
                                             Foreground="{DynamicResource Esri_TextControlBrush}" 
-                                            Background="{Binding Backgound, ElementName=searchSymbolsTextBox}"
+                                            Background="{Binding Background, ElementName=searchSymbolsTextBox}"
                                             Command="{Binding ClearSearchTextCommand}"
-                                            Content="X" />
+                                            Content="{x:Static prop:Resources.SearBtn1}" />
 
                     <ListBox
                                             x:Name="symbolListBox"
@@ -133,7 +133,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Content="Result Count:" />
+                        <Label Grid.Column="0" Content="{x:Static prop:Resources.SearLabel2}" />
                         <Label Grid.Column="1" Content="{Binding ResultCount, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
 
@@ -155,8 +155,8 @@
                         Source="{Binding SymbolAttributeSet.SymbolImage}">
                         <Image.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding SaveImageToCommand}" Header="Save Image As..." />
-                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="Copy Image to Clipboard" />
+                                <MenuItem Command="{Binding SaveImageToCommand}" Header="{x:Static prop:Resources.SearMenu1}" />
+                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="{x:Static prop:Resources.SearMenu2}" />
                             </ContextMenu>
                         </Image.ContextMenu>
                     </Image>
@@ -169,7 +169,7 @@
                         ItemsSource="{Binding SelectedStyleTags, UpdateSourceTrigger=PropertyChanged}">
                         <ItemsControl.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Copy" Click="CopyTagsButton" />
+                                <MenuItem Header="{x:Static prop:Resources.SearMenu3}" Click="CopyTagsButton" />
                             </ContextMenu>
                         </ItemsControl.ContextMenu>                        
                         <ItemsControl.ItemTemplate>
@@ -225,7 +225,7 @@
                                     Grid.Column="0"
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveSymbolFileCommand}"
-                                    Content="Add Favorite"
+                                    Content="{x:Static prop:Resources.SearBtn2}"
                                     IsEnabled="{Binding IsStyleItemSelected}"
                                     Style="{DynamicResource Esri_SimpleButton}" />
             <ToggleButton
@@ -235,10 +235,10 @@
                                     HorizontalAlignment="Center"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
-                                    Content=" Add to Map "
+                                    Content="{x:Static prop:Resources.SearToggleBtn3}"
                                     IsChecked="{Binding AddToMapToolEnabled, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="{Binding IsStyleItemSelected}"
-                                    ToolTip="Add to Map"
+                                    ToolTip="{x:Static prop:Resources.SearToggleBtn3ToolTip}"
                                     Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
                 <ToggleButton.Style>
                     <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
@@ -253,7 +253,7 @@
                                     CommandParameter="2"
                                     IsEnabled="{Binding IsStyleItemSelected}"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
-                                    ToolTip="Go to Symbol Tab">
+                                    ToolTip="{x:Static prop:Resources.SearBtn4}">
                 <Button.RenderTransform>
                     <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
                 </Button.RenderTransform>
