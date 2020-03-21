@@ -178,9 +178,9 @@ namespace ProSymbolEditor
                 if (hasStandard)
                 {
                     ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        Properties.Resources.SWMsg1 + selectedGDB + System.Environment.NewLine + Properties.Resources.SWMsg2 + System.Environment.NewLine +
-                        ProSymbolUtilities.GetStandardLabel(standardFound) + Properties.Resources.SWMsg4 + System.Environment.NewLine +   Properties.Resources.SWMsg3
-                        , Properties.Resources.SWCaption,
+                        Properties.Resources.SWStDbMsg + selectedGDB + System.Environment.NewLine + Properties.Resources.SWStSchMsg + System.Environment.NewLine +
+                        ProSymbolUtilities.GetStandardLabel(standardFound) + Properties.Resources.SWStEndMsg + System.Environment.NewLine +   Properties.Resources.SWStSetMsg
+                        , Properties.Resources.SWMsgCaption,
                         MessageBoxButton.OK, MessageBoxImage.Information);
 
                     Standard = standardFound;

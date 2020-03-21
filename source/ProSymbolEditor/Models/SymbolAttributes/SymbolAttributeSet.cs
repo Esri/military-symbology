@@ -282,7 +282,7 @@ namespace ProSymbolEditor
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Trace.WriteLine("Exception in GetBitmapImageAsync: " + ex.Message);
+                    System.Diagnostics.Trace.WriteLine(Properties.Resources.SymAttrBmpExc + ex.Message);
                     return null;
                 }
              });
@@ -453,7 +453,7 @@ namespace ProSymbolEditor
             if (rowBuffer == null)
             {
                 // not normally possible with ref parameter, but check just in case
-                System.Diagnostics.Debug.WriteLine("Null RowBuffer passed to PopulateRowBufferWithAttributes");
+                System.Diagnostics.Debug.WriteLine(Properties.Resources.SymAttNullRowBuffer);
                 return;
             }
 
@@ -652,7 +652,7 @@ namespace ProSymbolEditor
             if (feature == null)
             {
                 // not normally possible with ref parameter, but check just in case
-                System.Diagnostics.Debug.WriteLine("Null Feature passed to PopulateFeatureWithAttributes");
+                System.Diagnostics.Debug.WriteLine(Properties.Resources.SymAttNullFeaPassed);
                 return;
             }
 

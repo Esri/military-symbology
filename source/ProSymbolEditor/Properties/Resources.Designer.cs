@@ -61,74 +61,74 @@ namespace ProSymbolEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About.
+        ///   Looks up a localized string similar to http://esriurl.com/AFDMilitaryOverlay.
         /// </summary>
-        public static string AbtTitle {
+        public static string AbtWinAFDUrl {
             get {
-                return ResourceManager.GetString("AbtTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Military Symbol Editor.
-        /// </summary>
-        public static string AbtTxt1 {
-            get {
-                return ResourceManager.GetString("AbtTxt1", resourceCulture);
+                return ResourceManager.GetString("AbtWinAFDUrl", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The Military Symbol Editor is a tool for quickly creating military overlays in ArcGIS Pro using the Military Overlay template. The tool is useful for searching, modifying attributes, and previewing military symbols. These military symbols can then be added to the map through map click or entering coordinates. The Military Symbol Editor is intended to be used with the ArcGIS for Defense Military Overlay Template or the Military Overlay Information Model..
         /// </summary>
-        public static string AbtTxt2 {
+        public static string AbtWinDescTxt {
             get {
-                return ResourceManager.GetString("AbtTxt2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Resources.
-        /// </summary>
-        public static string AbtTxt3 {
-            get {
-                return ResourceManager.GetString("AbtTxt3", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Military Overlay Template.
-        /// </summary>
-        public static string AbtTxt4 {
-            get {
-                return ResourceManager.GetString("AbtTxt4", resourceCulture);
+                return ResourceManager.GetString("AbtWinDescTxt", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Military Overlay Information Model.
         /// </summary>
-        public static string AbtTxt5 {
+        public static string AbtWinMilOvrInf {
             get {
-                return ResourceManager.GetString("AbtTxt5", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to http://esriurl.com/AFDMilitaryOverlay.
-        /// </summary>
-        public static string AbtUrl4 {
-            get {
-                return ResourceManager.GetString("AbtUrl4", resourceCulture);
+                return ResourceManager.GetString("AbtWinMilOvrInf", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to http://esriurl.com/MilitaryOverlayInformationModel.
         /// </summary>
-        public static string AbtUrl5 {
+        public static string AbtWinMilOvrInfUrl {
             get {
-                return ResourceManager.GetString("AbtUrl5", resourceCulture);
+                return ResourceManager.GetString("AbtWinMilOvrInfUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Military Overlay Template.
+        /// </summary>
+        public static string AbtWinMilOvrTmp {
+            get {
+                return ResourceManager.GetString("AbtWinMilOvrTmp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Military Symbol Editor.
+        /// </summary>
+        public static string AbtWinMilSymTxt {
+            get {
+                return ResourceManager.GetString("AbtWinMilSymTxt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resources.
+        /// </summary>
+        public static string AbtWinResTxt {
+            get {
+                return ResourceManager.GetString("AbtWinResTxt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        public static string AbtWinTitle {
+            get {
+                return ResourceManager.GetString("AbtWinTitle", resourceCulture);
             }
         }
         
@@ -162,126 +162,180 @@ namespace ProSymbolEditor.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Add Coordinate(s) to Map.
         /// </summary>
-        public static string CoordBtn1 {
+        public static string CoordBtnAddCoordinate {
             get {
-                return ResourceManager.GetString("CoordBtn1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mark/Pan to Coordinate.
-        /// </summary>
-        public static string CoordBtn2 {
-            get {
-                return ResourceManager.GetString("CoordBtn2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Back to Label.
-        /// </summary>
-        public static string CoordBtn3ToolTip {
-            get {
-                return ResourceManager.GetString("CoordBtn3ToolTip", resourceCulture);
+                return ResourceManager.GetString("CoordBtnAddCoordinate", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Add Favorite.
         /// </summary>
-        public static string CoordBtn4 {
+        public static string CoordBtnAddFavorite {
             get {
-                return ResourceManager.GetString("CoordBtn4", resourceCulture);
+                return ResourceManager.GetString("CoordBtnAddFavorite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Back to Label.
+        /// </summary>
+        public static string CoordBtnBack2LblToolTip {
+            get {
+                return ResourceManager.GetString("CoordBtnBack2LblToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mark/Pan to Coordinate.
+        /// </summary>
+        public static string CoordBtnMarkPan {
+            get {
+                return ResourceManager.GetString("CoordBtnMarkPan", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Save Edits.
         /// </summary>
-        public static string CoordBtn5 {
+        public static string CoordBtnSaveEdits {
             get {
-                return ResourceManager.GetString("CoordBtn5", resourceCulture);
+                return ResourceManager.GetString("CoordBtnSaveEdits", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Save Edits.
         /// </summary>
-        public static string CoordBtn5ToolTip {
+        public static string CoordBtnSaveEditsToolTip {
             get {
-                return ResourceManager.GetString("CoordBtn5ToolTip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to List of Coordinates.
-        /// </summary>
-        public static string CoordDGHeader1 {
-            get {
-                return ResourceManager.GetString("CoordDGHeader1", resourceCulture);
+                return ResourceManager.GetString("CoordBtnSaveEditsToolTip", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Attribute.
         /// </summary>
-        public static string CoordDGHeader2 {
+        public static string CoordDGHeaderAttr {
             get {
-                return ResourceManager.GetString("CoordDGHeader2", resourceCulture);
+                return ResourceManager.GetString("CoordDGHeaderAttr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List of Coordinates.
+        /// </summary>
+        public static string CoordDGHeaderListOfCoords {
+            get {
+                return ResourceManager.GetString("CoordDGHeaderListOfCoords", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Value.
         /// </summary>
-        public static string CoordDGHeader3 {
+        public static string CoordDGHeaderVal {
             get {
-                return ResourceManager.GetString("CoordDGHeader3", resourceCulture);
+                return ResourceManager.GetString("CoordDGHeaderVal", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Coordinates.
         /// </summary>
-        public static string CoordLabel1 {
+        public static string CoordLblCoordinates {
             get {
-                return ResourceManager.GetString("CoordLabel1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Save Image As....
-        /// </summary>
-        public static string CoordMenu1 {
-            get {
-                return ResourceManager.GetString("CoordMenu1", resourceCulture);
+                return ResourceManager.GetString("CoordLblCoordinates", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Copy Image to Clipboard.
         /// </summary>
-        public static string CoordMenu2 {
+        public static string CoordMenuCopyImage {
             get {
-                return ResourceManager.GetString("CoordMenu2", resourceCulture);
+                return ResourceManager.GetString("CoordMenuCopyImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Image As....
+        /// </summary>
+        public static string CoordMenuSaveImage {
+            get {
+                return ResourceManager.GetString("CoordMenuSaveImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The coordinates are invalid.
+        /// </summary>
+        public static string CoordObjInvalidCoordinates {
+            get {
+                return ResourceManager.GetString("CoordObjInvalidCoordinates", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to  Add to Map .
         /// </summary>
-        public static string CoordToggleBtn1 {
+        public static string CoordToggleBtnAddMap {
             get {
-                return ResourceManager.GetString("CoordToggleBtn1", resourceCulture);
+                return ResourceManager.GetString("CoordToggleBtnAddMap", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Add to Map.
         /// </summary>
-        public static string CoordToggleBtn1ToolTip {
+        public static string CoordToggleBtnAddMapToolTip {
             get {
-                return ResourceManager.GetString("CoordToggleBtn1ToolTip", resourceCulture);
+                return ResourceManager.GetString("CoordToggleBtnAddMapToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to app6b.
+        /// </summary>
+        public static string Enumapp6b {
+            get {
+                return ResourceManager.GetString("Enumapp6b", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to app6d.
+        /// </summary>
+        public static string Enumapp6d {
+            get {
+                return ResourceManager.GetString("Enumapp6d", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to mil2525b.
+        /// </summary>
+        public static string Enummil2525b {
+            get {
+                return ResourceManager.GetString("Enummil2525b", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to mil2525c.
+        /// </summary>
+        public static string Enummil2525c {
+            get {
+                return ResourceManager.GetString("Enummil2525c", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to mil2525d.
+        /// </summary>
+        public static string Enummil2525d {
+            get {
+                return ResourceManager.GetString("Enummil2525d", resourceCulture);
             }
         }
         
@@ -417,6 +471,24 @@ namespace ProSymbolEditor.Properties {
         public static string FavToggleBtn7ToolTip {
             get {
                 return ResourceManager.GetString("FavToggleBtn7ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The label entered is at the maximum allowable length for this feature field.
+        /// </summary>
+        public static string LblAttrLenError {
+            get {
+                return ResourceManager.GetString("LblAttrLenError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label Attributes.
+        /// </summary>
+        public static string LblAttrToString {
+            get {
+                return ResourceManager.GetString("LblAttrToString", resourceCulture);
             }
         }
         
@@ -651,6 +723,24 @@ namespace ProSymbolEditor.Properties {
         public static string LblToggleBtn3ToolTip {
             get {
                 return ResourceManager.GetString("LblToggleBtn3ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to militaryoverlay.
+        /// </summary>
+        public static string MilOvrDMDSTName {
+            get {
+                return ResourceManager.GetString("MilOvrDMDSTName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Military Overlay.
+        /// </summary>
+        public static string MilOvrDMName {
+            get {
+                return ResourceManager.GetString("MilOvrDMName", resourceCulture);
             }
         }
         
@@ -1762,11 +1852,263 @@ namespace ProSymbolEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to APP-6(B).
+        /// </summary>
+        public static string PSymapp6b {
+            get {
+                return ResourceManager.GetString("PSymapp6b", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to APP-6(D).
+        /// </summary>
+        public static string PSymapp6d {
+            get {
+                return ResourceManager.GetString("PSymapp6d", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Geodatabase.
+        /// </summary>
+        public static string PSymBwItemGDB {
+            get {
+                return ResourceManager.GetString("PSymBwItemGDB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to mil2525bc2.
+        /// </summary>
+        public static string PSymDic2525b {
+            get {
+                return ResourceManager.GetString("PSymDic2525b", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to mil2525c.
+        /// </summary>
+        public static string PSymDic2525c {
+            get {
+                return ResourceManager.GetString("PSymDic2525c", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to app6b.
+        /// </summary>
+        public static string PSymDicapp6b {
+            get {
+                return ResourceManager.GetString("PSymDicapp6b", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to app6d.
+        /// </summary>
+        public static string PSymDicapp6d {
+            get {
+                return ResourceManager.GetString("PSymDicapp6d", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to mil2525d.
+        /// </summary>
+        public static string PSymDicDef {
+            get {
+                return ResourceManager.GetString("PSymDicDef", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to mil2525c_b2.
+        /// </summary>
+        public static string PSymDicOth {
+            get {
+                return ResourceManager.GetString("PSymDicOth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MilitaryOverlayAPP6B.
+        /// </summary>
+        public static string PSymDtsNameapp6b {
+            get {
+                return ResourceManager.GetString("PSymDtsNameapp6b", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to militaryoverlayapp6d.
+        /// </summary>
+        public static string PSymDtsNameapp6d {
+            get {
+                return ResourceManager.GetString("PSymDtsNameapp6d", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to militaryoverlay2525d.
+        /// </summary>
+        public static string PSymDtsNameDef {
+            get {
+                return ResourceManager.GetString("PSymDtsNameDef", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to militaryoverlay2525b2.
+        /// </summary>
+        public static string PSymDtsNamemil2525b {
+            get {
+                return ResourceManager.GetString("PSymDtsNamemil2525b", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MilitaryOverlay2525C.
+        /// </summary>
+        public static string PSymDtsNamemil2525c {
+            get {
+                return ResourceManager.GetString("PSymDtsNamemil2525c", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning - unable to execute command: .
+        /// </summary>
+        public static string PSymExcCmdWar {
+            get {
+                return ResourceManager.GetString("PSymExcCmdWar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MIL-STD-2525B w/ Change 2.
+        /// </summary>
+        public static string PSymmil2525b {
+            get {
+                return ResourceManager.GetString("PSymmil2525b", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MIL-STD-2525C.
+        /// </summary>
+        public static string PSymmil2525c {
+            get {
+                return ResourceManager.GetString("PSymmil2525c", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MIL-STD-2525D.
+        /// </summary>
+        public static string PSymmil2525d {
+            get {
+                return ResourceManager.GetString("PSymmil2525d", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Warning - GetStandardFromLabel unrecognized standard string: .
         /// </summary>
-        public static string PSymMsg1 {
+        public static string PSymStFromLblMsg {
             get {
-                return ResourceManager.GetString("PSymMsg1", resourceCulture);
+                return ResourceManager.GetString("PSymStFromLblMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to APP6B.
+        /// </summary>
+        public static string PSymStLblapp6b {
+            get {
+                return ResourceManager.GetString("PSymStLblapp6b", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to APP6D.
+        /// </summary>
+        public static string PSymStLblapp6d {
+            get {
+                return ResourceManager.GetString("PSymStLblapp6d", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2525D.
+        /// </summary>
+        public static string PSymStLblDef {
+            get {
+                return ResourceManager.GetString("PSymStLblDef", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2525B.
+        /// </summary>
+        public static string PSymStLblmil2525b {
+            get {
+                return ResourceManager.GetString("PSymStLblmil2525b", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2525C.
+        /// </summary>
+        public static string PSymStLblmil2525c {
+            get {
+                return ResourceManager.GetString("PSymStLblmil2525c", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to APP6B.
+        /// </summary>
+        public static string PSymStNameapp6b {
+            get {
+                return ResourceManager.GetString("PSymStNameapp6b", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to APP6D.
+        /// </summary>
+        public static string PSymStNameapp6d {
+            get {
+                return ResourceManager.GetString("PSymStNameapp6d", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2525D.
+        /// </summary>
+        public static string PSymStNameDef {
+            get {
+                return ResourceManager.GetString("PSymStNameDef", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2525Bc2.
+        /// </summary>
+        public static string PSymStNamemil2525b {
+            get {
+                return ResourceManager.GetString("PSymStNamemil2525b", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2525C.
+        /// </summary>
+        public static string PSymStNamemil2525c {
+            get {
+                return ResourceManager.GetString("PSymStNamemil2525c", resourceCulture);
             }
         }
         
@@ -1872,72 +2214,99 @@ namespace ProSymbolEditor.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Database Contains Schema.
         /// </summary>
-        public static string SWCaption {
+        public static string SWMsgCaption {
             get {
-                return ResourceManager.GetString("SWCaption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Military Overlay _Database:.
-        /// </summary>
-        public static string SWLabel1 {
-            get {
-                return ResourceManager.GetString("SWLabel1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Military Symbology _Standard:.
-        /// </summary>
-        public static string SWLabel2 {
-            get {
-                return ResourceManager.GetString("SWLabel2", resourceCulture);
+                return ResourceManager.GetString("SWMsgCaption", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Database: .
         /// </summary>
-        public static string SWMsg1 {
+        public static string SWStDbMsg {
             get {
-                return ResourceManager.GetString("SWMsg1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to contains a schema for standard: .
-        /// </summary>
-        public static string SWMsg2 {
-            get {
-                return ResourceManager.GetString("SWMsg2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Setting standard to this value..
-        /// </summary>
-        public static string SWMsg3 {
-            get {
-                return ResourceManager.GetString("SWMsg3", resourceCulture);
+                return ResourceManager.GetString("SWStDbMsg", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to ..
         /// </summary>
-        public static string SWMsg4 {
+        public static string SWStEndMsg {
             get {
-                return ResourceManager.GetString("SWMsg4", resourceCulture);
+                return ResourceManager.GetString("SWStEndMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to contains a schema for standard: .
+        /// </summary>
+        public static string SWStSchMsg {
+            get {
+                return ResourceManager.GetString("SWStSchMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setting standard to this value..
+        /// </summary>
+        public static string SWStSetMsg {
+            get {
+                return ResourceManager.GetString("SWStSetMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Military Overlay _Database:.
+        /// </summary>
+        public static string SWWinMilOvrDBLbl {
+            get {
+                return ResourceManager.GetString("SWWinMilOvrDBLbl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Military Symbology _Standard:.
+        /// </summary>
+        public static string SWWinMilSymStLbl {
+            get {
+                return ResourceManager.GetString("SWWinMilSymStLbl", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Application Settings.
         /// </summary>
-        public static string SWTitle {
+        public static string SWWinTitle {
             get {
-                return ResourceManager.GetString("SWTitle", resourceCulture);
+                return ResourceManager.GetString("SWWinTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Null Feature passed to PopulateFeatureWithAttributes.
+        /// </summary>
+        public static string SymAttNullFeaPassed {
+            get {
+                return ResourceManager.GetString("SymAttNullFeaPassed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Null RowBuffer passed to PopulateRowBufferWithAttributes.
+        /// </summary>
+        public static string SymAttNullRowBuffer {
+            get {
+                return ResourceManager.GetString("SymAttNullRowBuffer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exception in GetBitmapImageAsync: .
+        /// </summary>
+        public static string SymAttrBmpExc {
+            get {
+                return ResourceManager.GetString("SymAttrBmpExc", resourceCulture);
             }
         }
         
@@ -2109,6 +2478,15 @@ namespace ProSymbolEditor.Properties {
         public static string SymMenu2 {
             get {
                 return ResourceManager.GetString("SymMenu2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GetFeatureClassFromExtendedFunctionCode - could not find feature class for: .
+        /// </summary>
+        public static string SymSMapFCLNotFound {
+            get {
+                return ResourceManager.GetString("SymSMapFCLNotFound", resourceCulture);
             }
         }
         

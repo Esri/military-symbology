@@ -72,7 +72,7 @@ namespace ProSymbolEditor
                     case "Coordinate":
                         if (!IsValid)
                         {
-                            Error = "The coordinates are invalid";
+                            Error = Properties.Resources.CoordObjInvalidCoordinates;
                         }
                         break;
                 }

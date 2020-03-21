@@ -70,7 +70,7 @@ namespace ProSymbolEditor
                 }
             }
 
-            System.Diagnostics.Trace.WriteLine("GetFeatureClassFromExtendedFunctionCode - could not find feature class for: " + symbolSet);
+            System.Diagnostics.Trace.WriteLine(Properties.Resources.SymSMapFCLNotFound + symbolSet);
             return "";
         }
 
@@ -93,7 +93,7 @@ namespace ProSymbolEditor
 
             }
 
-            System.Diagnostics.Trace.WriteLine("GetFeatureClassFromExtendedFunctionCode - could not find feature class for: " + extendedFunctionCode);
+            System.Diagnostics.Trace.WriteLine(Properties.Resources.SymSMapFCLNotFound + extendedFunctionCode);
             return "";
         }
 

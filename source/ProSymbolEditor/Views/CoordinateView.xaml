@@ -33,7 +33,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0" Content="{x:Static prop:Resources.CoordLabel1}"
+                    <Label Grid.Row="0" Content="{x:Static prop:Resources.CoordLblCoordinates}"
  />
                     <AdornerDecorator Grid.Row="1">
                         <Grid>
@@ -58,7 +58,7 @@
                                     <DataGridTextColumn
                                                             Width="*"
                                                             Binding="{Binding Coordinate, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                                                            Header="{x:Static prop:Resources.CoordDGHeader1}"
+                                                            Header="{x:Static prop:Resources.CoordDGHeaderListOfCoords}"
  />
                                 </DataGrid.Columns>
                             </DataGrid>
@@ -71,14 +71,14 @@
                                                 HorizontalAlignment="Left"
                                                 Command="{Binding AddCoordinateToMapCommand}"
                                                 CommandParameter="True"
-                                                Content="{x:Static prop:Resources.CoordBtn1}"
+                                                Content="{x:Static prop:Resources.CoordBtnAddCoordinate}"
                                                 Style="{DynamicResource Esri_SimpleButton}"
                                                 Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
                         <Button
                                                 HorizontalAlignment="Left"
                                                 Command="{Binding MarkCoordinateOnMapCommand}"
                                                 CommandParameter="True"
-                                                Content="{x:Static prop:Resources.CoordBtn2}"
+                                                Content="{x:Static prop:Resources.CoordBtnMarkPan}"
                                                 Style="{DynamicResource Esri_SimpleButton}"
                                                 Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" />
                     </WrapPanel>
@@ -100,8 +100,8 @@
                                             Source="{Binding SymbolAttributeSet.SymbolImage}">
                         <Image.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding SaveImageToCommand}" Header="{x:Static prop:Resources.CoordMenu1}" />
-                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="{x:Static prop:Resources.CoordMenu2}"  />
+                                <MenuItem Command="{Binding SaveImageToCommand}" Header="{x:Static prop:Resources.CoordMenuSaveImage}" />
+                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="{x:Static prop:Resources.CoordMenuCopyImage}"  />
                             </ContextMenu>
                         </Image.ContextMenu>
                     </Image>
@@ -126,8 +126,8 @@
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="{x:Static prop:Resources.CoordDGHeader2}"  Binding="{Binding Key}" />
-                            <DataGridTextColumn Header="{x:Static prop:Resources.CoordDGHeader3}" Binding="{Binding Value}" />
+                            <DataGridTextColumn Header="{x:Static prop:Resources.CoordDGHeaderAttr}"  Binding="{Binding Key}" />
+                            <DataGridTextColumn Header="{x:Static prop:Resources.CoordDGHeaderVal}" Binding="{Binding Value}" />
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -149,7 +149,7 @@
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="3"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
-                                    ToolTip="{x:Static prop:Resources.CoordBtn3ToolTip}" >
+                                    ToolTip="{x:Static prop:Resources.CoordBtnBack2LblToolTip}" >
                 <Button.RenderTransform>
                     <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
                 </Button.RenderTransform>
@@ -158,7 +158,7 @@
                                     Grid.Column="1"                                 
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveSymbolFileCommand}"
-                                    Content="{x:Static prop:Resources.CoordBtn4}"
+                                    Content="{x:Static prop:Resources.CoordBtnAddFavorite}"
                                     Style="{DynamicResource Esri_SimpleButton}" />
             <ToggleButton
                                     Grid.Column="2"                                    
@@ -166,9 +166,9 @@
                                     HorizontalAlignment="Center"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
-                                    Content="{x:Static prop:Resources.CoordToggleBtn1}"
+                                    Content="{x:Static prop:Resources.CoordToggleBtnAddMap}"
                                     IsChecked="{Binding AddToMapToolEnabled}"
-                                    ToolTip="{x:Static prop:Resources.CoordToggleBtn1ToolTip}"
+                                    ToolTip="{x:Static prop:Resources.CoordToggleBtnAddMapToolTip}"
                                     Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}" >
                 <ToggleButton.Style>
                     <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
@@ -179,9 +179,9 @@
                                     Height="24"
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveEditsCommand}"
-                                    Content="{x:Static prop:Resources.CoordBtn5}"
+                                    Content="{x:Static prop:Resources.CoordBtnSaveEdits}"
                                     Style="{DynamicResource Esri_SimpleButton}"
-                                    ToolTip="{x:Static prop:Resources.CoordBtn5ToolTip}"
+                                    ToolTip="{x:Static prop:Resources.CoordBtnSaveEditsToolTip}"
                                     Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
         </Grid>
     </Grid>
