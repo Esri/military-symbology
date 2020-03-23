@@ -78,7 +78,7 @@ namespace ProSymbolEditor
                     IsStyleItemSelected = false;
                     SelectedTabIndex = 0;
 
-                    _searchString = Properties.Resources.MSDocVMSS;
+                    _searchString = Properties.Resources.MilSymDPEnableAddIn;
                 }
                 else
                 {
@@ -272,13 +272,13 @@ namespace ProSymbolEditor
             {
                 resetViewModelState();
                 IsAddinEnabled = false;
-                StatusMessage = Properties.Resources.MSDocVMMsg1;
+                StatusMessage = Properties.Resources.MilSymDPAddInDisabled;
 
                 return;
             }
 
             ProSymbolUtilities.Standard = foundStandard;
-            StatusMessage = Properties.Resources.MSDocVMMsg2;
+            StatusMessage = Properties.Resources.MilSymDPMsgInitialized;
             IsAddinEnabled = true;
 
             //Add military style to project
@@ -369,8 +369,8 @@ namespace ProSymbolEditor
             SelectedFeaturesCollection = new ObservableCollection<SelectedFeature>();
             BindingOperations.EnableCollectionSynchronization(SelectedFeaturesCollection, _lock);
 
-            _progressDialogLoad = new ProgressDialog(Properties.Resources.MSDocVMPg1);
-            _progressDialogSearch = new ProgressDialog(Properties.Resources.MSDocVMPg2);
+            _progressDialogLoad = new ProgressDialog(Properties.Resources.MilSymDPLoadLyrPkg);
+            _progressDialogSearch = new ProgressDialog(Properties.Resources.MilSymDPSrch);
 
             //Load saved favorites
             _favoritesFilePath = System.IO.Path.Combine(ProSymbolUtilities.UserSettingsLocation(), "SymbolFavorites.json");
@@ -781,7 +781,7 @@ namespace ProSymbolEditor
                 }
                 catch (Exception exception)
                 {
-                    System.Diagnostics.Trace.WriteLine(Properties.Resources.MSDocVMEx1 + exception.Message);
+                    System.Diagnostics.Trace.WriteLine(Properties.Resources.MilSymDPExcSelectedFeature + exception.Message);
                 }
 
                 // if not on Symbol or Label Tab, set to Symbol Tab
@@ -859,9 +859,9 @@ namespace ProSymbolEditor
             get
             {
                 if (ProSymbolUtilities.IsLegacyStandard())
-                    return Properties.Resources.MSDocVMEchLabel1;
+                    return Properties.Resources.MilSymDPLblEchelonMobility;
                 else
-                    return Properties.Resources.MSDocVMEchLabel2;
+                    return Properties.Resources.MilSymDPLblEchelon;
             }
         }
 
@@ -1144,18 +1144,18 @@ namespace ProSymbolEditor
             bool isSettingsReadOnly = false;
             if (enabledWithPreviousStandard && !initialConfiguration)
             {
-                string message = Properties.Resources.MSDocVMMsg3 + 
-                    ProSymbolUtilities.GetStandardLabel(previousSettingStandard) + Properties.Resources.MSDocVMMsg8 + System.Environment.NewLine + Properties.Resources.MSDocVMMsg4;
+                string message = Properties.Resources.MilSymDPMsgContainsDbSchema +
+                    ProSymbolUtilities.GetStandardLabel(previousSettingStandard) + Properties.Resources.MilSymDPMsgEnd + System.Environment.NewLine + Properties.Resources.MilSymDPMsgCreateNewPrj;
                 MessageBoxResult result = 
                     ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message,
-                    Properties.Resources.MSDocVMCpt1, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    Properties.Resources.MilSymDPAppSettingsCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 isSettingsReadOnly = true;
             }
 
             if (!isSettingsReadOnly)
             {
                 // set this status in case user cancels any of this setup at start
-                StatusMessage = Properties.Resources.MSDocVMMsg1;
+                StatusMessage = Properties.Resources.MilSymDPAddInDisabled;
             }
 
             SettingsWindow settingsWindow = new SettingsWindow();
@@ -1187,8 +1187,8 @@ namespace ProSymbolEditor
                 if (!(currentItem is GDBProjectItem))
                 {
                     ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        Properties.Resources.MSDocVMMsg5 + newDatabase,
-                        Properties.Resources.MSDocVMCpt2,
+                        Properties.Resources.MilSymDPMsgNotOpenDb + newDatabase,
+                        Properties.Resources.MilSymDPCouldNotOpenDbCaption,
                         MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return false;
                 }
@@ -1212,7 +1212,7 @@ namespace ProSymbolEditor
 
                 if (enabledWithNewStandard)
                 {
-                    StatusMessage = Properties.Resources.MSDocVMMsg6;
+                    StatusMessage = Properties.Resources.MilSymDPMsgDbAdded;
                 }
                 else
                 {
@@ -1225,10 +1225,10 @@ namespace ProSymbolEditor
                     if (dbAlreadyContainsMilitaryOverlay)
                     {
                         ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                            Properties.Resources.MSDocVMMsg9 + newDatabase + System.Environment.NewLine +
-                            Properties.Resources.MSDocVMMsg10 + System.Environment.NewLine +
-                            Properties.Resources.MSDocVMMsg11,
-                            Properties.Resources.MSDocVMCpt3, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                            Properties.Resources.MilSymDPMsgDb + newDatabase + System.Environment.NewLine +
+                            Properties.Resources.MilSymDPMsgHasMilOverlaySchema + System.Environment.NewLine +
+                            Properties.Resources.MilSymDPMsgDiffDbAddInSettings,
+                            Properties.Resources.MilSymDPUnableSelectDbCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
                         // Remove the item added above
                         await QueuedTask.Run(() => Project.Current.RemoveItem(currentItem as IProjectItem));
@@ -1253,12 +1253,12 @@ namespace ProSymbolEditor
             if (!enabledWithNewStandard)
             {
                 var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                    Properties.Resources.MSDocVMMsg12 + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgMilOverlaySchema + System.Environment.NewLine +
                     ProSymbolUtilities.GetStandardLabel(newSettingStandard) + System.Environment.NewLine +
-                    Properties.Resources.MSDocVMMsg13 + 
+                    Properties.Resources.MilSymDPMsgAddDb +
                     newDatabase + System.Environment.NewLine +
-                    Properties.Resources.MSDocVMMsg14
-                    , Properties.Resources.MSDocVMCpt4,
+                    Properties.Resources.MilSymDPMsgTakeSeveralMins
+                    , Properties.Resources.MilSymDPAddSchemaDbCaption,
                     MessageBoxButton.OKCancel, MessageBoxImage.Information);
 
                 if (Convert.ToString(result) == "Cancel")
@@ -1271,9 +1271,9 @@ namespace ProSymbolEditor
                 if (!success)
                 {
                     ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        Properties.Resources.MSDocVMMsg15 + System.Environment.NewLine +
-                        Properties.Resources.MSDocVMMsg16,
-                        Properties.Resources.MSDocVMCpt5, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        Properties.Resources.MilSymDPMsgUnable2AddLyrPkg + System.Environment.NewLine +
+                        Properties.Resources.MilSymDPMsgTryAgainAddInSettings,
+                        Properties.Resources.MilSymDPUnable2AddLyrPkgCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
                     return false;
                 }
@@ -1282,12 +1282,12 @@ namespace ProSymbolEditor
                 ProSymbolUtilities.SaveProject();
                 enabledWithNewStandard = true;
 
-                StatusMessage = Properties.Resources.MSDocVMMsg17;
+                StatusMessage = Properties.Resources.MilSymDPMsgMilLyrAdded;
             }
 
             if (!enabledWithNewStandard)
             {
-                StatusMessage = Properties.Resources.MSDocVMMsg1;
+                StatusMessage = Properties.Resources.MilSymDPAddInDisabled;
                 return false;
             }
 
@@ -1434,7 +1434,7 @@ namespace ProSymbolEditor
             }
 
 
-            StatusMessage = Properties.Resources.MSDocVMMsg18;
+            StatusMessage = Properties.Resources.MilSymDPMsgSrchComplete;
 
             NotifyPropertyChanged(() => StyleItems);
 
@@ -1471,15 +1471,15 @@ namespace ProSymbolEditor
             {
                 string requiredLayerName = _currentFeatureClassName;
                 if (string.IsNullOrEmpty(requiredLayerName))
-                    requiredLayerName = Properties.Resources.MSDocVMMsg19;
+                    requiredLayerName = Properties.Resources.MilSymDPMsgLyrNotFound;
 
                 // Could not find layer in map - ask to re-add it
-                string warningMessage = Properties.Resources.MSDocVMMsg20 + System.Environment.NewLine +
-                    Properties.Resources.MSDocVMMsg21 + requiredLayerName + "." + System.Environment.NewLine +
-                    Properties.Resources.MSDocVMMsg22;
+                string warningMessage = Properties.Resources.MilSymDPMsgReqLyrNotActive + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgReqLyr + requiredLayerName + "." + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgAddMilOverlayLyr;
                 Debug.WriteLine(warningMessage);
                 MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage,
-                    Properties.Resources.MSDocVMCpt6, MessageBoxButton.YesNoCancel, 
+                    Properties.Resources.MilSymDPAddLyrCaption, MessageBoxButton.YesNoCancel, 
                     MessageBoxImage.Exclamation);
 
                 bool continueWithAdd = false;
@@ -1492,8 +1492,8 @@ namespace ProSymbolEditor
                 if (!continueWithAdd)
                 {
                     ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        Properties.Resources.MSDocVMMsg23 + requiredLayerName,
-                        Properties.Resources.MSDocVMCpt7, MessageBoxButton.OK,
+                        Properties.Resources.MilSymDPMsgNotCreateFeaLyr + requiredLayerName,
+                        Properties.Resources.MilSymDPCouldNotCreateMapFeaCaption, MessageBoxButton.OK,
                         MessageBoxImage.Exclamation);
 
                     return;
@@ -1535,7 +1535,7 @@ namespace ProSymbolEditor
                             using (FeatureClassDefinition facilitySiteDefinition = featureClass.GetDefinition())
                             {
                                 EditOperation editOperation = new EditOperation();
-                                editOperation.Name = Properties.Resources.MSDocVMEd1;
+                                editOperation.Name = Properties.Resources.MilSymDPEdMilSymInsert;
                                 editOperation.Callback(context =>
                                 {
                                     try
@@ -1565,7 +1565,7 @@ namespace ProSymbolEditor
 
                                 if (!creationResult && !string.IsNullOrEmpty(message))
                                 {
-                                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MSDocVMCpt8);
+                                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MilsymDPFeaStoreFail);
                                     message = string.Empty; // set to empty so 2nd error message is not displayed below
                                     await Project.Current.DiscardEditsAsync();
                                 }
@@ -1583,7 +1583,7 @@ namespace ProSymbolEditor
 
             if (!creationResult && !string.IsNullOrEmpty(message))
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MSDocVMCpt8);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MilsymDPFeaStoreFail);
             }
         }
 
@@ -1678,8 +1678,8 @@ namespace ProSymbolEditor
         private void SaveImageAs(object parameter)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = Properties.Resources.MSDocVMSaveFln;
-            saveFileDialog.Filter = Properties.Resources.MSDocVMSaveFlt;
+            saveFileDialog.FileName = Properties.Resources.MilSymDPSaveSymbol;
+            saveFileDialog.Filter = Properties.Resources.MilSymDPFilterImagePNG;
             Nullable<bool> result = saveFileDialog.ShowDialog();
             if (result == true)
             {
@@ -1857,14 +1857,14 @@ namespace ProSymbolEditor
                 // If it is not a valid or exportable symbol error+return
                 if ((SymbolAttributeSet == null) || !SymbolAttributeSet.IsValid)
                 {
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MSDocVMMsg24,
-                    Properties.Resources.MSDocVMCpt9, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgNotValidFavr,
+                    Properties.Resources.MilSymDPInvalidFavrCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return;
                 }
 
                 if (Favorites.Contains(SymbolAttributeSet))
                 {
-                    throw new Exception(Properties.Resources.MSDocVMEx1);
+                    throw new Exception(Properties.Resources.MilSymDPExcSelectedFeature);
                 }
 
                 SymbolAttributeSet.FavoriteId = Guid.NewGuid().ToString();
@@ -1880,18 +1880,18 @@ namespace ProSymbolEditor
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Trace.WriteLine(Properties.Resources.MSDocVMMsg25 + ex.Message);
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MSDocVMMsg26 +
-                        _favoritesFilePath + System.Environment.NewLine + Properties.Resources.MSDocVMMsg27 + System.Environment.NewLine +
-                        Properties.Resources.MSDocVMMsg28,
-                        Properties.Resources.MSDocVMCpt10, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    System.Diagnostics.Trace.WriteLine(Properties.Resources.MilSymDPMsgDeserializeFailure + ex.Message);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgErrorFavrFile +
+                        _favoritesFilePath + System.Environment.NewLine + Properties.Resources.MilSymDPMsgNotLoaded + System.Environment.NewLine +
+                        Properties.Resources.MilSymDPMsgDeleteFile,
+                        Properties.Resources.MilSymDPCorruptFavrCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
 
                 LabelAttributes.MaxLengthValidationOn = true;
 
                 //Add to favorites
                 if (favoriteSet == null) // should not happen
-                    throw new Exception(Properties.Resources.MSDocVMMsg29);
+                    throw new Exception(Properties.Resources.MilSymDPMsgNotCreatedFavr);
 
                 favoriteSet.GeneratePreviewSymbol();
                 Favorites.Add(favoriteSet);
@@ -1907,7 +1907,7 @@ namespace ProSymbolEditor
             }
             catch (Exception ex)
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MSDocVMMsg30 + ex.Message, Properties.Resources.MSDocVMCpt11, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgUnable2AddFavr + ex.Message, Properties.Resources.MilSymDPErrorAddFavrCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -2013,8 +2013,8 @@ namespace ProSymbolEditor
 
             if (!success)
             {
-                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MSDocVMMsg31,
-                    Properties.Resources.MSDocVMCpt12, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgNotCreatedTemplate,
+                    Properties.Resources.MilSymDPNotCreateTempCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
 
         }
@@ -2022,8 +2022,8 @@ namespace ProSymbolEditor
         private void SaveFavoritesAsToFile(object parameter)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = Properties.Resources.MSDocVMSaveFln1;
-            saveFileDialog.Filter = Properties.Resources.MSDocVMSaveFlt1;
+            saveFileDialog.FileName = Properties.Resources.MilSymDPSaveFavrs;
+            saveFileDialog.Filter = Properties.Resources.MilSymDPFilterJSON;
             Nullable<bool> result = saveFileDialog.ShowDialog();
             if (result == true)
             {
@@ -2035,10 +2035,10 @@ namespace ProSymbolEditor
         private void ImportFavoritesFile(object parameter)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = Properties.Resources.MSDocVMImpFlt;
+            openFileDialog.Filter = Properties.Resources.MilSymDPImpFilterJSON;
             if (openFileDialog.ShowDialog() == true)
             {
-                if (Path.GetExtension(openFileDialog.FileName).ToUpper() == Properties.Resources.MSDocVMImpExt)
+                if (Path.GetExtension(openFileDialog.FileName).ToUpper() == Properties.Resources.MilSymDPImpExtJSON)
                 {
 
                     ObservableCollection<SymbolAttributeSet> importedFavorites = null;
@@ -2052,11 +2052,11 @@ namespace ProSymbolEditor
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Trace.WriteLine(Properties.Resources.MSDocVMMsg25 + ex.Message);
-                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MSDocVMMsg26 +
-                            _favoritesFilePath + System.Environment.NewLine + Properties.Resources.MSDocVMMsg27 + System.Environment.NewLine +
-                            Properties.Resources.MSDocVMMsg28,
-                            Properties.Resources.MSDocVMCpt10, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        System.Diagnostics.Trace.WriteLine(Properties.Resources.MilSymDPMsgDeserializeFailure + ex.Message);
+                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgErrorFavrFile +
+                            _favoritesFilePath + System.Environment.NewLine + Properties.Resources.MilSymDPMsgNotLoaded + System.Environment.NewLine +
+                            Properties.Resources.MilSymDPMsgDeleteFile,
+                            Properties.Resources.MilSymDPCorruptFavrCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     }
                     LabelAttributes.MaxLengthValidationOn = true;
 
@@ -2087,7 +2087,7 @@ namespace ProSymbolEditor
                 }
                 else
                 {
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MSDocVMMsg32);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgInvalidImportFile);
                 }
             }
         }
@@ -2156,11 +2156,11 @@ namespace ProSymbolEditor
 
                 if (!string.IsNullOrEmpty(layer.Name) && layer.Name.StartsWith("Military Overlay"))
                 {
-                    string warningMessage = Properties.Resources.MSDocVMMsg33 + System.Environment.NewLine + Properties.Resources.MSDocVMMsg34;
-                  
+                    string warningMessage = Properties.Resources.MilSymDPMsgRmvMilOverlayLyr + System.Environment.NewLine + Properties.Resources.MilSymDPMsgContinue;
+
                     Debug.WriteLine(warningMessage);
                     MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage,
-                        Properties.Resources.MSDocVMCpt13, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                        Properties.Resources.MilSymDPRmvMilOverlayCaption, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
 
                     if (result.ToString() == "Yes")
                     {
@@ -2189,10 +2189,10 @@ namespace ProSymbolEditor
 
                 if (!string.IsNullOrEmpty(layer.Name) && layer.Name.StartsWith("Military Overlay"))
                 {
-                    string warningMessage = Properties.Resources.MSDocVMMsg35 + System.Environment.NewLine +
-                    Properties.Resources.MSDocVMMsg36;
+                    string warningMessage = Properties.Resources.MilSymDPMsgMilOverlayLyrRmvd + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgReset;
                     Debug.WriteLine(warningMessage);
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, Properties.Resources.MSDocVMCpt14, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, Properties.Resources.MilSymDPMilOverlayRmvCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
                     // Workaround: re-subscribe to this event
                     ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEvent.Subscribe(OnMapSelectionChanged);
@@ -2224,12 +2224,12 @@ namespace ProSymbolEditor
 
             SelectedFeaturesCollection.Clear();
 
-            string symbolSetFieldName = Properties.Resources.MSDocVMStr1;
-            string symbolEntityFieldName = Properties.Resources.MSDocVMStr2;
+            string symbolSetFieldName = Properties.Resources.MilSymDPSymSet;
+            string symbolEntityFieldName = Properties.Resources.MilSymDPSymEntity;
 
             if (ProSymbolUtilities.IsLegacyStandard())
             {
-                symbolSetFieldName = Properties.Resources.MSDocVMStr3;
+                symbolSetFieldName = Properties.Resources.MilSymDPExtFunctCode;
                 symbolEntityFieldName = ""; // not used
             }
 
@@ -2339,9 +2339,9 @@ namespace ProSymbolEditor
                 await Task.FromResult<bool>(true);
 
                 var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                    Properties.Resources.MSDocVMMsg37 + System.Environment.NewLine +
-                    Properties.Resources.MSDocVMMsg38,
-                    Properties.Resources.MSDocVMCpt15,
+                    Properties.Resources.MilSymDPMsgReqMilOverlayDataModel + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgAddDataModel,
+                    Properties.Resources.MilSymDPAddInDisabledCaption,
                     System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
 
                 if (Convert.ToString(result) == "Yes")
@@ -2429,33 +2429,33 @@ namespace ProSymbolEditor
                 return;
 
             // These differ between 2525D & C_B2 schemas              
-            string affiliationField = Properties.Resources.MSDocVMaff;
-            string hostileValue = Properties.Resources.MSDocVMhos;
-            string friendValue = Properties.Resources.MSDocVMfri;
-            string neutralValue = Properties.Resources.MSDocVMNeu;
+            string affiliationField = Properties.Resources.MilSymDPAffiliationFldDef;
+            string hostileValue = Properties.Resources.MilSymDPHostileFaker;
+            string friendValue = Properties.Resources.MilSymDPFriend;
+            string neutralValue = Properties.Resources.MilSymDPNeutral;
 
             // These have different values for 2525C/B2
             if (ProSymbolUtilities.IsLegacyStandard())
             {
-                affiliationField = Properties.Resources.MSDocVMaff1;
-                hostileValue = Properties.Resources.MSDocVMhos1;
+                affiliationField = Properties.Resources.MilSymDPAffiliationFld;
+                hostileValue = Properties.Resources.MilSymDPHostile;
                 if (ProSymbolUtilities.Standard != ProSymbolUtilities.SupportedStandardsType.app6b) // app6b is different for some reason 
-                    friendValue = Properties.Resources.MSDocVMfri1;
+                    friendValue = Properties.Resources.MilSymDPFriendly;
             }
 
             string upperTagsName = _selectedStyleItem.Tags.ToUpper();
             string upperItemName = _selectedStyleItem.Name.ToUpper();
 
             string identityCode = "";
-            if (upperTagsName.Contains(Properties.Resources.MSDocVMfriUp) || upperItemName.Contains(Properties.Resources.MSDocVMfri1Up))
+            if (upperTagsName.Contains(Properties.Resources.MilSymDPFriendUpper) || upperItemName.Contains(Properties.Resources.MiSymDPColon + Properties.Resources.MilSymDPFriendUpper))
             {
                 identityCode = await GetDomainValueAsync(affiliationField, friendValue);
             }
-            else if (upperTagsName.Contains(Properties.Resources.MSDocVMhosUp) || upperItemName.Contains(Properties.Resources.MSDocVMhos1Up))
+            else if (upperTagsName.Contains(Properties.Resources.MilSymDPHostileUpper) || upperItemName.Contains(Properties.Resources.MiSymDPColon + Properties.Resources.MilSymDPHostileUpper))
             {
                 identityCode = await GetDomainValueAsync(affiliationField, hostileValue);
             }
-            else if (upperTagsName.Contains(Properties.Resources.MSDocVMNeuUp) || upperItemName.Contains(Properties.Resources.MSDocVMNeu1Up))
+            else if (upperTagsName.Contains(Properties.Resources.MilSymDPNeutralUpper) || upperItemName.Contains(Properties.Resources.MiSymDPColon + Properties.Resources.MilSymDPNeutralUpper))
             {
                 identityCode = await GetDomainValueAsync(affiliationField, neutralValue);
             }
@@ -2464,7 +2464,7 @@ namespace ProSymbolEditor
             // a required attribute
             // else if (upperTagsName.Contains("UNKNOWN") || upperItemName.Contains(": UNKNOWN"))
             {
-                identityCode = await GetDomainValueAsync(affiliationField, Properties.Resources.MSDocVMUnk);
+                identityCode = await GetDomainValueAsync(affiliationField, Properties.Resources.MilSymDPUnk);
             }
 
             if (identityCode != "")
@@ -2853,7 +2853,7 @@ namespace ProSymbolEditor
                               (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
                                ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
                                // Filter out 2525D-only symbols when in 2525C_B2 mode:
-                               && (!x.Tags.Contains(Properties.Resources.MSDocVMStr4))
+                               && (!x.Tags.Contains(Properties.Resources.MilSymDPNEW2525D))
                                ));
                         }
                     }
@@ -2887,11 +2887,11 @@ namespace ProSymbolEditor
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Trace.WriteLine(Properties.Resources.MSDocVMMsg25 + ex.Message);
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MSDocVMMsg26 + 
-                        _favoritesFilePath + System.Environment.NewLine + Properties.Resources.MSDocVMMsg27 + System.Environment.NewLine +
-                        Properties.Resources.MSDocVMMsg28,
-                        Properties.Resources.MSDocVMCpt10, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    System.Diagnostics.Trace.WriteLine(Properties.Resources.MilSymDPMsgDeserializeFailure + ex.Message);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgErrorFavrFile + 
+                        _favoritesFilePath + System.Environment.NewLine + Properties.Resources.MilSymDPMsgNotLoaded + System.Environment.NewLine +
+                        Properties.Resources.MilSymDPMsgDeleteFile,
+                        Properties.Resources.MilSymDPCorruptFavrCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
             }
 
@@ -2933,18 +2933,18 @@ namespace ProSymbolEditor
 
         private void ShowMilitaryFeatureNotFoundMessageBox()
         {
-            string message = Properties.Resources.MSDocVMMsg39 + ProSymbolUtilities.StandardLabel +
-                Properties.Resources.MSDocVMMsg40;
+            string message = Properties.Resources.MilSymDPMsgNotMatchMilStandard + ProSymbolUtilities.StandardLabel +
+                Properties.Resources.MilSymDPMsgCloseBracket;
 
-            MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MSDocVMCpt16, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MilSymDPInvalidSelectionCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
         private void ShowMilitaryStyleNotFoundMessageBox()
         {
-            string message = Properties.Resources.MSDocVMMsg41 + ProSymbolUtilities.StandardString +
-                Properties.Resources.MSDocVMMsg42;
+            string message = Properties.Resources.MilSymDPMsgReqMilStyle + ProSymbolUtilities.StandardString +
+                Properties.Resources.MilSymDPMsgNotDetected;
 
-            MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MSDocVMCpt17, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MilSymDPAddInDisabledCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
         private async void ShowAddInNotEnabledMessageBox()
@@ -2965,11 +2965,11 @@ namespace ProSymbolEditor
             // Run on UI Thread
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
             {
-                string message = Properties.Resources.MSDocVMMsg43 + ProSymbolUtilities.StandardLabel +
-                    Properties.Resources.MSDocVMMsg44 + System.Environment.NewLine +
-                    Properties.Resources.MSDocVMMsg45;
+                string message = Properties.Resources.MilSymDPMsgThe + ProSymbolUtilities.StandardLabel +
+                    Properties.Resources.MilSymDPMsgMilOverlaySchemaNotDetected + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgAddMilOverlayLyrPkg;
 
-                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MSDocVMCpt17, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MilSymDPAddInDisabledCaption, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result.ToString() == "Yes")
                 {
                     if (MapView.Active != null)
@@ -2986,8 +2986,8 @@ namespace ProSymbolEditor
                     }
                     else
                     {
-                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MSDocVMMsg46, Properties.Resources.MSDocVMCpt18, MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                        SearchString = Properties.Resources.MSDocVMStr5;
+                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgPrjMapNotActive, Properties.Resources.MilSymDPAddMapCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        SearchString = Properties.Resources.MilSymDPAddMap;
                     }
                 }
                 else
@@ -2997,7 +2997,7 @@ namespace ProSymbolEditor
                     // StyleItems.Clear();
                     // NotifyPropertyChanged(() => StyleItems);
                     // WORKAROUND:
-                    SearchString = Properties.Resources.MSDocVMStr6;
+                    SearchString = Properties.Resources.MilSymDPAddInDisabled;
                 }
 
             }));
@@ -3010,8 +3010,8 @@ namespace ProSymbolEditor
                 // Check the active map is available+ready
                 if ((MapView.Active == null) || (MapView.Active.Map == null))
                 {
-                    var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MSDocVMMsg47 + System.Environment.NewLine
-                        + Properties.Resources.MSDocVMMsg48 + System.Environment.NewLine + Properties.Resources.MSDocVMMsg49, Properties.Resources.MSDocVMCpt19,
+                    var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgMapNotAvailable + System.Environment.NewLine
+                        + Properties.Resources.MilSymDPMsgTryAgain + System.Environment.NewLine + Properties.Resources.MilSymDPMsgMapVisibleReady, Properties.Resources.MilSymDPRetryAddingDataModelCaption,
                         System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
                     if (Convert.ToString(result) != "Yes")
                         return false;
@@ -3020,8 +3020,8 @@ namespace ProSymbolEditor
                 // Check again
                 if ((MapView.Active == null) || (MapView.Active.Map == null))
                 {
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MSDocVMMsg50 + System.Environment.NewLine
-                        + Properties.Resources.MSDocVMMsg51, Properties.Resources.MSDocVMCpt20, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgUnableAddLyrPkg + System.Environment.NewLine
+                        + Properties.Resources.MilSymDPMsgMapVisible, Properties.Resources.MilSymDPUnable2AddLyrPkgCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return false;
                 }
 
@@ -3036,16 +3036,16 @@ namespace ProSymbolEditor
                     enabled = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
 
                     if (enabled)
-                        StatusMessage = Properties.Resources.MSDocVMStr7;
+                        StatusMessage = Properties.Resources.MilSymDPMilLyrAdded;
                     else
-                        StatusMessage = Properties.Resources.MSDocVMStr8;
+                        StatusMessage = Properties.Resources.MilSymDPAddInDisabled;
                 });
 
             }
             catch (Exception exception)
             {
                 // Catch any exception found and display a message box.
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MSDocVMExt1 + exception.Message);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPExcCaught + exception.Message);
                 return false;
             }
 
@@ -3070,7 +3070,7 @@ namespace ProSymbolEditor
                     case "MapPointCoordinatesString":
                         if (!PointCoordinateValid)
                         {
-                            Error = Properties.Resources.MSDocVMExt2;
+                            Error = Properties.Resources.MilSymDPExcInvalidCoordinates;
                         }
                         break;
                 }

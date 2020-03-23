@@ -201,172 +201,172 @@
   <data name="CoordToggleBtnAddMapToolTip" xml:space="preserve">
     <value>Add to Map</value>
   </data>
-  <data name="FavBtn1" xml:space="preserve">
+  <data name="btnDelete" xml:space="preserve">
     <value>Delete</value>
   </data>
-  <data name="FavBtn2Txt1" xml:space="preserve">
+  <data name="FavBtnCreateTxt" xml:space="preserve">
     <value>Create</value>
   </data>
-  <data name="FavBtn2Txt2" xml:space="preserve">
+  <data name="FavBtnTemplateTxt" xml:space="preserve">
     <value>Template</value>
   </data>
-  <data name="FavBtn3" xml:space="preserve">
+  <data name="FavBtnImport" xml:space="preserve">
     <value>Import...</value>
   </data>
-  <data name="FavBtn4" xml:space="preserve">
+  <data name="FavBtnSaveAs" xml:space="preserve">
     <value>Save As...</value>
   </data>
-  <data name="FavBtn5ToolTip" xml:space="preserve">
+  <data name="FavBtnBack2Search" xml:space="preserve">
     <value>Back to Search</value>
   </data>
-  <data name="FavBtn6" xml:space="preserve">
+  <data name="FavBtnAddFavorite" xml:space="preserve">
     <value>Add Favorite</value>
   </data>
-  <data name="FavBtn8ToolTip" xml:space="preserve">
+  <data name="FavBtnGo2SymbolToolTip" xml:space="preserve">
     <value>Go to Symbol Tab</value>
   </data>
-  <data name="FavDGHeader1" xml:space="preserve">
+  <data name="FavDGHeaderAttr" xml:space="preserve">
     <value>Attribute</value>
   </data>
-  <data name="FavDGHeader2" xml:space="preserve">
+  <data name="FavDGHeaderVal" xml:space="preserve">
     <value>Value</value>
   </data>
-  <data name="FavLabel1" xml:space="preserve">
+  <data name="FavLblFilterBy" xml:space="preserve">
     <value>Filter By...</value>
   </data>
-  <data name="FavMenu1" xml:space="preserve">
+  <data name="FavMenuSaveImage" xml:space="preserve">
     <value>Save Image As...</value>
   </data>
-  <data name="FavMenu2" xml:space="preserve">
+  <data name="FavMenuCopyImage" xml:space="preserve">
     <value>Copy Image to Clipboard</value>
   </data>
-  <data name="FavToggleBtn7" xml:space="preserve">
+  <data name="FavToggleBtnAddMap" xml:space="preserve">
     <value>Add to Map</value>
   </data>
-  <data name="FavToggleBtn7ToolTip" xml:space="preserve">
+  <data name="FavToggleBtnAddMapToolTip" xml:space="preserve">
     <value>Add to Map</value>
   </data>
-  <data name="LblBtn1ToolTip" xml:space="preserve">
+  <data name="LabelBtnBack2Symbol" xml:space="preserve">
     <value>Back to Symbol</value>
   </data>
-  <data name="LblBtn2" xml:space="preserve">
+  <data name="LabelBtnAddFavorite" xml:space="preserve">
     <value>Add Favorite</value>
   </data>
-  <data name="LblBtn4" xml:space="preserve">
+  <data name="LabelBtnSaveEdits" xml:space="preserve">
     <value>Save Edits</value>
   </data>
-  <data name="LblBtn4ToolTip" xml:space="preserve">
+  <data name="LabelBtnSaveEditsToolTip" xml:space="preserve">
     <value>Save Edits</value>
   </data>
-  <data name="LblBtn5ToolTip" xml:space="preserve">
+  <data name="LabelBtnEnterCoords" xml:space="preserve">
     <value>Enter Coordinates</value>
   </data>
-  <data name="LblDGHeader1" xml:space="preserve">
+  <data name="LabelDGHeaderAttr" xml:space="preserve">
     <value>Attribute</value>
   </data>
-  <data name="LblDGHeader2" xml:space="preserve">
+  <data name="LabelDGHeaderVal" xml:space="preserve">
     <value>Value</value>
   </data>
-  <data name="LblLabel1" xml:space="preserve">
+  <data name="LabelLblDateTimeValid" xml:space="preserve">
     <value>Date/Time Valid</value>
   </data>
-  <data name="LblLabel10" xml:space="preserve">
+  <data name="LabelLblAdditionalInfo" xml:space="preserve">
     <value>Additional Information</value>
   </data>
-  <data name="LblLabel11" xml:space="preserve">
+  <data name="LabelLblHigherForm" xml:space="preserve">
     <value>Higher Formation</value>
   </data>
-  <data name="LblLabel12" xml:space="preserve">
+  <data name="LabelLblCredibility" xml:space="preserve">
     <value>Credibility</value>
   </data>
-  <data name="LblLabel13" xml:space="preserve">
+  <data name="LabelLblReliability" xml:space="preserve">
     <value>Reliability</value>
   </data>
-  <data name="LblLabel14" xml:space="preserve">
+  <data name="LabelLblSignatureEquipment" xml:space="preserve">
     <value>Signature Equipment(ENY)</value>
   </data>
-  <data name="LblLabel15" xml:space="preserve">
+  <data name="LabelLblCountryCode" xml:space="preserve">
     <value>Country Code</value>
   </data>
-  <data name="LblLabel2" xml:space="preserve">
+  <data name="LabelLblDateTimeExpired" xml:space="preserve">
     <value>Date/Time Expired</value>
   </data>
-  <data name="LblLabel3" xml:space="preserve">
+  <data name="LabelLblType" xml:space="preserve">
     <value>Type</value>
   </data>
-  <data name="LblLabel4" xml:space="preserve">
+  <data name="LabelLblCommonIdentifier" xml:space="preserve">
     <value>Common Identifier</value>
   </data>
-  <data name="LblLabel5" xml:space="preserve">
+  <data name="LabelLblSpeed" xml:space="preserve">
     <value>Speed</value>
   </data>
-  <data name="LblLabel6" xml:space="preserve">
+  <data name="LabelLblDirection" xml:space="preserve">
     <value>Direction</value>
   </data>
-  <data name="LblLabel7" xml:space="preserve">
+  <data name="LabelLblUniqueDesignation" xml:space="preserve">
     <value>Unique Designation</value>
   </data>
-  <data name="LblLabel8" xml:space="preserve">
+  <data name="LabelLblReinforced" xml:space="preserve">
     <value>Reinforced</value>
   </data>
-  <data name="LblLabel9" xml:space="preserve">
+  <data name="LabelLblStaffComments" xml:space="preserve">
     <value>Staff Comments</value>
   </data>
-  <data name="LblMenu1" xml:space="preserve">
+  <data name="LabelMenuSaveImage" xml:space="preserve">
     <value>Save Image As...</value>
   </data>
-  <data name="LblMenu2" xml:space="preserve">
+  <data name="LabelMenuCopyImage" xml:space="preserve">
     <value>Copy Image to Clipboard</value>
   </data>
-  <data name="LblToggleBtn3" xml:space="preserve">
+  <data name="LabelToggleBtnAddMap" xml:space="preserve">
     <value> Add to Map </value>
   </data>
-  <data name="LblToggleBtn3ToolTip" xml:space="preserve">
+  <data name="LabelToggleBtnAddMapToolTip" xml:space="preserve">
     <value>Add to Map</value>
   </data>
-  <data name="ModBtn1ToolTip" xml:space="preserve">
+  <data name="ModBtnGo2SymTabToolTip" xml:space="preserve">
     <value>Go to Symbol Tab</value>
   </data>
-  <data name="ModDGHeader1" xml:space="preserve">
+  <data name="ModDGHeaderAttr" xml:space="preserve">
     <value>Attribute</value>
   </data>
-  <data name="ModDGHeader2" xml:space="preserve">
+  <data name="ModDGHeaderVal" xml:space="preserve">
     <value>Value</value>
   </data>
-  <data name="ModLabel1" xml:space="preserve">
+  <data name="ModLblSelectTool" xml:space="preserve">
     <value>Use the select tool to select a feature to modify</value>
   </data>
-  <data name="ModMenu1" xml:space="preserve">
+  <data name="ModMenuSaveImage" xml:space="preserve">
     <value>Save Image As...</value>
   </data>
-  <data name="ModMenu2" xml:space="preserve">
+  <data name="ModMenuCopyImage" xml:space="preserve">
     <value>Copy Image to Clipboard</value>
   </data>
-  <data name="ModTxt1" xml:space="preserve">
+  <data name="ModTxtObjectID" xml:space="preserve">
     <value> : Object ID </value>
   </data>
-  <data name="MsdBtn1" xml:space="preserve">
+  <data name="MsdBtnAbout" xml:space="preserve">
     <value>About</value>
   </data>
-  <data name="MsdBtn2" xml:space="preserve">
+  <data name="MsdBtnSettings" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="MsdLabel1" xml:space="preserve">
+  <data name="MsdLblSelectFeature" xml:space="preserve">
     <value>Select a feature to modify</value>
   </data>
-  <data name="MsdTabHeader1" xml:space="preserve">
+  <data name="MsdTabHeaderSearch" xml:space="preserve">
     <value>Search</value>
   </data>
-  <data name="MsdTabHeader2" xml:space="preserve">
+  <data name="MsdTabHeaderFavorites" xml:space="preserve">
     <value>Favorites</value>
   </data>
-  <data name="MsdTabHeader3" xml:space="preserve">
+  <data name="MsdTabHeaderSymbol" xml:space="preserve">
     <value>Symbol</value>
   </data>
-  <data name="MsdTabHeader4" xml:space="preserve">
+  <data name="MsdTabHeaderLabel" xml:space="preserve">
     <value>Label</value>
   </data>
-  <data name="MsdTabHeader5" xml:space="preserve">
+  <data name="MsdTabheaderEnterCoords" xml:space="preserve">
     <value>Enter Coordinates</value>
   </data>
   <data name="SWMsgCaption" xml:space="preserve">
@@ -381,427 +381,385 @@
   <data name="SWStSetMsg" xml:space="preserve">
     <value>Setting standard to this value.</value>
   </data>
-  <data name="SearBtn1" xml:space="preserve">
+  <data name="SrchBtnX" xml:space="preserve">
     <value>X</value>
   </data>
-  <data name="SearBtn2" xml:space="preserve">
+  <data name="SrchBtnAddFavorite" xml:space="preserve">
     <value>Add Favorite</value>
   </data>
-  <data name="SearBtn4" xml:space="preserve">
+  <data name="SrchBtnGo2SymTabToolTip" xml:space="preserve">
     <value>Go to Symbol Tab</value>
   </data>
-  <data name="SearLabel1" xml:space="preserve">
+  <data name="SrchLblSearch" xml:space="preserve">
     <value>Search...</value>
   </data>
-  <data name="SearLabel2" xml:space="preserve">
+  <data name="SrchLblResultCount" xml:space="preserve">
     <value>Result Count:</value>
   </data>
-  <data name="SearMenu1" xml:space="preserve">
+  <data name="SrchMenuSaveImage" xml:space="preserve">
     <value>Save Image As...</value>
   </data>
-  <data name="SearMenu2" xml:space="preserve">
+  <data name="SrchMenuCopyImage" xml:space="preserve">
     <value>Copy Image to Clipboard</value>
   </data>
-  <data name="SearMenu3" xml:space="preserve">
+  <data name="SrchMenuCopy" xml:space="preserve">
     <value>Copy</value>
   </data>
-  <data name="SearToggleBtn3" xml:space="preserve">
+  <data name="SrchToggleBtnAddMap" xml:space="preserve">
     <value> Add to Map </value>
   </data>
-  <data name="SearToggleBtn3ToolTip" xml:space="preserve">
+  <data name="SrchToggleBtnAddMapToolTip" xml:space="preserve">
     <value>Add to Map</value>
   </data>
-  <data name="SymBtn1ToolTip" xml:space="preserve">
+  <data name="SymBtnBack2SearchToolTip" xml:space="preserve">
     <value>Back to Search</value>
   </data>
-  <data name="SymBtn2" xml:space="preserve">
+  <data name="SymBtnAddFavorite" xml:space="preserve">
     <value>Add Favorite</value>
   </data>
-  <data name="SymBtn4" xml:space="preserve">
+  <data name="SymBtnSaveEdits" xml:space="preserve">
     <value>Save Edits</value>
   </data>
-  <data name="SymBtn4ToolTip" xml:space="preserve">
+  <data name="SymBtnSaveEditsToolTip" xml:space="preserve">
     <value>Save Edits</value>
   </data>
-  <data name="SymBtn5ToolTip" xml:space="preserve">
+  <data name="SymBtnGo2LabelTabToolTip" xml:space="preserve">
     <value>Go to Label Tab</value>
   </data>
-  <data name="SymDGHeader1" xml:space="preserve">
+  <data name="SymDGHeaderAttr" xml:space="preserve">
     <value>Attribute</value>
   </data>
-  <data name="SymDGHeader2" xml:space="preserve">
+  <data name="SymDGHeaderVal" xml:space="preserve">
     <value>Value</value>
   </data>
-  <data name="SymLabel1" xml:space="preserve">
+  <data name="SymLblIdentityAffiliation" xml:space="preserve">
     <value>Identity/Affiliation</value>
   </data>
-  <data name="SymLabel10" xml:space="preserve">
+  <data name="SymLblFunction" xml:space="preserve">
     <value>Function</value>
   </data>
-  <data name="SymLabel2" xml:space="preserve">
+  <data name="SymLblStatusPlanned" xml:space="preserve">
     <value>Status/Planned</value>
   </data>
-  <data name="SymLabel3" xml:space="preserve">
+  <data name="SymLblOperCondititon" xml:space="preserve">
     <value>Operational Condition</value>
   </data>
-  <data name="SymLabel4" xml:space="preserve">
+  <data name="SymLblTFFDHQ" xml:space="preserve">
     <value>TF, FD, HQ</value>
   </data>
-  <data name="SymLabel5" xml:space="preserve">
+  <data name="SymLblMobility" xml:space="preserve">
     <value>Mobility</value>
   </data>
-  <data name="SymLabel6" xml:space="preserve">
+  <data name="SymLblContext" xml:space="preserve">
     <value>Context</value>
   </data>
-  <data name="SymLabel7" xml:space="preserve">
+  <data name="SymLblModifier1" xml:space="preserve">
     <value>Modifier 1</value>
   </data>
-  <data name="SymLabel8" xml:space="preserve">
+  <data name="SymLblModifier2" xml:space="preserve">
     <value>Modifier 2</value>
   </data>
-  <data name="SymLabel9" xml:space="preserve">
+  <data name="SymLblEntity" xml:space="preserve">
     <value>Entity</value>
   </data>
-  <data name="SymMenu1" xml:space="preserve">
+  <data name="SymMenuSaveImage" xml:space="preserve">
     <value>Save Image As...</value>
   </data>
-  <data name="SymMenu2" xml:space="preserve">
+  <data name="SymMenuCopyImage" xml:space="preserve">
     <value>Copy Image to Clipboard</value>
   </data>
-  <data name="SymToggleBtn3" xml:space="preserve">
+  <data name="SymToggleBtnAddMap" xml:space="preserve">
     <value> Add to Map </value>
   </data>
-  <data name="SymToggleBtn3ToolTip" xml:space="preserve">
+  <data name="SymToggleBtnAddMapToolTip" xml:space="preserve">
     <value>Add to Map</value>
   </data>
-  <data name="MSDocVMCpt1" xml:space="preserve">
+  <data name="MilSymDPAppSettingsCaption" xml:space="preserve">
     <value>Application Settings Read-Only</value>
   </data>
-  <data name="MSDocVMCpt2" xml:space="preserve">
+  <data name="MilSymDPCouldNotOpenDbCaption" xml:space="preserve">
     <value>Could Not Open Database</value>
   </data>
-  <data name="MSDocVMCpt3" xml:space="preserve">
+  <data name="MilSymDPUnableSelectDbCaption" xml:space="preserve">
     <value>Unable to Select Database</value>
   </data>
-  <data name="MSDocVMCpt4" xml:space="preserve">
+  <data name="MilSymDPAddSchemaDbCaption" xml:space="preserve">
     <value>Adding Schema to Database</value>
   </data>
-  <data name="MSDocVMCpt5" xml:space="preserve">
-    <value>Unable to Add Layer Package to Map</value>
-  </data>
-  <data name="MSDocVMCpt6" xml:space="preserve">
+  <data name="MilSymDPAddLyrCaption" xml:space="preserve">
     <value>Add Layer to Map?</value>
   </data>
-  <data name="MSDocVMCpt7" xml:space="preserve">
+  <data name="MilSymDPCouldNotCreateMapFeaCaption" xml:space="preserve">
     <value>Could Not Create Map Feature</value>
   </data>
-  <data name="MSDocVMCpt8" xml:space="preserve">
+  <data name="MilsymDPFeaStoreFail" xml:space="preserve">
     <value>Feature Store Failure</value>
   </data>
-  <data name="MSDocVMCpt9" xml:space="preserve">
+  <data name="MilSymDPInvalidFavrCaption" xml:space="preserve">
     <value>Invalid Favorite</value>
   </data>
-  <data name="MSDocVMEchLabel1" xml:space="preserve">
+  <data name="MilSymDPLblEchelonMobility" xml:space="preserve">
     <value>Echelon/Mobility</value>
   </data>
-  <data name="MSDocVMEchLabel2" xml:space="preserve">
+  <data name="MilSymDPLblEchelon" xml:space="preserve">
     <value>Echelon</value>
   </data>
-  <data name="MSDocVMEd1" xml:space="preserve">
+  <data name="MilSymDPEdMilSymInsert" xml:space="preserve">
     <value>Military Symbol Insert</value>
   </data>
-  <data name="MSDocVMEx1" xml:space="preserve">
+  <data name="MilSymDPExcSelectedFeature" xml:space="preserve">
     <value>Exception in SelectedSelectedFeature: </value>
   </data>
-  <data name="MSDocVMMsg1" xml:space="preserve">
-    <value>Add-in Not Enabled</value>
-  </data>
-  <data name="MSDocVMMsg10" xml:space="preserve">
+  <data name="MilSymDPMsgHasMilOverlaySchema" xml:space="preserve">
     <value>already contains a schema for Military Overlay.</value>
   </data>
-  <data name="MSDocVMMsg11" xml:space="preserve">
+  <data name="MilSymDPMsgDiffDbAddInSettings" xml:space="preserve">
     <value>Please select a different database from Addin Settings.</value>
   </data>
-  <data name="MSDocVMMsg12" xml:space="preserve">
+  <data name="MilSymDPMsgMilOverlaySchema" xml:space="preserve">
     <value>A military overlay schema matching standard: </value>
   </data>
-  <data name="MSDocVMMsg13" xml:space="preserve">
+  <data name="MilSymDPMsgAddDb" xml:space="preserve">
     <value>will be added to database: </value>
   </data>
-  <data name="MSDocVMMsg14" xml:space="preserve">
+  <data name="MilSymDPMsgTakeSeveralMins" xml:space="preserve">
     <value>Note: this may take several minutes.</value>
   </data>
-  <data name="MSDocVMMsg15" xml:space="preserve">
+  <data name="MilSymDPMsgUnable2AddLyrPkg" xml:space="preserve">
     <value>Unable to add layer package to map.</value>
   </data>
-  <data name="MSDocVMMsg16" xml:space="preserve">
+  <data name="MilSymDPMsgTryAgainAddInSettings" xml:space="preserve">
     <value>Please try again from Addin Settings when map available.</value>
   </data>
-  <data name="MSDocVMMsg17" xml:space="preserve">
+  <data name="MilSymDPMsgMilLyrAdded" xml:space="preserve">
     <value>Military Layers Added</value>
   </data>
-  <data name="MSDocVMMsg18" xml:space="preserve">
+  <data name="MilSymDPMsgSrchComplete" xml:space="preserve">
     <value>Search Complete</value>
   </data>
-  <data name="MSDocVMMsg19" xml:space="preserve">
+  <data name="MilSymDPMsgLyrNotFound" xml:space="preserve">
     <value>{Layer Not Found}</value>
   </data>
-  <data name="MSDocVMMsg2" xml:space="preserve">
+  <data name="MilSymDPMsgInitialized" xml:space="preserve">
     <value>Initialized</value>
   </data>
-  <data name="MSDocVMMsg20" xml:space="preserve">
+  <data name="MilSymDPMsgReqLyrNotActive" xml:space="preserve">
     <value>The required layer is not in the Active Map. </value>
   </data>
-  <data name="MSDocVMMsg21" xml:space="preserve">
+  <data name="MilSymDPMsgReqLyr" xml:space="preserve">
     <value>Required layer: </value>
   </data>
-  <data name="MSDocVMMsg22" xml:space="preserve">
+  <data name="MilSymDPMsgAddMilOverlayLyr" xml:space="preserve">
     <value>Add this military overlay layer to the map?</value>
   </data>
-  <data name="MSDocVMMsg23" xml:space="preserve">
+  <data name="MilSymDPMsgNotCreateFeaLyr" xml:space="preserve">
     <value>Could not create map feature in layer: </value>
   </data>
-  <data name="MSDocVMMsg24" xml:space="preserve">
+  <data name="MilSymDPMsgNotValidFavr" xml:space="preserve">
     <value>The current favorite is not valid.</value>
   </data>
-  <data name="MSDocVMMsg3" xml:space="preserve">
+  <data name="MilSymDPMsgContainsDbSchema" xml:space="preserve">
     <value>This project already contains a database with schema for standard: </value>
   </data>
-  <data name="MSDocVMMsg4" xml:space="preserve">
+  <data name="MilSymDPMsgCreateNewPrj" xml:space="preserve">
     <value>Please create a new project to change these settings.</value>
   </data>
-  <data name="MSDocVMMsg5" xml:space="preserve">
+  <data name="MilSymDPMsgNotOpenDb" xml:space="preserve">
     <value>Could not open Database: </value>
   </data>
-  <data name="MSDocVMMsg6" xml:space="preserve">
+  <data name="MilSymDPMsgDbAdded" xml:space="preserve">
     <value>Database Added</value>
   </data>
-  <data name="MSDocVMMsg7" xml:space="preserve">
-    <value>Database: </value>
-  </data>
-  <data name="MSDocVMMsg8" xml:space="preserve">
+  <data name="MilSymDPMsgEnd" xml:space="preserve">
     <value>.</value>
   </data>
-  <data name="MSDocVMMsg9" xml:space="preserve">
+  <data name="MilSymDPMsgDb" xml:space="preserve">
     <value>Database: </value>
   </data>
-  <data name="MSDocVMPg1" xml:space="preserve">
+  <data name="MilSymDPLoadLyrPkg" xml:space="preserve">
     <value>Loading Layer Package...</value>
   </data>
-  <data name="MSDocVMPg2" xml:space="preserve">
+  <data name="MilSymDPSrch" xml:space="preserve">
     <value>Searching...</value>
   </data>
-  <data name="MSDocVMSaveFln" xml:space="preserve">
+  <data name="MilSymDPSaveSymbol" xml:space="preserve">
     <value>symbol</value>
   </data>
-  <data name="MSDocVMSaveFlt" xml:space="preserve">
+  <data name="MilSymDPFilterImagePNG" xml:space="preserve">
     <value>Png Image|*.png</value>
   </data>
-  <data name="MSDocVMSS" xml:space="preserve">
+  <data name="MilSymDPEnableAddIn" xml:space="preserve">
     <value>Please click to enable add-in...</value>
-  </data>
-  <data name="String1" xml:space="preserve">
-    <value>Favorite already exists.</value>
   </data>
   <data name="SWStEndMsg" xml:space="preserve">
     <value>.</value>
   </data>
-  <data name="MSDocVMaff" xml:space="preserve">
+  <data name="MilSymDPAffiliationFldDef" xml:space="preserve">
     <value>identity</value>
   </data>
-  <data name="MSDocVMaff1" xml:space="preserve">
+  <data name="MilSymDPAffiliationFld" xml:space="preserve">
     <value>affiliation</value>
   </data>
-  <data name="MSDocVMCpt10" xml:space="preserve">
+  <data name="MilSymDPCorruptFavrCaption" xml:space="preserve">
     <value>Corrupt Favorites Files</value>
   </data>
-  <data name="MSDocVMCpt11" xml:space="preserve">
+  <data name="MilSymDPErrorAddFavrCaption" xml:space="preserve">
     <value>Error Adding Favorite</value>
   </data>
-  <data name="MSDocVMCpt12" xml:space="preserve">
+  <data name="MilSymDPNotCreateTempCaption" xml:space="preserve">
     <value>Could Not Create Template</value>
   </data>
-  <data name="MSDocVMCpt13" xml:space="preserve">
+  <data name="MilSymDPRmvMilOverlayCaption" xml:space="preserve">
     <value>Remove Military Overlay?</value>
   </data>
-  <data name="MSDocVMCpt14" xml:space="preserve">
+  <data name="MilSymDPMilOverlayRmvCaption" xml:space="preserve">
     <value>Military Overlay Removed</value>
   </data>
-  <data name="MSDocVMCpt15" xml:space="preserve">
-    <value>Add-in Disabled</value>
-  </data>
-  <data name="MSDocVMCpt16" xml:space="preserve">
+  <data name="MilSymDPInvalidSelectionCaption" xml:space="preserve">
     <value>Invalid Selection</value>
   </data>
-  <data name="MSDocVMCpt17" xml:space="preserve">
+  <data name="MilSymDPAddInDisabledCaption" xml:space="preserve">
     <value>Add-In Disabled</value>
   </data>
-  <data name="MSDocVMCpt18" xml:space="preserve">
+  <data name="MilSymDPAddMapCaption" xml:space="preserve">
     <value>Please Add Map to Your Project</value>
   </data>
-  <data name="MSDocVMCpt19" xml:space="preserve">
+  <data name="MilSymDPRetryAddingDataModelCaption" xml:space="preserve">
     <value>Retry Adding Military Overlay Data Model?</value>
   </data>
-  <data name="MSDocVMCpt20" xml:space="preserve">
+  <data name="MilSymDPUnable2AddLyrPkgCaption" xml:space="preserve">
     <value>Unable to Add Layer Package to Map</value>
   </data>
-  <data name="MSDocVMExt1" xml:space="preserve">
+  <data name="MilSymDPExcCaught" xml:space="preserve">
     <value>Exception caught: </value>
   </data>
-  <data name="MSDocVMExt2" xml:space="preserve">
+  <data name="MilSymDPExcInvalidCoordinates" xml:space="preserve">
     <value>The coordinates are invalid</value>
   </data>
-  <data name="MSDocVMfri" xml:space="preserve">
+  <data name="MilSymDPFriend" xml:space="preserve">
     <value>Friend</value>
   </data>
-  <data name="MSDocVMfri1" xml:space="preserve">
+  <data name="MilSymDPFriendly" xml:space="preserve">
     <value>Friendly</value>
   </data>
-  <data name="MSDocVMfri1Up" xml:space="preserve">
-    <value>: FRIEND</value>
-  </data>
-  <data name="MSDocVMfriUp" xml:space="preserve">
-    <value>FRIEND</value>
-  </data>
-  <data name="MSDocVMhos" xml:space="preserve">
-    <value>Hostile/Faker</value>
-  </data>
-  <data name="MSDocVMhos1" xml:space="preserve">
-    <value>Hostile</value>
-  </data>
-  <data name="MSDocVMhos1Up" xml:space="preserve">
-    <value>: HOSTILE</value>
-  </data>
-  <data name="MSDocVMhosUp" xml:space="preserve">
-    <value>HOSTILE</value>
-  </data>
-  <data name="MSDocVMImpExt" xml:space="preserve">
+  <data name="MilSymDPImpExtJSON" xml:space="preserve">
     <value>.JSON</value>
   </data>
-  <data name="MSDocVMImpFlt" xml:space="preserve">
+  <data name="MilSymDPImpFilterJSON" xml:space="preserve">
     <value>JSON Files (*.json)|*.json</value>
   </data>
-  <data name="MSDocVMMsg25" xml:space="preserve">
+  <data name="MilSymDPMsgDeserializeFailure" xml:space="preserve">
     <value>Deserialize failure: </value>
   </data>
-  <data name="MSDocVMMsg26" xml:space="preserve">
+  <data name="MilSymDPMsgErrorFavrFile" xml:space="preserve">
     <value>Error - the favorites file: </value>
   </data>
-  <data name="MSDocVMMsg27" xml:space="preserve">
+  <data name="MilSymDPMsgNotLoaded" xml:space="preserve">
     <value>could not be loaded.</value>
   </data>
-  <data name="MSDocVMMsg28" xml:space="preserve">
+  <data name="MilSymDPMsgDeleteFile" xml:space="preserve">
     <value>Please delete the file and try again.</value>
   </data>
-  <data name="MSDocVMMsg29" xml:space="preserve">
+  <data name="MilSymDPMsgNotCreatedFavr" xml:space="preserve">
     <value>Could not create Favorite.</value>
   </data>
-  <data name="MSDocVMMsg30" xml:space="preserve">
+  <data name="MilSymDPMsgUnable2AddFavr" xml:space="preserve">
     <value>Unable to add the current favorite. </value>
   </data>
-  <data name="MSDocVMMsg31" xml:space="preserve">
+  <data name="MilSymDPMsgNotCreatedTemplate" xml:space="preserve">
     <value>Could Not Create Template</value>
   </data>
-  <data name="MSDocVMMsg32" xml:space="preserve">
+  <data name="MilSymDPMsgInvalidImportFile" xml:space="preserve">
     <value>The import file you selected is invalid - please choose a valid JSON file.</value>
   </data>
-  <data name="MSDocVMMsg33" xml:space="preserve">
+  <data name="MilSymDPMsgRmvMilOverlayLyr" xml:space="preserve">
     <value>Removing the required Military Overlay layers will reset the Military Symbol Editor.</value>
   </data>
-  <data name="MSDocVMMsg34" xml:space="preserve">
+  <data name="MilSymDPMsgContinue" xml:space="preserve">
     <value>Continue?</value>
   </data>
-  <data name="MSDocVMMsg35" xml:space="preserve">
+  <data name="MilSymDPMsgMilOverlayLyrRmvd" xml:space="preserve">
     <value>The required Military Overlay layers have been removed from the active map.</value>
   </data>
-  <data name="MSDocVMMsg36" xml:space="preserve">
+  <data name="MilSymDPMsgReset" xml:space="preserve">
     <value>The Military Symbol Editor has been reset.</value>
   </data>
-  <data name="MSDocVMMsg37" xml:space="preserve">
+  <data name="MilSymDPMsgReqMilOverlayDataModel" xml:space="preserve">
     <value>The Military Symbol Editor requires the Military Overlay data model.</value>
   </data>
-  <data name="MSDocVMMsg38" xml:space="preserve">
+  <data name="MilSymDPMsgAddDataModel" xml:space="preserve">
     <value>Would you like to add the data model (database schema and layers) to the project?</value>
   </data>
-  <data name="MSDocVMMsg39" xml:space="preserve">
+  <data name="MilSymDPMsgNotMatchMilStandard" xml:space="preserve">
     <value>The Selected Feature does not seem to be a Military Feature or does not match the Military Standard in use (</value>
   </data>
-  <data name="MSDocVMMsg40" xml:space="preserve">
+  <data name="MilSymDPMsgCloseBracket" xml:space="preserve">
     <value>).</value>
   </data>
-  <data name="MSDocVMMsg41" xml:space="preserve">
+  <data name="MilSymDPMsgReqMilStyle" xml:space="preserve">
     <value>The Required Military Style (</value>
   </data>
-  <data name="MSDocVMMsg42" xml:space="preserve">
+  <data name="MilSymDPMsgNotDetected" xml:space="preserve">
     <value>) is not detected in Pro Install.</value>
   </data>
-  <data name="MSDocVMMsg43" xml:space="preserve">
+  <data name="MilSymDPMsgThe" xml:space="preserve">
     <value>The</value>
   </data>
-  <data name="MSDocVMMsg44" xml:space="preserve">
+  <data name="MilSymDPMsgMilOverlaySchemaNotDetected" xml:space="preserve">
     <value> Military Overlay schema is not detected in any database in your project.</value>
   </data>
-  <data name="MSDocVMMsg45" xml:space="preserve">
+  <data name="MilSymDPMsgAddMilOverlayLyrPkg" xml:space="preserve">
     <value> so the Military Symbol Editor cannot continue. Would you like to add the Military Overlay Layer Package to your project?</value>
   </data>
-  <data name="MSDocVMMsg46" xml:space="preserve">
+  <data name="MilSymDPMsgPrjMapNotActive" xml:space="preserve">
     <value>Your project does not contain any active map.  Create one and try again.</value>
   </data>
-  <data name="MSDocVMMsg47" xml:space="preserve">
+  <data name="MilSymDPMsgMapNotAvailable" xml:space="preserve">
     <value>The project map is not currently available.</value>
   </data>
-  <data name="MSDocVMMsg48" xml:space="preserve">
+  <data name="MilSymDPMsgTryAgain" xml:space="preserve">
     <value>Would you like to try again?</value>
   </data>
-  <data name="MSDocVMMsg49" xml:space="preserve">
+  <data name="MilSymDPMsgMapVisibleReady" xml:space="preserve">
     <value>Note: wait for map to be visible and ready.</value>
   </data>
-  <data name="MSDocVMMsg50" xml:space="preserve">
+  <data name="MilSymDPMsgUnableAddLyrPkg" xml:space="preserve">
     <value>Unable to add layer package to map.</value>
   </data>
-  <data name="MSDocVMMsg51" xml:space="preserve">
+  <data name="MilSymDPMsgMapVisible" xml:space="preserve">
     <value>Please ensure the project contains a map and the map is visible.</value>
   </data>
-  <data name="MSDocVMNeu" xml:space="preserve">
+  <data name="MilSymDPNeutral" xml:space="preserve">
     <value>Neutral</value>
   </data>
-  <data name="MSDocVMNeu1Up" xml:space="preserve">
-    <value>: NEUTRAL</value>
-  </data>
-  <data name="MSDocVMNeuUp" xml:space="preserve">
-    <value>NEUTRAL</value>
-  </data>
-  <data name="MSDocVMSaveFln1" xml:space="preserve">
+  <data name="MilSymDPSaveFavrs" xml:space="preserve">
     <value>favorites</value>
   </data>
-  <data name="MSDocVMSaveFlt1" xml:space="preserve">
+  <data name="MilSymDPFilterJSON" xml:space="preserve">
     <value>JSON|*.json</value>
   </data>
-  <data name="MSDocVMStr1" xml:space="preserve">
+  <data name="MilSymDPSymSet" xml:space="preserve">
     <value>symbolset</value>
   </data>
-  <data name="MSDocVMStr2" xml:space="preserve">
+  <data name="MilSymDPSymEntity" xml:space="preserve">
     <value>symbolentity</value>
   </data>
-  <data name="MSDocVMStr3" xml:space="preserve">
+  <data name="MilSymDPExtFunctCode" xml:space="preserve">
     <value>extendedfunctioncode</value>
   </data>
-  <data name="MSDocVMStr4" xml:space="preserve">
+  <data name="MilSymDPNEW2525D" xml:space="preserve">
     <value>NEW_AT_2525D</value>
   </data>
-  <data name="MSDocVMStr5" xml:space="preserve">
+  <data name="MilSymDPAddMap" xml:space="preserve">
     <value>ADD MAP TO PROJECT</value>
   </data>
-  <data name="MSDocVMStr6" xml:space="preserve">
-    <value>ADD-IN NOT ENABLED</value>
-  </data>
-  <data name="MSDocVMStr7" xml:space="preserve">
+  <data name="MilSymDPMilLyrAdded" xml:space="preserve">
     <value>Military Layers Added</value>
   </data>
-  <data name="MSDocVMStr8" xml:space="preserve">
+  <data name="MilSymDPAddInDisabled" xml:space="preserve">
     <value>Add-in Not Enabled</value>
   </data>
-  <data name="MSDocVMUnk" xml:space="preserve">
+  <data name="MilSymDPUnk" xml:space="preserve">
     <value>Unknown</value>
   </data>
   <data name="PSymStFromLblMsg" xml:space="preserve">
@@ -825,10 +783,10 @@
   <data name="Enummil2525d" xml:space="preserve">
     <value>mil2525d</value>
   </data>
-  <data name="LblAttrLenError" xml:space="preserve">
+  <data name="LabelAttrLenError" xml:space="preserve">
     <value>The label entered is at the maximum allowable length for this feature field</value>
   </data>
-  <data name="LblAttrToString" xml:space="preserve">
+  <data name="LabelAttrToString" xml:space="preserve">
     <value>Label Attributes</value>
   </data>
   <data name="MilOvrDMDSTName" xml:space="preserve">
@@ -921,16 +879,34 @@
   <data name="PSymStNamemil2525c" xml:space="preserve">
     <value>2525C</value>
   </data>
-  <data name="SymAttNullFeaPassed" xml:space="preserve">
+  <data name="SymAttrNullFeaPassed" xml:space="preserve">
     <value>Null Feature passed to PopulateFeatureWithAttributes</value>
   </data>
-  <data name="SymAttNullRowBuffer" xml:space="preserve">
+  <data name="SymAttrNullRowBuffer" xml:space="preserve">
     <value>Null RowBuffer passed to PopulateRowBufferWithAttributes</value>
   </data>
-  <data name="SymAttrBmpExc" xml:space="preserve">
+  <data name="SymAttrGetBmpImgExc" xml:space="preserve">
     <value>Exception in GetBitmapImageAsync: </value>
   </data>
-  <data name="SymSMapFCLNotFound" xml:space="preserve">
+  <data name="SymSetMapFCLNotFound" xml:space="preserve">
     <value>GetFeatureClassFromExtendedFunctionCode - could not find feature class for: </value>
+  </data>
+  <data name="MilSymDPFriendUpper" xml:space="preserve">
+    <value>FRIEND</value>
+  </data>
+  <data name="MilSymDPHostile" xml:space="preserve">
+    <value>Hostile</value>
+  </data>
+  <data name="MilSymDPHostileFaker" xml:space="preserve">
+    <value>Hostile/Faker</value>
+  </data>
+  <data name="MilSymDPHostileUpper" xml:space="preserve">
+    <value>HOSTILE</value>
+  </data>
+  <data name="MilSymDPNeutralUpper" xml:space="preserve">
+    <value>NEUTRAL</value>
+  </data>
+  <data name="MiSymDPColon" xml:space="preserve">
+    <value>: </value>
   </data>
 </root>

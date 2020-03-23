@@ -70,7 +70,7 @@ namespace ProSymbolEditor
                 }
             }
 
-            System.Diagnostics.Trace.WriteLine(Properties.Resources.SymSMapFCLNotFound + symbolSet);
+            System.Diagnostics.Trace.WriteLine(Properties.Resources.SymSetMapFCLNotFound + symbolSet);
             return "";
         }
 
@@ -93,7 +93,7 @@ namespace ProSymbolEditor
 
             }
 
-            System.Diagnostics.Trace.WriteLine(Properties.Resources.SymSMapFCLNotFound + extendedFunctionCode);
+            System.Diagnostics.Trace.WriteLine(Properties.Resources.SymSetMapFCLNotFound + extendedFunctionCode);
             return "";
         }
 

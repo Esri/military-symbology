@@ -282,7 +282,7 @@ namespace ProSymbolEditor
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Trace.WriteLine(Properties.Resources.SymAttrBmpExc + ex.Message);
+                    System.Diagnostics.Trace.WriteLine(Properties.Resources.SymAttrGetBmpImgExc + ex.Message);
                     return null;
                 }
              });
@@ -453,7 +453,7 @@ namespace ProSymbolEditor
             if (rowBuffer == null)
             {
                 // not normally possible with ref parameter, but check just in case
-                System.Diagnostics.Debug.WriteLine(Properties.Resources.SymAttNullRowBuffer);
+                System.Diagnostics.Debug.WriteLine(Properties.Resources.SymAttrNullRowBuffer);
                 return;
             }
 
@@ -652,7 +652,7 @@ namespace ProSymbolEditor
             if (feature == null)
             {
                 // not normally possible with ref parameter, but check just in case
-                System.Diagnostics.Debug.WriteLine(Properties.Resources.SymAttNullFeaPassed);
+                System.Diagnostics.Debug.WriteLine(Properties.Resources.SymAttrNullFeaPassed);
                 return;
             }
 

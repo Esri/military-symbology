@@ -41,7 +41,7 @@
                         <Label
                                                 Grid.Column="0"
                                                 Margin="5,0,0,0"
-                                                Content="{x:Static prop:Resources.ModLabel1}" />
+                                                Content="{x:Static prop:Resources.ModLblSelectTool}" />
 
                         <ToggleButton
                                                 Grid.Column="1"
@@ -142,7 +142,7 @@
                                                             TextAlignment="Left" />
                                     <TextBlock
                                                             Grid.Column="5"
-                                                            Text="{x:Static prop:Resources.ModTxt1}"
+                                                            Text="{x:Static prop:Resources.ModTxtObjectID}"
                                                             TextAlignment="Left" />
                                     <TextBlock
                                                             Grid.Column="6"
@@ -171,8 +171,8 @@
                                             Source="{Binding EditSelectedFeatureSymbol.SymbolImage}">
                         <Image.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding SaveImageToCommand}" Header="{x:Static prop:Resources.ModMenu1}" />
-                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="{x:Static prop:Resources.ModMenu2}"  />
+                                <MenuItem Command="{Binding SaveImageToCommand}" Header="{x:Static prop:Resources.ModMenuSaveImage}" />
+                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="{x:Static prop:Resources.ModMenuCopyImage}"  />
                             </ContextMenu>
                         </Image.ContextMenu>
                     </Image>
@@ -198,8 +198,8 @@
                             </ContextMenu>
                         </DataGrid.ContextMenu>                        
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="{x:Static prop:Resources.ModDGHeader1}" Binding="{Binding Key}" />
-                            <DataGridTextColumn Header="{x:Static prop:Resources.ModDGHeader2}" Binding="{Binding Value}" />
+                            <DataGridTextColumn Header="{x:Static prop:Resources.ModDGHeaderAttr}" Binding="{Binding Key}" />
+                            <DataGridTextColumn Header="{x:Static prop:Resources.ModDGHeaderVal}" Binding="{Binding Value}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -221,7 +221,7 @@
                                     CommandParameter="3"
                                     IsEnabled="{Binding IsStyleItemSelected}"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
-                                    ToolTip="{x:Static prop:Resources.ModBtn1ToolTip}">
+                                    ToolTip="{x:Static prop:Resources.ModBtnGo2SymTabToolTip}">
                 <Button.RenderTransform>
                     <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
                 </Button.RenderTransform>

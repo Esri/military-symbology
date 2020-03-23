@@ -53,7 +53,7 @@
                                             Grid.Row="0"
                                             Grid.Column="0"
                                             Margin="5,5,5,5"
-                                            Content="{x:Static prop:Resources.SymLabel1}"
+                                            Content="{x:Static prop:Resources.SymLblIdentityAffiliation}"
                                             Visibility="{Binding ElementName=identityComboBox, Path=Visibility}" />
                     <ComboBox
                                             x:Name="identityComboBox"
@@ -82,7 +82,7 @@
                                             Grid.Row="1"
                                             Grid.Column="0"
                                             Margin="5,5,5,5"
-                                            Content="{x:Static prop:Resources.SymLabel2}"
+                                            Content="{x:Static prop:Resources.SymLblStatusPlanned}"
                                             Visibility="{Binding ElementName=statusComboBox, Path=Visibility}" />
                     <ComboBox
                                             x:Name="statusComboBox"
@@ -109,7 +109,7 @@
                                             Grid.Row="2"
                                             Grid.Column="0"
                                             Margin="5,5,5,5"
-                                            Content="{x:Static prop:Resources.SymLabel3}"
+                                            Content="{x:Static prop:Resources.SymLblOperCondititon}"
                                             Visibility="{Binding ElementName=operationalConditionAmplifierComboBox, Path=Visibility}" />
                     <ComboBox
                                             x:Name="operationalConditionAmplifierComboBox"
@@ -138,7 +138,7 @@
                                             Grid.Row="3"
                                             Grid.Column="0"
                                             Margin="5,5,5,5"
-                                            Content="{x:Static prop:Resources.SymLabel4}"
+                                            Content="{x:Static prop:Resources.SymLblTFFDHQ}"
                                             Visibility="{Binding ElementName=tfFdHqComboBox, Path=Visibility}" />
                     <ComboBox
                                             x:Name="tfFdHqComboBox"
@@ -194,7 +194,7 @@
                                             Grid.Row="5"
                                             Grid.Column="0"
                                             Margin="5,5,5,5"
-                                            Content="{x:Static prop:Resources.SymLabel5}"
+                                            Content="{x:Static prop:Resources.SymLblMobility}"
                                             Visibility="{Binding ElementName=mobilityComboBox, Path=Visibility}" />
                     <ComboBox
                                             x:Name="mobilityComboBox"
@@ -223,7 +223,7 @@
                                             Grid.Row="6"
                                             Grid.Column="0"
                                             Margin="5,5,5,5"
-                                            Content="{x:Static prop:Resources.SymLabel6}"
+                                            Content="{x:Static prop:Resources.SymLblContext}"
                                             Visibility="{Binding ElementName=contextComboBox, Path=Visibility}" />
                     <ComboBox
                                             x:Name="contextComboBox"
@@ -252,7 +252,7 @@
                                             Grid.Row="7"
                                             Grid.Column="0"
                                             Margin="5,5,5,5"
-                                            Content="{x:Static prop:Resources.SymLabel7}"
+                                            Content="{x:Static prop:Resources.SymLblModifier1}"
                                             Visibility="{Binding ElementName=modifier1ComboBox, Path=Visibility}" />
                     <ComboBox
                                             x:Name="modifier1ComboBox"
@@ -281,7 +281,7 @@
                                             Grid.Row="8"
                                             Grid.Column="0"
                                             Margin="5,5,5,5"
-                                            Content="{x:Static prop:Resources.SymLabel8}"
+                                            Content="{x:Static prop:Resources.SymLblModifier2}"
                                             Visibility="{Binding ElementName=modifier2ComboBox, Path=Visibility}" />
                     <ComboBox
                                             x:Name="modifier2ComboBox"
@@ -309,7 +309,7 @@
                         Grid.Row="10"
                         Grid.Column="0"
                         Margin="5,5,5,5"
-                        Content="{x:Static prop:Resources.SymLabel9}"
+                        Content="{x:Static prop:Resources.SymLblEntity}"
                         Visibility="{Binding ElementName=entityCodeComboBox, Path=Visibility}" />
                     <ComboBox
                                             x:Name="entityCodeComboBox"
@@ -338,7 +338,7 @@
                                             Grid.Row="5"
                                             Grid.Column="0"
                                             Margin="5,5,5,5"
-                                            Content="{x:Static prop:Resources.SymLabel10}"
+                                            Content="{x:Static prop:Resources.SymLblFunction}"
                                             Visibility="{Binding ElementName=extendedFunctionCodeComboBox, Path=Visibility}" />
                     <ComboBox
                                             x:Name="extendedFunctionCodeComboBox"
@@ -380,8 +380,8 @@
                                             Source="{Binding SymbolAttributeSet.SymbolImage}">
                         <Image.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding SaveImageToCommand}" Header="{x:Static prop:Resources.SymMenu1}" />
-                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="{x:Static prop:Resources.SymMenu2}" />
+                                <MenuItem Command="{Binding SaveImageToCommand}" Header="{x:Static prop:Resources.SymMenuSaveImage}" />
+                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="{x:Static prop:Resources.SymMenuCopyImage}" />
                             </ContextMenu>
                         </Image.ContextMenu>
                     </Image>
@@ -406,8 +406,8 @@
                             </ContextMenu>
                         </DataGrid.ContextMenu>                        
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="{x:Static prop:Resources.SymDGHeader1}" Binding="{Binding Key}" />
-                            <DataGridTextColumn Header="{x:Static prop:Resources.SymDGHeader2}" Binding="{Binding Value}" />
+                            <DataGridTextColumn Header="{x:Static prop:Resources.SymDGHeaderAttr}" Binding="{Binding Key}" />
+                            <DataGridTextColumn Header="{x:Static prop:Resources.SymDGHeaderVal}" Binding="{Binding Value}" />
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -430,7 +430,7 @@
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="0"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
-                                    ToolTip="{x:Static prop:Resources.SymBtn1ToolTip}">
+                                    ToolTip="{x:Static prop:Resources.SymBtnBack2SearchToolTip}">
                 <Button.RenderTransform>
                     <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
                 </Button.RenderTransform>
@@ -441,7 +441,7 @@
                                     
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveSymbolFileCommand}"
-                                    Content="{x:Static prop:Resources.SymBtn2}"
+                                    Content="{x:Static prop:Resources.SymBtnAddFavorite}"
                                     Style="{DynamicResource Esri_SimpleButton}" />
             <ToggleButton
                                     Grid.Row="0"
@@ -450,9 +450,9 @@
                                     HorizontalAlignment="Center"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
-                                    Content="{x:Static prop:Resources.SymToggleBtn3}"
+                                    Content="{x:Static prop:Resources.SymToggleBtnAddMap}"
                                     IsChecked="{Binding AddToMapToolEnabled}"
-                                    ToolTip="{x:Static prop:Resources.SymToggleBtn3ToolTip}"
+                                    ToolTip="{x:Static prop:Resources.SymToggleBtnAddMapToolTip}"
                                     Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
                 <ToggleButton.Style>
                     <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
@@ -464,9 +464,9 @@
                                     Height="24"
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveEditsCommand}"
-                                    Content="{x:Static prop:Resources.SymBtn4}"
+                                    Content="{x:Static prop:Resources.SymBtnSaveEdits}"
                                     Style="{DynamicResource Esri_SimpleButton}"
-                                    ToolTip="{x:Static prop:Resources.SymBtn4ToolTip}"
+                                    ToolTip="{x:Static prop:Resources.SymBtnSaveEditsToolTip}"
                                     Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
             <Button
                                     Grid.Row="0"
@@ -476,7 +476,7 @@
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="3"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
-                                    ToolTip="{x:Static prop:Resources.SymBtn5ToolTip}">
+                                    ToolTip="{x:Static prop:Resources.SymBtnGo2LabelTabToolTip}">
                 <Button.RenderTransform>
                     <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
                 </Button.RenderTransform>

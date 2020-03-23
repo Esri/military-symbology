@@ -127,7 +127,7 @@
                     Margin="3,3,3,3"
                     SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
-                    <TabItem Header="{x:Static prop:Resources.MsdTabHeader1}">
+                    <TabItem Header="{x:Static prop:Resources.MsdTabHeaderSearch}">
                         <UserControl Content="{Binding SearchViewTab}" />
                     </TabItem>
 
@@ -135,19 +135,19 @@
                         <UserControl Content="{Binding ModifyViewTab}" />
                     </TabItem>-->
 
-                    <TabItem Header="{x:Static prop:Resources.MsdTabHeader2}">
+                    <TabItem Header="{x:Static prop:Resources.MsdTabHeaderFavorites}">
                         <UserControl Content="{Binding FavoritesViewTab}" />
                     </TabItem>
 
-                    <TabItem Header="{x:Static prop:Resources.MsdTabHeader3}" IsEnabled="{Binding IsStyleItemSelected}">
+                    <TabItem Header="{x:Static prop:Resources.MsdTabHeaderSymbol}" IsEnabled="{Binding IsStyleItemSelected}">
                         <UserControl Content="{Binding SymbolViewTab}" />
                     </TabItem>
 
-                    <TabItem Header="{x:Static prop:Resources.MsdTabHeader4}" IsEnabled="{Binding IsStyleItemSelected}">
+                    <TabItem Header="{x:Static prop:Resources.MsdTabHeaderLabel}" IsEnabled="{Binding IsStyleItemSelected}">
                         <UserControl Content="{Binding LabelViewTab}" />
                     </TabItem>
 
-                    <TabItem Header="{x:Static prop:Resources.MsdTabHeader5}" IsEnabled="{Binding IsCoordinateTabEnabled}">
+                    <TabItem Header="{x:Static prop:Resources.MsdTabheaderEnterCoords}" IsEnabled="{Binding IsCoordinateTabEnabled}">
                         <UserControl Content="{Binding CoordinateViewTab}" />
                     </TabItem>                    
 
@@ -157,7 +157,7 @@
                     <Label
                             Grid.Column="0"
                             Margin="5,0,0,0"
-                            Content="{x:Static prop:Resources.MsdLabel1}" />
+                            Content="{x:Static prop:Resources.MsdLblSelectFeature}" />
 
                     <ToggleButton
                             Grid.Column="1"
@@ -200,7 +200,7 @@
                     <Button
                         Margin="5"
                         Command="{Binding ShowAboutWindowCommand}"
-                        Content="{x:Static prop:Resources.MsdBtn1}"
+                        Content="{x:Static prop:Resources.MsdBtnAbout}"
                         Cursor="Hand">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
@@ -223,7 +223,7 @@
                     <Button
                         Margin="5"
                         Command="{Binding ShowSettingsWindowCommand}"
-                        Content="{x:Static prop:Resources.MsdBtn2}"
+                        Content="{x:Static prop:Resources.MsdBtnSettings}"
                         Cursor="Hand">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
