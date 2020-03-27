@@ -235,7 +235,7 @@ namespace ProSymbolEditor
                 return false; //No active map
 
             // See if Military Overlay in Active Map
-            string militaryOverlayName = Properties.Resources.MilOvrDMName;
+            string militaryOverlayName = "Military Overlay";
             IEnumerable<GroupLayer> mapLayers = MapView.Active.Map.GetLayersAsFlattenedList().OfType<GroupLayer>().Where(l => l.Name.StartsWith(militaryOverlayName));
             if ((mapLayers == null) || (mapLayers.Count() == 0))
             {
@@ -294,7 +294,7 @@ namespace ProSymbolEditor
             if (gdbProjectItem == null)
                 return false;
 
-            string militaryOverlayFeatureDatasetName = Properties.Resources.MilOvrDMDSTName;
+            string militaryOverlayFeatureDatasetName = "militaryoverlay";
 
             bool gdbContainsMilitaryOverlay = await
                 ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run<bool>(() => 

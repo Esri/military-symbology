@@ -61,16 +61,16 @@
             Grid.Row="4"
             Margin="10,0,0,0"
             Visibility="Hidden">
-            <Hyperlink NavigateUri="{x:Static prop:Resources.AbtWinAFDUrl}" RequestNavigate="Hyperlink_RequestNavigate">
-            <TextBlock Text="{x:Static prop:Resources.AbtWinMilOvrTmp}" />
+            <Hyperlink NavigateUri="{Binding Source={x:Static prop:Resources.AbtWinAFDUrl}}" RequestNavigate="Hyperlink_RequestNavigate">
+             <Run Text="{x:Static prop:Resources.AbtWinMilOvrTmp}"/>
             </Hyperlink>
         </TextBlock>
         <TextBlock
             Grid.Row="5"
             Margin="10,0,0,0"
             Visibility="Hidden">
-            <Hyperlink NavigateUri="{x:Static prop:Resources.AbtWinMilOvrInfUrl}" RequestNavigate="Hyperlink_RequestNavigate">
-             <TextBlock Text="{x:Static prop:Resources.AbtWinMilOvrInf}" />
+            <Hyperlink NavigateUri="{Binding Source={x:Static prop:Resources.AbtWinMilOvrInfUrl}}" RequestNavigate="Hyperlink_RequestNavigate">
+             <Run Text="{x:Static prop:Resources.AbtWinMilOvrInf}"/>
             </Hyperlink>
         </TextBlock>
         <Button

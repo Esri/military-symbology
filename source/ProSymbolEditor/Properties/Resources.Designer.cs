@@ -727,24 +727,6 @@ namespace ProSymbolEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to militaryoverlay.
-        /// </summary>
-        public static string MilOvrDMDSTName {
-            get {
-                return ResourceManager.GetString("MilOvrDMDSTName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Military Overlay.
-        /// </summary>
-        public static string MilOvrDMName {
-            get {
-                return ResourceManager.GetString("MilOvrDMName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Add-in Not Enabled.
         /// </summary>
         public static string MilSymDPAddInDisabled {
@@ -1870,51 +1852,6 @@ namespace ProSymbolEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MilitaryOverlayAPP6B.
-        /// </summary>
-        public static string PSymDtsNameapp6b {
-            get {
-                return ResourceManager.GetString("PSymDtsNameapp6b", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to militaryoverlayapp6d.
-        /// </summary>
-        public static string PSymDtsNameapp6d {
-            get {
-                return ResourceManager.GetString("PSymDtsNameapp6d", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to militaryoverlay2525d.
-        /// </summary>
-        public static string PSymDtsNameDef {
-            get {
-                return ResourceManager.GetString("PSymDtsNameDef", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to militaryoverlay2525b2.
-        /// </summary>
-        public static string PSymDtsNamemil2525b {
-            get {
-                return ResourceManager.GetString("PSymDtsNamemil2525b", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to MilitaryOverlay2525C.
-        /// </summary>
-        public static string PSymDtsNamemil2525c {
-            get {
-                return ResourceManager.GetString("PSymDtsNamemil2525c", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Warning - unable to execute command: .
         /// </summary>
         public static string PSymExcCmdWar {
@@ -2005,51 +1942,6 @@ namespace ProSymbolEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to APP6B.
-        /// </summary>
-        public static string PSymStNameapp6b {
-            get {
-                return ResourceManager.GetString("PSymStNameapp6b", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to APP6D.
-        /// </summary>
-        public static string PSymStNameapp6d {
-            get {
-                return ResourceManager.GetString("PSymStNameapp6d", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 2525D.
-        /// </summary>
-        public static string PSymStNameDef {
-            get {
-                return ResourceManager.GetString("PSymStNameDef", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 2525Bc2.
-        /// </summary>
-        public static string PSymStNamemil2525b {
-            get {
-                return ResourceManager.GetString("PSymStNamemil2525b", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 2525C.
-        /// </summary>
-        public static string PSymStNamemil2525c {
-            get {
-                return ResourceManager.GetString("PSymStNamemil2525c", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Add Favorite.
         /// </summary>
         public static string SrchBtnAddFavorite {
@@ -2136,6 +2028,15 @@ namespace ProSymbolEditor.Properties {
         public static string SrchToggleBtnAddMapToolTip {
             get {
                 return ResourceManager.GetString("SrchToggleBtnAddMapToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {default}.
+        /// </summary>
+        public static string SWDefaultDb {
+            get {
+                return ResourceManager.GetString("SWDefaultDb", resourceCulture);
             }
         }
         

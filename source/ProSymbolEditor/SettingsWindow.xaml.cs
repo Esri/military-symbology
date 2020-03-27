@@ -79,7 +79,7 @@ namespace ProSymbolEditor
             get
             {
                 if (string.IsNullOrEmpty(_defaultDatabase))
-                    return "{default}";
+                    return Properties.Resources.SWDefaultDb;
                 else
                     return _defaultDatabase;
             }

@@ -147,18 +147,6 @@
   <data name="AbtWinResTxt" xml:space="preserve">
     <value>Resources</value>
   </data>
-  <data name="AbtWinMilOvrTmp" xml:space="preserve">
-    <value>Military Overlay Template</value>
-  </data>
-  <data name="AbtWinMilOvrInf" xml:space="preserve">
-    <value>Military Overlay Information Model</value>
-  </data>
-  <data name="AbtWinAFDUrl" xml:space="preserve">
-    <value>http://esriurl.com/AFDMilitaryOverlay</value>
-  </data>
-  <data name="AbtWinMilOvrInfUrl" xml:space="preserve">
-    <value>http://esriurl.com/MilitaryOverlayInformationModel</value>
-  </data>
   <data name="CoordBtnAddCoordinate" xml:space="preserve">
     <value>Add Coordinate(s) to Map</value>
   </data>
@@ -789,12 +777,6 @@
   <data name="LabelAttrToString" xml:space="preserve">
     <value>Label Attributes</value>
   </data>
-  <data name="MilOvrDMDSTName" xml:space="preserve">
-    <value>militaryoverlay</value>
-  </data>
-  <data name="MilOvrDMName" xml:space="preserve">
-    <value>Military Overlay</value>
-  </data>
   <data name="PSymapp6b" xml:space="preserve">
     <value>APP-6(B)</value>
   </data>
@@ -822,21 +804,6 @@
   <data name="PSymDicOth" xml:space="preserve">
     <value>mil2525c_b2</value>
   </data>
-  <data name="PSymDtsNameapp6b" xml:space="preserve">
-    <value>MilitaryOverlayAPP6B</value>
-  </data>
-  <data name="PSymDtsNameapp6d" xml:space="preserve">
-    <value>militaryoverlayapp6d</value>
-  </data>
-  <data name="PSymDtsNameDef" xml:space="preserve">
-    <value>militaryoverlay2525d</value>
-  </data>
-  <data name="PSymDtsNamemil2525b" xml:space="preserve">
-    <value>militaryoverlay2525b2</value>
-  </data>
-  <data name="PSymDtsNamemil2525c" xml:space="preserve">
-    <value>MilitaryOverlay2525C</value>
-  </data>
   <data name="PSymExcCmdWar" xml:space="preserve">
     <value>Warning - unable to execute command: </value>
   </data>
@@ -862,21 +829,6 @@
     <value>2525B</value>
   </data>
   <data name="PSymStLblmil2525c" xml:space="preserve">
-    <value>2525C</value>
-  </data>
-  <data name="PSymStNameapp6b" xml:space="preserve">
-    <value>APP6B</value>
-  </data>
-  <data name="PSymStNameapp6d" xml:space="preserve">
-    <value>APP6D</value>
-  </data>
-  <data name="PSymStNameDef" xml:space="preserve">
-    <value>2525D</value>
-  </data>
-  <data name="PSymStNamemil2525b" xml:space="preserve">
-    <value>2525Bc2</value>
-  </data>
-  <data name="PSymStNamemil2525c" xml:space="preserve">
     <value>2525C</value>
   </data>
   <data name="SymAttrNullFeaPassed" xml:space="preserve">
@@ -908,5 +860,20 @@
   </data>
   <data name="MiSymDPColon" xml:space="preserve">
     <value>: </value>
+  </data>
+  <data name="SWDefaultDb" xml:space="preserve">
+    <value>{default}</value>
+  </data>
+  <data name="AbtWinAFDUrl" xml:space="preserve">
+    <value>http://esriurl.com/AFDMilitaryOverlay</value>
+  </data>
+  <data name="AbtWinMilOvrInf" xml:space="preserve">
+    <value>Military Overlay Information Model</value>
+  </data>
+  <data name="AbtWinMilOvrInfUrl" xml:space="preserve">
+    <value>http://esriurl.com/MilitaryOverlayInformationModel</value>
+  </data>
+  <data name="AbtWinMilOvrTmp" xml:space="preserve">
+    <value>Military Overlay Template</value>
   </data>
 </root>

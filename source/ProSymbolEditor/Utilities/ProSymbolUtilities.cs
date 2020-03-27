@@ -161,14 +161,14 @@ namespace ProSymbolEditor
 
         public static string GetDatasetName(SupportedStandardsType standardIn)
         {
-            string datasetName = Properties.Resources.PSymDtsNameDef;
+            string datasetName = "militaryoverlay2525d";
 
             switch (standardIn)
             {
-                case SupportedStandardsType.app6b: datasetName = Properties.Resources.PSymDtsNameapp6b; break;
-                case SupportedStandardsType.app6d: datasetName = Properties.Resources.PSymDtsNameapp6d; break;
-                case SupportedStandardsType.mil2525c: datasetName = Properties.Resources.PSymDtsNamemil2525c; break;
-                case SupportedStandardsType.mil2525b: datasetName = Properties.Resources.PSymDtsNamemil2525b; break;
+                case SupportedStandardsType.app6b: datasetName = "MilitaryOverlayAPP6B"; break;
+                case SupportedStandardsType.app6d: datasetName = "militaryoverlayapp6d"; break;
+                case SupportedStandardsType.mil2525c: datasetName = "MilitaryOverlay2525C"; break;
+                case SupportedStandardsType.mil2525b: datasetName = "militaryoverlay2525b2"; break;
                 default: break;
             }
 
@@ -177,14 +177,14 @@ namespace ProSymbolEditor
 
         public static string GetStandardString(SupportedStandardsType standardIn)
         {
-            string standardName = Properties.Resources.PSymStNameDef;
+            string standardName = "2525D";
 
             switch (standardIn)
             {
-                case SupportedStandardsType.app6b: standardName = Properties.Resources.PSymStNameapp6b; break;
-                case SupportedStandardsType.app6d: standardName = Properties.Resources.PSymStNameapp6d; break;
-                case SupportedStandardsType.mil2525c: standardName = Properties.Resources.PSymStNamemil2525c; break;
-                case SupportedStandardsType.mil2525b: standardName = Properties.Resources.PSymStNamemil2525b; break;
+                case SupportedStandardsType.app6b: standardName = "APP6B"; break;
+                case SupportedStandardsType.app6d: standardName = "APP6D"; break;
+                case SupportedStandardsType.mil2525c: standardName = "2525C"; break;
+                case SupportedStandardsType.mil2525b: standardName = "2525Bc2"; break;
                 default: break;
             }
 
