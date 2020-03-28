@@ -22,11 +22,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using CoordinateConversionLibrary.Models;
 using ArcGIS.Desktop.Mapping;
 using System.Threading.Tasks;
 using System.Collections.Generic; 
 using System.Linq;
+
+using ProAppCoordConversionModule.Common.Attributes;
+using ProAppCoordConversionModule.Models;
 
 namespace ProSymbolEditor
 {
@@ -34,19 +36,19 @@ namespace ProSymbolEditor
     {
         public enum SupportedStandardsType : int
         {
-            [CoordinateConversionLibrary.LocalizableDescription(@"Enummil2525d", typeof(Properties.Resources))]
+            [LocalizableDescription(@"Enummil2525d", typeof(Properties.Resources))]
             mil2525d = 1,
 
-            [CoordinateConversionLibrary.LocalizableDescription(@"Enummil2525c", typeof(Properties.Resources))]
+            [LocalizableDescription(@"Enummil2525c", typeof(Properties.Resources))]
             mil2525c = 2,
 
-            [CoordinateConversionLibrary.LocalizableDescription(@"Enummil2525b", typeof(Properties.Resources))]
+            [LocalizableDescription(@"Enummil2525b", typeof(Properties.Resources))]
             mil2525b = 3,
 
-            [CoordinateConversionLibrary.LocalizableDescription(@"Enumapp6d", typeof(Properties.Resources))]
+            [LocalizableDescription(@"Enumapp6d", typeof(Properties.Resources))]
             app6d = 4,
 
-            [CoordinateConversionLibrary.LocalizableDescription(@"Enumapp6b", typeof(Properties.Resources))]
+            [LocalizableDescription(@"Enumapp6b", typeof(Properties.Resources))]
             app6b = 5,
 
         };

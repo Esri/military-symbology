@@ -36,11 +36,11 @@ using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Catalog;
-using CoordinateConversionLibrary.Models;
 using Microsoft.Win32;
 using System.Web.Script.Serialization;
 using System.Windows.Threading;
 using ArcGIS.Core.CIM;
+using ProAppCoordConversionModule.Models;
 
 namespace ProSymbolEditor
 {
