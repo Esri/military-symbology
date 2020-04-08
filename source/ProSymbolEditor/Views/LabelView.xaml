@@ -7,6 +7,7 @@
             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
              xmlns:fwcontrols="clr-namespace:ArcGIS.Desktop.Internal.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
              xmlns:mtcontrols="clr-namespace:ProSymbolEditor.Controls"
+             xmlns:prop="clr-namespace:ProSymbolEditor.Properties" 
             xmlns:local="clr-namespace:ProSymbolEditor"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -58,7 +59,7 @@
                                             Grid.Row="0"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Date/Time Valid"
+                                            Content="{x:Static prop:Resources.LabelLblDateTimeValid}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeValidFieldExists}" />
 
                     <fwcontrols:DateTimePicker 
@@ -74,7 +75,7 @@
                                             Grid.Row="1"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Date/Time Expired"
+                                            Content="{x:Static prop:Resources.LabelLblDateTimeExpired}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.DateTimeExpiredFieldExists}" />
                     <fwcontrols:DateTimePicker 
                                             Grid.Row="1"
@@ -89,7 +90,7 @@
                                             Grid.Row="3"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Type"
+                                            Content="{x:Static prop:Resources.LabelLblType}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.TypeFieldExists}" />
                     <TextBox
                                             Grid.Row="3"
@@ -103,7 +104,7 @@
                                             Grid.Row="4"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Common Identifier"
+                                            Content="{x:Static prop:Resources.LabelLblCommonIdentifier}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.CommonIdentifierFieldExists}" />
                     <TextBox
                                             Grid.Row="4"
@@ -117,7 +118,7 @@
                                             Grid.Row="5"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Speed"
+                                            Content="{x:Static prop:Resources.LabelLblSpeed}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}" />
                     <!--<TextBox Grid.Row="11" Width="170" Text="{Binding SymbolAttributeSet.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding MilitaryFieldsInspectorModel.SpeedFieldExists}"/>-->
                     <mtcontrols:NumberUpDownControl 
@@ -135,7 +136,7 @@
                                             Grid.Row="6"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Direction"
+                                            Content="{x:Static prop:Resources.LabelLblDirection}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.DirectionFieldExists}" />
                     <mtcontrols:NumberUpDownControl 
                         x:Name="directionUpDown"
@@ -152,7 +153,7 @@
                                             Grid.Row="7"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Unique Designation"
+                                            Content="{x:Static prop:Resources.LabelLblUniqueDesignation}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.UniqueDesignationFieldExists}" />
                     <TextBox
                                             Grid.Row="7"
@@ -166,7 +167,7 @@
                                             Grid.Row="8"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Reinforced"
+                                            Content="{x:Static prop:Resources.LabelLblReinforced}"
                                             Visibility="{Binding ElementName=reinforcedComboBox, Path=Visibility}" />
                     <ComboBox
                                             Name="reinforcedComboBox"
@@ -193,7 +194,7 @@
                                             Grid.Row="9"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Staff Comments"
+                                            Content="{x:Static prop:Resources.LabelLblStaffComments}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.StaffCommentsFieldExists}" />
                     <TextBox
                                             Grid.Row="9"
@@ -207,7 +208,7 @@
                                             Grid.Row="10"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Additional Information"
+                                            Content="{x:Static prop:Resources.LabelLblAdditionalInfo}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.AdditionalInformationFieldExists}" />
                     <TextBox
                                             Grid.Row="10"
@@ -221,7 +222,7 @@
                                             Grid.Row="11"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Higher Formation"
+                                            Content="{x:Static prop:Resources.LabelLblHigherForm}"
                                             Visibility="{Binding MilitaryFieldsInspectorModel.HigherFormationFieldExists}" />
                     <TextBox
                                             Grid.Row="11"
@@ -235,7 +236,7 @@
                                             Grid.Row="12"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Credibility"
+                                            Content="{x:Static prop:Resources.LabelLblCredibility}"
                                             Visibility="{Binding ElementName=credibilityComboBox, Path=Visibility}" />
                     <ComboBox
                                             Name="credibilityComboBox"
@@ -262,7 +263,7 @@
                                             Grid.Row="13"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Reliability"
+                                            Content="{x:Static prop:Resources.LabelLblReliability}"
                                             Visibility="{Binding ElementName=reliabilityComboBox, Path=Visibility}" />
                     <ComboBox
                                             Name="reliabilityComboBox"
@@ -289,7 +290,7 @@
                                             Grid.Row="14"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Signature Equipment(ENY)"
+                                            Content="{x:Static prop:Resources.LabelLblSignatureEquipment}"
                                             Visibility="{Binding ElementName=signatureEquipmentComboBox, Path=Visibility}" />
                     <ComboBox
                                             Name="signatureEquipmentComboBox"
@@ -316,7 +317,7 @@
                                             Grid.Row="15"
                                             Grid.Column="0"
                                             Margin="3,3,3,3"
-                                            Content="Country Code"
+                                            Content="{x:Static prop:Resources.LabelLblCountryCode}"
                                             Visibility="{Binding ElementName=countryComboBox, Path=Visibility}" />
                     <ComboBox
                                             Name="countryComboBox"
@@ -356,8 +357,8 @@
                                             Source="{Binding SymbolAttributeSet.SymbolImage}">
                         <Image.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding SaveImageToCommand}" Header="Save Image As..." />
-                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="Copy Image to Clipboard" />
+                                <MenuItem Command="{Binding SaveImageToCommand}" Header="{x:Static prop:Resources.LabelMenuSaveImage}" />
+                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="{x:Static prop:Resources.LabelMenuCopyImage}" />
                             </ContextMenu>
                         </Image.ContextMenu>
                     </Image>
@@ -382,8 +383,8 @@
                             </ContextMenu>
                         </DataGrid.ContextMenu>                        
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
-                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                            <DataGridTextColumn Header="{x:Static prop:Resources.LabelDGHeaderAttr}" Binding="{Binding Key}" />
+                            <DataGridTextColumn Header="{x:Static prop:Resources.LabelDGHeaderVal}" Binding="{Binding Value}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -405,7 +406,7 @@
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="2"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
-                                    ToolTip="Back to Symbol">
+                                    ToolTip="{x:Static prop:Resources.LabelBtnBack2Symbol}">
                 <Button.RenderTransform>
                     <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
                 </Button.RenderTransform>
@@ -414,7 +415,7 @@
                                     Grid.Column="1"
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveSymbolFileCommand}"
-                                    Content="Add Favorite"
+                                    Content="{x:Static prop:Resources.LabelBtnAddFavorite}"
                                     Style="{DynamicResource Esri_SimpleButton}" />
             <ToggleButton
                                     Grid.Column="2"
@@ -422,9 +423,9 @@
                                     HorizontalAlignment="Center"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
-                                    Content=" Add to Map "
+                                    Content="{x:Static prop:Resources.LabelToggleBtnAddMap}"
                                     IsChecked="{Binding AddToMapToolEnabled}"
-                                    ToolTip="Add to Map"
+                                    ToolTip="{x:Static prop:Resources.LabelToggleBtnAddMapToolTip}"
                                     Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
                 <ToggleButton.Style>
                     <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
@@ -435,9 +436,9 @@
                                     Height="24"
                                     HorizontalAlignment="Center"
                                     Command="{Binding SaveEditsCommand}"
-                                    Content="Save Edits"
+                                    Content="{x:Static prop:Resources.LabelBtnSaveEdits}"
                                     Style="{DynamicResource Esri_SimpleButton}"
-                                    ToolTip="Save Edits"
+                                    ToolTip="{x:Static prop:Resources.LabelBtnSaveEditsToolTip}"
                                     Visibility="{Binding Path=IsEditing, Converter={StaticResource BoolToVis}}" />
             <Button
                                     Grid.Column="3"
@@ -447,7 +448,7 @@
                                     CommandParameter="4"
                                     IsEnabled="{Binding IsCoordinateTabEnabled}"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
-                                    ToolTip="Enter Coordinates">
+                                    ToolTip="{x:Static prop:Resources.LabelBtnEnterCoords}">
                 <Button.RenderTransform>
                     <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
                 </Button.RenderTransform>

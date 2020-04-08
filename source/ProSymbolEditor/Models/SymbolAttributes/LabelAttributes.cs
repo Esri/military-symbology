@@ -47,7 +47,7 @@ namespace ProSymbolEditor
         private DomainCodedValuePair _selectedSignatureEquipmentDomainPair;
         private string _countryCode;
         private DomainCodedValuePair _selectedCountryCodeDomainPair;
-        private string lengthError = "The label entered is at the maximum allowable length for this feature field";
+        private string lengthError = Properties.Resources.LabelAttrLenError;
 
 
         [ScriptIgnore, Browsable(false)]
@@ -68,7 +68,7 @@ namespace ProSymbolEditor
 
         public override string ToString()
         {
-            return "Label Attributes";
+            return Properties.Resources.LabelAttrToString;
         }
 
         public string Name
@@ -91,7 +91,7 @@ namespace ProSymbolEditor
 
                 if (sb.Length == 0)
                 {
-                    sb.Append("Label Attributes");
+                    sb.Append(Properties.Resources.LabelAttrToString);
                 }
 
                 return sb.ToString();

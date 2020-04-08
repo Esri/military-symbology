@@ -36,11 +36,11 @@ using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Catalog;
-using CoordinateConversionLibrary.Models;
 using Microsoft.Win32;
 using System.Web.Script.Serialization;
 using System.Windows.Threading;
 using ArcGIS.Core.CIM;
+using ProAppCoordConversionModule.Models;
 
 namespace ProSymbolEditor
 {
@@ -78,7 +78,7 @@ namespace ProSymbolEditor
                     IsStyleItemSelected = false;
                     SelectedTabIndex = 0;
 
-                    _searchString = "Please click to enable add-in...";
+                    _searchString = Properties.Resources.MilSymDPEnableAddIn;
                 }
                 else
                 {
@@ -272,13 +272,13 @@ namespace ProSymbolEditor
             {
                 resetViewModelState();
                 IsAddinEnabled = false;
-                StatusMessage = "Add-in Not Enabled";
+                StatusMessage = Properties.Resources.MilSymDPAddInDisabled;
 
                 return;
             }
 
             ProSymbolUtilities.Standard = foundStandard;
-            StatusMessage = "Initialized";
+            StatusMessage = Properties.Resources.MilSymDPMsgInitialized;
             IsAddinEnabled = true;
 
             //Add military style to project
@@ -369,8 +369,8 @@ namespace ProSymbolEditor
             SelectedFeaturesCollection = new ObservableCollection<SelectedFeature>();
             BindingOperations.EnableCollectionSynchronization(SelectedFeaturesCollection, _lock);
 
-            _progressDialogLoad = new ProgressDialog("Loading Layer Package...");
-            _progressDialogSearch = new ProgressDialog("Searching...");
+            _progressDialogLoad = new ProgressDialog(Properties.Resources.MilSymDPLoadLyrPkg);
+            _progressDialogSearch = new ProgressDialog(Properties.Resources.MilSymDPSrch);
 
             //Load saved favorites
             _favoritesFilePath = System.IO.Path.Combine(ProSymbolUtilities.UserSettingsLocation(), "SymbolFavorites.json");
@@ -781,7 +781,7 @@ namespace ProSymbolEditor
                 }
                 catch (Exception exception)
                 {
-                    System.Diagnostics.Trace.WriteLine("Exception in SelectedSelectedFeature: " + exception.Message);
+                    System.Diagnostics.Trace.WriteLine(Properties.Resources.MilSymDPExcSelectedFeature + exception.Message);
                 }
 
                 // if not on Symbol or Label Tab, set to Symbol Tab
@@ -859,9 +859,9 @@ namespace ProSymbolEditor
             get
             {
                 if (ProSymbolUtilities.IsLegacyStandard())
-                    return "Echelon/Mobility";
+                    return Properties.Resources.MilSymDPLblEchelonMobility;
                 else
-                    return "Echelon";
+                    return Properties.Resources.MilSymDPLblEchelon;
             }
         }
 
@@ -1144,19 +1144,18 @@ namespace ProSymbolEditor
             bool isSettingsReadOnly = false;
             if (enabledWithPreviousStandard && !initialConfiguration)
             {
-                string message = "This project already contains a database with schema for standard: " + 
-                    ProSymbolUtilities.GetStandardLabel(previousSettingStandard) + ".\n" +
-                    "Please create a new project to change these settings.";
+                string message = Properties.Resources.MilSymDPMsgContainsDbSchema +
+                    ProSymbolUtilities.GetStandardLabel(previousSettingStandard) + Properties.Resources.MilSymDPMsgEnd + System.Environment.NewLine + Properties.Resources.MilSymDPMsgCreateNewPrj;
                 MessageBoxResult result = 
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, 
-                    "Application Settings Read-Only", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message,
+                    Properties.Resources.MilSymDPAppSettingsCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 isSettingsReadOnly = true;
             }
 
             if (!isSettingsReadOnly)
             {
                 // set this status in case user cancels any of this setup at start
-                StatusMessage = "Add-in Not Enabled";
+                StatusMessage = Properties.Resources.MilSymDPAddInDisabled;
             }
 
             SettingsWindow settingsWindow = new SettingsWindow();
@@ -1188,8 +1187,8 @@ namespace ProSymbolEditor
                 if (!(currentItem is GDBProjectItem))
                 {
                     ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        "Could not open Database: " + newDatabase,
-                        "Could Not Open Database",
+                        Properties.Resources.MilSymDPMsgNotOpenDb + newDatabase,
+                        Properties.Resources.MilSymDPCouldNotOpenDbCaption,
                         MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return false;
                 }
@@ -1213,7 +1212,7 @@ namespace ProSymbolEditor
 
                 if (enabledWithNewStandard)
                 {
-                    StatusMessage = "Database Added";
+                    StatusMessage = Properties.Resources.MilSymDPMsgDbAdded;
                 }
                 else
                 {
@@ -1226,10 +1225,10 @@ namespace ProSymbolEditor
                     if (dbAlreadyContainsMilitaryOverlay)
                     {
                         ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                            "Database: " + newDatabase + "\n" +
-                            "already contains a schema for Military Overlay." + "\n" +
-                            "Please select a different database from Addin Settings.",
-                            "Unable to Select Database", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                            Properties.Resources.MilSymDPMsgDb + newDatabase + System.Environment.NewLine +
+                            Properties.Resources.MilSymDPMsgHasMilOverlaySchema + System.Environment.NewLine +
+                            Properties.Resources.MilSymDPMsgDiffDbAddInSettings,
+                            Properties.Resources.MilSymDPUnableSelectDbCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
                         // Remove the item added above
                         await QueuedTask.Run(() => Project.Current.RemoveItem(currentItem as IProjectItem));
@@ -1254,12 +1253,12 @@ namespace ProSymbolEditor
             if (!enabledWithNewStandard)
             {
                 var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                    "A military overlay schema matching standard: " + "\n" +
-                    ProSymbolUtilities.GetStandardLabel(newSettingStandard) + "\n" +
-                    "will be added to database: " + 
-                    newDatabase + "\n" +
-                    "Note: this may take several minutes."
-                    , "Adding Schema to Database",
+                    Properties.Resources.MilSymDPMsgMilOverlaySchema + System.Environment.NewLine +
+                    ProSymbolUtilities.GetStandardLabel(newSettingStandard) + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgAddDb +
+                    newDatabase + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgTakeSeveralMins
+                    , Properties.Resources.MilSymDPAddSchemaDbCaption,
                     MessageBoxButton.OKCancel, MessageBoxImage.Information);
 
                 if (Convert.ToString(result) == "Cancel")
@@ -1272,9 +1271,9 @@ namespace ProSymbolEditor
                 if (!success)
                 {
                     ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        "Unable to add layer package to map.\n" +
-                        "Please try again from Addin Settings when map available.",
-                        "Unable to Add Layer Package to Map", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        Properties.Resources.MilSymDPMsgUnable2AddLyrPkg + System.Environment.NewLine +
+                        Properties.Resources.MilSymDPMsgTryAgainAddInSettings,
+                        Properties.Resources.MilSymDPUnable2AddLyrPkgCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
                     return false;
                 }
@@ -1283,12 +1282,12 @@ namespace ProSymbolEditor
                 ProSymbolUtilities.SaveProject();
                 enabledWithNewStandard = true;
 
-                StatusMessage = "Military Layers Added";
+                StatusMessage = Properties.Resources.MilSymDPMsgMilLyrAdded;
             }
 
             if (!enabledWithNewStandard)
             {
-                StatusMessage = "Add-in Not Enabled";
+                StatusMessage = Properties.Resources.MilSymDPAddInDisabled;
                 return false;
             }
 
@@ -1435,7 +1434,7 @@ namespace ProSymbolEditor
             }
 
 
-            StatusMessage = "Search Complete";
+            StatusMessage = Properties.Resources.MilSymDPMsgSrchComplete;
 
             NotifyPropertyChanged(() => StyleItems);
 
@@ -1472,15 +1471,15 @@ namespace ProSymbolEditor
             {
                 string requiredLayerName = _currentFeatureClassName;
                 if (string.IsNullOrEmpty(requiredLayerName))
-                    requiredLayerName = "{Layer Not Found}";
+                    requiredLayerName = Properties.Resources.MilSymDPMsgLyrNotFound;
 
                 // Could not find layer in map - ask to re-add it
-                string warningMessage = "The required layer is not in the Active Map. \n" +
-                    "Required layer: " + requiredLayerName + ".\n" +
-                    "Add this military overlay layer to the map?";
+                string warningMessage = Properties.Resources.MilSymDPMsgReqLyrNotActive + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgReqLyr + requiredLayerName + "." + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgAddMilOverlayLyr;
                 Debug.WriteLine(warningMessage);
-                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, 
-                    "Add Layer to Map?", MessageBoxButton.YesNoCancel, 
+                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage,
+                    Properties.Resources.MilSymDPAddLyrCaption, MessageBoxButton.YesNoCancel, 
                     MessageBoxImage.Exclamation);
 
                 bool continueWithAdd = false;
@@ -1493,8 +1492,8 @@ namespace ProSymbolEditor
                 if (!continueWithAdd)
                 {
                     ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        "Could not create map feature in layer: " + requiredLayerName,
-                        "Could Not Create Map Feature", MessageBoxButton.OK,
+                        Properties.Resources.MilSymDPMsgNotCreateFeaLyr + requiredLayerName,
+                        Properties.Resources.MilSymDPCouldNotCreateMapFeaCaption, MessageBoxButton.OK,
                         MessageBoxImage.Exclamation);
 
                     return;
@@ -1536,7 +1535,7 @@ namespace ProSymbolEditor
                             using (FeatureClassDefinition facilitySiteDefinition = featureClass.GetDefinition())
                             {
                                 EditOperation editOperation = new EditOperation();
-                                editOperation.Name = "Military Symbol Insert";
+                                editOperation.Name = Properties.Resources.MilSymDPEdMilSymInsert;
                                 editOperation.Callback(context =>
                                 {
                                     try
@@ -1566,7 +1565,7 @@ namespace ProSymbolEditor
 
                                 if (!creationResult && !string.IsNullOrEmpty(message))
                                 {
-                                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Feature Store Failure");
+                                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MilsymDPFeaStoreFail);
                                     message = string.Empty; // set to empty so 2nd error message is not displayed below
                                     await Project.Current.DiscardEditsAsync();
                                 }
@@ -1584,7 +1583,7 @@ namespace ProSymbolEditor
 
             if (!creationResult && !string.IsNullOrEmpty(message))
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Feature Store Failure");
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MilsymDPFeaStoreFail);
             }
         }
 
@@ -1679,8 +1678,8 @@ namespace ProSymbolEditor
         private void SaveImageAs(object parameter)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = "symbol";
-            saveFileDialog.Filter = "Png Image|*.png";
+            saveFileDialog.FileName = Properties.Resources.MilSymDPSaveSymbol;
+            saveFileDialog.Filter = Properties.Resources.MilSymDPFilterImagePNG;
             Nullable<bool> result = saveFileDialog.ShowDialog();
             if (result == true)
             {
@@ -1858,14 +1857,14 @@ namespace ProSymbolEditor
                 // If it is not a valid or exportable symbol error+return
                 if ((SymbolAttributeSet == null) || !SymbolAttributeSet.IsValid)
                 {
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The current favorite is not valid.", 
-                    "Invalid Favorite", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgNotValidFavr,
+                    Properties.Resources.MilSymDPInvalidFavrCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return;
                 }
 
                 if (Favorites.Contains(SymbolAttributeSet))
                 {
-                    throw new Exception("Favorite already exists.");
+                    throw new Exception(Properties.Resources.MilSymDPExcSelectedFeature);
                 }
 
                 SymbolAttributeSet.FavoriteId = Guid.NewGuid().ToString();
@@ -1881,18 +1880,18 @@ namespace ProSymbolEditor
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Trace.WriteLine("Deserialize failure: " + ex.Message);
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Error - the favorites file: " +
-                        _favoritesFilePath + "\ncould not be loaded. \n" +
-                        "Please delete the file and try again.",
-                        "Corrupt Favorites Files", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    System.Diagnostics.Trace.WriteLine(Properties.Resources.MilSymDPMsgDeserializeFailure + ex.Message);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgErrorFavrFile +
+                        _favoritesFilePath + System.Environment.NewLine + Properties.Resources.MilSymDPMsgNotLoaded + System.Environment.NewLine +
+                        Properties.Resources.MilSymDPMsgDeleteFile,
+                        Properties.Resources.MilSymDPCorruptFavrCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
 
                 LabelAttributes.MaxLengthValidationOn = true;
 
                 //Add to favorites
                 if (favoriteSet == null) // should not happen
-                    throw new Exception("Could not create Favorite.");
+                    throw new Exception(Properties.Resources.MilSymDPMsgNotCreatedFavr);
 
                 favoriteSet.GeneratePreviewSymbol();
                 Favorites.Add(favoriteSet);
@@ -1908,7 +1907,7 @@ namespace ProSymbolEditor
             }
             catch (Exception ex)
             {
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Unable to add the current favorite. " + ex.Message, "Error Adding Favorite", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgUnable2AddFavr + ex.Message, Properties.Resources.MilSymDPErrorAddFavrCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -2014,8 +2013,8 @@ namespace ProSymbolEditor
 
             if (!success)
             {
-                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Could Not Create Template", 
-                    "Could Not Create Template", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgNotCreatedTemplate,
+                    Properties.Resources.MilSymDPNotCreateTempCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
 
         }
@@ -2023,8 +2022,8 @@ namespace ProSymbolEditor
         private void SaveFavoritesAsToFile(object parameter)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = "favorites";
-            saveFileDialog.Filter = "JSON|*.json";
+            saveFileDialog.FileName = Properties.Resources.MilSymDPSaveFavrs;
+            saveFileDialog.Filter = Properties.Resources.MilSymDPFilterJSON;
             Nullable<bool> result = saveFileDialog.ShowDialog();
             if (result == true)
             {
@@ -2036,10 +2035,10 @@ namespace ProSymbolEditor
         private void ImportFavoritesFile(object parameter)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "JSON Files (*.json)|*.json";
+            openFileDialog.Filter = Properties.Resources.MilSymDPImpFilterJSON;
             if (openFileDialog.ShowDialog() == true)
             {
-                if (Path.GetExtension(openFileDialog.FileName).ToUpper() == ".JSON")
+                if (Path.GetExtension(openFileDialog.FileName).ToUpper() == Properties.Resources.MilSymDPImpExtJSON)
                 {
 
                     ObservableCollection<SymbolAttributeSet> importedFavorites = null;
@@ -2053,11 +2052,11 @@ namespace ProSymbolEditor
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Trace.WriteLine("Deserialize failure: " + ex.Message);
-                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Error: the favorites file: " +
-                            _favoritesFilePath + "\ncould not be loaded. \n" +
-                            "Please delete the file and try again.",
-                            "Corrupt Favorites Files", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        System.Diagnostics.Trace.WriteLine(Properties.Resources.MilSymDPMsgDeserializeFailure + ex.Message);
+                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgErrorFavrFile +
+                            _favoritesFilePath + System.Environment.NewLine + Properties.Resources.MilSymDPMsgNotLoaded + System.Environment.NewLine +
+                            Properties.Resources.MilSymDPMsgDeleteFile,
+                            Properties.Resources.MilSymDPCorruptFavrCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     }
                     LabelAttributes.MaxLengthValidationOn = true;
 
@@ -2088,7 +2087,7 @@ namespace ProSymbolEditor
                 }
                 else
                 {
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("The import file you selected is invalid - please choose a valid JSON file.");
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgInvalidImportFile);
                 }
             }
         }
@@ -2157,11 +2156,11 @@ namespace ProSymbolEditor
 
                 if (!string.IsNullOrEmpty(layer.Name) && layer.Name.StartsWith("Military Overlay"))
                 {
-                    string warningMessage = "Removing the required Military Overlay layers will reset the Military Symbol Editor.\n" + 
-                        "Continue?";
+                    string warningMessage = Properties.Resources.MilSymDPMsgRmvMilOverlayLyr + System.Environment.NewLine + Properties.Resources.MilSymDPMsgContinue;
+
                     Debug.WriteLine(warningMessage);
-                    MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, 
-                        "Remove Military Overlay?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                    MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage,
+                        Properties.Resources.MilSymDPRmvMilOverlayCaption, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
 
                     if (result.ToString() == "Yes")
                     {
@@ -2190,10 +2189,10 @@ namespace ProSymbolEditor
 
                 if (!string.IsNullOrEmpty(layer.Name) && layer.Name.StartsWith("Military Overlay"))
                 {
-                    string warningMessage = "The required Military Overlay layers have been removed from the active map.\n" +
-                    "The Military Symbol Editor has been reset.";
+                    string warningMessage = Properties.Resources.MilSymDPMsgMilOverlayLyrRmvd + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgReset;
                     Debug.WriteLine(warningMessage);
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, "Military Overlay Removed", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(warningMessage, Properties.Resources.MilSymDPMilOverlayRmvCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
                     // Workaround: re-subscribe to this event
                     ArcGIS.Desktop.Mapping.Events.MapSelectionChangedEvent.Subscribe(OnMapSelectionChanged);
@@ -2225,12 +2224,12 @@ namespace ProSymbolEditor
 
             SelectedFeaturesCollection.Clear();
 
-            string symbolSetFieldName = "symbolset";
-            string symbolEntityFieldName = "symbolentity";
+            string symbolSetFieldName = Properties.Resources.MilSymDPSymSet;
+            string symbolEntityFieldName = Properties.Resources.MilSymDPSymEntity;
 
             if (ProSymbolUtilities.IsLegacyStandard())
             {
-                symbolSetFieldName = "extendedfunctioncode";
+                symbolSetFieldName = Properties.Resources.MilSymDPExtFunctCode;
                 symbolEntityFieldName = ""; // not used
             }
 
@@ -2340,9 +2339,9 @@ namespace ProSymbolEditor
                 await Task.FromResult<bool>(true);
 
                 var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                    "The Military Symbol Editor requires the Military Overlay data model.\n" +
-                    "Would you like to add the data model (database schema and layers) to the project? \n",
-                    "Add-in Disabled",
+                    Properties.Resources.MilSymDPMsgReqMilOverlayDataModel + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgAddDataModel,
+                    Properties.Resources.MilSymDPAddInDisabledCaption,
                     System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
 
                 if (Convert.ToString(result) == "Yes")
@@ -2430,33 +2429,33 @@ namespace ProSymbolEditor
                 return;
 
             // These differ between 2525D & C_B2 schemas              
-            string affiliationField = "identity";
-            string hostileValue = "Hostile/Faker";
-            string friendValue = "Friend";
-            string neutralValue = "Neutral";
+            string affiliationField = Properties.Resources.MilSymDPAffiliationFldDef;
+            string hostileValue = Properties.Resources.MilSymDPHostileFaker;
+            string friendValue = Properties.Resources.MilSymDPFriend;
+            string neutralValue = Properties.Resources.MilSymDPNeutral;
 
             // These have different values for 2525C/B2
             if (ProSymbolUtilities.IsLegacyStandard())
             {
-                affiliationField = "affiliation";
-                hostileValue = "Hostile";
+                affiliationField = Properties.Resources.MilSymDPAffiliationFld;
+                hostileValue = Properties.Resources.MilSymDPHostile;
                 if (ProSymbolUtilities.Standard != ProSymbolUtilities.SupportedStandardsType.app6b) // app6b is different for some reason 
-                    friendValue = "Friendly";
+                    friendValue = Properties.Resources.MilSymDPFriendly;
             }
 
             string upperTagsName = _selectedStyleItem.Tags.ToUpper();
             string upperItemName = _selectedStyleItem.Name.ToUpper();
 
             string identityCode = "";
-            if (upperTagsName.Contains("FRIEND") || upperItemName.Contains(": FRIEND"))
+            if (upperTagsName.Contains(Properties.Resources.MilSymDPFriendUpper) || upperItemName.Contains(Properties.Resources.MiSymDPColon + Properties.Resources.MilSymDPFriendUpper))
             {
                 identityCode = await GetDomainValueAsync(affiliationField, friendValue);
             }
-            else if (upperTagsName.Contains("HOSTILE") || upperItemName.Contains(": HOSTILE"))
+            else if (upperTagsName.Contains(Properties.Resources.MilSymDPHostileUpper) || upperItemName.Contains(Properties.Resources.MiSymDPColon + Properties.Resources.MilSymDPHostileUpper))
             {
                 identityCode = await GetDomainValueAsync(affiliationField, hostileValue);
             }
-            else if (upperTagsName.Contains("NEUTRAL") || upperItemName.Contains(": NEUTRAL"))
+            else if (upperTagsName.Contains(Properties.Resources.MilSymDPNeutralUpper) || upperItemName.Contains(Properties.Resources.MiSymDPColon + Properties.Resources.MilSymDPNeutralUpper))
             {
                 identityCode = await GetDomainValueAsync(affiliationField, neutralValue);
             }
@@ -2465,7 +2464,7 @@ namespace ProSymbolEditor
             // a required attribute
             // else if (upperTagsName.Contains("UNKNOWN") || upperItemName.Contains(": UNKNOWN"))
             {
-                identityCode = await GetDomainValueAsync(affiliationField, "Unknown");
+                identityCode = await GetDomainValueAsync(affiliationField, Properties.Resources.MilSymDPUnk);
             }
 
             if (identityCode != "")
@@ -2854,7 +2853,7 @@ namespace ProSymbolEditor
                               (((x.Key.Length == 8) && int.TryParse(x.Key, out outParse)) ||
                                ((x.Key.Length == 10) && (x.Key[8] == '_') && int.TryParse(x.Key[9].ToString(), out outParse)))
                                // Filter out 2525D-only symbols when in 2525C_B2 mode:
-                               && (!x.Tags.Contains("NEW_AT_2525D"))
+                               && (!x.Tags.Contains(Properties.Resources.MilSymDPNEW2525D))
                                ));
                         }
                     }
@@ -2888,11 +2887,11 @@ namespace ProSymbolEditor
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Trace.WriteLine("Deserialize failure: " + ex.Message);
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Error - the favorites file: " + 
-                        _favoritesFilePath + "\ncould not be loaded. \n" +
-                        "Please delete the file and try again.", 
-                        "Corrupt Favorites Files", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    System.Diagnostics.Trace.WriteLine(Properties.Resources.MilSymDPMsgDeserializeFailure + ex.Message);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgErrorFavrFile + 
+                        _favoritesFilePath + System.Environment.NewLine + Properties.Resources.MilSymDPMsgNotLoaded + System.Environment.NewLine +
+                        Properties.Resources.MilSymDPMsgDeleteFile,
+                        Properties.Resources.MilSymDPCorruptFavrCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
             }
 
@@ -2934,19 +2933,18 @@ namespace ProSymbolEditor
 
         private void ShowMilitaryFeatureNotFoundMessageBox()
         {
-            string message = "The Selected Feature does not seem to be a Military Feature or " +
-                "does not match the Military Standard in use (" + ProSymbolUtilities.StandardLabel +
-                ").";
+            string message = Properties.Resources.MilSymDPMsgNotMatchMilStandard + ProSymbolUtilities.StandardLabel +
+                Properties.Resources.MilSymDPMsgCloseBracket;
 
-            MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Invalid Selection", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MilSymDPInvalidSelectionCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
         private void ShowMilitaryStyleNotFoundMessageBox()
         {
-            string message = "The Required Military Style (" + ProSymbolUtilities.StandardString +
-                ") is not detected in Pro Install.";
+            string message = Properties.Resources.MilSymDPMsgReqMilStyle + ProSymbolUtilities.StandardString +
+                Properties.Resources.MilSymDPMsgNotDetected;
 
-            MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MilSymDPAddInDisabledCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
         private async void ShowAddInNotEnabledMessageBox()
@@ -2967,12 +2965,11 @@ namespace ProSymbolEditor
             // Run on UI Thread
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(async () =>
             {
-                string message = "The " + ProSymbolUtilities.StandardLabel +
-                    " Military Overlay schema is not detected in any database in your project. \n" +
-                    " so the Military Symbol Editor cannot continue." +
-                    " Would you like to add the Military Overlay Layer Package to your project?";
+                string message = Properties.Resources.MilSymDPMsgThe + ProSymbolUtilities.StandardLabel +
+                    Properties.Resources.MilSymDPMsgMilOverlaySchemaNotDetected + System.Environment.NewLine +
+                    Properties.Resources.MilSymDPMsgAddMilOverlayLyrPkg;
 
-                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, "Add-In Disabled", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                MessageBoxResult result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, Properties.Resources.MilSymDPAddInDisabledCaption, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result.ToString() == "Yes")
                 {
                     if (MapView.Active != null)
@@ -2989,8 +2986,8 @@ namespace ProSymbolEditor
                     }
                     else
                     {
-                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Your project does not contain any active map.  Create one and try again.", "Please Add Map to Your Project", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                        SearchString = "ADD MAP TO PROJECT";
+                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgPrjMapNotActive, Properties.Resources.MilSymDPAddMapCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        SearchString = Properties.Resources.MilSymDPAddMap;
                     }
                 }
                 else
@@ -3000,7 +2997,7 @@ namespace ProSymbolEditor
                     // StyleItems.Clear();
                     // NotifyPropertyChanged(() => StyleItems);
                     // WORKAROUND:
-                    SearchString = "ADD-IN NOT ENABLED";
+                    SearchString = Properties.Resources.MilSymDPAddInDisabled;
                 }
 
             }));
@@ -3013,10 +3010,8 @@ namespace ProSymbolEditor
                 // Check the active map is available+ready
                 if ((MapView.Active == null) || (MapView.Active.Map == null))
                 {
-                    var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        "The project map is not currently available.\n" +
-                        "Would you like to try again?\n" +
-                        "Note: wait for map to be visible and ready.", "Retry Adding Military Overlay Data Model?",
+                    var result = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgMapNotAvailable + System.Environment.NewLine
+                        + Properties.Resources.MilSymDPMsgTryAgain + System.Environment.NewLine + Properties.Resources.MilSymDPMsgMapVisibleReady, Properties.Resources.MilSymDPRetryAddingDataModelCaption,
                         System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Asterisk);
                     if (Convert.ToString(result) != "Yes")
                         return false;
@@ -3025,10 +3020,8 @@ namespace ProSymbolEditor
                 // Check again
                 if ((MapView.Active == null) || (MapView.Active.Map == null))
                 {
-                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        "Unable to add layer package to map.\n" +
-                        "Please ensure the project contains a map and the map is visible.",
-                        "Unable to Add Layer Package to Map", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPMsgUnableAddLyrPkg + System.Environment.NewLine
+                        + Properties.Resources.MilSymDPMsgMapVisible, Properties.Resources.MilSymDPUnable2AddLyrPkgCaption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return false;
                 }
 
@@ -3043,16 +3036,16 @@ namespace ProSymbolEditor
                     enabled = await ProSymbolEditorModule.Current.MilitaryOverlaySchema.ShouldAddInBeEnabledAsync();
 
                     if (enabled)
-                        StatusMessage = "Military Layers Added";
+                        StatusMessage = Properties.Resources.MilSymDPMilLyrAdded;
                     else
-                        StatusMessage = "Add-in Not Enabled";
+                        StatusMessage = Properties.Resources.MilSymDPAddInDisabled;
                 });
 
             }
             catch (Exception exception)
             {
                 // Catch any exception found and display a message box.
-                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Exception caught: " + exception.Message);
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Properties.Resources.MilSymDPExcCaught + exception.Message);
                 return false;
             }
 
@@ -3077,7 +3070,7 @@ namespace ProSymbolEditor
                     case "MapPointCoordinatesString":
                         if (!PointCoordinateValid)
                         {
-                            Error = "The coordinates are invalid";
+                            Error = Properties.Resources.MilSymDPExcInvalidCoordinates;
                         }
                         break;
                 }

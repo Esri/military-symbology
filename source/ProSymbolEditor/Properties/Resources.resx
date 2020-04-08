@@ -1,0 +1,879 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btnBrowse" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="btnCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="btnOK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="SWWinMilOvrDBLbl" xml:space="preserve">
+    <value>Military Overlay _Database:</value>
+  </data>
+  <data name="SWWinMilSymStLbl" xml:space="preserve">
+    <value>Military Symbology _Standard:</value>
+  </data>
+  <data name="SWWinTitle" xml:space="preserve">
+    <value>Application Settings</value>
+  </data>
+  <data name="AbtWinTitle" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AbtWinMilSymTxt" xml:space="preserve">
+    <value>Military Symbol Editor</value>
+  </data>
+  <data name="AbtWinDescTxt" xml:space="preserve">
+    <value>The Military Symbol Editor is a tool for quickly creating military overlays in ArcGIS Pro using the Military Overlay template. The tool is useful for searching, modifying attributes, and previewing military symbols. These military symbols can then be added to the map through map click or entering coordinates. The Military Symbol Editor is intended to be used with the ArcGIS for Defense Military Overlay Template or the Military Overlay Information Model.</value>
+  </data>
+  <data name="AbtWinResTxt" xml:space="preserve">
+    <value>Resources</value>
+  </data>
+  <data name="CoordBtnAddCoordinate" xml:space="preserve">
+    <value>Add Coordinate(s) to Map</value>
+  </data>
+  <data name="CoordBtnMarkPan" xml:space="preserve">
+    <value>Mark/Pan to Coordinate</value>
+  </data>
+  <data name="CoordBtnBack2LblToolTip" xml:space="preserve">
+    <value>Back to Label</value>
+  </data>
+  <data name="CoordBtnAddFavorite" xml:space="preserve">
+    <value>Add Favorite</value>
+  </data>
+  <data name="CoordBtnSaveEdits" xml:space="preserve">
+    <value>Save Edits</value>
+  </data>
+  <data name="CoordBtnSaveEditsToolTip" xml:space="preserve">
+    <value>Save Edits</value>
+  </data>
+  <data name="CoordDGHeaderListOfCoords" xml:space="preserve">
+    <value>List of Coordinates</value>
+  </data>
+  <data name="CoordDGHeaderAttr" xml:space="preserve">
+    <value>Attribute</value>
+  </data>
+  <data name="CoordDGHeaderVal" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="CoordLblCoordinates" xml:space="preserve">
+    <value>Coordinates</value>
+  </data>
+  <data name="CoordMenuSaveImage" xml:space="preserve">
+    <value>Save Image As...</value>
+  </data>
+  <data name="CoordMenuCopyImage" xml:space="preserve">
+    <value>Copy Image to Clipboard</value>
+  </data>
+  <data name="CoordToggleBtnAddMap" xml:space="preserve">
+    <value> Add to Map </value>
+  </data>
+  <data name="CoordToggleBtnAddMapToolTip" xml:space="preserve">
+    <value>Add to Map</value>
+  </data>
+  <data name="btnDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="FavBtnCreateTxt" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="FavBtnTemplateTxt" xml:space="preserve">
+    <value>Template</value>
+  </data>
+  <data name="FavBtnImport" xml:space="preserve">
+    <value>Import...</value>
+  </data>
+  <data name="FavBtnSaveAs" xml:space="preserve">
+    <value>Save As...</value>
+  </data>
+  <data name="FavBtnBack2Search" xml:space="preserve">
+    <value>Back to Search</value>
+  </data>
+  <data name="FavBtnAddFavorite" xml:space="preserve">
+    <value>Add Favorite</value>
+  </data>
+  <data name="FavBtnGo2SymbolToolTip" xml:space="preserve">
+    <value>Go to Symbol Tab</value>
+  </data>
+  <data name="FavDGHeaderAttr" xml:space="preserve">
+    <value>Attribute</value>
+  </data>
+  <data name="FavDGHeaderVal" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="FavLblFilterBy" xml:space="preserve">
+    <value>Filter By...</value>
+  </data>
+  <data name="FavMenuSaveImage" xml:space="preserve">
+    <value>Save Image As...</value>
+  </data>
+  <data name="FavMenuCopyImage" xml:space="preserve">
+    <value>Copy Image to Clipboard</value>
+  </data>
+  <data name="FavToggleBtnAddMap" xml:space="preserve">
+    <value>Add to Map</value>
+  </data>
+  <data name="FavToggleBtnAddMapToolTip" xml:space="preserve">
+    <value>Add to Map</value>
+  </data>
+  <data name="LabelBtnBack2Symbol" xml:space="preserve">
+    <value>Back to Symbol</value>
+  </data>
+  <data name="LabelBtnAddFavorite" xml:space="preserve">
+    <value>Add Favorite</value>
+  </data>
+  <data name="LabelBtnSaveEdits" xml:space="preserve">
+    <value>Save Edits</value>
+  </data>
+  <data name="LabelBtnSaveEditsToolTip" xml:space="preserve">
+    <value>Save Edits</value>
+  </data>
+  <data name="LabelBtnEnterCoords" xml:space="preserve">
+    <value>Enter Coordinates</value>
+  </data>
+  <data name="LabelDGHeaderAttr" xml:space="preserve">
+    <value>Attribute</value>
+  </data>
+  <data name="LabelDGHeaderVal" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="LabelLblDateTimeValid" xml:space="preserve">
+    <value>Date/Time Valid</value>
+  </data>
+  <data name="LabelLblAdditionalInfo" xml:space="preserve">
+    <value>Additional Information</value>
+  </data>
+  <data name="LabelLblHigherForm" xml:space="preserve">
+    <value>Higher Formation</value>
+  </data>
+  <data name="LabelLblCredibility" xml:space="preserve">
+    <value>Credibility</value>
+  </data>
+  <data name="LabelLblReliability" xml:space="preserve">
+    <value>Reliability</value>
+  </data>
+  <data name="LabelLblSignatureEquipment" xml:space="preserve">
+    <value>Signature Equipment(ENY)</value>
+  </data>
+  <data name="LabelLblCountryCode" xml:space="preserve">
+    <value>Country Code</value>
+  </data>
+  <data name="LabelLblDateTimeExpired" xml:space="preserve">
+    <value>Date/Time Expired</value>
+  </data>
+  <data name="LabelLblType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="LabelLblCommonIdentifier" xml:space="preserve">
+    <value>Common Identifier</value>
+  </data>
+  <data name="LabelLblSpeed" xml:space="preserve">
+    <value>Speed</value>
+  </data>
+  <data name="LabelLblDirection" xml:space="preserve">
+    <value>Direction</value>
+  </data>
+  <data name="LabelLblUniqueDesignation" xml:space="preserve">
+    <value>Unique Designation</value>
+  </data>
+  <data name="LabelLblReinforced" xml:space="preserve">
+    <value>Reinforced</value>
+  </data>
+  <data name="LabelLblStaffComments" xml:space="preserve">
+    <value>Staff Comments</value>
+  </data>
+  <data name="LabelMenuSaveImage" xml:space="preserve">
+    <value>Save Image As...</value>
+  </data>
+  <data name="LabelMenuCopyImage" xml:space="preserve">
+    <value>Copy Image to Clipboard</value>
+  </data>
+  <data name="LabelToggleBtnAddMap" xml:space="preserve">
+    <value> Add to Map </value>
+  </data>
+  <data name="LabelToggleBtnAddMapToolTip" xml:space="preserve">
+    <value>Add to Map</value>
+  </data>
+  <data name="ModBtnGo2SymTabToolTip" xml:space="preserve">
+    <value>Go to Symbol Tab</value>
+  </data>
+  <data name="ModDGHeaderAttr" xml:space="preserve">
+    <value>Attribute</value>
+  </data>
+  <data name="ModDGHeaderVal" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="ModLblSelectTool" xml:space="preserve">
+    <value>Use the select tool to select a feature to modify</value>
+  </data>
+  <data name="ModMenuSaveImage" xml:space="preserve">
+    <value>Save Image As...</value>
+  </data>
+  <data name="ModMenuCopyImage" xml:space="preserve">
+    <value>Copy Image to Clipboard</value>
+  </data>
+  <data name="ModTxtObjectID" xml:space="preserve">
+    <value> : Object ID </value>
+  </data>
+  <data name="MsdBtnAbout" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="MsdBtnSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="MsdLblSelectFeature" xml:space="preserve">
+    <value>Select a feature to modify</value>
+  </data>
+  <data name="MsdTabHeaderSearch" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="MsdTabHeaderFavorites" xml:space="preserve">
+    <value>Favorites</value>
+  </data>
+  <data name="MsdTabHeaderSymbol" xml:space="preserve">
+    <value>Symbol</value>
+  </data>
+  <data name="MsdTabHeaderLabel" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="MsdTabheaderEnterCoords" xml:space="preserve">
+    <value>Enter Coordinates</value>
+  </data>
+  <data name="SWMsgCaption" xml:space="preserve">
+    <value>Database Contains Schema</value>
+  </data>
+  <data name="SWStDbMsg" xml:space="preserve">
+    <value>Database: </value>
+  </data>
+  <data name="SWStSchMsg" xml:space="preserve">
+    <value>contains a schema for standard: </value>
+  </data>
+  <data name="SWStSetMsg" xml:space="preserve">
+    <value>Setting standard to this value.</value>
+  </data>
+  <data name="SrchBtnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="SrchBtnAddFavorite" xml:space="preserve">
+    <value>Add Favorite</value>
+  </data>
+  <data name="SrchBtnGo2SymTabToolTip" xml:space="preserve">
+    <value>Go to Symbol Tab</value>
+  </data>
+  <data name="SrchLblSearch" xml:space="preserve">
+    <value>Search...</value>
+  </data>
+  <data name="SrchLblResultCount" xml:space="preserve">
+    <value>Result Count:</value>
+  </data>
+  <data name="SrchMenuSaveImage" xml:space="preserve">
+    <value>Save Image As...</value>
+  </data>
+  <data name="SrchMenuCopyImage" xml:space="preserve">
+    <value>Copy Image to Clipboard</value>
+  </data>
+  <data name="SrchMenuCopy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="SrchToggleBtnAddMap" xml:space="preserve">
+    <value> Add to Map </value>
+  </data>
+  <data name="SrchToggleBtnAddMapToolTip" xml:space="preserve">
+    <value>Add to Map</value>
+  </data>
+  <data name="SymBtnBack2SearchToolTip" xml:space="preserve">
+    <value>Back to Search</value>
+  </data>
+  <data name="SymBtnAddFavorite" xml:space="preserve">
+    <value>Add Favorite</value>
+  </data>
+  <data name="SymBtnSaveEdits" xml:space="preserve">
+    <value>Save Edits</value>
+  </data>
+  <data name="SymBtnSaveEditsToolTip" xml:space="preserve">
+    <value>Save Edits</value>
+  </data>
+  <data name="SymBtnGo2LabelTabToolTip" xml:space="preserve">
+    <value>Go to Label Tab</value>
+  </data>
+  <data name="SymDGHeaderAttr" xml:space="preserve">
+    <value>Attribute</value>
+  </data>
+  <data name="SymDGHeaderVal" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="SymLblIdentityAffiliation" xml:space="preserve">
+    <value>Identity/Affiliation</value>
+  </data>
+  <data name="SymLblFunction" xml:space="preserve">
+    <value>Function</value>
+  </data>
+  <data name="SymLblStatusPlanned" xml:space="preserve">
+    <value>Status/Planned</value>
+  </data>
+  <data name="SymLblOperCondititon" xml:space="preserve">
+    <value>Operational Condition</value>
+  </data>
+  <data name="SymLblTFFDHQ" xml:space="preserve">
+    <value>TF, FD, HQ</value>
+  </data>
+  <data name="SymLblMobility" xml:space="preserve">
+    <value>Mobility</value>
+  </data>
+  <data name="SymLblContext" xml:space="preserve">
+    <value>Context</value>
+  </data>
+  <data name="SymLblModifier1" xml:space="preserve">
+    <value>Modifier 1</value>
+  </data>
+  <data name="SymLblModifier2" xml:space="preserve">
+    <value>Modifier 2</value>
+  </data>
+  <data name="SymLblEntity" xml:space="preserve">
+    <value>Entity</value>
+  </data>
+  <data name="SymMenuSaveImage" xml:space="preserve">
+    <value>Save Image As...</value>
+  </data>
+  <data name="SymMenuCopyImage" xml:space="preserve">
+    <value>Copy Image to Clipboard</value>
+  </data>
+  <data name="SymToggleBtnAddMap" xml:space="preserve">
+    <value> Add to Map </value>
+  </data>
+  <data name="SymToggleBtnAddMapToolTip" xml:space="preserve">
+    <value>Add to Map</value>
+  </data>
+  <data name="MilSymDPAppSettingsCaption" xml:space="preserve">
+    <value>Application Settings Read-Only</value>
+  </data>
+  <data name="MilSymDPCouldNotOpenDbCaption" xml:space="preserve">
+    <value>Could Not Open Database</value>
+  </data>
+  <data name="MilSymDPUnableSelectDbCaption" xml:space="preserve">
+    <value>Unable to Select Database</value>
+  </data>
+  <data name="MilSymDPAddSchemaDbCaption" xml:space="preserve">
+    <value>Adding Schema to Database</value>
+  </data>
+  <data name="MilSymDPAddLyrCaption" xml:space="preserve">
+    <value>Add Layer to Map?</value>
+  </data>
+  <data name="MilSymDPCouldNotCreateMapFeaCaption" xml:space="preserve">
+    <value>Could Not Create Map Feature</value>
+  </data>
+  <data name="MilsymDPFeaStoreFail" xml:space="preserve">
+    <value>Feature Store Failure</value>
+  </data>
+  <data name="MilSymDPInvalidFavrCaption" xml:space="preserve">
+    <value>Invalid Favorite</value>
+  </data>
+  <data name="MilSymDPLblEchelonMobility" xml:space="preserve">
+    <value>Echelon/Mobility</value>
+  </data>
+  <data name="MilSymDPLblEchelon" xml:space="preserve">
+    <value>Echelon</value>
+  </data>
+  <data name="MilSymDPEdMilSymInsert" xml:space="preserve">
+    <value>Military Symbol Insert</value>
+  </data>
+  <data name="MilSymDPExcSelectedFeature" xml:space="preserve">
+    <value>Exception in SelectedSelectedFeature: </value>
+  </data>
+  <data name="MilSymDPMsgHasMilOverlaySchema" xml:space="preserve">
+    <value>already contains a schema for Military Overlay.</value>
+  </data>
+  <data name="MilSymDPMsgDiffDbAddInSettings" xml:space="preserve">
+    <value>Please select a different database from Addin Settings.</value>
+  </data>
+  <data name="MilSymDPMsgMilOverlaySchema" xml:space="preserve">
+    <value>A military overlay schema matching standard: </value>
+  </data>
+  <data name="MilSymDPMsgAddDb" xml:space="preserve">
+    <value>will be added to database: </value>
+  </data>
+  <data name="MilSymDPMsgTakeSeveralMins" xml:space="preserve">
+    <value>Note: this may take several minutes.</value>
+  </data>
+  <data name="MilSymDPMsgUnable2AddLyrPkg" xml:space="preserve">
+    <value>Unable to add layer package to map.</value>
+  </data>
+  <data name="MilSymDPMsgTryAgainAddInSettings" xml:space="preserve">
+    <value>Please try again from Addin Settings when map available.</value>
+  </data>
+  <data name="MilSymDPMsgMilLyrAdded" xml:space="preserve">
+    <value>Military Layers Added</value>
+  </data>
+  <data name="MilSymDPMsgSrchComplete" xml:space="preserve">
+    <value>Search Complete</value>
+  </data>
+  <data name="MilSymDPMsgLyrNotFound" xml:space="preserve">
+    <value>{Layer Not Found}</value>
+  </data>
+  <data name="MilSymDPMsgInitialized" xml:space="preserve">
+    <value>Initialized</value>
+  </data>
+  <data name="MilSymDPMsgReqLyrNotActive" xml:space="preserve">
+    <value>The required layer is not in the Active Map. </value>
+  </data>
+  <data name="MilSymDPMsgReqLyr" xml:space="preserve">
+    <value>Required layer: </value>
+  </data>
+  <data name="MilSymDPMsgAddMilOverlayLyr" xml:space="preserve">
+    <value>Add this military overlay layer to the map?</value>
+  </data>
+  <data name="MilSymDPMsgNotCreateFeaLyr" xml:space="preserve">
+    <value>Could not create map feature in layer: </value>
+  </data>
+  <data name="MilSymDPMsgNotValidFavr" xml:space="preserve">
+    <value>The current favorite is not valid.</value>
+  </data>
+  <data name="MilSymDPMsgContainsDbSchema" xml:space="preserve">
+    <value>This project already contains a database with schema for standard: </value>
+  </data>
+  <data name="MilSymDPMsgCreateNewPrj" xml:space="preserve">
+    <value>Please create a new project to change these settings.</value>
+  </data>
+  <data name="MilSymDPMsgNotOpenDb" xml:space="preserve">
+    <value>Could not open Database: </value>
+  </data>
+  <data name="MilSymDPMsgDbAdded" xml:space="preserve">
+    <value>Database Added</value>
+  </data>
+  <data name="MilSymDPMsgEnd" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="MilSymDPMsgDb" xml:space="preserve">
+    <value>Database: </value>
+  </data>
+  <data name="MilSymDPLoadLyrPkg" xml:space="preserve">
+    <value>Loading Layer Package...</value>
+  </data>
+  <data name="MilSymDPSrch" xml:space="preserve">
+    <value>Searching...</value>
+  </data>
+  <data name="MilSymDPSaveSymbol" xml:space="preserve">
+    <value>symbol</value>
+  </data>
+  <data name="MilSymDPFilterImagePNG" xml:space="preserve">
+    <value>Png Image|*.png</value>
+  </data>
+  <data name="MilSymDPEnableAddIn" xml:space="preserve">
+    <value>Please click to enable add-in...</value>
+  </data>
+  <data name="SWStEndMsg" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="MilSymDPAffiliationFldDef" xml:space="preserve">
+    <value>identity</value>
+  </data>
+  <data name="MilSymDPAffiliationFld" xml:space="preserve">
+    <value>affiliation</value>
+  </data>
+  <data name="MilSymDPCorruptFavrCaption" xml:space="preserve">
+    <value>Corrupt Favorites Files</value>
+  </data>
+  <data name="MilSymDPErrorAddFavrCaption" xml:space="preserve">
+    <value>Error Adding Favorite</value>
+  </data>
+  <data name="MilSymDPNotCreateTempCaption" xml:space="preserve">
+    <value>Could Not Create Template</value>
+  </data>
+  <data name="MilSymDPRmvMilOverlayCaption" xml:space="preserve">
+    <value>Remove Military Overlay?</value>
+  </data>
+  <data name="MilSymDPMilOverlayRmvCaption" xml:space="preserve">
+    <value>Military Overlay Removed</value>
+  </data>
+  <data name="MilSymDPInvalidSelectionCaption" xml:space="preserve">
+    <value>Invalid Selection</value>
+  </data>
+  <data name="MilSymDPAddInDisabledCaption" xml:space="preserve">
+    <value>Add-In Disabled</value>
+  </data>
+  <data name="MilSymDPAddMapCaption" xml:space="preserve">
+    <value>Please Add Map to Your Project</value>
+  </data>
+  <data name="MilSymDPRetryAddingDataModelCaption" xml:space="preserve">
+    <value>Retry Adding Military Overlay Data Model?</value>
+  </data>
+  <data name="MilSymDPUnable2AddLyrPkgCaption" xml:space="preserve">
+    <value>Unable to Add Layer Package to Map</value>
+  </data>
+  <data name="MilSymDPExcCaught" xml:space="preserve">
+    <value>Exception caught: </value>
+  </data>
+  <data name="MilSymDPExcInvalidCoordinates" xml:space="preserve">
+    <value>The coordinates are invalid</value>
+  </data>
+  <data name="MilSymDPFriend" xml:space="preserve">
+    <value>Friend</value>
+  </data>
+  <data name="MilSymDPFriendly" xml:space="preserve">
+    <value>Friendly</value>
+  </data>
+  <data name="MilSymDPImpExtJSON" xml:space="preserve">
+    <value>.JSON</value>
+  </data>
+  <data name="MilSymDPImpFilterJSON" xml:space="preserve">
+    <value>JSON Files (*.json)|*.json</value>
+  </data>
+  <data name="MilSymDPMsgDeserializeFailure" xml:space="preserve">
+    <value>Deserialize failure: </value>
+  </data>
+  <data name="MilSymDPMsgErrorFavrFile" xml:space="preserve">
+    <value>Error - the favorites file: </value>
+  </data>
+  <data name="MilSymDPMsgNotLoaded" xml:space="preserve">
+    <value>could not be loaded.</value>
+  </data>
+  <data name="MilSymDPMsgDeleteFile" xml:space="preserve">
+    <value>Please delete the file and try again.</value>
+  </data>
+  <data name="MilSymDPMsgNotCreatedFavr" xml:space="preserve">
+    <value>Could not create Favorite.</value>
+  </data>
+  <data name="MilSymDPMsgUnable2AddFavr" xml:space="preserve">
+    <value>Unable to add the current favorite. </value>
+  </data>
+  <data name="MilSymDPMsgNotCreatedTemplate" xml:space="preserve">
+    <value>Could Not Create Template</value>
+  </data>
+  <data name="MilSymDPMsgInvalidImportFile" xml:space="preserve">
+    <value>The import file you selected is invalid - please choose a valid JSON file.</value>
+  </data>
+  <data name="MilSymDPMsgRmvMilOverlayLyr" xml:space="preserve">
+    <value>Removing the required Military Overlay layers will reset the Military Symbol Editor.</value>
+  </data>
+  <data name="MilSymDPMsgContinue" xml:space="preserve">
+    <value>Continue?</value>
+  </data>
+  <data name="MilSymDPMsgMilOverlayLyrRmvd" xml:space="preserve">
+    <value>The required Military Overlay layers have been removed from the active map.</value>
+  </data>
+  <data name="MilSymDPMsgReset" xml:space="preserve">
+    <value>The Military Symbol Editor has been reset.</value>
+  </data>
+  <data name="MilSymDPMsgReqMilOverlayDataModel" xml:space="preserve">
+    <value>The Military Symbol Editor requires the Military Overlay data model.</value>
+  </data>
+  <data name="MilSymDPMsgAddDataModel" xml:space="preserve">
+    <value>Would you like to add the data model (database schema and layers) to the project?</value>
+  </data>
+  <data name="MilSymDPMsgNotMatchMilStandard" xml:space="preserve">
+    <value>The Selected Feature does not seem to be a Military Feature or does not match the Military Standard in use (</value>
+  </data>
+  <data name="MilSymDPMsgCloseBracket" xml:space="preserve">
+    <value>).</value>
+  </data>
+  <data name="MilSymDPMsgReqMilStyle" xml:space="preserve">
+    <value>The Required Military Style (</value>
+  </data>
+  <data name="MilSymDPMsgNotDetected" xml:space="preserve">
+    <value>) is not detected in Pro Install.</value>
+  </data>
+  <data name="MilSymDPMsgThe" xml:space="preserve">
+    <value>The</value>
+  </data>
+  <data name="MilSymDPMsgMilOverlaySchemaNotDetected" xml:space="preserve">
+    <value> Military Overlay schema is not detected in any database in your project.</value>
+  </data>
+  <data name="MilSymDPMsgAddMilOverlayLyrPkg" xml:space="preserve">
+    <value> so the Military Symbol Editor cannot continue. Would you like to add the Military Overlay Layer Package to your project?</value>
+  </data>
+  <data name="MilSymDPMsgPrjMapNotActive" xml:space="preserve">
+    <value>Your project does not contain any active map.  Create one and try again.</value>
+  </data>
+  <data name="MilSymDPMsgMapNotAvailable" xml:space="preserve">
+    <value>The project map is not currently available.</value>
+  </data>
+  <data name="MilSymDPMsgTryAgain" xml:space="preserve">
+    <value>Would you like to try again?</value>
+  </data>
+  <data name="MilSymDPMsgMapVisibleReady" xml:space="preserve">
+    <value>Note: wait for map to be visible and ready.</value>
+  </data>
+  <data name="MilSymDPMsgUnableAddLyrPkg" xml:space="preserve">
+    <value>Unable to add layer package to map.</value>
+  </data>
+  <data name="MilSymDPMsgMapVisible" xml:space="preserve">
+    <value>Please ensure the project contains a map and the map is visible.</value>
+  </data>
+  <data name="MilSymDPNeutral" xml:space="preserve">
+    <value>Neutral</value>
+  </data>
+  <data name="MilSymDPSaveFavrs" xml:space="preserve">
+    <value>favorites</value>
+  </data>
+  <data name="MilSymDPFilterJSON" xml:space="preserve">
+    <value>JSON|*.json</value>
+  </data>
+  <data name="MilSymDPSymSet" xml:space="preserve">
+    <value>symbolset</value>
+  </data>
+  <data name="MilSymDPSymEntity" xml:space="preserve">
+    <value>symbolentity</value>
+  </data>
+  <data name="MilSymDPExtFunctCode" xml:space="preserve">
+    <value>extendedfunctioncode</value>
+  </data>
+  <data name="MilSymDPNEW2525D" xml:space="preserve">
+    <value>NEW_AT_2525D</value>
+  </data>
+  <data name="MilSymDPAddMap" xml:space="preserve">
+    <value>ADD MAP TO PROJECT</value>
+  </data>
+  <data name="MilSymDPMilLyrAdded" xml:space="preserve">
+    <value>Military Layers Added</value>
+  </data>
+  <data name="MilSymDPAddInDisabled" xml:space="preserve">
+    <value>Add-in Not Enabled</value>
+  </data>
+  <data name="MilSymDPUnk" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="PSymStFromLblMsg" xml:space="preserve">
+    <value>Warning - GetStandardFromLabel unrecognized standard string: </value>
+  </data>
+  <data name="CoordObjInvalidCoordinates" xml:space="preserve">
+    <value>The coordinates are invalid</value>
+  </data>
+  <data name="Enumapp6b" xml:space="preserve">
+    <value>app6b</value>
+  </data>
+  <data name="Enumapp6d" xml:space="preserve">
+    <value>app6d</value>
+  </data>
+  <data name="Enummil2525b" xml:space="preserve">
+    <value>mil2525b</value>
+  </data>
+  <data name="Enummil2525c" xml:space="preserve">
+    <value>mil2525c</value>
+  </data>
+  <data name="Enummil2525d" xml:space="preserve">
+    <value>mil2525d</value>
+  </data>
+  <data name="LabelAttrLenError" xml:space="preserve">
+    <value>The label entered is at the maximum allowable length for this feature field</value>
+  </data>
+  <data name="LabelAttrToString" xml:space="preserve">
+    <value>Label Attributes</value>
+  </data>
+  <data name="PSymapp6b" xml:space="preserve">
+    <value>APP-6(B)</value>
+  </data>
+  <data name="PSymapp6d" xml:space="preserve">
+    <value>APP-6(D)</value>
+  </data>
+  <data name="PSymBwItemGDB" xml:space="preserve">
+    <value>Select Geodatabase</value>
+  </data>
+  <data name="PSymDic2525b" xml:space="preserve">
+    <value>mil2525bc2</value>
+  </data>
+  <data name="PSymDic2525c" xml:space="preserve">
+    <value>mil2525c</value>
+  </data>
+  <data name="PSymDicapp6b" xml:space="preserve">
+    <value>app6b</value>
+  </data>
+  <data name="PSymDicapp6d" xml:space="preserve">
+    <value>app6d</value>
+  </data>
+  <data name="PSymDicDef" xml:space="preserve">
+    <value>mil2525d</value>
+  </data>
+  <data name="PSymDicOth" xml:space="preserve">
+    <value>mil2525c_b2</value>
+  </data>
+  <data name="PSymExcCmdWar" xml:space="preserve">
+    <value>Warning - unable to execute command: </value>
+  </data>
+  <data name="PSymmil2525b" xml:space="preserve">
+    <value>MIL-STD-2525B w/ Change 2</value>
+  </data>
+  <data name="PSymmil2525c" xml:space="preserve">
+    <value>MIL-STD-2525C</value>
+  </data>
+  <data name="PSymmil2525d" xml:space="preserve">
+    <value>MIL-STD-2525D</value>
+  </data>
+  <data name="PSymStLblapp6b" xml:space="preserve">
+    <value>APP6B</value>
+  </data>
+  <data name="PSymStLblapp6d" xml:space="preserve">
+    <value>APP6D</value>
+  </data>
+  <data name="PSymStLblDef" xml:space="preserve">
+    <value>2525D</value>
+  </data>
+  <data name="PSymStLblmil2525b" xml:space="preserve">
+    <value>2525B</value>
+  </data>
+  <data name="PSymStLblmil2525c" xml:space="preserve">
+    <value>2525C</value>
+  </data>
+  <data name="SymAttrNullFeaPassed" xml:space="preserve">
+    <value>Null Feature passed to PopulateFeatureWithAttributes</value>
+  </data>
+  <data name="SymAttrNullRowBuffer" xml:space="preserve">
+    <value>Null RowBuffer passed to PopulateRowBufferWithAttributes</value>
+  </data>
+  <data name="SymAttrGetBmpImgExc" xml:space="preserve">
+    <value>Exception in GetBitmapImageAsync: </value>
+  </data>
+  <data name="SymSetMapFCLNotFound" xml:space="preserve">
+    <value>GetFeatureClassFromExtendedFunctionCode - could not find feature class for: </value>
+  </data>
+  <data name="MilSymDPFriendUpper" xml:space="preserve">
+    <value>FRIEND</value>
+  </data>
+  <data name="MilSymDPHostile" xml:space="preserve">
+    <value>Hostile</value>
+  </data>
+  <data name="MilSymDPHostileFaker" xml:space="preserve">
+    <value>Hostile/Faker</value>
+  </data>
+  <data name="MilSymDPHostileUpper" xml:space="preserve">
+    <value>HOSTILE</value>
+  </data>
+  <data name="MilSymDPNeutralUpper" xml:space="preserve">
+    <value>NEUTRAL</value>
+  </data>
+  <data name="MiSymDPColon" xml:space="preserve">
+    <value>: </value>
+  </data>
+  <data name="SWDefaultDb" xml:space="preserve">
+    <value>{default}</value>
+  </data>
+  <data name="AbtWinAFDUrl" xml:space="preserve">
+    <value>http://esriurl.com/AFDMilitaryOverlay</value>
+  </data>
+  <data name="AbtWinMilOvrInf" xml:space="preserve">
+    <value>Military Overlay Information Model</value>
+  </data>
+  <data name="AbtWinMilOvrInfUrl" xml:space="preserve">
+    <value>http://esriurl.com/MilitaryOverlayInformationModel</value>
+  </data>
+  <data name="AbtWinMilOvrTmp" xml:space="preserve">
+    <value>Military Overlay Template</value>
+  </data>
+</root>

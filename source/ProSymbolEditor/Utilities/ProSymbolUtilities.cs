@@ -22,17 +22,36 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using CoordinateConversionLibrary.Models;
 using ArcGIS.Desktop.Mapping;
 using System.Threading.Tasks;
 using System.Collections.Generic; 
 using System.Linq;
 
+using ProAppCoordConversionModule.Common.Attributes;
+using ProAppCoordConversionModule.Models;
+
 namespace ProSymbolEditor
 {
     public class ProSymbolUtilities
     {
-        public enum SupportedStandardsType { mil2525d, mil2525c, mil2525b, app6d, app6b };
+        public enum SupportedStandardsType : int
+        {
+            [LocalizableDescription(@"Enummil2525d", typeof(Properties.Resources))]
+            mil2525d = 1,
+
+            [LocalizableDescription(@"Enummil2525c", typeof(Properties.Resources))]
+            mil2525c = 2,
+
+            [LocalizableDescription(@"Enummil2525b", typeof(Properties.Resources))]
+            mil2525b = 3,
+
+            [LocalizableDescription(@"Enumapp6d", typeof(Properties.Resources))]
+            app6d = 4,
+
+            [LocalizableDescription(@"Enumapp6b", typeof(Properties.Resources))]
+            app6b = 5,
+
+        };
 
         public static SupportedStandardsType Standard
         {
@@ -58,14 +77,14 @@ namespace ProSymbolEditor
 
         public static string GetStandardLabel(SupportedStandardsType standardIn)
         {
-            string standardLabel = "MIL-STD-2525D"; // default
+            string standardLabel = Properties.Resources.PSymmil2525d; // default
 
             switch (standardIn)
             {
-                case SupportedStandardsType.app6b: standardLabel = "APP-6(B)"; break;
-                case SupportedStandardsType.app6d: standardLabel = "APP-6(D)"; break;
-                case SupportedStandardsType.mil2525c: standardLabel = "MIL-STD-2525C"; break;
-                case SupportedStandardsType.mil2525b: standardLabel = "MIL-STD-2525B w/ Change 2"; break;
+                case SupportedStandardsType.app6b: standardLabel = Properties.Resources.PSymapp6b; break;
+                case SupportedStandardsType.app6d: standardLabel = Properties.Resources.PSymapp6d; break;
+                case SupportedStandardsType.mil2525c: standardLabel = Properties.Resources.PSymmil2525c; break;
+                case SupportedStandardsType.mil2525b: standardLabel = Properties.Resources.PSymmil2525b; break;
                 default: break;
             }
 
@@ -79,22 +98,22 @@ namespace ProSymbolEditor
 
         public static string GetDictionaryString(SupportedStandardsType standardIn)
         {
-            string dictionaryString = "mil2525d"; // default
+            string dictionaryString = Properties.Resources.PSymDicDef; // default
 
-            string dictionaryStringMil2525b = "mil2525c_b2";
-            string dictionaryStringMil2525c = "mil2525c_b2";
+            string dictionaryStringMil2525b = Properties.Resources.PSymDicOth;
+            string dictionaryStringMil2525c = Properties.Resources.PSymDicOth;
 
             if ((ProSymbolUtilities.ProMajorVersion >= 2) && (ProSymbolUtilities.ProMinorVersion >= 4))
             {
                 // These were split into separate styles after 2.4
-                dictionaryStringMil2525b = "mil2525bc2";
-                dictionaryStringMil2525c = "mil2525c";
+                dictionaryStringMil2525b = Properties.Resources.PSymDic2525b;
+                dictionaryStringMil2525c = Properties.Resources.PSymDic2525c;
             }
 
             switch (standardIn)
             {
-                case SupportedStandardsType.app6b: dictionaryString = "app6b"; break;
-                case SupportedStandardsType.app6d: dictionaryString = "app6d"; break;
+                case SupportedStandardsType.app6b: dictionaryString = Properties.Resources.PSymDicapp6b; break;
+                case SupportedStandardsType.app6d: dictionaryString = Properties.Resources.PSymDicapp6d; break;
                 case SupportedStandardsType.mil2525c: dictionaryString = dictionaryStringMil2525c; break;
                 case SupportedStandardsType.mil2525b: dictionaryString = dictionaryStringMil2525b; break;
                 default: break;
@@ -121,21 +140,21 @@ namespace ProSymbolEditor
                 return SupportedStandardsType.app6b;
             else
             {
-                System.Diagnostics.Trace.WriteLine("Warning - GetStandardFromLabel unrecognized standard string: " + standardString);
+                System.Diagnostics.Trace.WriteLine(Properties.Resources.PSymStFromLblMsg + standardString);
                 return SupportedStandardsType.mil2525d;
             }
         }
 
         public static string GetShortStandardLabel(SupportedStandardsType standardIn)
         {
-            string standardLabel = "2525D";
+            string standardLabel = Properties.Resources.PSymStLblDef;
 
             switch (standardIn)
             {
-                case SupportedStandardsType.app6b: standardLabel = "APP6B"; break;
-                case SupportedStandardsType.app6d: standardLabel = "APP6D"; break;
-                case SupportedStandardsType.mil2525c: standardLabel = "2525C"; break;
-                case SupportedStandardsType.mil2525b: standardLabel = "2525B"; break;
+                case SupportedStandardsType.app6b: standardLabel = Properties.Resources.PSymStLblapp6b; break;
+                case SupportedStandardsType.app6d: standardLabel = Properties.Resources.PSymStLblapp6d; break;
+                case SupportedStandardsType.mil2525c: standardLabel = Properties.Resources.PSymStLblmil2525c; break;
+                case SupportedStandardsType.mil2525b: standardLabel = Properties.Resources.PSymStLblmil2525b; break;
                 default: break;
             }
 
@@ -442,7 +461,7 @@ namespace ProSymbolEditor
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine("Warning - unable to execute command: " + commandId);
+                    System.Diagnostics.Trace.WriteLine(Properties.Resources.PSymExcCmdWar + commandId);
                 }
             });
 
@@ -586,7 +605,7 @@ namespace ProSymbolEditor
             ArcGIS.Desktop.Catalog.OpenItemDialog pathDialog =
                 new ArcGIS.Desktop.Catalog.OpenItemDialog()
                 {
-                    Title = "Select Geodatabase",
+                    Title = Properties.Resources.PSymBwItemGDB,
                     InitialLocation = initialPath,
                     MultiSelect = false,
                     Filter = itemFilter,

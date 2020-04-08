@@ -6,6 +6,7 @@
     xmlns:controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions"
     xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
     xmlns:local="clr-namespace:ProSymbolEditor"
+    xmlns:prop="clr-namespace:ProSymbolEditor.Properties"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     d:DesignHeight="430"
@@ -126,7 +127,7 @@
                     Margin="3,3,3,3"
                     SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
-                    <TabItem Header="Search">
+                    <TabItem Header="{x:Static prop:Resources.MsdTabHeaderSearch}">
                         <UserControl Content="{Binding SearchViewTab}" />
                     </TabItem>
 
@@ -134,19 +135,19 @@
                         <UserControl Content="{Binding ModifyViewTab}" />
                     </TabItem>-->
 
-                    <TabItem Header="Favorites">
+                    <TabItem Header="{x:Static prop:Resources.MsdTabHeaderFavorites}">
                         <UserControl Content="{Binding FavoritesViewTab}" />
                     </TabItem>
 
-                    <TabItem Header="Symbol" IsEnabled="{Binding IsStyleItemSelected}">
+                    <TabItem Header="{x:Static prop:Resources.MsdTabHeaderSymbol}" IsEnabled="{Binding IsStyleItemSelected}">
                         <UserControl Content="{Binding SymbolViewTab}" />
                     </TabItem>
 
-                    <TabItem Header="Label" IsEnabled="{Binding IsStyleItemSelected}">
+                    <TabItem Header="{x:Static prop:Resources.MsdTabHeaderLabel}" IsEnabled="{Binding IsStyleItemSelected}">
                         <UserControl Content="{Binding LabelViewTab}" />
                     </TabItem>
 
-                    <TabItem Header="Enter Coordinates" IsEnabled="{Binding IsCoordinateTabEnabled}">
+                    <TabItem Header="{x:Static prop:Resources.MsdTabheaderEnterCoords}" IsEnabled="{Binding IsCoordinateTabEnabled}">
                         <UserControl Content="{Binding CoordinateViewTab}" />
                     </TabItem>                    
 
@@ -156,7 +157,7 @@
                     <Label
                             Grid.Column="0"
                             Margin="5,0,0,0"
-                            Content="Select a feature to modify" />
+                            Content="{x:Static prop:Resources.MsdLblSelectFeature}" />
 
                     <ToggleButton
                             Grid.Column="1"
@@ -199,7 +200,7 @@
                     <Button
                         Margin="5"
                         Command="{Binding ShowAboutWindowCommand}"
-                        Content="About"
+                        Content="{x:Static prop:Resources.MsdBtnAbout}"
                         Cursor="Hand">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
@@ -222,7 +223,7 @@
                     <Button
                         Margin="5"
                         Command="{Binding ShowSettingsWindowCommand}"
-                        Content="Settings"
+                        Content="{x:Static prop:Resources.MsdBtnSettings}"
                         Cursor="Hand">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">

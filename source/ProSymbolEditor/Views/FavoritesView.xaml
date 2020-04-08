@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
             xmlns:controls="clr-namespace:ArcGIS.Desktop.Extensions.Controls;assembly=ArcGIS.Desktop.Extensions"
             xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"             
-            xmlns:sys="clr-namespace:System;assembly=mscorlib"             
+            xmlns:sys="clr-namespace:System;assembly=mscorlib"
+            xmlns:prop="clr-namespace:ProSymbolEditor.Properties"
             xmlns:local="clr-namespace:ProSymbolEditor"             
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -47,7 +48,7 @@
                                                             AlignmentY="Center"
                                                             Stretch="None">
                                         <VisualBrush.Visual>
-                                            <Label Content="Filter By..." Foreground="{DynamicResource Esri_TextStyleDefaultBrush}" />
+                                            <Label Content="{x:Static prop:Resources.FavLblFilterBy}" Foreground="{DynamicResource Esri_TextStyleDefaultBrush}" />
                                         </VisualBrush.Visual>
                                     </VisualBrush>
                                 </Style.Resources>
@@ -123,7 +124,7 @@
                                                 Grid.Column="1"
                                                 Margin="5,5,5,5"
                                                 Command="{Binding DeleteFavoriteSymbolCommand}"
-                                                Content="Delete"
+                                                Content="{x:Static prop:Resources.btnDelete}"
                                                 IsEnabled="{Binding IsFavoriteItemSelected}"
                                                 Style="{DynamicResource Esri_SimpleButton}" />
                         <Button
@@ -135,8 +136,8 @@
                                                 Style="{DynamicResource Esri_SimpleButton}">
                             <!-- Content= (Multiline Content Below)-->
                             <StackPanel>
-                                <TextBlock HorizontalAlignment="Center" Text="Create" />
-                                <TextBlock HorizontalAlignment="Center" Text="Template" />
+                                <TextBlock HorizontalAlignment="Center" Text="{x:Static prop:Resources.FavBtnCreateTxt}" />
+                                <TextBlock HorizontalAlignment="Center" Text="{x:Static prop:Resources.FavBtnTemplateTxt}" />
                             </StackPanel>
                         </Button>
                         <Button
@@ -144,14 +145,14 @@
                                                 Grid.Column="1"
                                                 Margin="5,5,5,5"
                                                 Command="{Binding ImportFavoritesFileCommand}"
-                                                Content="Import..."
+                                                Content="{x:Static prop:Resources.FavBtnImport}"
                                                 Style="{DynamicResource Esri_SimpleButton}" />
                         <Button
                                                 Grid.Row="3"
                                                 Grid.Column="1"
                                                 Margin="5,5,5,5"
                                                 Command="{Binding SaveFavoritesFileAsCommand}"
-                                                Content="Save As..."
+                                                Content="{x:Static prop:Resources.FavBtnSaveAs}"
                                                 Style="{DynamicResource Esri_SimpleButton}" />
 
                     </Grid>
@@ -218,8 +219,8 @@
                                             Source="{Binding SelectedFavoriteSymbol.SymbolImage}">
                         <Image.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding SaveImageToCommand}" Header="Save Image As..." />
-                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="Copy Image to Clipboard" />
+                                <MenuItem Command="{Binding SaveImageToCommand}" Header="{x:Static prop:Resources.FavMenuSaveImage}" />
+                                <MenuItem Command="{Binding CopyImageToClipboardCommand}" Header="{x:Static prop:Resources.FavMenuCopyImage}" />
                             </ContextMenu>
                         </Image.ContextMenu>
                     </Image>
@@ -238,8 +239,8 @@
                             </ToolTip>
                         </DataGrid.ToolTip>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Attribute" Binding="{Binding Key}" />
-                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                            <DataGridTextColumn Header="{x:Static prop:Resources.FavDGHeaderAttr}" Binding="{Binding Key}" />
+                            <DataGridTextColumn Header="{x:Static prop:Resources.FavDGHeaderVal}" Binding="{Binding Value}" />
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -263,7 +264,7 @@
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="0"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
-                                    ToolTip="Back to Search" >
+                                    ToolTip="{x:Static prop:Resources.FavBtnBack2Search}" >
                 <Button.RenderTransform>
                     <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
                 </Button.RenderTransform>
@@ -274,7 +275,7 @@
                                     HorizontalAlignment="Center"
                                     Command="{Binding GoToTabCommand}"
                                     CommandParameter="1"
-                                    Content="Add Favorite"
+                                    Content="{x:Static prop:Resources.FavBtnAddFavorite}"
                                     Style="{DynamicResource Esri_SimpleButton}"
                                     Visibility="Collapsed" />
             <ToggleButton
@@ -285,10 +286,10 @@
                                     HorizontalAlignment="Center"
                                     BorderThickness="0.5"
                                     Command="{Binding ActivateAddToMapToolCommand}"
-                                    Content="Add to Map"
+                                    Content="{x:Static prop:Resources.FavToggleBtnAddMap}"
                                     IsEnabled="{Binding IsFavoriteItemSelected}"                                  
                                     IsChecked="{Binding AddToMapToolEnabled}"
-                                    ToolTip="Add to Map"
+                                    ToolTip="{x:Static prop:Resources.FavToggleBtnAddMapToolTip}"
                                     Visibility="{Binding Path=IsAddingNew, Converter={StaticResource BoolToVis}}">
                 <ToggleButton.Style>
                     <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
@@ -303,7 +304,7 @@
                                     IsEnabled="{Binding IsFavoriteItemSelected}"
                                     CommandParameter="2"
                                     Style="{DynamicResource Esri_ButtonBackSmall}"
-                                    ToolTip="Go to Symbol Tab">
+                                    ToolTip="{x:Static prop:Resources.FavBtnGo2SymbolToolTip}">
                 <Button.RenderTransform>
                     <ScaleTransform ScaleX="-1.5" ScaleY="1.5"/>
                 </Button.RenderTransform>

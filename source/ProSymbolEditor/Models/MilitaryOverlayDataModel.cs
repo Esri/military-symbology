@@ -235,7 +235,7 @@ namespace ProSymbolEditor
                 return false; //No active map
 
             // See if Military Overlay in Active Map
-            const string militaryOverlayName = "Military Overlay";
+            string militaryOverlayName = "Military Overlay";
             IEnumerable<GroupLayer> mapLayers = MapView.Active.Map.GetLayersAsFlattenedList().OfType<GroupLayer>().Where(l => l.Name.StartsWith(militaryOverlayName));
             if ((mapLayers == null) || (mapLayers.Count() == 0))
             {

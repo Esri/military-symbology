@@ -17,7 +17,7 @@
 using System.ComponentModel;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Contracts;
-using CoordinateConversionLibrary.Models;
+using ProAppCoordConversionModule.Models;
 
 namespace ProSymbolEditor
 {
@@ -72,7 +72,7 @@ namespace ProSymbolEditor
                     case "Coordinate":
                         if (!IsValid)
                         {
-                            Error = "The coordinates are invalid";
+                            Error = Properties.Resources.CoordObjInvalidCoordinates;
                         }
                         break;
                 }

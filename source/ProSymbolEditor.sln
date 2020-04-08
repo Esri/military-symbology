@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProSymbolEditor", "ProSymbolEditor\ProSymbolEditor.csproj", "{4FF462B0-2910-47F3-B6FD-D1D17E5F7DFC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SymbolEditorUnitTests", "SymbolEditorUnitTests\SymbolEditorUnitTests.csproj", "{CC20F47D-D223-47B2-8D44-455951753918}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoordinateConversionLibrary", "..\..\coordinate-conversion-addin-dotnet\source\CoordinateConversion\CoordinateConversionLibrary\CoordinateConversionLibrary.csproj", "{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProAppCoordConversionModule", "..\..\coordinate-conversion-addin-dotnet\source\CoordinateConversion\ProAppCoordConversionModule\ProAppCoordConversionModule.csproj", "{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,16 +33,19 @@ Global
 		{CC20F47D-D223-47B2-8D44-455951753918}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CC20F47D-D223-47B2-8D44-455951753918}.Release|x64.ActiveCfg = Release|x64
 		{CC20F47D-D223-47B2-8D44-455951753918}.Release|x64.Build.0 = Release|x64
-		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Debug|x64.Build.0 = Debug|Any CPU
-		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Release|x64.ActiveCfg = Release|Any CPU
-		{67FFDFAE-F8EC-45AA-A3F9-6109BCF5BBF4}.Release|x64.Build.0 = Release|Any CPU
+		{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}.Debug|x64.Build.0 = Debug|Any CPU
+		{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}.Release|x64.ActiveCfg = Release|Any CPU
+		{D91D391E-03A3-4376-8BBB-EAF6F0DA1EBF}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C8AB7199-52DD-4722-A79C-F3A326AFDE45}
 	EndGlobalSection
 EndGlobal

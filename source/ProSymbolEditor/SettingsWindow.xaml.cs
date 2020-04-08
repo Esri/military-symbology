@@ -79,7 +79,7 @@ namespace ProSymbolEditor
             get
             {
                 if (string.IsNullOrEmpty(_defaultDatabase))
-                    return "{default}";
+                    return Properties.Resources.SWDefaultDb;
                 else
                     return _defaultDatabase;
             }
@@ -178,11 +178,9 @@ namespace ProSymbolEditor
                 if (hasStandard)
                 {
                     ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(
-                        "Database: " + selectedGDB + "\n" +
-                        "contains a schema for standard: \n" +
-                        ProSymbolUtilities.GetStandardLabel(standardFound) + ".\n" +
-                        "Setting standard to this value."
-                        , "Database Contains Schema",
+                        Properties.Resources.SWStDbMsg + selectedGDB + System.Environment.NewLine + Properties.Resources.SWStSchMsg + System.Environment.NewLine +
+                        ProSymbolUtilities.GetStandardLabel(standardFound) + Properties.Resources.SWStEndMsg + System.Environment.NewLine +   Properties.Resources.SWStSetMsg
+                        , Properties.Resources.SWMsgCaption,
                         MessageBoxButton.OK, MessageBoxImage.Information);
 
                     Standard = standardFound;
